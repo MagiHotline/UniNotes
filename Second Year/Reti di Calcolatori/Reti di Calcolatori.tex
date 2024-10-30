@@ -15,7 +15,7 @@
 \usetikzlibrary{decorations.pathreplacing} % for angle arc
 \usetikzlibrary{angles, quotes, calc} % for drawing angles
 
-\usepackage{color}   %May be necessary if yosu want to color links
+\usepackage{color}   %May be necessary if you want to color links
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true, %set true if you want colored links
@@ -921,5 +921,39 @@ Il server DNS locale memorizza le risposte e quindi gli indirizzi IP dei server 
 \end{itemize}
 Tutti i protocolli si appoggiano su TCP. Dal punto di vista dell'architettura ogni dominio di posta elettronica (la porzione che segue la \@ dell'indirizzo di posta elettronica) deve avere associato uno specifico server SMTP che gestisce le caselle degli utenti appartenenti a quel dominio.\\
 Quando il server univr.it riceve un messaggio, controlla il dominio, se il dominio è \texttt{univr.it}, allora mette il messaggio sulla corrispondente casella di posta. Se il dominio è diverso, il server SMTP controlla il server SMTP di destinazione per la consegna del messaggio attraverso il protocollo SMTP.
+
+\pagebreak
+
+\section{Livello di Trasporto}
+
+\subsection{Header del protocollo TCP}
+
+L'header del protocollo TCP (Transmission Control Protocol) è una parte fondamentale del protocollo, che viene utilizzata per gestire la trasmissione affidabile dei dati tra due dispositivi su una rete. Ogni segmento TCP, ovvero ogni unità di dati inviata, contiene un header che include informazioni necessarie per la corretta gestione e interpretazione della connessione e dei dati.
+\\
+L'header TCP standard è composto da 20 byte (minimo) e può essere esteso con campi opzionali. Vediamo i campi principali:
+\begin{itemize}
+	\item[$\rightarrow$] \textbf{Porta Sorgente/Destinazione}: Indentificatori dei processi sorgente e destinazione coinvolti nella comunicazione. Esistono due tipi di porte:
+	\begin{itemize}
+		\item Statiche, ovvero sono i numeri di porte che vanno da 0 - 1023, identificativi associati a protocolli definiti dallo standard (HTTP, SMTP, \dots) utilizzati \textbf{lato server}.
+		\item Dinamiche, $\ge 1024$ e sono identificativi assegnati dal sistema operativo \textbf{lato client} quando viene aperto un socket.
+\end{itemize}
+
+\item[$\rightarrow$]\textbf{Numero di sequenza}, numero sequenziale che identifica univocamente ogni byte di dati nel flusso TCP.
+È cruciale per il riordinamento dei pacchetti, specialmente se alcuni di essi vengono ricevuti fuori ordine.		
+\begin{itemize}
+		\item A livello applicativo vengono generati messaggi di dimensione arbitraria
+		\item A livelllo ``Collegamenti Dati'' (L2) alla scheda di rete è associato un parametro chiamato:
+			\begin{itemize}
+				\item MTU Maximum Transmission Unit
+				\item MSS Maximum Sequent Size
+			\end{itemize}
+	\end{itemize}
+\item[$\rightarrow$] \textbf{Numero di riscontro o di acknowledgment\footnote{ACK: È un segmento TCP senza dati (Solo header)}}: Questo campo è utilizzato per confermare la ricezione dei pacchetti. Contiene il numero di sequenza del byte successivo che il ricevente si aspetta di ricevere.
+L'uso del numero di riscontro rende possibile il controllo di flusso e la conferma di ricezione dei dati.
+
+\end{itemize}
+
+
+
 
 \end{document}
