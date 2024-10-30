@@ -1,9 +1,6 @@
 # Ignore everything
 *
 
-# But don't ignore .gitignore itself
-!.gitignore
-
 # Only track TeX and PDF files
 !*.tex
 !*.pdf
