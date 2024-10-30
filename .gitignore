@@ -1,6 +1,9 @@
-# Ignore everything
-*
-
-# Only track TeX and PDF files
-!*.tex
-!*.pdf
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.toc
+*.thm
+*.synctex.gz
+*.out
