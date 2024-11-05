@@ -270,6 +270,85 @@ Quindi la risposta forzata è:
 \begin{equation*}
     \tcbox[nobeforeafter]{\(h(t) = \frac{4}{5}e^{-\frac{1}{2}t}\delta_{-1}(t) + \frac{1}{5}e^{2t}\delta_{-1}(t)\)}
 \end{equation*}  
+
+\subsection{Esercizio 3}
+
+\begin{examplebox}{Consegna}
+    Dato il seguente sistema a tempo continuo (LTI):
+    \[v''(t) + 2v'(t) + v(t) = u''(t) + u(t)\]
+    e le seguenti condizioni iniziali:
+    \[\begin{cases}
+        v(0) = 4\\
+        v'(0) = -2
+    \end{cases}\]
+    Calcolare la risposta libera (1) e la risposta forzata/impulsiva del sistema (2).
+    \end{examplebox}
+1. Polinomio caratteristico:
+\[s^2 + 2s + 1 = (s+1)^2\]
+\[\lambda_1 = -1, \mu_1 = 2\]
+\[r = 1\]
+\[v(t) = c_{1,0}e^{-t} + c_{1,1}e^{-t}t\]
+Per semplicità chiamerò $c_{1,0} = c_1$ e $c_{1,1} = c_2$.
+Ora derivo $v(t)$:
+\[v'(t) = -c_1e^{-t} - c_2e^{-t}t + c_2e^{-t}\]
+Applico le condizioni iniziali:
+\[\begin{cases}
+    v(0) = 4\\
+    v'(0) = -2
+\end{cases} \begin{cases}
+    c_1\overbrace{e^{-t}}^{1} + \overbrace{c_2e^{-t}t}^{0} = 4\\
+    -c_1\overbrace{e^{-t}}^{1} - \overbrace{c_2e^{-t}t}^{0} + c_2\overbrace{e^{-t}}^{1}= -2
+\end{cases} \Longrightarrow
+\begin{cases}
+    c_1 = 4\\
+    c_2 = 2
+\end{cases}\]
+Quindi la risposta libera è:
+\begin{equation*}
+    \tcbox[nobeforeafter]{\(v_l(t) = 4e^{-t} + 2e^{-t}t\)}
+\end{equation*}
+2. Ora calcoliamo la risposta impulsiva.
+\begin{align*}
+    h(t) &= \overbrace{d_0}^{0} \delta_0(t) + \left[\sum_{i=1}^r \sum_{l=0}^{\mu_i - 1} d_{i,l} e^{\lambda_it} \frac{t^l}{l!}\right]\delta_{-1}(t)\\
+    &= (d_1e^{-t} + d_2e^{-t}t)\delta_{-1}(t)
+\end{align*}
+Calcoliamo le derivate di $h(t)$:
+\[h'(t) = (-d_1e^{-t} + -d_2e^{-t}t + d_2e^{-t})\delta_{-1}(t) + (d_1e^{-t} + d_2e^{-t}t)\delta_{0}(t)\]
+\[h''(t) = (d_1e^{-t} + d_2e^{-t}t - 2(d_2e^{-t}))\delta_{-1}t + 2\delta_0(t)((-d_1e^{-t} + -d_2e^{-t}t + d_2e^{-t}))  + ...\]
+\[... + (d_1e^{-t} + d_2e^{-t}t)\delta'(t) \]
+Ora poniamo $v(t) = h(t)$ e $u(t) = \delta(t)$ nell'equazione del sistema iniziale:
+\[h''(t) + 2h'(t) + h(t) = \delta''(t) + \delta(t)\]
+Sostituiamo ed eliminiamo i gradini:
+\[\overbrace{\cancel{(d_1e^{-t} + d_2e^{-t}t - 2(d_2e^{-t}))\delta_{-1}t} + 2\delta_0(t)((-d_1e^{-t} + -d_2e^{-t}t + d_2e^{-t})) + (d_1e^{-t} + d_2e^{-t}t)\delta'(t)}^{h''(t)} + ...\]
+\[2\overbrace{\left[\cancel{(-d_1e^{-t} + -d_2e^{-t}t + d_2e^{-t})\delta_{-1}(t)} + (d_1e^{-t} + d_2e^{-t}t)\delta_{0}(t) \right]}^{h'(t)} + \cancel{(d_1e^{-t} + d_2e^{-t}t)\delta_{-1}(t)}\]
+\[= \delta''(t) + \delta(t)\]
+Mettiamo a sistema i corrispettivi delta e poniamo $t = 0$:
+\begin{align*}
+&\begin{cases}
+    0 = \delta''(t)\\
+    (d_1e^{-t} + d_2e^{-t}t)\delta'(t) = 0\\
+    2\delta_0(t)((-d_1e^{-t} + \cancel{-d_2e^{-t}t} + d_2e^{-t})) + (d_1e^{-t} + \cancel{d_2e^{-t}t})\delta_0(t)= \delta_0(t)
+\end{cases}\\
+&\begin{cases}
+    d_1 = 0\\
+    2\delta_0(t)(-d_1 + d_2) + d_1\delta_0(t) = \delta_0(t) 
+\end{cases}\\
+&\begin{cases}
+    d_1 = 0\\
+    -2d_1\cancel{\delta_0(t)} + 2d_2\cancel{\delta_0(t)} + d_1\cancel{\delta_0(t)} = \cancel{\delta_0(t)}
+\end{cases}\\
+&\begin{cases}
+    d_1 = 0\\
+    2d_2 = 1 \Longrightarrow d_2 = \frac{1}{2}
+\end{cases}
+\end{align*}
+Quindi la risposta forzata è:
+\begin{equation*}
+    \tcbox[nobeforeafter]{\(h(t) = \frac{1}{2}e^{-t}t\delta_{-1}(t)\)}
+\end{equation*}
+
+
+
 \end{document}
 
 
