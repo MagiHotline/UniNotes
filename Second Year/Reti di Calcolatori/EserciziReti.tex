@@ -2,13 +2,12 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{pgfplots}
-% \pgfplotsset{compat=1.18}
+\pgfplotsset{compat=1.18}
 \usepackage{listings}
 \usepackage{enumitem}
 \usepackage{cancel}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{pgfplots}
 \usepackage{tikz}
 \usepackage{booktabs}
 \usepackage{tikz-cd}
@@ -84,7 +83,6 @@
 \begin{figure}
     \centering
     \includegraphics[width=0.3\textwidth]{UniversityofVerona.png}
-    \label{fig:centered-image}
 \end{figure}
 
 \maketitle 
@@ -204,9 +202,10 @@ Ma ce ne sono molteplici per questo caso.
 \item Per la \textbf{quarta LAN} la procedura è la stessa della seconda LAN solo che in questo caso per indirizzare 400 host basterà riservare 9 bit $\rightarrow 2^9 = 512$.
 \item Per la \textbf{quinta LAN} la procedura è la stessa della seconda LAN. In questo caso se il blocco iniziale doveva ospitare $2^{32-19}$ host, ovvero $8912$ ora se dobbiamo ospitarne la metà ovvero $4096$ dovremmo avere bisogno di una sottorete /20.
 
-
-
 \end{enumerate}
+
+
+
 
 \pagebreak
 

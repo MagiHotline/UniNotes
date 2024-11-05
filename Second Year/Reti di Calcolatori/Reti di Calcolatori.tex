@@ -950,8 +950,76 @@ L'header TCP standard è composto da 20 byte (minimo) e può essere esteso con c
 	\end{itemize}
 \item[$\rightarrow$] \textbf{Numero di riscontro o di acknowledgment\footnote{ACK: È un segmento TCP senza dati (Solo header)}}: Questo campo è utilizzato per confermare la ricezione dei pacchetti. Contiene il numero di sequenza del byte successivo che il ricevente si aspetta di ricevere.
 L'uso del numero di riscontro rende possibile il controllo di flusso e la conferma di ricezione dei dati.
+\item[$\rightarrow$] \textbf{Checksum}, 
+serve per controllare la presenza di errori nel segmento. La checksum è 
+il risultato di una funzione che prende in input il 
+segmento e restituisce un valore a dimensione fissa 
+univoco per quel segmento. Se il segmento viene modificato 
+durante la trasmissione, la checksum cambia e il destinatario fa 
+un controllo mettendo in input ciò che ha ricevuto e se il confronto:
+\begin{itemize}
+  \item Va a buon fine: con \textbf{alta probabilità} non ci sono stati errori
+  \item Non a buon fine: ci sono \textbf{sicuramente} degli errori
+\end{itemize}
 
 \end{itemize}
+
+\subsubsection{Gestione delle connessioni}
+TCP è un protocollo connection oriented, cioè prima di scambiare dati, client 
+e server devono stabilire che vogliono comunicare e questo avviene tramite 
+l’invio di messaggi di servizio (senza dati), questa fase è chiamata 
+instaurazione della connessione.
+\\\\
+\textbf{N.B.:} Instaurare una connessione non ha niente a che fare con la creazione di un circuito o riservare delle risorse di rete
+\\\\
+Quindi avviene uno scambio di segmenti TCM (header senza payload) chiamata \textit{Three-way handshake}:
+\begin{itemize}
+
+  \item \textbf{Syn}: Il client invia un segmento con il flag SYN a 1. Questo segmento contiene l’initial sequence number del client (ISN), cioè un numero scelto casualmente da cui il client inizia a numerare i byte inviati. Questo numero serve anche come ulteriore sicurezza per la cifratura.
+  \item \textbf{Syn-Ack}: Il server risponde con un segmento con i flag SYN e ACK a 1. Questo segmento contiene l’initial sequence number del server e l’acknow- ledgment number uguale all’ISN del client + 1.
+  \item \textbf{Ack}: Il client risponde con un segmento con il flag ACK a 1 e l’acknow- ledgment number uguale all’ISN del server + 1.
+  \item \textbf{Altri parametri}: MSS (Maximum Segment Size): Indica la dimensione massima di un segmento che il client e il server possono ricevere. Client e server utilizzeranno il valore minimo tra le 2 MSS comunicate. La MSS è contenuta nelle opzioni dell’header TCP, che sono utilizzate solo se necessario.
+\end{itemize}
+Dopo aver instaurato la connessione gli host si possono scambiare i messaggi: Quando lo scambio dei messaggi è terminato, la connessione viene chiusa attra- verso uno scambio di header. Siccome il canale è biirezionale, la chiusura deve avvenire indipendentemente nelle due direzioni. I 2 messaggi sono:
+\begin{itemize}
+  \item \textbf{FIN}: sarà un messaggio con il flag \texttt{FIN} a 1.
+  \item \textbf{ACK}: sarà un messaggio con il flag \texttt{ACK} a 1.
+\end{itemize}
+TCP è un protocollo affidabile, cioè quando un host invia un segmento si aspetta di ricevere il riscontro entro un tempo massimo (RTO, Retransmission Ti- meOut). L’RTO dovrà tenere in conto l’RTT (Round Trip Time), cioè il tempo che impiega un segmento a viaggiare da un host all’altro e tornare indietro.
+
+\subsubsection{RTO e RTT}
+
+L'RTO dipende dal valore del RTT (Round Trip Time $\rightarrow$ tempo che impiega un segmento a 
+viaggiare da un host all'altro e tornare indietro.). All'apertura della connessione, misura il RTT
+durante il Three-way handshake. Per l'invio del primo messaggio (Syn) l'RTO è impostato a 500 ms.
+\\\\
+\textit{Come vengono aggiornati i valori di RTT e RTO?}
+ Ogni Host, per ongi segmento inviato, misuro l'RTT instantaneo e usa tale valore per aggiornare una variabile
+ chiamata: \textit{SRTT $\rightarrow$ Smoothed Round Trip Time}.
+\[SRTT_{attuale} = \alpha SRTT_{precedente} + (1 - \alpha)RTT_{instantaneo}\]
+\[0 < \alpha < 1\]
+L'SRTT è uno \textbf{stima} del valore medio del RTT. Questa tecnica si chiama \textit{Exponential Weighted Moving Average} (EWMA).
+\\ Dato l'SRTT: \[RTO = \beta SRTT_{attuale}\]dove tipicamente $\beta = 2$. Quindi in poche parole, il segmento viene
+ritrasmesso dopo un tempo pari al doppio del tempo medio di ritorno. In caso di perdite, l'RTO per il segmento
+ritrasmesso  viene temporaneamente raddoppiato. Se invio un segmento ad ogni RTT, la velocità di trasmissione
+è  $\frac{1 seg}{k\pi} \rightarrow \frac{1500 byte}{100} = 1200$ byte/sec.
+
+\subsection{Controllo di flusso e il controllo di congestione}
+
+Per aumentare la velocità di trasmissione invece di trasmettere un singolo segmento ne trasmetto di più contemporaneamente. Per esempio, se ne inviassi
+due alla volta, raddoppierai la velocità di trasmissione. Tuttavia questo genera diversi problemi. Come gestisco i riscontri
+e cosa succede se uno dei segmenti viene perso? Ci sono due tecniche che ci aiutano in questo caso:
+
+\begin{enumerate}
+  \item Il controllo di flusso $\rightarrow$ Azione preventiva per limitare la congestione. 
+  Inviare più segmenti contemporaneamente con un meccanismo o finestra scorrevole
+  \item Il controllo di congestione $\rightarrow$ Reazione in caso di congestione
+\end{enumerate}
+\begin{center}
+  Congestione $\Longleftrightarrow$ Perdita di un segmento (Riscontro non ricevuto)
+\end{center}
+
+
 
 
 
