@@ -168,20 +168,20 @@ Ora raccolgo le funzioni delta e le metto a sistema. Ricordiamo di imporre $t = 
 \end{cases}\\
 &\begin{cases}
     d_1 + d_2 = 1\\
-    -2d_1\delta_0(t) + 12d_2\delta_0(t) - 5d_1\delta_0(t) + 5d_2\delta_0(t) = 5\delta(t)
+    -2d_1\delta_0(t) + 12d_2\delta_0(t) - 5d_1\delta_0(t) - 5d_2\delta_0(t) = 5\delta(t)
 \end{cases}\\
 &\begin{cases}
     d_1 = 1 - d_2\\
-    -7d_1\delta_0(t) + 17d_2\delta_0(t) = 5\delta(t)
+    -7d_1\cancel{\delta_0(t)} + 7d_2\cancel{\delta_0(t)} = 5\cancel{\delta(t)}
 \end{cases}\\
 &\begin{cases}
-    d_1 = \frac{1}{2}\\
-    d_2 = \frac{1}{2}
+    d_1 = \frac{1}{7}\\
+    d_2 = \frac{6}{7}
 \end{cases}
 \end{align*}
 Quindi la risposta forzata è:
 \begin{equation*}
-    \tcbox[nobeforeafter]{\(h(t) = \frac{1}{2}e^{-t}\delta_{-1}(t) + \frac{1}{2}e^{6t}\delta_{-1}(t)\)}
+    \tcbox[nobeforeafter]{\(h(t) = \frac{1}{7}e^{-t}\delta_{-1}(t) + \frac{6}{7}e^{6t}\delta_{-1}(t)\)}
 \end{equation*}
 
 \subsection{Esercizio 2}
