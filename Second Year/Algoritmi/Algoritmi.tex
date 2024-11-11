@@ -929,7 +929,7 @@ Questo algoritmo esegue \( n-1 + n-1 = 2n-2 \) confronti.
     \begin{itemize}
       \item All'inizio \( m+M = 2n \) perchè ogni oggetto può essere sia minimo che 
         massimo.
-      \item Alla fine \( m+m = 2 \) perchè alla fine ci sarà un solo minimo e un solo 
+      \item Alla fine \( m+M = 2 \) perchè alla fine ci sarà un solo minimo e un solo 
         massimo.
     \end{itemize}
     Quando viene fatto un confronto \( m+M \) può diminuire.
@@ -1023,11 +1023,12 @@ Un algoritmo che raggiunge il limite inferiore è il seguente:
     \] 
 
   \item Confronta \( a_i \) con \( b_i \), supponendo \( a_i < b_i \) (mette a sinistra
-    i più piccoli e a destra i più grandi)
+    i più piccoli e a destra i più grandi). Una volta aver fatto il confronto possiamo swappare
+     gli elementi nella loro apposita sezione.
 
   \item Cerca il minimo degli \( a_i \) e cerca il massimo dei \( b_i \):
 
-  \item Sistema l'eventuale elemento in più
+  \item Sistema l'eventuale elemento in più (se l'array è dispari) 
 \end{enumerate}
 
 \subsection{Randomized select}
@@ -1112,7 +1113,7 @@ Si potrebbe cercare un elemento perno più ottimale, cioè che divida l'array in
       3 \cdot  \left(\underbrace{\left\lceil \frac{1}{2} \left\lceil \frac{n}{5} \right\rceil  \right\rceil}_{\text{
           verdi + blu + rosso
       }} - \underbrace{2}_{\text{rosso + blu}} \right) 
-      \ge \frac{3}{10} n - 6
+      = \frac{3}{10} n - 6
     \] 
     Da ogni parte si hanno almeno \( \frac{3}{10} n - 6 \) elementi, quindi
     al massimo si hanno \( n - \left( \frac{3}{10} n - 6 \right) = \frac{7}{10} n + 6 \)
@@ -1124,34 +1125,67 @@ Si potrebbe cercare un elemento perno più ottimale, cioè che divida l'array in
     \[
       T(n) = \Theta (n) + T\left(\left\lceil \frac{n}{5} \right\rceil\right) + T\left(\frac{7}{10} n + 6\right)
     \] 
-    Supponiamo \( T(n) \le cn \):
+    Applichiamo il metodo di sostituzione \( T(n) \le cn \):
     \[
       \begin{aligned}
-        T(n) &\le c'n + c \left\lceil \frac{n}{5} \right\rceil + c \left( \frac{7}{10}
-        n + 6\right) \\
-             & \le c'n + c \frac{n}{5} + c + c \left( \frac{7}{10} n + 6 \right) \\
-             &= c \frac{7}{10}n + \frac{c}{5}n + 7c + c'n \\
-             &= cn - \left( \frac{3}{10}cn - \frac{c}{5}n - 7c - c'n \right) \\
+        T(n) &\le n + c \left\lceil \frac{n}{5} \right\rceil + c \left( \frac{7}{10}
+        n + 6\right) \end{aligned}
+    \]
+    Tuttavia non sappiamo se $\left(\frac{7}{10}n + 6\right)$ sia $< n$. Scopriamo che la disuguaglianza è vera 
+    solo se $n > 20$. Quindi per risolvere il problema ci basta scegliere un $\overline{n} > 20$. Le costanti quindi
+    sono abbastanza alte. 
+    \[
+        \begin{aligned}
+             & \le n + c + n \frac{c}{5} + \frac{7}{10} cn + 6c \\
+             &= \frac{9}{10}cn + 7c + n \\
              & \stackrel{?}{\le} cn 
       \end{aligned}
     \] 
     \[
       \begin{aligned}
-        \frac{3}{10}cn - \frac{1}{5}cn - 7c - c'n &\ge 0\\
-        \frac{1}{10}cn - c'n - 7c &\ge 0\\
-        \frac{1}{10}c &> c'\\
-        c &> 10c'
+        &=  cn + \left(- \frac{1}{10}cn + 7c + n\right) \le cn \\
+        &\stackrel{\text{sse}}{\Longleftrightarrow} \left(n + 7c - \frac{1}{10}cn\right)\le 0\\
       \end{aligned}
     \] 
-    Quindi \( T(n) \le cn \) e quindi \( T(n) = O(n) \). Il problema è che le
-    costanti sono così alte che nella pratica è meglio il \texttt{randomized\_select}.
+    Dove l'equazione di ricorrenza diventa: 
+    \[T(n) \le \Theta(n) + c\left\lceil\frac{n}{5}\right\rceil + c\left(\frac{7}{10} + 6\right)\] 
+    Quindi \( T(n) \le cn \) e quindi \( T(n) \in \Theta(n) \). Quindi è un algoritmo ottimo. 
+    Il problema è che le costanti sono così alte che nella pratica è meglio il \texttt{randomized\_select}.
 \end{enumerate}
+Esistono modi per strutturare meglio le informazioni nel calcolatore 
+per trovare l'elemento cercato in tempo $O(\log n)$? Dobbiamo trovare delle rappresentazione
+che ci permettono di rispondere a delle domande in tempo logaritmico. 
 
+\pagebreak
 
+\section{Strutture dati}
 
+Una struttura dati è un modo per organizzare i dati in modo da poterli manipolare in modo efficiente.
 
+\subsection{Stack o Pila}
+\begin{definition}
+  Uno stack è una struttura dati che permette di inserire e rimuovere elementi in modo LIFO (Last In First Out). 
+  \begin{itemize}
+      \item \texttt{push(x)}: Inserisce l'elemento \( x \) nello stack. 
+      (Produce un oggetto che corrisponde allo stack originale a cui è stato aggiunto l'elemento).
+      \item \texttt{pop(S)}: Rimuove l'elemento in cima allo stack. (Produce un oggetto che corrisponde all'elemento originale a cui è stato rimosso l'elemento).
+      \item \texttt{top(S)}: Restituisce l'elemento in cima allo stack.
+      \item \texttt{new()}: Crea uno stack vuoto.
+      \item \texttt{isEmpty(S)}: Restituisce \texttt{true} se lo stack è vuoto, \texttt{false} altrimenti.
+  \end{itemize}
+\end{definition}
 
+Da queste operazioni si possono definire certe proprietà come:
 
+\begin{itemize}
+  \item top(push(S,x)) = x
+  \item pop(push(S,x)) = S
+\end{itemize}
+Quindi un modo per definire uno stack tramite le operazioni che andiamo a fare sull'oggetto stesso:
+
+\begin{center}
+\texttt{Push(Push(Push(Empty(), $x_1$) $x_2$) $x_3$) ...}
+\end{center}
 
 
 
