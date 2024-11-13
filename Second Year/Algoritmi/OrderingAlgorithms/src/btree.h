@@ -1,3 +1,11 @@
+/*
+ * File: btree.h
+ * Description: Implements a simple binary search tree
+ * Author: Paolo Imbriani, @magihotline on github
+ * Date: 2024-11-13
+ * License: MIT License
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,10 +16,10 @@ typedef struct btree {
     struct btree *right;
 }btree;
 
-/*
-* Creates a new node with the item passed in as an argument and pointers to the left and right nodes
+/**
+* @brief Creates a new node with the item passed in as an argument and pointers to the left and right nodes
 * @param int item - the item to create a new node with
-* @return btree * - the new node created
+* Return: btree * - the new node created
 */
 btree *create_node(int item) {
     // Allocate memory for the new node
@@ -25,8 +33,8 @@ btree *create_node(int item) {
     return new_btree;
 }
 
-/*
-* Adds an item to the binary tree
+/**
+* @brief Adds an item to the binary tree
 * @param btree *bt - the binary tree to add the item to
 * @param int item - the item to add to the binary tree
 * @return btree * - the binary tree with the new item added
@@ -46,8 +54,8 @@ btree *add(btree *bt, int item) {
     return bt;
 }
 
-/*
-* Prints the binary tree in order
+/**
+* @brief Prints the binary tree in order
 * @param btree *bt - the binary tree to print in order
 */
 void print_in_order(btree *bt) {
@@ -59,8 +67,8 @@ void print_in_order(btree *bt) {
     }
 }
 
-/*
-* Search an item inside the binary search tree.
+/**
+* @brief Search an item inside the binary search tree.
 * @param btree *bt - the binary tree to search into
 * @param int k - the item to search
 * @return int - 1 if the item is found, 0 otherwise

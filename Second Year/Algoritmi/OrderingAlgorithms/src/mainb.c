@@ -1,4 +1,4 @@
-// Creator: Imbriani Paolo, @magihotline on github
+
 #include "btree.h"
 #include <stdlib.h>
 #include <time.h>
