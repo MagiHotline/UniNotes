@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Albero Binario di Ricerca
 typedef struct btree {
     int item;
     struct btree *left;
@@ -41,6 +42,7 @@ btree *add(btree *bt, int item) {
         // if the item is greater than the current node, go to the right
         bt->right = add(bt->right, item);
     }
+
     return bt;
 }
 
@@ -55,4 +57,36 @@ void print_in_order(btree *bt) {
         printf("%d\n", bt->item);
         print_in_order(bt->right);
     }
+}
+
+/*
+* Search an item inside the binary search tree.
+* @param btree *bt - the binary tree to search into
+* @param int k - the item to search
+* @return int - 1 if the item is found, 0 otherwise
+*/
+int search(btree *bt, int k) {
+    if(bt != NULL) {
+        if(k == bt->item) {
+            return 1;
+        } else if(k < bt->item) {
+            return search(bt->left, k);  // return the result of searching in the left subtree
+        } else {
+            return search(bt->right, k); // return the result of searching in the right subtree
+        }
+    }
+    return 0;
+}
+
+int extract(btree *bt, int k) {
+    if(bt != NULL) {
+        if(k == bt->item) {
+            return bt->item;
+        } else if(k < bt->item) {
+            return search(bt->left, k);  // return the result of searching in the left subtree
+        } else {
+            return search(bt->right, k); // return the result of searching in the right subtree
+        }
+    }
+    return -1;
 }
