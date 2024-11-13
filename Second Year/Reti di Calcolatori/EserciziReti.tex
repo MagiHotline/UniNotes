@@ -229,7 +229,37 @@ Obiettivo: Valutare l'evoluzione temporale della \texttt{cwnd} fino a fine a tra
     \texttt{cwnd} = 1 segmento
 \end{center}
 
+\subsubsection{Esercizio 2}
 
+Un'applicazione A deve trasferire 46500 byte verso un'applicazione B. Si suppone che la connessione sia già stata instaurata:
+\begin{itemize}
+    \item MSS = 1500 byte
+    \item RCVWND (iniziale) = 24000 byte e rimane costante 
+    \item STT (iniziale) = RCVWND / 2
+    \item RTT = 0.5 secondi, costante per tutto il tempo di trasmissione
+    \item RTO = 2RTT (raddoppia in caso di perdite sequenziali)
+    \item Down di rete (rete fuori uso in cui tutti i segmenti vengono persi)
+    \[D_1 = [1.5 \rightarrow 3.5]\]
+    \[D_2 = [7 \rightarrow 7.5]\]
+\end{itemize}
+Quindi calcoliamo il numero di segmenti, la RCVWND iniziale e la SSTHRESH iniziale:
+\begin{itemize}
+    \item \# segmenti = $\frac{46500}{1500} = 31$ 
+    \item RCVWND = $\frac{24000}{1500} = 16$ segmenti
+    \item STT = 8 segmenti
+\end{itemize}
 
+\subsubsection{Esercizio 3}
+Appl -> 104000 byte $\rightarrow$ Appl B
+\begin{itemize}
+    \item MSS = 1200 byte
+    \item RCVWND = 24000 byte (costante)
+    \item STT = RCWND
+    \item RTT = 0.5 secondi
+    \item RTO = 2RTT (raddoppia in caso di perdite sequenziali)
+    \item Down di Rete (rete fuori uso in cui tutti i segmenti vengono persi)
+    \[D_1 = [3.5 \rightarrow 4]\]
+    \[D_2 = [6.5 \rightarrow 10.5]\]
+\end{itemize}
 
 \end{document}

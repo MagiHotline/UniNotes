@@ -1205,5 +1205,46 @@ L'header del protocollo IP contiene le seguenti specifiche:
   \item Header Checksum $\rightarrow$ Controllo degli errori dell'header
 \end{itemize}
 
+\subsubsection{Frammentazione IP}
 
+Data una tecnologia di trasmissione (Scheda di rete, a livello datalink) c'è una dimensione massima
+di trasmissione chiamata MTU. \\
+Che cosa succede se un pacchetto durante il percorso incontra una MTU minore di quella del pacchetto?
+\textit{Il pacchetto viene frammentato in pacchetti più piccoli}.
+
+\begin{itemize}
+  \item[$\rightarrow$] Il \textit{router} con link di uscita con MTU $<$ dimensione del pacchetto, frammenta il pacchetto in più pacchetti con MTU
+  compatibile con il link di uscita.
+\end{itemize}
+I campi dell'header coninvolti nella frammentazione sono:
+\begin{itemize}
+  \item \textbf{Identification} $\rightarrow$ Numero progressivo dato dalla sorgente (livello di rete) ad ogni pacchetto (nessuna relazione con il \# sequenza del TCP)
+  \item \textbf{Flag} $\rightarrow$ 3 bit: \begin{itemize}
+    \item $\rightarrow$ Bit "M", se il pacchetto non è stato frammentato 0 oppure se è l'ultimo frammento.
+    altrimenti 1 se il pacchetto è un frammento tranne l'ultimo
+  \end{itemize}
+  \item \textbf{Fragment Offset} $\rightarrow$ Indica la posizione del frammento all'interno del pacchetto originale (diviso per 8.)
+
+\end{itemize}
+\begin{examplebox}{Esempio}
+  MTU $= 1500$ byte, pacchetto $= 4000$ byte $+ 20$ byte header IP.
+
+  Nel percorso, il pacchetto passa attraverso un router con link di uscita:
+  \begin{itemize}
+    \item 1400 byte per il payload
+    \item 20 byte per l'header IP
+  \end{itemize}
+
+  Quindi posso dividere il pacchetto fino ad un max di 3 frammenti, 2 da 1400 byte e 1 da 1200 byte.\\\\
+  \textbf{Identification}: Avranno lo stesso ID del pacchetto originario.\\
+  \textbf{Flag}: Per quanto riguarda la flag del primo frammento, il bit M sarà 1, per gli altri 0.\\
+  \textbf{Fragment Offset}: $\text{Frammento 1} = 0, \; \text{Frammento 2: } \frac{1400}{8} = 175, \; \text{Frammento 3: } \frac{2800}{8} = 350$
+  \end{examplebox}
+
+  Chi fa il riassemblaggio?
+  \begin{itemize}
+    \item Il riassemblaggio viene fatto dal destinatario (host finale) e non dai router. 
+    \item Quando la destinazione riceve un frammento fa partire un timer (250-500 ms) per attendere gli altri frammenti. Se li riceve entro 
+    la scadenza del timer procede con il riassemblaggio, altrimenti scarta i frammenti ricevuti.
+  \end{itemize}
 \end{document}
