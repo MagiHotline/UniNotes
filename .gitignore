@@ -7,3 +7,4 @@
 *.thm
 *.synctex.gz
 *.out
+.DS_Store
