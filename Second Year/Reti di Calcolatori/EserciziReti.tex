@@ -204,10 +204,32 @@ Ma ce ne sono molteplici per questo caso.
 
 \end{enumerate}
 
+\subsection{Esercizi su TCP}
+\subsubsection{Esercizio 1}
+
+Un'applicazione A deve trasferire verso un'applicazione B 96000 byte. Si suppone che la connessioen sia già
+stata instaurata:
+\begin{itemize}
+    \item MSS = 10000 byte
+    \item RCVWND = 320000 byte, costante per l'intero trasferimento dei dati
+    \item  \texttt{SSTHRESH} = RCVWND iniziale / 2
+    \item RTT = costante, pari 0,5 secondi
+    \item RTO = 2RTT, raddoppia in caso di perdite sequenziali
+    \item Down di rete (rete fuori uso in cui tutti i segmenti vengono persi)
+    \[t_1 = 3 \rightarrow t_2 = 3.5\]
+    \[t_3 = 7 \rightarrow t_4 = 7.5\]
+\end{itemize}
+Obiettivo: Valutare l'evoluzione temporale della \texttt{cwnd} fino a fine a trasmissione
+
+\begin{center}
+    
+    \# segmenti da trasmettere $\rightarrow$ $\frac{96000}{1000}$ = 96 segmenti\\
+    \texttt{RCVWND iniziale} = $\frac{320000 byte}{1000}$  $\rightarrow$ 32 segmenti\\
+    \texttt{SSTHRESH} = 16 segmenti\\
+    \texttt{cwnd} = 1 segmento
+\end{center}
 
 
-
-\pagebreak
 
 
 \end{document}

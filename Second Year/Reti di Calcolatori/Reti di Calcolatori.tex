@@ -1160,7 +1160,50 @@ Torno al punto 1.
 \end{lstlisting}
 Esempio dell'evoluzione della trasmissione TCP (semplificato poiché siamo nel caso RTT sia mediamente stabile)
 
+\subsection{Protocollo UDP (User Datagram Protocol)}
 
+Il protocollo UDP:
+\begin{itemize}
+  \item Connectionless: Non c'è uno scambio preliminare prima di inviare i dati, ed è anche \textbf{non affidabile}
+  cioè se i segmenti vengono persi non vengono ritrasmessi. 
+  \item Non affidabile: in caso di perdita, i segmenti \textit{non} vengono ritrasmessi
+\end{itemize}
+
+\subsubsection{Header del protocollo UDP}
+
+Le particolarità del suo header è che contiene soltanto:
+\begin{itemize}
+  \item Porta Sorgente
+  \item Porta destinazione
+  \item Lunghezza (del messaggio)
+  \item Checksum, serve per controllare gli errori nel segmento
+\end{itemize}
+Possiamo notare come non è presente il sequence number, infatti non consegna i segmenti in ordine che 
+vengono inviati dal livello applicativo. Proprio per questo, il protocollo è molto leggero durante
+la trasmissione di dati in tempo reale, infatti non carica molto il processore essendo
+che non deve gestire efficaciamente i dati.
+
+\pagebreak
+
+\section{Livello di Rete}
+
+\subsection{Il protocollo IP (Internet Protocol)}
+
+\subsubsection{Header dell'IP}
+L'header del protocollo IP contiene le seguenti specifiche:
+
+\begin{itemize}
+  \item Versione del protocollo, indica la versione del protocollo IP utilizzato. Attualmente la versione che usiamo è IPv4 ma nel futuro si utilizzerà IPv6
+  \item Lunghezza dell'header $\rightarrow$ 20 byte se non ci sono opzioni può essere più lungo
+  \item Service Type $\rightarrow$ Codice che identifica una classe del servizio
+  \item Lunghezza totale del pacchetto $\rightarrow$ Header + Payload
+  \item Identification, flag e Fragment Offset $\rightarrow$ Usati per la frammentazione dei pacchetti
+  \item Time to Live $\rightarrow$ Numero di hop massimi che il pacchetto può fare (Max 64 Router) ogni volta che attraversa un Router il valore viene decrementato di uno
+  se il valore diventa 0, manda un messaggio di errore alla sorgente e scarta il pacchetto. In caso di problemi
+  di routing, la rete deve ricalcolare il percorso e nel frattempo si possono creare dei routing-loop. (momentanei)
+  \item Type $\rightarrow$ Codice che identifica il protocollo di trasporto (TCP, UDP, ICMP, \dots) 
+  \item Header Checksum $\rightarrow$ Controllo degli errori dell'header
+\end{itemize}
 
 
 \end{document}
