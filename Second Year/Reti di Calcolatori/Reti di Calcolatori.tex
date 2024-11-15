@@ -1247,4 +1247,37 @@ I campi dell'header coninvolti nella frammentazione sono:
     \item Quando la destinazione riceve un frammento fa partire un timer (250-500 ms) per attendere gli altri frammenti. Se li riceve entro 
     la scadenza del timer procede con il riassemblaggio, altrimenti scarta i frammenti ricevuti.
   \end{itemize}
+
+
+\subsection{Routing / Instradamento}
+
+Scopo del livello di rete: Data una destinazione $\overbrace{\text{fare il possibile}}^{\text{best effort}}$ per consegnare il pacchetto al destinatario.
+Quindi per fare in modo che il pacchetto arrivi a destinazione bisogna effettuare il routing (instradamento) del pacchetto.
+
+\subsubsection{Consegna diretta/indiretta}
+
+Un host conosce, oltre al proprio indirizzo IP, la maschera della rete a cui appartiene e l'indirizzo IP (dell'interfaccia) del router di bordo. 
+\\
+Data una destinazione ($IP_d$) l'host confronta $\overbrace{\text{IP e Maschera}}^{\text{prefisso immutato e suffisso a 0}}$
+e $IP_d$ e maschera. Se i due valori \textbf{sono uguali} la destinazione appartiene alla stessa rete e quindi avviene la \textbf{consegna diretta}.
+Altrimenti vuol dire che la destinazione appartiene ad un'altra rete e quindi faccio la \textbf{consegna indiretta} ovvero \textit{demando la consegna al router}.
+
+\begin{definition}
+  Il \textit{routing} è un processo di scoperta del cammino "migliore" da una sorgente a tutte le possibili destinazioni. 
+\end{definition}
+\noindent
+"Migliore" perché tutto ciò dipende dai criteri adottati da chi gestisce la rete (ISP).
+\begin{examplebox}{Esempio}
+  Tipi di criteri: 
+  \begin{itemize}
+    \item Distanza (cammino più corto), in termini di numero di hop (\# router attraversati) o in termini di chilometri.
+    \item Velocità di trasmissione
+    \item Livello di congestione (ma che non viene utilizzato)
+\end{itemize}
+\end{examplebox} 
+\noindent
+Data la rappresentazione dei grafi della rete (dove gli archi hanno associato un costo), \textit{il routing} non è altro che il \textbf{calcolo del cammino con il costo minimo}.
+Chi ha già conoscenza nel campod degli algoritmi questo tipo di approccio è conososciuto come \textit{Shortest Path Problem} e vengono applicati 
+algoritmi di Pathfinding.
+
 \end{document}
