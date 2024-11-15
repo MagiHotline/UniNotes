@@ -508,7 +508,8 @@ Espandiamo e raccogliamo:
     che dipende solo dai coefficenti delle derivate associate all'ingresso. \colorbox{blue!30!white}{Polinimonio caratteristico di u(t)}
     \item \textcolor{green!70!black}{$d(s)$} è un polinomio di grado $n$ che dipende
     solo dai coefficenti delle derivate associate di uscita. \colorbox{blue!30!white}{Polinimonio caratteristico di v(t)}
-    \item \textcolor{green!70!black}{$p(s):$}\[\sum_{k=0}^{n-1}S^k\left(\sum_{j=k+1}^{n} a_{j+1} \frac{d^{n-j}}{...}\right)\]
+    \item \textcolor{green!70!black}{$p(s):$}\[\sum_{k=0}^{n-1}S^k\left(\sum_{j=k+1}^{n} a_{j+1} \frac{d^{n-j}}{dt^{n-j}}\bigg|_{t=0^-}\right)\]
+    Polinomio di grado $n-1$ che dipende solo dalle C.I di v(t)
     \item \textcolor{green!70!black}{$\frac{P(s)}{d(S)}$} è una funzione razionale che dipende solo dalle C.I ì del sistema e dai 
     coefficenti del polinomio caratteristico di $v(t)$
     \[V_l(s) = \frac{P(s)}{d(s)}\]
@@ -522,9 +523,21 @@ Espandiamo e raccogliamo:
     \end{center}
     H(s) è definita come TdL delle risposte impulsive $h(t)$
     \begin{align*}
-        h(t) = d_0 \delta_0(t) + ... TODO
+        h(t) &= d_0 \delta_0(t) + ... \left(\sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} d_{i,l}\frac{t^l}{l!}e^{\lambda_i t}\right)\delta_{-1}(t)\\
+        &\stackrel{\mathcal{L}}{=} d_0 + \sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} \frac{d_{i,l}}{(s-\lambda)^{l+1}}
     \end{align*}
 \end{itemize}
+\begin{examplebox}{Esempio}
+    Dato un sistema LTI:
+    \[\frac{d^3v(t)}{dt^3} + \frac{d^2v(t)}{dt^2} = \frac{du(t)}{dt}\]
+    \[\downarrow\]
+    \[\textcolor{green!60!black}{\mathcal{L}\left[\frac{d^3v(t)}{dt^3}\right]} + \textcolor{blue!80!black}{\mathcal{L}\left[\frac{d^2v(t)}{dt^2}\right]} = \textcolor{red!80!black}{\mathcal{L}\left[\frac{du(t)}{dt}\right]}\]
+    \[\downarrow\]
+    \[\textcolor{green!60!black}{S^3V(s) - S^2v(0^-) - S\frac{dv(0^-)}{dt} - \cancel{S^0}\frac{d^2v(0^-)}{dt^2}} +\]
+    \[\textcolor{blue!80!black}{+ S^2V(s) - Sv(0^-) - \frac{dv(0^-)}{dt}} = \textcolor{red!80!black}{SU(s)}\]
+    \[\underbrace{(S^3 + S^2)}_{d(s)}V(s) - \underbrace{\left[s^2v(0) + \frac{dv(0)}{dt}S + \frac{d^2v(0)}{dt^2} + v(0)S + \frac{dv(0)}{dt}\right]}_{p(s)} = \underbrace{S}_{n(s)}U(s)\]
+    \[V(s) = \frac{S}{(S^3 + S^2)}U(s) + \frac{\left[s^2v(0) + \frac{dv(0)}{dt}S + \frac{d^2v(0)}{dt^2} + v(0)S + \frac{dv(0)}{dt}\right]}{S^3 + S^2}\]
+\end{examplebox}
 
  
  
