@@ -264,8 +264,7 @@ Appl A $\rightarrow$ 104000 byte $\rightarrow$ Appl B
 
 \begin{itemize}
     \item \# segmenti = $\frac{104000}{1200} = 87$
-    \item RCVWND = $\frac{24000}{1200} = 20$ segmenti
-    \item STT = $\frac{RCWND}{2}$ = 10 segmenti
+    \item RCVWND = $\frac{24000}{1200} = 20$ segmenti = 20 STT
 \end{itemize}
 
 \begin{figure}[H]
@@ -276,7 +275,7 @@ Appl A $\rightarrow$ 104000 byte $\rightarrow$ Appl B
         xlabel={$t$},
         ylabel={$w$},
         xtick={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15},
-        ytick={1,2,4,8,16},
+        ytick={1,2,4,8,16,20},
         ymin=0, ymax=23,
         xmin=0, xmax=15,
         axis line style={->},
@@ -291,18 +290,14 @@ Appl A $\rightarrow$ 104000 byte $\rightarrow$ Appl B
     ]
     
     % Draw the STT Threshold
-    \addplot[domain=0:3.5, samples=100, color=blue]{10};
-    \addplot[domain=3.5:6.5, samples=100, color=blue]{6};
+    \addplot[domain=0:3.5, samples=100, color=blue]{20};
+    \addplot[domain=3.5:6.5, samples=100, color=blue]{10};
     \addplot[domain=10.5:15, samples=100, color=blue]{3};
     \addplot[domain=0:15, samples=100, color=red]{20};
   
-    
-    
-
-
     % Draw the plot and points
-    \addplot[thick, mark=*] coordinates {(0,1) (0.5,2) (1,4) (1.5,8) (2,10) (2.5, 11) (3, 12) 
-    (3.5, 13) (4.5, 13) (4.5, 1) (5, 2) (5.5, 4) (6, 6) (6.5, 7) (13.5, 7) (13.5, 1) (14, 2) (14.5, 3) (15, 4)};
+    \addplot[thick, mark=*] coordinates {(0,1) (0.5,2) (1,4) (1.5,8) (2, 16) (2.5, 20) (3, 20) (3.5, 20) (4.5, 20) (4.5, 1)
+    (5, 2) (5.5, 4) (6, 8) (6.5, 10) (13.5, 10) (13.5, 1) (14, 2)};
     \fill[orange!40] (3.5, 0) rectangle (4, 23);
     \fill[orange!40] (6.5, 0) rectangle (10.5, 23);
     
@@ -311,11 +306,9 @@ Appl A $\rightarrow$ 104000 byte $\rightarrow$ Appl B
 \end{figure}
 
 \begin{align*}
-    SEG = 1 + 2 + 4 + 8 + 10 + 11 + 12 + 1 + 2 + 4 + 6 + 1 + 2 + 3 + \textcolor{red}{4} = 87
+    SEG = 1 + 2 + 4 + 8 + 16 + 20 + 20 + 1 + 2 + 4 + 6 + 1 + 2 = 87
 \end{align*}
 
-
-\[CWDN_{new} = CWND_{old} + \frac{\# ACK}{CWND_{old}} = 3 + \frac{3}{3} = 4\]
 
 
 
