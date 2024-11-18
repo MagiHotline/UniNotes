@@ -32,7 +32,19 @@ int main(int argc, char* argv[]) {
         array[i] = rand()%k + 1;
     }
 
-    printf("\n1. Insertion Sort O(n^2)\n2. Merge Sort O(n log n)\n3. HeapSort O(n log n)\n4. Fattoriale\n5. Quicksort O(n log n)\n6. Counting Sort O(n+k)\n7. Radix Sort O(d(n+k))\n8. Bucket Sort\n9. Generic Bubble Sort O(n^2)\nPremi qualsiasi altro numero per uscire.\nScegli l'algoritmo che vuoi usare: ");
+    printf( "\n1. Insertion Sort O(n^2)"
+            "\n2. Merge Sort O(n log n)\n"
+            "3. HeapSort O(n log n)\n"
+            "4. Fattoriale\n"
+            "5. Quicksort O(n log n)\n"
+            "6. Counting Sort O(n+k)\n"
+            "7. Radix Sort O(d(n+k))\n"
+            "8. Bucket Sort\n"
+            "9. Generic Bubble Sort O(n^2)"
+            "\nPremi qualsiasi altro numero per uscire."
+            "\nScegli l'algoritmo che vuoi usare: "
+    );
+
     scanf("%d",&option);
     // Start the clock
     start = clock();
