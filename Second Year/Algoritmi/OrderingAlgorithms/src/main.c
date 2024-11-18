@@ -1,3 +1,10 @@
+/*
+ * File: main.c
+ * Description: Executes various type of sorting algorithms based on a user input (unsigned long long).
+ * Author: Paolo Imbriani, @magihotline on github
+ * Date: 2024-11-13
+ * License: MIT License
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>

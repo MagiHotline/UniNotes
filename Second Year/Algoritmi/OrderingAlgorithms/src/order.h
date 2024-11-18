@@ -1,3 +1,10 @@
+/*
+ * File: order.h
+ * Description: Implements a series of sorting algorithms
+ * Author: Paolo Imbriani, @magihotline on github
+ * Date: 2024-11-13
+ * License: MIT License
+ */
 #ifndef ORDER_H
 #define ORDER_H
 #include <stddef.h>

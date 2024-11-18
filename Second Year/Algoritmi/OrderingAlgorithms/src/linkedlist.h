@@ -1,3 +1,10 @@
+/*
+ * File: linkedlist.h
+ * Description: Implements a linked list data structure with a series of operations
+ * Author: Paolo Imbriani, @magihotline on github
+ * Date: 2024-11-13
+ * License: MIT License
+ */
 //definire una struttura dati lista concatenata con una serie di operazioni
 //tra cui: inserimento, cancellazione, ricerca e così via (CRUD) Create, Retrieve, Update, Delete
 #include <stdio.h>

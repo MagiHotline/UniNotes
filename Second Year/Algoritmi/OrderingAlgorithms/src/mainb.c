@@ -1,4 +1,10 @@
-
+/*
+ * File: main.c
+ * Description: Executes operations on a binary search tree with a un user provided input.
+ * Author: Paolo Imbriani, @magihotline on github
+ * Date: 2024-11-13
+ * License: MIT License
+ */
 #include "btree.h"
 #include <stdlib.h>
 #include <time.h>

@@ -1,3 +1,10 @@
+/*
+ * File: stack.c
+ * Description: Implementation of a stack data structure
+ * Author: Paolo Imbriani, @magihotline on github
+ * Date: 2024-11-13
+ * License: MIT License
+ */
 #include <stdio.h>
 #include <stdlib.h>
 
