@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
         array[i] = rand()%k + 1;
     }
 
-    printf("\n1. Insertion Sort\n2. Merge Sort\n3. HeapSort\n4. Fattoriale\n5. Quicksort\n6. Counting Sort\n7. Radix Sort\n8. Bucket Sort\n9. Generic Bubble Sort\n Premi qualsiasi altro numero per uscire.\nScegli l'algoritmo che vuoi usare: ");
+    printf("\n1. Insertion Sort O(n^2)\n2. Merge Sort O(n log n)\n3. HeapSort O(n log n)\n4. Fattoriale\n5. Quicksort O(n log n)\n6. Counting Sort O(n+k)\n7. Radix Sort O(d(n+k))\n8. Bucket Sort\n9. Generic Bubble Sort O(n^2)\nPremi qualsiasi altro numero per uscire.\nScegli l'algoritmo che vuoi usare: ");
     scanf("%d",&option);
     // Start the clock
     start = clock();
@@ -85,7 +85,10 @@ int main(int argc, char* argv[]) {
             break;
         }
         default: {
-            printf("Uscito senza ordinare");
+            printf("Uscito senza ordinare\n");
+            free(head);
+            free(array);
+            exit(1);
             break;
         }
     }
