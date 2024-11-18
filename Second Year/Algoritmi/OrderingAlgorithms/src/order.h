@@ -1,5 +1,6 @@
 #ifndef ORDER_H
 #define ORDER_H
+#include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -42,7 +43,6 @@ void printProgressBar(int progress, int total) {
     fflush(stdout); // Flush the output so it allows real time update
 }
 
-
 // Swaps two elements
 void swap(int *a, int *b)
 {
@@ -50,6 +50,68 @@ void swap(int *a, int *b)
     *a = *b;
     *b = temp;
 }
+
+// Swap two general elements of size 'size'
+void genericSwap(void *a, void *b, size_t size) {
+    char temp[size];
+    // memcpy copies 'size' bytes from 'x' to 'y'
+    memcpy(temp, a, size);
+    memcpy(a, b, size);
+    memcpy(b, temp, size);
+}
+
+/* COMPARING FUNCTIONS */
+
+// Compare two integers
+int intCompare(const void* a, const void *b) {
+    // Casting the void pointers to int pointers and then dereferencing them
+    int int_a = * ( (int*) a );
+    int int_b = * ( (int*) b );
+
+    // 0 if equal, 1 if a > b, -1 if a < b
+    return (int_a > int_b) - (int_a < int_b);
+}
+
+// Compare two doubles
+int doubleCompare(const void *a, const void *b) {
+    double double_a = * ( (double*) a );
+    double double_b = * ( (double*) b );
+
+    return (double_a > double_b) - (double_a < double_b);
+}
+
+// Compare two strings
+int stringCompare(const void *a, const void *b) {
+    // Casting the void pointers to string pointers and then dereferencing them
+    const char* string_a = * ( (const char**) a );
+    const char* string_b = * ( (const char**) b );
+
+    return strcmp(string_a, string_b);
+}
+
+// Define a function pointer type for the comparison function
+typedef int (*compareFunction)(const void*, const void*);
+/**
+ * @brief Generic bubble sort algorithm
+ * @param array - The array to be sorted
+ * @param n - The number of elements in the array
+ * @param elemSize - The size of each element in the array
+ * @param compare - The comparison function to be used
+*
+*/
+void genericBubbleSort(void* array, size_t n, size_t elemSize, compareFunction compare) {
+    char* a = (char*)array; // cast to char for pointer arithmetic
+    size_t i, j;
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (compare((a + (j * elemSize)), (a + (j + 1 * elemSize))) > 0) {
+                genericSwap(a + (j * elemSize), a + ((j + 1) * elemSize), elemSize);
+            }
+        }
+        printProgressBar(i, n - 1);
+    }
+}
+
 
 /* ----------------------- HEAP -------------------------- */
 
@@ -115,6 +177,32 @@ void insertion_sort(int *a, int length)
         // Update the progress bar after each outer loop iteration
         printProgressBar(i, length - 1);
     }
+}
+
+void genericInsertionSort(void* array, size_t n, size_t elemSize, compareFunction compare) {
+    char* a = (char*)array; // Cast to char* for pointer arithmetic
+    char* key = (char*)malloc(elemSize); // Allocate memory for the key
+    if (!key) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        exit(-1);
+    }
+
+    for (size_t i = 1; i < n; i++) {
+        memcpy(key, a + (i * elemSize), elemSize); // Copy the key element
+        ssize_t j = i - 1;
+
+        // Move elements that are greater than `key`
+        while (j >= 0 && compare(a + (j * elemSize), key) > 0) {
+            memcpy(a + ((j + 1) * elemSize), a + (j * elemSize), elemSize);
+            j--;
+        }
+
+        // Place the key at the correct position
+        memcpy(a + ((j + 1) * elemSize), key, elemSize);
+        printProgressBar(i, n-1);
+    }
+
+    free(key); // Free the allocated memory for the key
 }
 
 /* ----------------------- MERGE -------------------------- */
@@ -391,8 +479,6 @@ void print_array(int *a, int n) {
     for(int i = 0; i < n; i++) printf("%d ", a[i]);
     printf("\n");
 }
-
-
 
 
 #endif

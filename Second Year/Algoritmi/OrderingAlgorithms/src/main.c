@@ -25,13 +25,14 @@ int main(int argc, char* argv[]) {
         array[i] = rand()%k + 1;
     }
 
-    printf("\n1. Insertion Sort\n2. Merge Sort\n3. HeapSort\n4. Fattoriale\n5. Quicksort\n6. Counting Sort\n7. Radix Sort\n8. Bucket Sort\n Premi qualsiasi altro numero per uscire.\nScegli l'algoritmo che vuoi usare: ");
+    printf("\n1. Insertion Sort\n2. Merge Sort\n3. HeapSort\n4. Fattoriale\n5. Quicksort\n6. Counting Sort\n7. Radix Sort\n8. Bucket Sort\n9. Generic Bubble Sort\n Premi qualsiasi altro numero per uscire.\nScegli l'algoritmo che vuoi usare: ");
     scanf("%d",&option);
     // Start the clock
     start = clock();
     switch (option) {
         case 1: {
-            insertion_sort(array, n);
+            //insertion_sort(array, n);
+            genericInsertionSort(array, n, sizeof(int), intCompare);
             break;
         }
         case 2: {
@@ -70,6 +71,10 @@ int main(int argc, char* argv[]) {
         }
         case 8: {
             array = bucketSort(array, n, n);
+            break;
+        }
+        case 9: {
+            genericBubbleSort(array, n, sizeof(int), intCompare);
             break;
         }
         default: {
