@@ -104,10 +104,9 @@ typedef int (*compareFunction)(const void*, const void*);
  * @param n - The number of elements in the array
  * @param elemSize - The size of each element in the array
  * @param compare - The comparison function to be used
-*
 */
 void genericBubbleSort(void* array, size_t n, size_t elemSize, compareFunction compare) {
-    char* a = (char*)array; // cast to char for pointer arithmetic
+    char* a = (char*)array; // cast to char (because its size is 1byte) for pointer arithmetic
     size_t i, j;
     for (i = 0; i < n - 1; i++) {
         for (j = 0; j < n - i - 1; j++) {
