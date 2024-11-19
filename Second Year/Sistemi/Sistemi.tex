@@ -529,22 +529,26 @@ Espandiamo e raccogliamo:
     \[\underbrace{(S^3 + S^2)}_{d(s)}V(s) - \underbrace{\left[s^2v(0) + \frac{dv(0)}{dt}S + \frac{d^2v(0)}{dt^2} + v(0)S + \frac{dv(0)}{dt}\right]}_{p(s)} = \underbrace{S}_{n(s)}U(s)\]
     \[V(s) = \frac{S}{(S^3 + S^2)}U(s) + \frac{\left[s^2v(0) + \frac{dv(0)}{dt}S + \frac{d^2v(0)}{dt^2} + v(0)S + \frac{dv(0)}{dt}\right]}{S^3 + S^2}\]
 \end{examplebox}
-
+\noindent
+H(s) è definita come TdL delle risposte impulsive $h(t)$. È una funzione razionale con grado del numeratore 
+generalemnte minore o uguale del denominatore.
+\begin{align*}
+    h(t) &= d_0 \delta_0(t) + ... \left(\sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} d_{i,l}\frac{t^l}{l!}e^{\lambda_i t}\right)\delta_{-1}(t)\\
+    &\stackrel{\mathcal{L}}{=} d_0 + \sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} \frac{d_{i,l}}{(s-\lambda)^{l+1}} = H(s)
+\end{align*}
 \subsubsection{Funzione di trasferimento}
-\textcolor{green!70!black}{$\frac{n(s)}{d(s)}$} funzione di trasferimento $H(s)$:
     \begin{align*}
         H(s) &= \frac{\sum_{j=0}^{m}b_js^j}{\sum_{i=0}^{n}a_is^i}\\
         &= \frac{b_m(S-\beta)^{\zeta_1}(S-\beta_2)^{\zeta_2}\; ... \; (S-\beta_q)^{\zeta_q}}{a_n(S-\alpha)^{\mu_1}(S-\alpha_2)^{\mu_2}\; ... \; (S-\alpha_n)^{\mu_r}}
     \end{align*}
     \begin{center}
-    \colorbox{blue!30!white}{Rapporto tra i polinomi car. di u(t) e v(t)}
+    \colorbox{blue!30!white}{Rapporto tra i polinomi car. di u(t) e v(t)}\\
+    Dove $\alpha_i$ e $\beta_j$ sono rispettivamente radici del denominatore e del numeratore.
     \end{center}
-    H(s) è definita come TdL delle risposte impulsive $h(t)$. È una funzione razionale con grado del numeratore 
-    generalemnte minore o uguale del denominatore.
-    \begin{align*}
-        h(t) &= d_0 \delta_0(t) + ... \left(\sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} d_{i,l}\frac{t^l}{l!}e^{\lambda_i t}\right)\delta_{-1}(t)\\
-        &\stackrel{\mathcal{L}}{=} d_0 + \sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} \frac{d_{i,l}}{(s-\lambda)^{l+1}} = H(s)
-    \end{align*}
+    Possiamo anche riscriverla come:
+    \[H(s) = k\frac{\prod_{i = 1}^m (S - Z_i)}{\prod_{i = 1}^n (S - P_i)} \; \;  \text{ dove } \; \; k = \frac{b_m}{a_n}\]
+    Dove $(S - Z_i)$ e $(S - P_i)$ sono rispettivamente zeri e poli della funzione razionale. 
+    
 
     \begin{definition}
         Definiamo come zero di una funzione razionale $H(s)$ un qualiasi numero $\beta \in \mathbb{C}$ t.c. $H(\beta) = 0$.
@@ -633,11 +637,18 @@ Espandiamo e raccogliamo:
         \end{cases}\] 
         \[\frac{S - 20}{(s+4)(s-2)} = \frac{4}{s+4} - \frac{3}{s-2}\]
         \item Metodo: \[c_{i,l} = \lim_{s \rightarrow \alpha_i}\frac{d^{\mu_i-l-1}\left((s-\alpha_i)^{\mu_i}\frac{r(s)}{d(s)}\right)}{ds^{\mu_i-l-1}}\]
-        \[c_1  =  A = \lim_{s \rightarrow -4} \frac{\cancel{d^{1-0-1}}\left((s+4)^{1}\frac{s-20}{(s+4)(s-2)}\right)}{ds^0} = 4\]
-        \[c_2  =  B = \lim_{s \rightarrow 2} \frac{d^{1-0-1}\left((s-2)^{1}\frac{s-20}{(s+4)(s-2)}\right)}{\cancel{ds^0}} = 3\]
+        \[c_1  =  A = \lim_{s \rightarrow -4} \frac{\cancel{d^{1-0-1}}\left((s+4)^{1}\frac{s-20}{(s+4)(s-2)}\right)}{ds^0} = \frac{-24}{-6}= 4\]
+        \[c_2  =  B = \lim_{s \rightarrow 2} \frac{d^{1-0-1}\left((s-2)^{1}\frac{s-20}{(s+4)(s-2)}\right)}{\cancel{ds^0}} = \frac{-18}{6}= -3\]
         \[\frac{S - 20}{(s+4)(s-2)} = \frac{4}{s+4} - \frac{3}{s-2}\]
     \end{enumerate}
 \end{examplebox}
+\noindent
+Ora si applica l'antitrasformata:
+\begin{align*}
+    V(s) &= k + \sum_{i=1}^r \sum_{l=0}^{\mu_i - 1}\frac{c_{i,l}}{(s-\lambda_i)^{l+1}}\\
+    &\stackrel{\mathcal{L}^{-1}}{=} \mathcal{L}^{-1}[k](t) + \sum_{i=0}^{r}\sum_{l=0}^{\mu_i - 1} \mathcal{L}^{-1}\left[\frac{c_{i,l}}{(s-\lambda_i)^{l+1}}\right](t)\\
+    &= k\delta_0(t) +  \left[\sum_{i=0}^{r}\sum_{l=0}^{\mu_i - 1} c_{i,l} \frac{t^l}{l!}e^{\lambda_i t}\delta_{-1}(t)\right]
+\end{align*}
 
 
 \end{document}
