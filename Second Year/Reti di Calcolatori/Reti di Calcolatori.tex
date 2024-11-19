@@ -1279,5 +1279,34 @@ Altrimenti vuol dire che la destinazione appartiene ad un'altra rete e quindi fa
 Data la rappresentazione dei grafi della rete (dove gli archi hanno associato un costo), \textit{il routing} non è altro che il \textbf{calcolo del cammino con il costo minimo}.
 Chi ha già conoscenza nel campod degli algoritmi questo tipo di approccio è conososciuto come \textit{Shortest Path Problem} e vengono applicati 
 algoritmi di Pathfinding.
+\\
+Algoritmi per il calcolo del cammino minimo:
+\begin{itemize}
+  \item Stato dei collegamenti: Link-State
+  \item Vettori di distanza: Distance-Vector
+\end{itemize}
+
+
+\subsection{Algoritmi di link-state}
+\begin{itemize}
+  \item Ogni nodo ha una tabella di routing
+  \item Ogni nodo conosce la topologia della rete
+  \item Ogni nodo calcola il cammino più breve verso tutti gli altri nodi
+\end{itemize}
+Ad ogni algoritmo corrisponde un protocollo di routing. Protocllo basato su link-state: OSPF (Open Shortest Path First). 
+\subsubsection{Algoritmo di Dijkstra}
+
+\begin{definition}
+  L'algoritmo di Dijkstra è un algoritmo che permette di trovare il cammino più breve tra due nodi di un grafo pesato, con pesi non negativi.
+\end{definition}
+\noindent
+I nodi si riscambiano i messaggi (Questi messaggi trasportano informazioni sulla topologia della rete.)
+\begin{enumerate}
+  \item periodici, per controllare se sono ancora raggiungibili
+  \item in caso di guasti/cambio di topologia
+\end{enumerate}
+
+
+
 
 \end{document}

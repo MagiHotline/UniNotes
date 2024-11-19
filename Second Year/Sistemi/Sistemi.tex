@@ -474,7 +474,7 @@ Ritardato nel tempo:
 \subsection{Applicazione della TdL per i sistemi LTI causali}
 \begin{equation*}
     \color{red}
-    \sum_{i=0}^{n} a_i \frac{d^iv(t)}{dt^i} = \sum_{i=0}^{m} b_i \frac{d^iu(t)}{dt^i}
+    \sum_{i=0}^{n} a_i \frac{d^iv(t)}{dt^i} = \sum_{j=0}^{m} b_j \frac{d^ju(t)}{dt^j}
 \end{equation*}
 \[n \ge m \text{ e } u(t) = u(t)\cdot \delta_{-1}(t) (u(t)=0, t<0)\]
 E consideriamo le n-1 condizioni iniziali:
@@ -497,7 +497,7 @@ Imponiamo le C.I.: $u(t)\bigg|_{t=0} = 0$\\\\
 Espandiamo e raccogliamo:
 \begin{align*}
     &\underbrace{\left[a_nS^n + a_{n-1}S^{n-1} + \dots + a_0\right]V(s)}_{d(s)} +\\
-    &- \underbrace{a_nv(0^-)S^{n-1}\left(a_{n-1}v(0^-) + a_n\frac{dv(t)}{dt}\bigg|_{t=0^-}\right) - \; \dots \; - \left(\sum_{k=0}^{n-1} a_{k+1} \frac{d^kv(t)}{dt^k}\bigg|_{t=0^-}\right)}_{p(s)}\\
+    &- \underbrace{a_nv(0^-)S^{n-1}\left(a_{n-1}v(0^-) + a_n\frac{dv(t)}{dt}\bigg|_{t=0^-}\right)S^{n-2} - \; \dots \; - \left(\sum_{k=0}^{n-1} a_{k+1} \frac{d^kv(t)}{dt^k}\bigg|_{t=0^-}\right)}_{p(s)}\\
     &= \underbrace{(b_mS^m + b_{m-1}S^{m-1} + \dots + b_0)}_{n(s)}U(s)
 \end{align*}
 
@@ -516,17 +516,8 @@ Espandiamo e raccogliamo:
     \item \textcolor{green!70!black}{$\frac{n(s)}{d(s)}U(s)$} è una funzione razionale che dipende dai coefficenti
     del polinomio caratteristico di $u(t)$, dei coefficenti del polinomio caratteristico di v(t) moltiplicati per tali u(t):
     \[V_f(s) = \frac{n(s)}{d(s)}U(s)\]
-    \item \textcolor{green!70!black}{$\frac{n(s)}{d(s)}$} funzione di trasferimento $H(s)$:
-    \[H(s) = \frac{\sum_{j=0}^{m}b_js^j}{\sum_{i=0}^{n}a_is^i}\]
-    \begin{center}
-    \colorbox{blue!30!white}{Rapporto tra i polinomi car. di u(t) e v(t)}
-    \end{center}
-    H(s) è definita come TdL delle risposte impulsive $h(t)$
-    \begin{align*}
-        h(t) &= d_0 \delta_0(t) + ... \left(\sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} d_{i,l}\frac{t^l}{l!}e^{\lambda_i t}\right)\delta_{-1}(t)\\
-        &\stackrel{\mathcal{L}}{=} d_0 + \sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} \frac{d_{i,l}}{(s-\lambda)^{l+1}}
-    \end{align*}
 \end{itemize}
+
 \begin{examplebox}{Esempio}
     Dato un sistema LTI:
     \[\frac{d^3v(t)}{dt^3} + \frac{d^2v(t)}{dt^2} = \frac{du(t)}{dt}\]
@@ -539,8 +530,114 @@ Espandiamo e raccogliamo:
     \[V(s) = \frac{S}{(S^3 + S^2)}U(s) + \frac{\left[s^2v(0) + \frac{dv(0)}{dt}S + \frac{d^2v(0)}{dt^2} + v(0)S + \frac{dv(0)}{dt}\right]}{S^3 + S^2}\]
 \end{examplebox}
 
- 
- 
- 
- 
+\subsubsection{Funzione di trasferimento}
+\textcolor{green!70!black}{$\frac{n(s)}{d(s)}$} funzione di trasferimento $H(s)$:
+    \begin{align*}
+        H(s) &= \frac{\sum_{j=0}^{m}b_js^j}{\sum_{i=0}^{n}a_is^i}\\
+        &= \frac{b_m(S-\beta)^{\zeta_1}(S-\beta_2)^{\zeta_2}\; ... \; (S-\beta_q)^{\zeta_q}}{a_n(S-\alpha)^{\mu_1}(S-\alpha_2)^{\mu_2}\; ... \; (S-\alpha_n)^{\mu_r}}
+    \end{align*}
+    \begin{center}
+    \colorbox{blue!30!white}{Rapporto tra i polinomi car. di u(t) e v(t)}
+    \end{center}
+    H(s) è definita come TdL delle risposte impulsive $h(t)$. È una funzione razionale con grado del numeratore 
+    generalemnte minore o uguale del denominatore.
+    \begin{align*}
+        h(t) &= d_0 \delta_0(t) + ... \left(\sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} d_{i,l}\frac{t^l}{l!}e^{\lambda_i t}\right)\delta_{-1}(t)\\
+        &\stackrel{\mathcal{L}}{=} d_0 + \sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} \frac{d_{i,l}}{(s-\lambda)^{l+1}} = H(s)
+    \end{align*}
+
+    \begin{definition}
+        Definiamo come zero di una funzione razionale $H(s)$ un qualiasi numero $\beta \in \mathbb{C}$ t.c. $H(\beta) = 0$.
+    \end{definition}
+    \begin{definition}
+        Definiamo come polo di una funzione razionale $H(s)$ un qualunque numero $\alpha \in \mathbb{C}$ t.c. $H(\alpha) = \infty$.
+    \end{definition}
+    \noindent
+    Dato H(s) in forma ridotta (ho eliminato le radici in comune): Siano $\lambda_1, \; ... \; \lambda_r$ con $r \le n$ i suoi poli dopo la semplificazione
+    se $Re(\lambda_i) < 0$ per $i = 1, \; ... \; r$ allora il sistema è BIBO stabile. 
+    \begin{lemma}
+        \label{lemma:polo_bibo_stabile}
+        Un sistema è BIBO stabile se tutti i suoi poli giaciono nel semipiano complesso negativo.
+    \end{lemma}
+    \noindent
+    Per stabilizzare un sistema (BIBO stabilizzato) devo togliere gli zeri $\lambda_i$ con $Re(\lambda_i) > 0$, dividendoli per il loro corrispettivo polo.
+
+\begin{examplebox}{Esempio 1}
+    \[v'(t) - 3v(t) = u''(t) - 5u'(t) + 4u(t)\]
+    Calcoliamoci il polinomio caratteristico:
+    \[s - 3 = s^2 - 5s + 4\]
+    \[H(s) = \frac{n(s)}{d(s)} = \frac{\text{Pol. Car degli ingressi}}{\text{Pol. Car delle uscite}} = \frac{s^2 -5s + 4}{s - 3}\]
+    \[H(s) = \frac{s^2 - 5s + 4}{s - 3} = \frac{(s-4)(s-1)}{s-3}\]
+    Poiché $\lambda_1 = 3$ non è asintonticamente stabile poiché la sua parte reale è maggiore di 0.\\ Non è neanche BIBO stabile
+    perché tutte le radici del denominatore (poli di $H(s)$) hanno parte reale maggiore di 0.
+\end{examplebox}
+\begin{examplebox}{Esempio 2}
+    \[v''(t) + 3v'(t) + 2v(t) = u''(t) - 4u'(t) + 3u(t)\]
+    \[H(s) = \frac{s^2 - 4s + 3}{s^2 + 3s + 2} = \frac{(s-3)(s-1)}{(s+1)(s+2)}\]
+    Poiché $\lambda_1 = -1$ e $\lambda_2 = -2$ sono minori di 0 allora il sistema è asintonticamente stabile. Ricordiamo che se un sistema è 
+    asintonticamente stabile allora è anche BIBO stabile.
+\end{examplebox}
+ \begin{examplebox}{Esempio 3}
+    \[v'''(t) + 7v''(t) - 2v'(t) + 6v(t) = u''(t) + 3u(t) - 4u(t)\]
+    \[H(s) = \frac{s^2 + 3s - 4}{s^3 + 7s^2 - 2s + 6} = \frac{(s+4)\cancel{(s-1)}}{\underbrace{(s+3)}_{\lambda_1 = -3}\underbrace{(s+2)}_{\lambda_2 = -2}\cancel{(s-1)}}\]
+    Non è asintonticamente stabile. Tuttavia è BIBO stabile poiché tutti i poli di $H(s)$ hanno parte reale minore di 0.
+ \end{examplebox}
+
+\section{Antitrasformata di Laplace}
+
+\[V(s) = \frac{n(s)}{d(s)} \Longrightarrow \begin{cases}
+    \underbrace{deg[n(s)] \ge deg[d(s)]}_{\text{Sistema proprio}} \Longrightarrow A\\
+    \underbrace{deg[n(s)] < deg[d(s)]}_{\text{Sistema strett. proprio}} \Longrightarrow B
+\end{cases}\]
+
+\begin{center}
+    A $\rightarrow$ Divisione polinomiale $\rightarrow$ Fratti semplici $\rightarrow$ Antitrasformata\\
+    B $\rightarrow$ Fratti complessi $\rightarrow$ Antitrasformata
+\end{center}
+\subsection{Divisione polinomiale}
+\[V(S) = \frac{r(s)}{d(s)} + k \; \; \text{    dove    } \; \; deg[r(s)] < deg[d(s)], k \in \mathbb{C}\]
+ \[\mathcal{L}[K\delta(t)] = K \stackrel{\mathcal{L}^{-1}}{\Longrightarrow} K\delta_0(t)\]
+\begin{examplebox}{Esempio}
+    \[V(s) = \frac{2s^2 + 4s - 3}{s^2 - s - 1} \; \; \text{ dove } \; \; m = 2, n=2\]
+    \[
+    \begin{array}{r|l}
+    \text{Quotient} & 2 \\ \hline
+    \text{Divisor} & s^2 - s - 1 \\
+    \text{Step 1: } & 2s^2 + 4s - 3 \\
+    \text{Subtract: } & -(2s^2 - 2s - 2) \\
+    \text{Remainder: } & 6s - 1 \\
+    \end{array}
+    \]
+    \[V(s) = \frac{6s - 1}{s^2 - s + 1} + 2\]
+\end{examplebox}
+
+\subsection{Fratti semplici}
+
+\[\frac{r(s)}{d(s)} =  d_0 + \sum_{i=1}^{r} \sum_{l=0}^{\mu_i - 1} \frac{d_{i,l}}{(s-\lambda)^{l+1}}  \]
+
+\begin{examplebox}{Esempio 1}
+    \[V(s) = \frac{3s^2 - 1}{(s+1)^2(s-2)(s+5)}\]
+    \[V(s) = \frac{A}{s-2} + \frac{B}{s+1} + \frac{C}{(s+1)^2} + \frac{D}{(s+5)}\]
+    $A, B, C, D$ sono i $c_{i,l}$
+\end{examplebox}
+\begin{examplebox}{Esempio 2}
+    \[\frac{s-20}{(s+4)(s-2)} = \frac{c_{1,0}}{(s+4)} + \frac{c_{2,0}}{s-2} = \frac{A}{s+4} + \frac{B}{s-2}\]
+    \begin{enumerate}
+        \item Metodo: \[\frac{A(s-2)+B(s+4)}{(s+4)(s-2)} = \frac{AS - 2A + BS + 4b}{(s+4)(s+2)}\]
+        \[\begin{cases}
+            A + B = 1\\
+            -2A + 4B = -20
+        \end{cases} \rightarrow \begin{cases}
+            A = 4\\
+            B = -3
+        \end{cases}\] 
+        \[\frac{S - 20}{(s+4)(s-2)} = \frac{4}{s+4} - \frac{3}{s-2}\]
+        \item Metodo: \[c_{i,l} = \lim_{s \rightarrow \alpha_i}\frac{d^{\mu_i-l-1}\left((s-\alpha_i)^{\mu_i}\frac{r(s)}{d(s)}\right)}{ds^{\mu_i-l-1}}\]
+        \[c_1  =  A = \lim_{s \rightarrow -4} \frac{\cancel{d^{1-0-1}}\left((s+4)^{1}\frac{s-20}{(s+4)(s-2)}\right)}{ds^0} = 4\]
+        \[c_2  =  B = \lim_{s \rightarrow 2} \frac{d^{1-0-1}\left((s-2)^{1}\frac{s-20}{(s+4)(s-2)}\right)}{\cancel{ds^0}} = 3\]
+        \[\frac{S - 20}{(s+4)(s-2)} = \frac{4}{s+4} - \frac{3}{s-2}\]
+    \end{enumerate}
+\end{examplebox}
+
+
 \end{document}

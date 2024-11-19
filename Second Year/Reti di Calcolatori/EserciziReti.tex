@@ -306,8 +306,23 @@ Appl A $\rightarrow$ 104000 byte $\rightarrow$ Appl B
 \end{figure}
 
 \begin{align*}
-    SEG = 1 + 2 + 4 + 8 + 16 + 20 + 20 + 1 + 2 + 4 + 6 + 1 + 2 = 87
+    SEG = 1 + 2 + 4 + 8 + 16 + 20 + 20 + 1 + 2 + 4 + 8 + 1 = 87
 \end{align*}
+
+\subsubsection{Esercizio 4}
+
+Un'applicazione A deve trasferire 104400 byte verso un'applicazione B. Si suppone che la connessione sia già stata instaurata:
+\begin{itemize}
+    \item MSS = 1200 byte
+    \item RCVWND (iniziale) = 9600 byte e rimane costante 
+    \item A partire dall'istante $t_a > 4$ la destinazione annuncia una RCWND = 14400 byte 
+    \item A partire dall'istante $t_b > 9$ la destinazione annuncia una RCWND = 7200 byte
+    \item STT (iniziale) = RCVWND 
+    \item RTT = 1 secondo, costante per tutto il tempo di trasmissione
+    \item RTO = 2RTT (raddoppia in caso di perdite sequenziali)
+    \item Down di rete (rete fuori uso in cui tutti i segmenti vengono persi)
+    \[D_1 = [11.5 \rightarrow 12.5]\]
+\end{itemize}
 
 
 
