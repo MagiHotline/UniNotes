@@ -7,10 +7,55 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <SDL.h>
 #include <sys/time.h>
 #include "order.h"
+#define WIDTH_SCREEN 800
+#define HEIGHT_SCREEN 600
+
+void initVideo(SDL_Window *window, SDL_Renderer *renderer) {
+    // Initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+        printf("Error initializing SDL: %s\n", SDL_GetError());
+        exit(-1);
+    }
+
+    // Create a window
+    window = SDL_CreateWindow(
+        "Sorting Visualization",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        WIDTH_SCREEN,
+        HEIGHT_SCREEN,
+        SDL_WINDOW_SHOWN
+    );
+
+    // Check if the window was successfully created
+    if (!window) {
+        printf("Error creating window: %s\n", SDL_GetError());
+        SDL_Quit();
+        exit(-1);
+    }
+
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+    if (!renderer) {
+        printf("Error creating renderer: %s\n", SDL_GetError());
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        exit(-1);
+    }
+}
+
 
 int main(int argc, char* argv[]) {
+
+    SDL_Window *window = NULL;
+    SDL_Renderer *renderer = NULL;
+
+    initVideo(window, renderer);
+    // Set the draw color (RGBA)
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red color
 
     // Setting the seed for the random number generator
     srand(time(NULL));
@@ -130,8 +175,13 @@ int main(int argc, char* argv[]) {
     if(printArray == 'y')
         print_array(array, n);
 
+    // CLEAN UP
     free(head);
     free(array);
+    // Destroy the renderer and window
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
     return 0;
 }
