@@ -9,8 +9,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{pgfplots}
-
 \usepackage{tikz-cd}
+
 
 \usetikzlibrary{decorations.pathreplacing} % for angle arc
 \usetikzlibrary{angles, quotes, calc} % for drawing angles
@@ -1314,7 +1314,39 @@ I nodi si riscambiano i messaggi (Questi messaggi trasportano informazioni sulla
   \item in caso di guasti/cambio di topologia
 \end{enumerate}
 
+\subsubsection{Algoritmo Distance-Vector}
 
+Costo dell'arco da i a j $\rightarrow$ $c(i,j)$ (I nodi i e j sono adiacenti $\rightarrow$ collegamento diretto).
+Il costo di un cammino dal nodo $i$ al nodo $k$ (dove $i$ e $k$ non sono necessariamente adiacenti) 
+$\rightarrow D(i,k) = \sum_{l = 0}^{n} c(l,n)$ 
 
-
+\vspace{1em}
+\noindent
+\textbf{Osservazione}
+Dati due nodi $i$ e $k$ quale è la distanza $D(i, k)$ minima?
+Il nodo ha un numero finito di vicini per cui:
+\[D(i,k) = \begin{cases}
+  c(i,l) + D(l,k)\\
+  c(i,m) + D(m,k)\\
+  c(i,j) + D(j,k)
+\end{cases}\]
+In generale:
+\[D(i,k) = min(c(i,v) + D(v,k)) \; \; \text{ dove } \; \; v \in \text{vicini diretti di i}\]
+\subsubsection{Algoritmo di Bellman-Ford}
+\begin{lstlisting}[language=Scala]
+  //Inizializzazione
+  Per ogni destinazione j
+    se j appartiene vicini diretti 
+      D(i,j) = c(i,j)
+    altrimenti
+      D(i,j) = infinito
+  Periodicamente (ad es. ogni 3 minuti)
+    Il nodo manda ai propri vicini il distance vector (dv)
+      - Il dv e' l'unione delle colonne next hop e costo della tabella di routing del nodo
+      - Con i dv ricevuti dai vicini, il nodo aggiorna la propria tabella di routing per ogni destinaizone
+        D(i,k) = min(c(i,v) + D(v,k)) per ogni vicino v
+\end{lstlisting}
+\noindent
+Si può dimostrare che se il grafo è connesso e non ci sono pesi negativi allora l'algoritmo di Bellman-Ford converge in un numero finito di passi.
+il numero di iterazioni è proporzionale al diametro del grafo (il cammino più lungo all'interno del grafo)
 \end{document}
