@@ -24,16 +24,17 @@
 }
 
 \usepackage{xcolor}
-\usepackage{tcolorbox}
+\usepackage[most]{tcolorbox}
 % Define a custom tcolorbox environment for examples
 \newtcolorbox{examplebox}[2][]{
-  colback=blue!5!white,   % Background color
-  colframe=blue!30!black, % Border color
-  title=#2,          % Title of the box
-  boxrule=0mm,          % Thickness of the border                % Rounded corners
-  fonttitle=\bfseries,    % Title font style
-  width=\textwidth,  
-  #1 % Width of the box (adjustable)
+  colback=blue!5!white,
+  colframe=blue!30!black,
+  title=#2,
+  boxrule=0mm,
+  fonttitle=\bfseries,
+  width=\textwidth,
+  breakable,
+  #1
 }
 \newtcolorbox{definition} {
   colback=green!5!white,   % Background color
@@ -1279,7 +1280,14 @@ Altrimenti vuol dire che la destinazione appartiene ad un'altra rete e quindi fa
 Data la rappresentazione dei grafi della rete (dove gli archi hanno associato un costo), \textit{il routing} non è altro che il \textbf{calcolo del cammino con il costo minimo}.
 Chi ha già conoscenza nel campod degli algoritmi questo tipo di approccio è conososciuto come \textit{Shortest Path Problem} e vengono applicati 
 algoritmi di Pathfinding.
-\\
+
+\vspace{1em}
+\noindent
+Dato una topologia (router e collegamenti) derivo il grafo e assegno i pesi secondo un criterio:
+\begin{itemize}
+  \item \# di hop $\rightarrow$ Tutti gli archi hanno peso 1
+  \item velocità di trasmissione (capacità nominale del link) i pesi sono proporzionale all'inverso della banda
+\end{itemize}
 Algoritmi per il calcolo del cammino minimo:
 \begin{itemize}
   \item Stato dei collegamenti: Link-State

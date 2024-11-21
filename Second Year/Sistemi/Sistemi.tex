@@ -91,16 +91,17 @@
 }
 
 \usepackage{xcolor}
-\usepackage{tcolorbox}
+\usepackage[most]{tcolorbox}
 % Define a custom tcolorbox environment for examples
 \newtcolorbox{examplebox}[2][]{
-  colback=blue!5!white,   % Background color
-  colframe=blue!30!black, % Border color
-  title=#2,          % Title of the box
-  boxrule=0mm,          % Thickness of the border                % Rounded corners
-  fonttitle=\bfseries,    % Title font style
-  width=\textwidth,  
-  #1 % Width of the box (adjustable)
+  colback=blue!5!white,
+  colframe=blue!30!black,
+  title=#2,
+  boxrule=0mm,
+  fonttitle=\bfseries,
+  width=\textwidth,
+  breakable,
+  #1
 }
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -649,6 +650,84 @@ Ora si applica l'antitrasformata:
     &\stackrel{\mathcal{L}^{-1}}{=} \mathcal{L}^{-1}[k](t) + \sum_{i=0}^{r}\sum_{l=0}^{\mu_i - 1} \mathcal{L}^{-1}\left[\frac{c_{i,l}}{(s-\lambda_i)^{l+1}}\right](t)\\
     &= k\delta_0(t) +  \left[\sum_{i=0}^{r}\sum_{l=0}^{\mu_i - 1} c_{i,l} \frac{t^l}{l!}e^{\lambda_i t}\delta_{-1}(t)\right]
 \end{align*}
+
+\begin{examplebox}{Esempio completo}
+    \[v''(t) - v'(t) - 2v(t) = u''(t) + 2u'(t) + u(t)\]
+    \[C.I = \begin{cases}
+        v(0) = 1\\
+        v'(0) = 0
+    \end{cases}\]
+    \[u(t) = e^{3t}\delta_{-1}(t)\]
+    Quello che ci viene chiesto è \begin{enumerate}
+        \item Stabilità
+        \item Risposta libera (nel tempo e in frequenza)
+        \item Risposta impulsiva
+        \item Risposta forzata
+        \item Risposta totale
+    \end{enumerate}
+    Partiamo con il primo punto:
+    \begin{enumerate}
+        \item Polinomio caratteristico: $s^2 - s - 2 = 0 \rightarrow \lambda_1 = 2, \lambda_2 = -1$ e $\mu_i = 1$
+        \textbf{Non è asintonticamente stabile} perché $\lambda_1 > 0$ 
+        \[V(s) = \underbrace{\frac{p(s)}{d(s)}}_{V_l(s)} + \underbrace{\overbrace{\frac{h(s)}{d(s)}}^{H(s)} \cdot U(s)}_{V_f(s)}\]
+        Per garantire stabilità BIBO i poli di $H(s)$ devono avere parte reale minore di 0.\\
+        Calcoliamo la funzione di trasferimento:
+        \[H(s) = \frac{s^2 + 2s + 1}{s^2 - s - 2} = \frac{(s+1)^{\cancel{2}}}{(s-2)\cancel{(s+1)}} = \frac{s+1}{s-2}\]
+        \textbf{Non è BIBO stabile} perché $\lambda_1$ (che è un polo della funzione di trasferimento) è maggiore di 0.
+        \item[2a. ] Risposta libera nel tempo:
+        \begin{align*}
+            v_l(t) &= \sum_{i = 1}^{r} \sum_{l = 0}^{\mu_i - 1} c_{i,l}\frac{t^l}{l!}e^{\lambda_it}\\
+            &= c_{1}e^{2t} + c_{2}e^{-t}
+        \end{align*}
+        \[\begin{cases}
+            v_l(t) = c_{1}e^{2t} + c_{2}e^{-t}\\
+            v_l'(t) = 2c_{1}e^{2t} - c_{2}e^{-t}\\
+        \end{cases} \stackrel{t = 0}{\rightarrow} \begin{cases}
+            c_1 + c_2 = 1\\
+            2c_1 - c_2 = 0
+        \end{cases} \rightarrow \begin{cases}
+            c_1 = 0\\
+            c_2 = 1
+        \end{cases}\]
+        \[v_l(t) = e^{-t}\]
+        
+        \item[2b .] Risposta libera in frequenza:
+        Facciamo la trasformata di Laplace del sistema:
+         \[\mathcal{L}[v''(t) - v'(t) - 2v(t)] = \mathcal{L}[u''(t) + 2u'(t) + u(t)]\]
+            \[\overbrace{(s^2V(s) - s + 1)}^{\mathcal{L}[v''(t)]} - \overbrace{(sV(s) + 1)}^{\mathcal{L}[v'(t)]} - \overbrace{2V(s)}^{\mathcal{L}[v(t)]} = (\overbrace{s^2U(s)}^{\mathcal{L}[u''(t)]} + \overbrace{2sU(s)}^{\mathcal{L}[u'(t)]} + \overbrace{U(s)}^{\mathcal{L}[u(t)]}\]
+        \[\overbrace{(s^2 - s - 2)}^{\text{pol. car. uscite}}V(s) - s + 2 = \overbrace{(s^2 + 2s + 1)}^{\text{pol. car entrate}}U(s)\]
+        \[V(s) = \frac{s - 2}{(s-2)(s+1)} + \frac{(s+1)^2}{(s-2)(s+1)} U(s)\]
+        Vediamo ora cosa è $U(s)$:
+        \[u(t) = \underbrace{e^{-3t}\delta_{-1}(t)}_{\lambda = -3, A = 1} \stackrel{\mathcal{L}}{\Longrightarrow} U(s) = \frac{1}{s+3}\]
+        \[V(s) = \underbrace{\frac{1}{s+1}}_{v_l(s)} + \overbrace{\underbrace{\frac{s+1}{s-2}}_{H(s)} \cdot \frac{1}{s+3}}^{V_f(s)}\]
+        Quindi la risposta libera in Laplace è: 
+        \[v_l(s) = \underbrace{\frac{1}{s+1}}_{\lambda = 1, A = 1}\stackrel{\mathcal{L}^{-1}}{\Longrightarrow} e^{-t}\delta_{-1}(t)\]
+        L'unica differenza che ci sta tra risposta libera e in frequenza e che quella in frequenza, quando la andiamo a trovare
+        dobbiamo moltiplicarla per la funzione causale, ovvero il gradino.
+        \item[3. ] Risposta impulsiva:
+        \[H(s) = \frac{s+1}{s-2}\]
+        Facciamo la divisione tra polinomi dove otteniamo:
+        \[H(s) = 1 + \frac{3}{s-2}\]
+        Applichiamo l'antitrasformata:
+        h(t) = $\mathcal{L}^{-1}[H(s)] = \delta_0(t) + 3e^{2t}\delta_{-1}(t)$
+        \item[4. ] Risposta forzata: Proviamo entrambi i metodi, partiamo con il primo (i fratti semplici):
+        \[V_f(s) = \frac{s+1}{(s-2)(s+3)} = \frac{A}{s-2} + \frac{B}{s+3}\]
+        \[\frac{As + 3A + Bs - 2B}{(s-2)(s+3)} = \frac{(A+B)s + (3A - 2B)}{(s-2)(s+3)}\]
+        \[\begin{cases}
+            A + B = 1\\
+            3A - 2B = 1
+        \end{cases} \rightarrow \begin{cases}
+            A = 1 - \frac{2}{5} = \frac{3}{5}\\
+            B = \frac{2}{5}
+        \end{cases}\]
+        \[\frac{3}{5}\frac{1}{s-2} + \frac{2}{5} \frac{1}{s+3} = \left(\frac{3}{5}e^{2t} + \frac{2}{5}e^{-3t}\right)\delta_{-1}(t)\]
+        Okay ora proviamo con il metodo dei limiti:
+        \[c_{i} = \lim_{s \rightarrow \lambda_i}\frac{d^{\mu - l - 1}r(s)}{ds^{s-l-1}}(s-\lambda)\]
+        \[A = \lim_{S \rightarrow +2} \frac{d^{1-0-1}}{ds^{1-0-1}} \frac{s+1}{\cancel{(s-2)}(s+3)}\cancel{(s-2)} = \frac{3}{5}\]
+        \[B =\lim_{S \rightarrow -3} \frac{d^{1-0-1}}{ds^{1-0-1}} \frac{s+1}{(s-2)\cancel{(s+3)}}\cancel{(s+3)} = \frac{2}{5} \]
+        E come si vede, si ottiene il risultato medesimo con diverso metodo.
+    \end{enumerate}
+\end{examplebox}
 
 
 \end{document}

@@ -28,17 +28,17 @@
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
 \usepackage{xcolor}
-\usepackage{tcolorbox}
-
+\usepackage[most]{tcolorbox}
 % Define a custom tcolorbox environment for examples
 \newtcolorbox{examplebox}[2][]{
-  colback=blue!2!white,   % Background color
-  colframe=blue!30!black, % Border color
-  title=#2,          % Title of the box
-  boxrule=0mm,          % Thickness of the border                % Rounded corners
-  fonttitle=\bfseries,    % Title font style
+  colback=blue!5!white,
+  colframe=blue!30!black,
+  title=#2,
+  boxrule=0mm,
+  fonttitle=\bfseries,
   width=\textwidth,
-  #1 % Width of the box (adjustable)
+  breakable,
+  #1
 }
 
 \newtcolorbox{definition} {
@@ -508,8 +508,6 @@ Questo si chiama passaggio iterativo.
     & \le n \left( \sum_{i=0}^{\infty} \left( \frac{3}{4} \right)^i \right) + c 3^{\log_4 n}\\
   \end{aligned}
   \]
-    \end{examplebox}
-\begin{examplebox}{}
   Per capire l'ordine di grandezza di \( 3^{\log_4 n} \) si può scrivere come:
   \[
     3^{\log_4 n} = n^{\left( \log_n 3^{\log_4 n} \right) } = n^{\log_4 n \cdot \log_n 3}
