@@ -6,8 +6,16 @@ but only for the ones I knew I were able to code in TeX.
 
 ## How to compile
 
-In my notes I implemented some Ordering Algorithms and some Sorting Algorithms, so if you want to compile while optimizing the code, here is the script:
+In my notes I implemented some Ordering Algorithms and some Sorting Algorithms (where I'm trying to implement a video visualization with sdl2), if you want to compile while optimizing the code, here is the script:
 ```bash
-gcc -O3 -march=native -lpthread -o main main.c
+make
 ```
+and use
+```bash
+make clean
+```
+if you want to clean the directory from the binary files.
+
+## Important contributors
+
 This notes may contain some integration made by [@fabiooo4](https://github.com/fabiooo4/Uni) who helped me through the draft of these notes.
