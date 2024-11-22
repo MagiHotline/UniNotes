@@ -722,12 +722,13 @@ Ora si applica l'antitrasformata:
         \end{cases}\]
         \[\frac{3}{5}\frac{1}{s-2} + \frac{2}{5} \frac{1}{s+3} = \left(\frac{3}{5}e^{2t} + \frac{2}{5}e^{-3t}\right)\delta_{-1}(t)\]
         Okay ora proviamo con il metodo dei limiti:
-        \[c_{i} = \lim_{s \rightarrow \lambda_i}\frac{d^{\mu - l - 1}r(s)}{ds^{s-l-1}}(s-\lambda)\]
+        \[c_{i} = \lim_{s \rightarrow \lambda_i}\frac{d^{\mu - l - 1}n(s)}{ds^{s-l-1}d(s)}(s-\lambda)\]
         \[A = \lim_{S \rightarrow +2} \frac{d^{1-0-1}}{ds^{1-0-1}} \frac{s+1}{\cancel{(s-2)}(s+3)}\cancel{(s-2)} = \frac{3}{5}\]
         \[B =\lim_{S \rightarrow -3} \frac{d^{1-0-1}}{ds^{1-0-1}} \frac{s+1}{(s-2)\cancel{(s+3)}}\cancel{(s+3)} = \frac{2}{5} \]
         E come si vede, si ottiene il risultato medesimo con diverso metodo.
     \end{enumerate}
 \end{examplebox}
+\noindent
 
 
 \end{document}

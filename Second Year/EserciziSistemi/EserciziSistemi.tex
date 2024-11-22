@@ -346,9 +346,167 @@ Quindi la risposta forzata è:
 \begin{equation*}
     \tcbox[nobeforeafter]{\(h(t) = \frac{1}{2}e^{-t}t\delta_{-1}(t)\)}
 \end{equation*}
-
-
-
+\pagebreak
+\section{Esercizi fatti in classe}
+\subsection{Esercizio 1}
+\begin{examplebox}{Consegna}
+\[v''(t) - 5v'(t) + 4v(t) = u'(t) - 3u(t)\]
+\[C.I = \begin{cases}
+    v(0) = 9\\
+    v'(0) = 1
+\end{cases}\]
+\[u(t)\ = e^t\delta_{-1}(t)\]
+\begin{enumerate}
+    \item  Discutere la stabilità del sistema.
+    \item Determinare la FdT (H(s)) (Solo in Laplace quindi non serve in t)
+    \item Calcolare la risposta impulsiva h(t) (quindi $\mathcal{L}^{-1}[H(s)](t)$)
+    \item Calcolare la risposta totale $v_t(t)$
+\end{enumerate}
+\end{examplebox}
+\noindent
+\[s^2 -5s + 4 = 0\]
+\[\lambda_1 = +1, \lambda_2 = +4, \mu_i = 1\]
+\textbf{Sistema instabile} poiché $Re(\lambda_i) > 0$.
+\[\mathcal{L}[v''(t) - 5v'(t) + 4v(t)](s) = \mathcal{L}[u'(t) - 3u(t)](s)\]
+\[\mathcal{L}[v''(t)] = s^2V(s) - \cancel{sv(0)} - \overbrace{{v'(0)}}^{1} = s^2V(s) - 1\]
+\[-5\mathcal{L}[v'(t)](s) = -5[SV(s) - sv(0)] = -5SV(s)\]
+\[+4\mathcal{L}[v(t)](s) = +4V(s)\]
+È sempre sottinteso che $u^i(0) = 0$.
+\[\mathcal{L}[u'(t)] = sU(s) + su(0) = sU(s)\]
+\[\mathcal{L}[u(t)](s) = -3U(s)\]
+Ora che abbiamo i diversi pezzetini possiamo ricostruire l'equazione iniziale:
+\[S^2V(s) - 1 - 5V(s) + 4V(s) = sU(s) - 3U(s)\]
+\[V(s)(S^2 - 5 + 4) - 1 = sU(s) - 3U(s)\]
+\[V(s) = \frac{\overbrace{1}^{p(s)}}{\underbrace{(s-1)(s-4)}_{d(s)}} + \frac{\overbrace{s-3}^{n(s)}}{\underbrace{(s-1)(s-4)}_{d(s)}}U(s)\]
+Parliamo della BIBO stabilità. Sia $\lambda_i$ polo di H(s) e $Re(\lambda_i) < 0$ allora il sistema è BIBO stabile. In questo caso abbiamo due poli $\lambda_1 = 1$ e $\lambda_2 = 4$ che sono 
+entrambi positivi quindi il sistema non è né stabile né BIBO stabile.\\
+2. Calcoliamo la FdT che abbiamo già trovato precedentemente:
+\begin{equation*}
+    \tcbox[nobeforeafter]{\(H(s) = \frac{s-3}{(s-1)(s-4)}\)}
+\end{equation*}
+3. 
+\[h(t) = \mathcal{L}^{-1}[H(s)](t)\]
+Controlliamo i gradi di $n(s)$ e $d(s)$. 
+\[V(s) = \frac{n(s)}{d(s)} \Longrightarrow \begin{cases}
+    \underbrace{deg[n(s)] \ge deg[d(s)]}_{\text{Sistema proprio}}\\
+    \underbrace{deg[n(s)] < deg[d(s)]}_{\text{Sistema strett. proprio}} 
+\end{cases}\]
+Se il sistema è proprio allora $\Longrightarrow$ Divisione fra polinomi poi Fratti semplici e poi antitrasformata. Altrimenti
+se è strettamente proprio allora $\Longrightarrow$ Fratti semplici e poi antitrasformata.\\
+In questo caso il sistema è strettamente proprio quindi dobbiamo fare i fratti semplici:
+\[H(s) = \frac{s-3}{(s-1)(s-4)} = \frac{A}{s-1} + \frac{B}{s-4}\]
+Utilizziamo il metodo dei limiti per trovare A e B: 
+\[c_{i} = \lim_{s \rightarrow \lambda_i}\frac{d^{\mu - l - 1}n(s)}{ds^{s-l-1}d(s)}(s-\lambda)^\mu\]
+\[A = \lim_{s \rightarrow +1}\frac{d^{1 - 0 - 1}(s-3)}{ds^{1-0-1}\cancel{(s-1)}(s-4)}\cancel{(s-1)} = \frac{2}{3}\]
+\[B = \lim_{s \rightarrow +4}\frac{d^{1 - 0 - 1}(s-3)}{ds^{1-0-1}\cancel{(s-4)}(s-1)}\cancel{(s-4)} = \frac{1}{3}\]
+\[h(t) = \frac{2}{3}\frac{1}{(s-1)} + \frac{1}{3}\frac{1}{(s-4)} \stackrel{\mathcal{L}^{-1}}{=} \left(\frac{2}{3}e^t + \frac{1}{3}e^{4t}\right)\delta_{-1}(t)\]
+4. Risposta totalen $v_t(t)$:
+\[v_t(t) = v_l(t) + v_f(t)\]
+\[V(s) = \underbrace{\frac{1}{(s-1)(s-4)}}_{V_l(s)} + \underbrace{\frac{s-3}{(s-1)(s-4)}U(s)}_{V_f(s)}\]
+Ora dobbiamo trovare $U(s)$:
+\[U(s) = \mathcal{L}[u(t)](s) = \mathcal{L}[e^t\delta_{-1}(t)](s) = \frac{1}{s-1}\]
+Quindi: 
+\begin{align*}
+V(s) &= \underbrace{\frac{1}{(s-1)(s-4)}}_{V_l(s)} + \underbrace{\frac{s-3}{(s-1)^2(s-4)}U(s)}_{V_f(s)}\\
+&= \frac{s-1 + s-3}{(s-1)^2(s-4)}\\
+& = \frac{2s - 4}{(s-1)^2(s-4)} = v_t(s)
+\end{align*}
+Ora dobbiamo trovare $V_f(s)$:
+\[V_f(s) = \frac{A}{(s-1)} + \frac{B}{(s-1)^2} + \frac{C}{(s-4)}\]
+Qua ci torna utile il metodo dei limiti:
+\begin{align*}
+A &= \lim_{s \rightarrow 1} \frac{d^{2-0-1}}{ds^{2-0-1}} \cancel{(s-1)^2}\frac{2s-4}{\cancel{(s-1)^2}(s-4)}\\
+&= \frac{d}{ds} \frac{2s - 4}{s-4}\bigg|_{s=1} \\
+&= \frac{2(s-4) - (2s-4)(1)}{(s-4)^2}\bigg|_{s=1}\\
+&= \frac{-4}{(1-4)^2} = -\frac{4}{9}
+\end{align*}
+\begin{align*}
+B &= \lim_{s \rightarrow 1} \frac{d^{2-1-1}}{ds^{2-1-1}} \cancel{(s-1)^2}\frac{2s-4}{\cancel{(s-1)^2}(s-4)}\\
+&= \lim_{s \rightarrow 1} \frac{2s - 4}{s-4} = \frac{2}{3}\\
+\end{align*}
+\begin{align*}
+C &= \lim_{s \rightarrow 4} \frac{d^{1-0-1}}{ds^{1-0-1}} \cancel{(s-4)}\frac{2s-4}{(s-1)^2\cancel{(s-4)}}\\
+&= \lim_{s \rightarrow 4} \frac{2s-4}{(s-1)^2} = \frac{4}{9}
+\end{align*}
+Quindi:
+\begin{equation*}
+    \tcbox[nobeforeafter]{\(V_t(s) = -\frac{4}{9}\frac{1}{(s-1)} + \frac{2}{3}\frac{1}{(s-1)^2} + \frac{4}{9}\frac{1}{(s-4)}\)}
+\end{equation*}
+Quindi $v_f(t)$, applichiamo l'antitrasformata e otteniamo:
+\begin{equation*}
+    \tcbox[nobeforeafter]{\(v_t(t) = \left(-\frac{4}{9}e^t + \frac{2}{3}te^t + \frac{4}{9}e^{4t}\right)\delta_{-1}(t)\)}
+\end{equation*}
+\subsection{Esercizio 2}
+\begin{examplebox}{Consegna}
+    \[v''(t) + 4v'(t) + 4v(t) = u'(t)\]
+    \[C.I = \begin{cases}
+        v(0) = 1\\
+        v'(0) = 0
+    \end{cases}\]
+    \[u(t) = sin(t)cos(t)\delta_{-1}(t)\]
+    \begin{enumerate}
+        \item Risposta libera
+        \item Risposta forzata
+    \end{enumerate}
+\end{examplebox}
+\[S^2V(s) - sv(0) - \cancel{v'(0)} + 4(SV(s) - v(0)) + 4V(s) = sU(s)\]
+\[V(s)(s^2 - 4s + 4) - s - 4 = sU(s)\]
+\begin{align*}
+    V(s) &= \frac{s+4}{(s^2+4s+4)} + \frac{s}{(s^2+4s+4)}U(s)\\
+    &= \frac{s+4}{(s+2)^2} + \frac{s}{(s+2)^2}U(s)
+\end{align*}
+Questo sistema è stabile e quindi anche BIBO stabile.\\
+1. 
+\[v_l(s) = \frac{s+4}{(s+4)^2} = \frac{A}{s+2} + \frac{B}{(s+2)^2}\]
+Troviamo $A$ e $B$:
+\begin{align*}
+   A &= \lim_{s \rightarrow -2} \frac{d}{ds} \cancel{(s+2)^2}\frac{s+4}{\cancel{(s+2)^2}}\\ 
+   &= \lim_{s \rightarrow -2} \frac{d(s+4)}{ds} = 1
+\end{align*}
+\begin{align*}
+    B &= \lim_{s \rightarrow -2} \cancel{(s+2)}\frac{s+4}{\cancel{(s+2)^2}} = 2
+\end{align*}
+\begin{align*}
+    V_l(s) &= \frac{1}{s+2} + \frac{2}{(s+2)^2}\\
+    &= \mathcal{L}^{-1}\left[\frac{1}{s+2} + \frac{2}{(s+2)^2}\right]\\
+    &\stackrel{\mathcal{L}^{-1}}{=} (e^{-2t} + 2te^{-2t})\delta_{-1}(t)
+\end{align*}
+2. 
+\[v_f(s) = \frac{s}{(s+2)^2}U(s)\]
+Troviamo $U(s)$: 
+\[U(s) = \mathcal{L}^{-1}[u(t)](s)\]
+Utilizziamo Eulero per trasformare l'antitrasformata di $u(t) = \sin(t)\cos(t)\delta_{-1}(t)$:
+\[\cos(t) = \frac{e^{jt}+e^{-jt}}{2}\]
+\[\sin(t) = \frac{e^{jt}-e^{-jt}}{2j}\]
+\begin{align*}
+    &= \mathcal{L}\left[\frac{e^{jt}-e^[jt]}{2}\frac{e^{jt}+e^{-jt}}{2j}\delta_{-1}(t)\right](s)\\
+    &= \frac{1}{4j}\mathcal{L}[(e^{2jt} - e^{-2jt})\delta_{-1}(t)](s)\\
+    &= \frac{1}{4j} \left(\frac{1}{s-2j} - \frac{1}{s+2j}\right) = \frac{1}{s^2 + 4}
+\end{align*} 
+Quindi $V_f(s)$:
+\begin{align*}
+    V_f(s) &= H(s)U(s)\\
+    &= \frac{s}{(s+2)^2}\frac{1}{s^2 + 4}\\
+    &= \frac{s}{(s+2)^2(s-2j)(s+2j)}\\
+    &= \frac{A}{s+2} + \frac{B}{(s+2)^2} + \frac{C}{s-2j} + \frac{D}{s+2j}
+\end{align*}
+Troviamo $A, B, C, D$:
+\begin{align*}
+    A &= \lim_{s \rightarrow -2}\frac{d}{ds} \cancel{(s+2)^2}\frac{s}{\cancel{(s+2)^2}(s^2-4)} = \frac{1}{16}\\
+    B &= \lim_{s \rightarrow -2}\cancel{(s+2)^2}\frac{s}{\cancel{(s+2)^2}(s^2+4)} = -\frac{1}{4}\\
+    C &= \lim_{s \rightarrow 2j}\cancel{(s-2j)}\frac{s}{(s+2)^2\cancel{(s-2j)}(s+2j)} = \frac{1}{16j}\\
+    D &= \lim_{s \rightarrow -2j}\cancel{(s+2j)}\frac{s}{(s+2)^2\cancel{(s+2j)}(s-2j)} = -\frac{1}{16j}
+\end{align*}
+Andiamo a sostituire e otteniamo:
+\[V_f(s) = \frac{1}{16} \frac{1}{s+2} - \frac{1}{4}\frac{1}{(s+2)^2} + \frac{1}{16j}\frac{1}{(s-2j)} - \frac{1}{16j}\frac{1}{(s+2j)}\]
+Applichiamo Laplace e otteniamo $v_f(t)$:
+\begin{equation*}
+    \tcbox[nobeforeafter]{\(v_f(t) = \left(\frac{1}{16}e^{-2t} - \frac{1}{4}te^{-2t} + \underbrace{\frac{1}{16j}e^{2jt} - \frac{1}{16j}e^{-2jt}}_{\left(\frac{e^{2jt} - e^{-2jt}}{2j}\right) = sin(2t)}\right)\delta_{-1}(t)\)}
+\end{equation*}
+Possiamo semplificare e quindi:
+\begin{equation*}
+    \tcbox[nobeforeafter]{\(v_f(t) = \left(\frac{1}{16}e^{-2t} - \frac{1}{4}te^{-2t} + \frac{1}{8}sin(2t)\right)\delta_{-1}(t)\)}
+\end{equation*}
 \end{document}
 
 
