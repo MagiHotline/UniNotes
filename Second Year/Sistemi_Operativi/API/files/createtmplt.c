@@ -6,9 +6,10 @@
 #include <string.h>
 #include <fcntl.h>
 
-
 int main(int argc, char* argv[]) {
-    char *tmplt = "#include <stdio.h>\n#include <stdlib.h>\n\nint main(int argc, char* argv[]) { \n return 0; \n}";
+    char *tmplt = "#include <stdio.h>\n#include"
+    "<stdlib.h>\n\nint main(int argc, char* argv[]) "
+    "{ \n return 0; \n}";
     int ret, fd;
     if(argc == 1) {
         // If pass only one argument then the filename was not inserted
