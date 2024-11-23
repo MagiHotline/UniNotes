@@ -28,31 +28,65 @@ int main(int argc, char* argv[]) {
         }
         default: {
             fprintf(stderr, "Troppi argomenti!");
-            exit(-1);
+            exit(0);
         }
     }
 
-   if((dir = opendir(path)) == NULL) {
-       perror("Errore di scrittura");
-       exit(-1);
-   }
+    if(stat(path, &statbuf) == -1) {
+        perror("Errore della stat");
+        exit(-1);
+    }
 
-   printf("Cammino: %s", path);
-   while((stdir = readdir(dir)) != NULL) {
-       sprintf(filename, "%s%s", path, stdir->d_name);
-       if(stat(filename, &statbuf) == -1) {
-           perror("Errore della stat");
-           exit(-1);
-       }
-   }
+    if(!S_ISDIR(statbuf.st_mode)) {
+        printf("%10lld %s \n", statbuf.st_size, path);
+        exit(1);
+    }
 
-    // Check if the file is a regular file or a directory
-    if (S_ISREG(statbuf.st_mode))
-        printf("[r] %10lld %s \n", statbuf.st_size, stdir->d_name);
-    else if(S_ISDIR(statbuf.st_mode))
-        printf("[d] %10lld %s \n",statbuf.st_size, stdir->d_name); // If is a directory
-    else printf("[ ] %10lld %s \n", statbuf.st_size, stdir->d_name); // IF
+    if((dir = opendir(path)) == NULL) {
+        perror("Errore di apertura");
+        exit(-1);
+    }
+
+    printf("Path: %s\n", path);
+    while((stdir = readdir(dir)) != NULL) {
+        // Print the name of the file
+        snprintf(filename, sizeof(filename), "%s%s", path, stdir->d_name);
+        // Check if extraction of the file status is successful
+        if(stat(filename, &statbuf) == -1) {
+            perror("Errore della stat");
+            exit(-1);
+        }
+
+        if(S_ISREG(statbuf.st_mode)) {
+            printf("[r] %10lld %s \n", statbuf.st_size, stdir -> d_name);
+        } else if(S_ISDIR(statbuf.st_mode)) {
+            printf("[d] %10lld %s \n", statbuf.st_size, stdir -> d_name );
+        } else {
+            printf("[other] %10lld %s \n", statbuf.st_size, stdir->d_name);
+        }
+
+    }
+
+    if ((dir =opendir(path))== NULL) {
+        perror("errore di apertura");
+        exit(-1);
+    }
+
+
+    while ((stdir = readdir(dir)) != NULL) {
+        sprintf(filename ,"%s/%s", path ,stdir->d_name);
+        if(stat(filename , &statbuf) == -1) {
+            perror("errore della stat");
+            exit(-1);
+        }
+
+        if (S_ISREG(statbuf.st_mode))
+            printf("[r] %10lld %s \n", statbuf.st_size, stdir->d_name);
+        else if(S_ISDIR(statbuf.st_mode))
+            printf("[d] %10lld %s \n",statbuf.st_size, stdir->d_name);
+        else printf("[ ] %10lld %s \n",statbuf.st_size, stdir->d_name);
+    }
 
     closedir(dir);
-    return 0;
+    exit(0);
 }
