@@ -261,6 +261,44 @@ Quindi la risposta forzata è:
 \begin{equation*}
     \tcbox[nobeforeafter]{\(h(t) = \frac{1}{2}e^{-t}t\delta_{-1}(t)\)}
 \end{equation*}
+
+
+\section{Esercizi sulla convoluzione e la risposta forzata}
+
+
+\subsection{Esercizio 1}
+calcolare il prodotto di convoluzione tra:
+\[h(t) = \delta_0(t) - 2e^{-t}\delta_{-1}(t) \]
+\[u(t) = (1+e^{-t})\delta_{-1}(t)\]
+Procediamo con il calcolo della convoluzione utilizzando l'integrale:
+
+\begin{equation*}
+    \begin{aligned}
+        v_f(t) = (h \ast u)(t) &= \int_{-\infty}^{+\infty}h(\tau)u(t-\tau)d\tau\\
+        &= \int_{-\infty}^{+\infty} u(\tau)h(t-\tau)d\tau\\ 
+        &= \int_{-\infty}^{+\infty} (\delta_0(\tau) - 2e^{-\tau}\delta_{-1}(\tau)) \cdot (1+e^{-t+\tau})\delta_{-1}(t-\tau) d\tau\\
+        &= \int_{-\infty}^{+\infty} (\delta_0(\tau))(1+e^{-t+\tau})\delta_{-1}(t-\tau) d\tau \\
+        &-2 \left[\int_{-\infty}^{+\infty}e^{-t}(\delta_{-1}(\tau))(1+e^{-t+\tau})\delta_{-1}(t-\tau)d\tau\right] \\
+        &= \int_{\infty}^{+\infty} \delta_0(\tau)\delta_{-1}(t - \tau)d\tau + \int_{-\infty}^{+\infty} \delta_0(\tau)e^{-t+\tau}\delta_{-1}(t-\tau)d\tau\\
+        &-2 \left[\int_{\infty}^{\infty} e^{-t}\delta_{-1}(\tau)\delta_{-1}(t-\tau)d\tau + \int_{-\infty}^{+\infty} e^{-\tau}\delta_{-1}(\tau)e^{-t+\tau}\delta_{-1}(t-\tau)d\tau\right]\\
+    \end{aligned}
+\end{equation*}
+\begin{equation*}
+    \begin{aligned}
+        &= \int_{0^-}^{0^+} d\tau + \int_{0^-}^{0^+} e^{-t+\tau}d\tau  - 2\left[\int_{0}^t e^{-\tau}d\tau + \int_{0}^{t} e^{-t}d\tau\right]\\    
+        &= 0 + e^{-t} + 2e^{-t} - 2 + 2e^{-t}t \\
+        &= 3e^{-t} + 2e^{-t}t - 2
+    \end{aligned}
+\end{equation*}
+
+
+
+
+
+
+
+
+
 \pagebreak
 \section{Esercizi fatti in classe}
 \subsection{Esercizio 1}
@@ -422,6 +460,11 @@ Possiamo semplificare e quindi:
 \begin{equation*}
     \tcbox[nobeforeafter]{\(v_f(t) = \left(\frac{1}{16}e^{-2t} - \frac{1}{4}te^{-2t} + \frac{1}{8}sin(2t)\right)\delta_{-1}(t)\)}
 \end{equation*}
+
+
+
+
+
 \end{document}
 
 

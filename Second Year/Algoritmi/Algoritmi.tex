@@ -24,14 +24,19 @@
 
 
 Ci sono diverse definizioni di 'algoritmo' ma quella più semplice per definirlo è una sequenza di istruzioni volta a risolvere un problema. In maniera più semplice, possiamo definirlo come una ricetta. Le ricette sono delle istruzioni per creare dei piatti: queste istruzioni sono precise tuttavia possono avere anche delle varianti. Il problema non è trovare la ricetta, ma capire quale sia quella gisuta da utilizzare in base al problema posto.
-\\\\
+
+\vspace{1em}
+\noindent
 In questo corso impararemo come \textit{decidere}. Studiare i diversi approcci e il metodo migliore per affrontare un problema.
 Capiremo come confrontare gli algoritmi fra di loro.
 
 \subsection{Complessità}
 
-Classifichiamo gli algoritmi in base alla loro complessità ovvero quanto tempo ci mettono per essere completati. Il nostro obiettivo è quello non di misurare il tempo in sè (poiché può dipendere dal tipo di macchina che utilizziamo) che impiega un programma a finire ma piuttosto capire il numero di istruzioni elementari che vengono impiegate per risolvere il problema.
-\\\\
+Classifichiamo gli algoritmi in base alla loro complessità ovvero quanto tempo ci mettono per essere completati. Il nostro obiettivo è quello non di misurare il tempo in sè (poiché può dipendere dal tipo di macchina che utilizziamo) 
+che impiega un programma a finire ma piuttosto capire il numero di istruzioni elementari che vengono impiegate per risolvere il problema.
+
+\vspace{1em}
+\noindent
 La complessità non è un numero bensì una funzione, poiché mappa la dimensione del problema in numero di istruzioni da eseguire. Per esempio, quando si parla di dimensione di una matrice ci si viene più comodo vedere il numero di colonne e righe piuttosto che contare il numero di elementi all'interno della matrice. La dimensione del problema è un insieme di oggetti, tipicamente un insieme di numeri che ci permette di avere un idea chiara di capire quanto sia grande il problema. Se riusciamo a misurarlo bene, potremmo facilitarci la vita nel risolvere il problema.
 
 \subsection{Complessità dei costrutti e ordini di grandezza}
@@ -1233,5 +1238,372 @@ Inserisco due nodi speciali all'inizio e alla fine della lista. Questi nodi spec
 Questi nodi speciali mi permettono di eliminare un nodo in modo più semplice. A volte l'efficienza non è la cosa più importante, infatti ci sono alcuni pezzi di codice
 che vogliamo ottimizzare nel migliore dei modi. Per tutti gli altri siamo disposti a perdere un po' di memoria. Proprio come le sentinelle. 
 
+
+\subsection{RB-Tree o Albero rosso-nero}
+
+\begin{definition}
+Perché si chiamano red black? Questi sono normali alberi di ricerca, devono rispettare alcune proprietà:
+
+\begin{itemize}
+  \item Ogni nodo è rosso o nero.
+  \item Ogni foglia è necessariamente nera.
+  \item Figli di un rosso sono necessariamente neri.
+  \item Ogni cammino radice-fopglia ha lo stesso numero di nodi neri.
+\end{itemize}
+\end{definition}
+
+\begin{figure}[H]
+  \centering
+
+  \begin{forest}
+for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=1.5em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=0.2cm
+}
+[26, 
+  [17, 
+    [14,
+      [10, 
+      [7
+        [3]
+      ]
+      [12]
+      ]
+      [10]
+    ]
+    [21 
+      [19
+        [20]
+      ]
+      [23]
+    ]
+  ]
+  [41
+    [30
+      [28]
+      [38
+        [33]
+        [39]
+      ]
+    ]
+    [47]
+  ]
+]
+\end{forest}
+\caption{Esempio di albero binario}
+\end{figure}
+\noindent
+La proprietà 1 e 3 sono rispettate mentre la proprietà 2. Per sistemare questo problema potremmo bilanciare l'albero aggiungendo alle foglie rossi dei nodi 
+"NIL" che saranno neri. In questo modo la proprietà 2 è rispettata.
+
+\begin{figure}[H]
+  \centering
+
+  \begin{forest}
+for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=1.5em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=0.2cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+}
+[26, 
+  [17, 
+    [14,
+      [10, 
+      [7
+        [3
+          [\text{NIL}]
+          [\text{NIL}]
+        ]
+        [\text{NIL}]
+      ]
+      [12
+        [\text{NIL}]
+        [\text{NIL}]
+      ]
+      ]
+      [10
+        [\text{NIL}]
+        [\text{NIL}]
+      ]
+    ]
+    [21 
+      [19
+        [20
+        [\text{NIL}]
+        [\text{NIL}]
+        ]
+      ]
+      [23
+        [\text{NIL}]
+        [\text{NIL}]
+      ]
+    ]
+  ]
+  [41
+    [30
+      [28
+      [\text{NIL}]
+      [\text{NIL}]
+      ]
+      [38
+        [33
+        [\text{NIL}]
+        [\text{NIL}]
+        ]
+        [39
+        [\text{NIL}]
+        [\text{NIL}]
+        ]
+      ]
+    ]
+    [47
+      [\text{NIL}]
+      [\text{NIL}]
+    ]
+  ]
+]
+\end{forest}
+\caption{RB Albero bilanciato con i NIL}
+\end{figure}
+\noindent
+Il concetto principlae di questo tipi di alberi è quello della \textbf{Black Height} (bh(X) dove X è una foglia) cioè il
+numero di nodi neri che si incontrano lungo un cammino dalla radice ad una foglia.
+
+\begin{lemma}
+  Per ogni nodo $X$ il sottoalbero radicato in $X$ ha almeno $2^{bh(X)} - 1$ nodi.
+\end{lemma}
+Proviamo a dimsotrare il lemma:
+\begin{proof}
+  Dimostriamo il lemma per induzione. Per $bh(X) = 0$ il lemma è vero. Supponiamo che il lemma sia vero per tutti i nodi.
+ Allora i figli di $X$ hanno $bh(X) = k-1$. Per ipotesi induttiva:
+
+  \begin{figure}[H]
+    \centering
+  
+    \begin{forest}
+  for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+    [x
+      [a]
+      [b]
+    ]
+  \end{forest}
+  \end{figure}
+  dove $bh(a) \ge bh(X) - 1$ e $bh(b) \ge bh(x) - 1$
+  \begin{align*}
+  \# nodi &\ge 2^{bh(a)} - 1 + 2^{bh(b)} - 1 + 1\\
+  &\ge 2^{bh(X)-1} - 1 + 2^{bh(X)-1} \cancel{- 1 + 1}\\
+  &\ge 2 \cdot 2^{bh(X) - 1} - 1\\
+  &= 2^{bh(X)} - 1 \; \; \; \square
+  \end{align*}
+\end{proof}
+Prendiamo un albero RB di altezza $h$, possiamo dire che l'altezza di una foglia sia uguale a 0. 
+Quindi l'altezza di un nodo che non sia una foglia sia uguale al numero di tutti i nodi che incontro lungo il cammino meno uno.
+$bh(X) \ge \frac{h}{2}$
+L'altezza nera è almeno la metà dell'altezza dell'albero. Quindi l'altezza dell'albero è al massimo il doppio dell'altezza nera.
+\[\# \text{nodi interni} \ge 2^{\frac{h}{2}} - 1\]
+\begin{align*}
+  2^{\frac{h}{2}} &\le n + 1\\
+  \frac{h}{2} &\le \log_2(n+1)\\
+  h &\le 2 \log_2(n+1)
+\end{align*}
+Come faccio a decidere se il nodo inserito deve essere rosso o nero?
+In questo caso, decidiamo che di base il nodo inserito sarà rosso. Se il padre del nodo inserito è rosso per la regola numero 2, allora 
+quella parte di albero non sarà un RB-Albero creando un anomalia. L'oggetto RB-Albero in questo momento ha un puntatore che punta ad un nodo X 
+che potrebbe essere un nodo rosso figlio di un nodo rosso. Se l'albero presenta un'anomalia, dobbiamo eliminarla. Posso decidere se propagare l'anomalia 
+verso l'alto in modo che risolvo l'anomalia per tutta la profondità dell'albero. 
+In questo caso ci viene in aiuto l'algoritmo di rotazione destra o sinistra che ribalincierà l'albero:
+\begin{examplebox}{Esempio di rotazione dx e sx}
+\begin{figure}[H]
+    \centering
+    \begin{forest}
+  for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+    [y
+      [x
+        [$\alpha$]
+        [$\beta$]
+      ]
+      [$\gamma$]
+    ]
+  \end{forest}
+\end{figure}
+\noindent
+Ruota-dx $\rightarrow$:
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=2em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=1cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+}
+  [x
+    [$\alpha$
+    ]
+    [y
+      [$\beta$]
+      [$\gamma$]
+    ]
+  ]
+\end{forest}
+\end{figure}
+\end{examplebox}
+\noindent
+Pseudocodice dell'algoritmo della rotazione:
+\begin{lstlisting}[language=Scala]
+//Gli passiamo il nodo che ha l'anomalia insieme all'intero albero
+// la funziona p[x] prende il parent del nodo x
+while != root && color(P[x]) = red
+  if p[x] = left[p[p[x]]]
+    y <- right[p[p[x]]]
+    if color[y] = red
+      color(p[p[x]]) <- red
+      color[y] <- black
+      color[p(x)] <- black
+      x <- p[p[x]]
+    else
+      if x = right[p[x]]
+        x <- p[x]
+        rotation-sx(x)
+    
+      color[p[x]] <- black
+      color[p[p[x]]] <- red
+      rotation-dx(p[p[x]])
+      x <- root
+\end{lstlisting}  
+
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=2em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=1cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+}
+  [11
+    [\color{red}2
+      [1]
+      [7
+        [\color{red}5
+          [\color{red}4(x)]
+        ]
+        [\color{red}8(y)]
+      ]
+    ]
+    [14]
+  ]
+\end{forest}
+\end{figure}
+\noindent
+L'idea è quella di spostare l'anomalia in alto. Se il padre del nodo inserito è rosso, allora 
+il nonno del nodo inserito sarà nero. Quindi posso cambiare colore al nonno 
+e dare al nonno l'anomalia e così via, fino ad arrivare alla radice.
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=2em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=1cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+}
+  [11
+    [\color{red}2
+      [1]
+      [\color{red}7(x)
+        [5
+          [\color{red}4]
+        ]
+        [8]
+      ]
+    ]
+    [14(y)]
+  ]
+\end{forest}
+\caption{Il padre e lo zio del nodo anomalo diventano nero e il nonno rosso}
+\end{figure}
+\noindent
+Ruotiamo a sinistra 
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=2em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=1cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+}
+  [11
+    [\color{red}7
+      [\color{red}2(x)
+        [1]
+        [5
+          [\color{red}4]
+        ]
+      ]
+      [8]
+    ]
+    [14(y)]
+    ]
+\end{forest}
+\caption{Rotazione a sinistra e l'ordine dei neri non è cambiato}
+\end{figure}
+Si cambiano i colori e si effettua una rotazione a destra:
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=2em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=1cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+}
+  [7
+    [\color{red}2
+      [1
+      ]
+      [5
+        [\color{red}4]
+      ]
+    ]
+    [\color{red}11
+      [8]
+      [14]
+    ]
+    ]
+\end{forest}
+\caption{Rotazione a sinistra e l'ordine dei neri non è cambiato}
+\end{figure}
 
 \end{document}

@@ -91,8 +91,6 @@
 % To customize QED symbol
 \renewcommand{\qedsymbol}{$\blacksquare$}
 
-
-
 \usetikzlibrary{decorations.pathreplacing} % for angle arc
 \usetikzlibrary{angles, quotes, calc} % for drawing angles
 
@@ -110,6 +108,17 @@
 \newtcolorbox{examplebox}[2][]{
   colback=blue!5!white,
   colframe=blue!30!black,
+  title=#2,
+  boxrule=0mm,
+  fonttitle=\bfseries,
+  width=\textwidth,
+  breakable,
+  #1
+}
+
+\newtcolorbox{definizione}[2] {
+  colback=green!5!white,
+  colframe=green!30!black,
   title=#2,
   boxrule=0mm,
   fonttitle=\bfseries,
