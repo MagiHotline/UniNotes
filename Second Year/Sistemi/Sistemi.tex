@@ -595,5 +595,80 @@ Ora si applica l'antitrasformata:
 
 \section{Sistema a blocchi}
 
+In generale ci sono tre modi per mettere a sistema un sistema a blocchi:
+\begin{itemize}
+    \item \textbf{Sistema in serie} (o cascata) dove l'output di un sistema A diventa l'input di un sistema B
+    \[x_2 = y_1\]
+    \item \textbf{Sistema parallelo} dove un input x viene separato in $x_1$ e $x_2$, entrano all'interno rispettivamente
+    dei sistemi A e B e poi vengono sommati in una singola uscita $y$.
+    \[x = x_1 = x_2\]
+    \[y = y_1 + y_2\]
+    \item \textbf{Sistema di retroazione} dove l'uscita di un sistema A diventa l'input di un sistema B e viceversa.
+    \[x= x_1 + y_2 \]
+    \[y = y_1 = x_2\]
+\end{itemize}
+I blocchi avranno sempre un singolo input e un singolo output (poiché sistemi SISO (Single Input Single Output)), per quanto riguarda i nodi sommatori,
+possono entrare infiniti numeri di archi e generalmente ne esce solo una.\\
+Esistono 2 tipi di controlli:
+\begin{enumerate}
+    \item \textit{Il controllo ad anello aperto} è un sistema in cui l'uscita non influenza l'input. È un sistema a ciclo aperto, ovvero non c'è feedback.
+    \item \textit{Il controllo ad anello chiuso} è un sistema in cui l'uscita influenza l'input. È un sistema a ciclo chiuso, ovvero c'è feedback.
+    Dove il sistema che ritorna il feedback del sistema A si chiama funzione di trasferimento del sistema.
+\end{enumerate}
+I sistemi che ci interessano di più sono quelli a ciclo chiuso, in quanto sono quelli che si avvicinano di più alla realtà.\\
+Guardando la nomenclatura dei sistemi a blocchi, si ha che:
+\begin{itemize}
+    \item Sistema di riferimento $r$ è l'input del sistema
+    \item Elemento di feedforward $F$ è un blocco che manda un segnale di controllo al processo
+    \item Processo $P$ è il sistema che trasforma l'input in un output (che però può essere disturbato)
+    \item Elemento di feedback $B$ è un blocco che manda un segnale di feedback $b$ al processo per correggere l'errore 
+    \item Segnale di attuazione che è in genere una sorta di errore $e = r - b$ (in genere viene chiamato 
+    chiamato feedback negativo quando $e = r-b$ mentre è feedback positivo quando $e = r + b$)
+\end{itemize}
 
+\subsection{Controllori}
+I controllori sono di tre tipi con relative regole di controllo:
+\begin{itemize}
+    \item P è il controllore proporzionale e la sua regola di controllo è $u(t) = K_p e(t)$
+    \item I è il controllore integrale e la sua regola di controllo è $u(t) = K_i \int e(\tau)d\tau$
+    \item D è il controllore derivativo e la sua regola di controllo è $u(t) = K_d \frac{de(t)}{dt}$
+\end{itemize}
+Possiamo anche combinarli insieme, esistono tipi "compositi" di controllori come PID, PI, PD, I, P, D.
+\[\mu_{pid} = K_p e(t) + K_d \frac{de(t)}{dt} + K_i \int e(t)dt\]
+Quando abbiamo un sistema a blocchi complesso e ridurlo a un sistema a blocchi più semplice, applicando diverse regole di riduzione:
+\subsection{Forma canonica - nomenclatura}
+La \textbf{Forma canonica} è una forma standard di rappresentazione di un sistema a blocchi.
+\begin{enumerate}
+    \item $G$: Funzione di trasferimento diretta
+    \item $H$: Funzione di trasferimento di feedback
+    \item $GH$: Funzione di trasferimento del loop (o anello)
+    \item $\frac{C}{R}$ = Funzione di trasferimento dell'anello chiuso 
+    \[\frac{C}{R} = \frac{G}{1 \pm GH} = \frac{\text{eq. car. dell'ingresso}}{\text{eq. car. dell'uscita}}\]
+    \item $\frac{E}{R}$: rapporto del segnale di attuazione $ = \frac{1}{1 \pm GH}$
+    \item $\frac{B}{R}$: rapporto di feedback $ = \frac{GH}{1 \pm GH}$ 
+\end{enumerate}
+L'obiettivo è di compattare il sistema fino ad arrivere ad un sistema a blocchi uguale alla forma canonica.
+Prendiamo per esempio il sistema massa molla smorzatore:
+\begin{align*}
+    ma &= \sum F\\
+    mx'' &=  F_{ext} - kx - bx'\\
+    F_{ext} &= kx + bx' + mx''\\
+    F_{ext}(s) &= kX(s) + bsX(s) + ms^2X(s)\\
+    X(s) &= \frac{F_{ext}(s)}{ms^2 + bs + k}
+\end{align*}
+
+\subsection{Regole di trasfromazione}
+
+\begin{enumerate}
+    \item \textbf{Combinazione di blocchi in serie}: dati due blocchi $A$ e $B$ in serie, riducendolo otteniamo un singolo blocco che è il prodotto di $AB$.
+    \item \textbf{Combinazione di blocchi in parallelo}: dati due blocchi $A$ e $B$ in parallelo, riducendolo otteniamo un singolo blocco che è (in base al sommatore) $A\pm B$.
+    \item \textbf{Rimozione di blocchi in parallelo}: dati due blocchi $A$ e $B$ in parallelo, riducendolo otteniamo un singolo blocco che è il prodotto di $AB$ diviso la somma di $AB$.
+    \item \textbf{Rimozione di anello feedback}: dati due blocchi $A$ e $B$ in feedback, riducendolo otteniamo un singolo blocco che diventa $\frac{A}{1 \pm AB}$
+    \item \textbf{Rimozione del loop}: dati due blocchi $A$ e $B$ in loop, possiamo spostare il blocco retroattivo all'inizio del blocco iniziale
+    \item \textbf{Riorganizzazione degli input}: posso organizzare gli input del sistema a blocchi come voglio, l'importante è che alla fine si arrivi ad un sistema a blocchi canonico.
+    \item \textbf{Spostamento dei nodi di somma prima di un blocco}: posso spostare i nodi di somma prima di un blocco
+    \item \textbf{Spostamento dei nodi di somma dopo un blocco}: posso spostare i nodi di somma dopo un blocco
+    \item \textbf{Spostamento dei nodi prima di un blocco}: posso spostare i nodi prima di un blocco
+    \item \textbf{Spostamento dei nodi dopo un blocco}: posso spostare i nodi dopo un blocco
+\end{enumerate}
 \end{document}

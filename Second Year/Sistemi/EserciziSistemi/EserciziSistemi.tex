@@ -273,30 +273,89 @@ calcolare il prodotto di convoluzione tra:
 Procediamo con il calcolo della convoluzione utilizzando l'integrale:
 
 \begin{equation*}
-    \begin{aligned}
+    \scalebox{0.8}
+    {
+    $\begin{aligned}
         v_f(t) = (h \ast u)(t) &= \int_{-\infty}^{+\infty}h(\tau)u(t-\tau)d\tau\\
-        &= \int_{-\infty}^{+\infty} u(\tau)h(t-\tau)d\tau\\ 
-        &= \int_{-\infty}^{+\infty} (\delta_0(\tau) - 2e^{-\tau}\delta_{-1}(\tau)) \cdot (1+e^{-t+\tau})\delta_{-1}(t-\tau) d\tau\\
-        &= \int_{-\infty}^{+\infty} (\delta_0(\tau))(1+e^{-t+\tau})\delta_{-1}(t-\tau) d\tau \\
-        &-2 \left[\int_{-\infty}^{+\infty}e^{-t}(\delta_{-1}(\tau))(1+e^{-t+\tau})\delta_{-1}(t-\tau)d\tau\right] \\
-        &= \int_{\infty}^{+\infty} \delta_0(\tau)\delta_{-1}(t - \tau)d\tau + \int_{-\infty}^{+\infty} \delta_0(\tau)e^{-t+\tau}\delta_{-1}(t-\tau)d\tau\\
-        &-2 \left[\int_{\infty}^{\infty} e^{-t}\delta_{-1}(\tau)\delta_{-1}(t-\tau)d\tau + \int_{-\infty}^{+\infty} e^{-\tau}\delta_{-1}(\tau)e^{-t+\tau}\delta_{-1}(t-\tau)d\tau\right]\\
-    \end{aligned}
+        &= \int_{-\infty}^{+\infty}(\delta_0(\tau) - 2e^{-\tau}\delta_{-1}(\tau))(1+e^{-(t-\tau)})\delta_{-1}(t-\tau)d\tau\\
+        &= \int_{\cancel{-\infty}\; 0^-}^{\cancel{+\infty}\; 0^+} \cancel{\delta_0(\tau)\delta_{-1}(t-\tau)}d\tau + \int_{\cancel{-\infty}\; 0^-}^{\cancel{+\infty}\; 0^+} \cancel{\delta_0(\tau)\delta_{-1}(t-\tau)}e^{-(t-\tau)}d\tau\\
+        &- 2\int_{\cancel{-\infty}\; 0}^{\cancel{+\infty}\; t} e^{-\tau}\cancel{\delta_{-1}(\tau)\delta_{-1}(t-\tau)}d\tau - 2\int_{\cancel{-\infty}\; 0}^{\cancel{+\infty}\; t} e^{-\tau}e^{-(t-\tau)}\cancel{\delta_{-1}(\tau)\delta_{-1}(t-\tau)}d\tau\\
+        &= -2 \int_{0}^{t} e^{-\tau} d\tau - 2e^{-t}\int_{0}^{t}d\tau = -2\left[-e^{-\tau}\bigg|_{0}^t\right] -2e^{-t}\left[\tau\bigg|_{0}^t\right]\\
+        &= -2[-e^{-t} + 1] -2e^{-t}t\\
+        &= (2e^{-t} - 2 - 2e^{-t}t)\underbrace{\delta_{-1}(t)}_{\text{causale}}
+    \end{aligned}$
+    }
 \end{equation*}
+
+\subsection{Esercizio 2}
+
+Dato il seguente sistema LTI: 
+\[v'(t) + 4v(t) = u(t)\]
+Calcolare la risposta forzata considerando la seguente funzione in input:
+\[u(t) = \delta_0(t) + e^{-t}\delta_{-1}(t)\]
+Polinimonio caratteristico: $s + 4 = 0 \Longrightarrow \lambda = -4, \mu = 1, l = 0$\\
+Risposta impulsiva: $h(t) = d_1e^{-4t}\delta_{-1}(t)$\\
+Riscrivo l'eq sostituendo:
+\[h'(t) + 4h(t) = \delta_0(t)\]
+\[h'(t) = -4d_1e^{-4t}\delta_{-1}(t) + d_1e^{-4t}\delta_0(t)\]
+\[\cancel{-4d_1e^{-4t}\delta_{-1}(t)} + d_1e^{-4t}\delta_0(t) + \cancel{4d_1e^{-4t}\delta_{-1}(t)} = \delta_0(t)\]
+\[d_1e^{-4t}\cancel{\delta_0(t)} = \cancel{\delta_0(t)}\]
+\[d_1 = 1\]
+Quindi \[h(t) = e^{-4t}\delta_{-1}(t)\]
+Ora facciamo la convoluzione tra $h(t)$ e $u(t)$:
 \begin{equation*}
-    \begin{aligned}
-        &= \int_{0^-}^{0^+} d\tau + \int_{0^-}^{0^+} e^{-t+\tau}d\tau  - 2\left[\int_{0}^t e^{-\tau}d\tau + \int_{0}^{t} e^{-t}d\tau\right]\\    
-        &= 0 + e^{-t} + 2e^{-t} - 2 + 2e^{-t}t \\
-        &= 3e^{-t} + 2e^{-t}t - 2
-    \end{aligned}
+    \scalebox{0.9}
+    {
+    $\begin{aligned}
+        v_f(t) &= \int_{-\infty}^{+\infty}h(\tau)u(t-\tau)d\tau\\
+        &= \int_{-\infty}^{+\infty} (\delta_0(t) + e^{-\tau}\delta_{-1}(\tau))e^{-4(t-\tau)}\delta_{-1}(t-\tau)d\tau\\
+        &= \int_{\cancel{-\infty} \; 0^-}^{\cancel{+\infty} \; 0^+} \cancel{\delta_0(t)\delta_{-1}(t-\tau)}e^{-4(t-\tau)}d\tau + \int_{\cancel{-\infty}\; 0}^{\cancel{+\infty} \; t} \cancel{\delta_0(\tau)\delta_{-1}(t-\tau)}e^{-\tau}e^{-4t+4\tau}d\tau \\
+        &= \cancel{e^{-4t}\int_{0^-}^{0^+}e^{4\tau}d\tau} + e^{-4t}\int_{0}^{t}e^{3\tau}d\tau\\
+        &= e^{-4t}\left[\frac{1}{3}e^{3\tau}\bigg|_{0}^{t}\right] = \frac{1}{3}(e^{-t} - e^{-4t})\delta_{-1}(t)
+    \end{aligned}$
+    }
 \end{equation*}
 
+\subsection{Esercizio 3}
 
-
-
-
-
-
+Dato il seguente sistema LTI:
+\[v''(t) - v'h(t) + 4v(t) = u''(t) + 3u'(t) + 2u(t)\]
+E il seguente input $u(t) = 3\delta_{-1}(t)$. Calcolare la risposta forzata del sistema.\\
+Polinomio caratteristico: $s^2 - s + 4 = 0 \Longrightarrow \lambda = (s-2)^2 \Longrightarrow \lambda_1 = 2, \mu_1 = 2$\\
+\[h(t) = d_0\delta_0(t) + (d_1e^{2t} + d_2e^{2t}t)\delta_{-1}(t)\]
+\begin{align*}
+    h'(t) &= d_0\delta'(t) + (2d_1e^{2t} + 2d_2e^{2t}t + d_2e^{2t})\delta_{-1}(t) + (d_1e^{2t} + d_2e^{2t}t)\bigg|_{t=0}\delta_{0}(t)\\
+    &= d_0\delta'(t) + (2d_1e^{2t} + 2d_2e^{2t}t + d_2e^{2t})\delta_{-1}(t) + d_1\delta_{0}(t)
+\end{align*}
+\begin{align*}
+    h''(t) &= d_0\delta''(t) + (4d_1e^{2t} + 4d_2e^{2t}t + 2d_2e^{2t} + 2d_2e^{2t})\delta_{-1}(t)\\
+    &+ (2d_1e^{2t} + 2d_2e^{2t}t + d_2e^{2t})\bigg|_{t=0}\delta_{0}(t) + d_1\delta'(t)\\
+    &= d_0\delta''(t) + (4d_1e^{2t} + 4d_2e^{2t}t + 2d_2e^{2t} + 2d_2e^{2t})\delta_{-1}(t)\\
+    &+ (2d_1 + d_2e^{2t})\delta_{0}(t) + d_1\delta'(t)\\
+\end{align*}
+Ora riscriviamo sostituendo $v(t) = u(t)$ e $u(t) = \delta(t)$ ed eliminando i gradini:
+\[d_1\delta''(t) + (2d_1 + d_2)\delta_0(t) + d_1\delta'{t} - 4(d_0\delta'(t) + d_1\delta_0(t)) + d_0\delta_0(t)\]
+\[= 3\delta''(t) + 3\delta'(t) + 2\delta(t)\]
+Ora mettiamo a sistema i corrispettivi delta:
+\begin{align*}
+&\begin{cases}
+    d_1\delta''(t) = \delta''(t)\\
+    d_1\delta'(t) - 4d_0\delta'(t) = 3\delta'(t)\\
+    (2d_1 + d_2)\delta_0(t) - 4d_1\delta_0(t) + d_0\delta_0(t) = 2\delta_0(t)
+\end{cases}\\
+&\begin{cases}
+    d_1 = 1\\
+    d_0 = \frac{1}{2}\\
+    2 + d_2 - 4 + \frac{1}{2} = 2 \Longrightarrow d_2 = \frac{7}{2}
+\end{cases} 
+\end{align*}
+\[h(t) = \frac{1}{2}\delta_0(t) + \left(e^{2t} + \frac{7}{2}e^{2t}t\right)\delta_{-1}(t)\]
+Ora facciamo la convoluzione con $u(t)$:
+\begin{align*}
+    \int_{-\infty}^{+\infty} h(\tau)u(t-\tau) &= \int_{-\infty}^{+\infty} \left(\frac{1}{2}\delta_0(t) + \left(e^{2t} + \frac{7}{2}e^{2t}t\right)\delta_{-1}(t)\right)(3\delta_{-1}(t)) \\
+    &= \frac{3}{2} + 3\left[e^{2\tau}\right]_0^t + \frac{21}{2}\left[\frac{\tau e^{2\tau}}{2} - \frac{e^{2t}}{4}\right]_0^t\\
+    &= 3e^{2t} + \frac{21}{2}te^{2t} - \frac{21}{8}e^{2t} - \frac{3}{2}\\
+\end{align*}
 
 
 \pagebreak
