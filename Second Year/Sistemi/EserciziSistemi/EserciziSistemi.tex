@@ -353,11 +353,33 @@ Ora mettiamo a sistema i corrispettivi delta:
 Ora facciamo la convoluzione con $u(t)$:
 \begin{align*}
     \int_{-\infty}^{+\infty} h(\tau)u(t-\tau) &= \int_{-\infty}^{+\infty} \left(\frac{1}{2}\delta_0(t) + \left(e^{2t} + \frac{7}{2}e^{2t}t\right)\delta_{-1}(t)\right)(3\delta_{-1}(t)) \\
-    &= \frac{3}{2} + 3\left[e^{2\tau}\right]_0^t + \frac{21}{2}\left[\frac{\tau e^{2\tau}}{2} - \frac{e^{2t}}{4}\right]_0^t\\
+    &= \frac{3}{2} + 3\left[e^{2\tau}\right]_0^t + \frac{21}{2}\left[\frac{\tau e^{2\tau}}{2} - \frac{e^{2\tau}}{4}\right]_0^t\\
     &= 3e^{2t} + \frac{21}{2}te^{2t} - \frac{21}{8}e^{2t} - \frac{3}{2}\\
 \end{align*}
 
+\subsection{Esercizio 4}
 
+Dato il seguente sistema LTI:
+\[v''(t) + 3v'(t) + 2v(t) = \frac{1}{3}u(t)\]
+Calcolare la risposta forzata del sistema tramite questo input:
+\[u(t) = e^{-2t}\delta_{-1}(t)\]
+\[h(t) = (d_1e^{-2t} + d_2e^{-t})\delta_{-1}(t)\]
+\[h'(t) = (-2d_1e^{-2t} - d_2e^{-t})\delta_{-1}(t) +(d_1 + d_2)\delta_0(t)\]
+\[h''(t) = (-4d_1e^{-2t} + d_2e^{-t})\delta_{-1}(t) + (-2d_1 - d_2)\delta(t) + (d_1 + d_2)\delta'(t) \]
+Ora sostituiamo $v(t) = h(t)$ e $u(t) = \delta(t)$ nell'equazione del sistema:
+\[-(2d_1 + d_2)\delta(t) + (d_1 + d_2)\delta'(t) + 3(d_1 + d_2)\delta(t) = \frac{1}{3}\delta(t)\]
+\[\begin{cases}
+    - 2d_1 - d_2 + 3d_1 + 3d_2 = \frac{1}{3}\\
+    (d_1 + d_2)\delta'(t) = 0
+\end{cases} \Longrightarrow 
+\begin{cases}
+    d_1 = \frac{1}{6}\\
+    d_2 = -\frac{1}{6}
+\end{cases}
+\]
+
+
+\[h(t) = \left(\frac{1}{6}e^{-2t} - \frac{1}{6}e^{-t}\right)\delta_{-1}(t)\]
 \pagebreak
 \section{Esercizi fatti in classe}
 \subsection{Esercizio 1}

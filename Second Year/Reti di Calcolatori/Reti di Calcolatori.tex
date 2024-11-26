@@ -1215,6 +1215,7 @@ Algoritmi per il calcolo del cammino minimo:
   \item Stato dei collegamenti: Link-State
   \item Vettori di distanza: Distance-Vector
 \end{itemize}
+Questi due classi di algoritmi di routing sono mutualmente esclusive, nel senso che o si usa una o si usa l'altra
 
 
 \subsection{Algoritmi di link-state}
@@ -1271,4 +1272,62 @@ In generale:
 \noindent
 Si può dimostrare che se il grafo è connesso e non ci sono pesi negativi allora l'algoritmo di Bellman-Ford converge in un numero finito di passi.
 il numero di iterazioni è proporzionale al diametro del grafo (il cammino più lungo all'interno del grafo)
+
+\subsection{Routing Intra- e Inter-As}
+Internet è una rete di reti $\rightarrow$ è un insieme di domini amministrativi autonomi (AS, Autonomous System). 
+\[ISP \Longleftrightarrow AS \]
+Gli algoritmi e i protocolli $DV/LS$ sono utilizzati per calcolare il cammino minimo all'interno di un AS. Ed è per questo che si chiamano algoritmi di Intra-AS.
+Per le destinazioni che appartengono ad altri AS è stato definito un protocollo standard che tutti devono usare. Questo protocollo è chiamato \textbf{BGP} (Border Gateway Protocol) $\rightarrow$ Intra-AS.
+
+\vspace{1em}
+\noindent
+Considerando un router di un AS: la tabella di routing conterrà le righe (destinazione/blocco di indirizzi) che sono state configurate dal protocollo Intra-AS e
+righe configurate dal protocollo Inter-AS.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c}
+    Destinazione & Next Hop & Costo\\
+    \hline
+    $n_1$ & $r_x$ & $c_1$\\
+    $n_2$ & $r_y$ & $c_2$\\
+    \vdots & \vdots & \vdots\\
+    $n^e_1$ & $r_x$ & $c^i_1$\\
+    $n^e_2$ & $r_w$ & $c^i_2$\\
+  \end{tabular}
+\end{table}
+\noindent
+I router hanno visione globale solo della propria rete e non ha nessuna idea di quale sia la topologia o il costo degli altri router residienti in altri AS.
+L'unica scelta che puoi fare è quella di inviare il pacchetto al router di bordo (gateway) più vicino (router che collega due AS) e poi il router di bordo si occuperà di instradare il pacchetto verso la destinazione.
+Non è la soluzione più efficiente ma è l'unico modo per fare routing tra AS (\textit{Hot Potato Routing})
+
+\subsection{DHCP (Dynamic Host Configuration Protocol)}
+\begin{definition}
+  Il protocollo DHCP è un protocollo di rete utilizzato per assegnare automaticamente un indirizzo IP ai dispositivi connessi alla rete.
+\end{definition}
+\noindent
+Gli indirizzi IP degli host attestati ad una rete appartengono al blocco della rete stessa e sono segnati dal server DHCP (È un server che gira all'interno di un router). 
+
+\subsubsection{Funzionamento del DHCP}
+\begin{enumerate}
+  \item Il client che non possiede un indirizzo IP manda un messaggio in \textit{broadcast} con TYPE DHCP, denominato "DHCP Discover" dove l'IP sorgente è 0.0.0.0 e IP destinazione è 255.255.255.255 che va a recuperare il server DHCP.
+  \item Il server DHCP risponde con un messaggio "DHCP Offer" contenente l'indirizzo IP e altre informazioni come il transaction ID che permette al client di capire che l'indirizzo IP offerto è per lui.
+  \item Il client risponde con un messaggio "DHCP Request" per confermare l'indirizzo IP offerto. 
+  \item Il server DHCP risponde con un messaggio "DHCP Ack" per confermare la concessione dell'indirizzo IP.
+\end{enumerate}
+\noindent
+Da punto 4. in poi il client può usare l'indirizzo IP assegnato. L'indirizzo assegnato ha un tempo di validità. (LEASE) ad esempio
+14 o 24 ore. Se l'host rimane per più tempo dovrà richiedere l'estenzione del tempo di LEASE.
+Il DHCP server fornisce anche una serie di informazioni oltre all'indirizzo IP: 
+\begin{itemize}
+  \item Subnet Mask
+  \item Gateway (IP del Router di Default)
+  \item IP del server DNS (Così il client può utilizzare i nomi logici)
+\end{itemize}
+Protocollo chiamato "Plug \& Play" perché l'utente può non fare niente e direttamente connettersi alla rete
+
+
+
+
+
 \end{document}

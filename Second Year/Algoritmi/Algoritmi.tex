@@ -1605,5 +1605,220 @@ for tree={
 \end{forest}
 \caption{Rotazione a sinistra e l'ordine dei neri non è cambiato}
 \end{figure}
+\noindent
+Come faccio \textit{per l'estrazione di un elemento} ora? Se voglio eliminare un nodo rosso, non è un problema perché non c'è nessuna anomalia.
+Tuttavia se voglio eliminare un nodo nero, allora devo segnarmi l'anomalia perché mi servirebbe un nero in più per fare in modo
+che ogni cammino radice-foglia abbia lo stesso numero di nodi neri. L'anomalia si crea e un nodo diventa "doppiamente nero" poiché devo contenere per due neri se voglio che rimanga un RB-Albero
+L'algoritmo che ribilancia l'albero anch'esso cerca di spostare l'anomalia verso l'alto ed è diviso in diversi casi:
+\begin{enumerate}
+  \item Se il fratello del nodo è rosso. Sappiamo che DEVONO esistere il padre, lo zio e i nipoti grazie alle regole dell'RB-Tree.
+  \begin{figure}[H]
+    \centering
+    \begin{forest}
+  for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+  [b
+      [a (x)]
+      [\color{red}d
+        [c]
+        [e]
+      ]
+  ]
+  \end{forest}
+  \end{figure}
+  \noindent
+  allora il padre del nodo diventa rosso e il fratello diventa nero. Si effettua una rotazione a sinistra su B
+  \begin{figure}[H]
+    \centering
+    \begin{forest}
+  for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+  [d
+      [\color{red} b
+        [a(x)]
+        [c]
+      ]
+      [e]
+  ]
+  \end{forest}
+  \end{figure}
+  \item Se il fratello del nodo è nero andiamo a controllare i nipoti e sia C che E sono neri. (Il simbolo "?" davanti al nome 
+  del nodo vuol dire che può essere di qualsiasi colore)
+  \begin{figure}[H]
+    \centering
+    \begin{forest}
+    for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+  [b?
+      [a(x)]
+      [d
+        [c]
+        [e]
+      ]
+  ]
+  \end{forest}
+  \end{figure}
+  Togliamo 1 nero ad A e D e aggiungilo a B
+  \begin{figure}[H]
+    \centering
+    \begin{forest}
+    for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+  [b?(x)
+      [a]
+      [\color{red}d
+        [c]
+        [e]
+      ]
+  ]
+  \end{forest}
+  \end{figure}
+  \item Non sappiamo che colore abbia B perché D è nero e assumiamo che uno dei nipoti (C) sia rosso ed E è nero.
+  \begin{figure}[H]
+    \centering
+    \begin{forest}
+    for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+  [b??
+      [a(x)]
+      [d
+        [\color{red}c
+          [$\alpha$]
+          [$\beta$]
+        ]
+        [e
+          [$\gamma$]
+          [$\delta$]
+        ]
+      ]
+  ]
+  \end{forest}
+  \end{figure}
+  Si scambiano colore D e C e fai una rotazione a destra su D
+  \begin{figure}[H]
+    \centering
+    \begin{forest}
+    for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+  [b??
+      [a(x)]
+      [c
+        [$\alpha$]
+        [\color{red}d
+          [$\beta$]
+          [e
+            [$\delta$]
+            [$\gamma$]
+          ]
+        ]
+      ]
+  ]
+  \end{forest}
+  \end{figure}
+  \item Se il nipote destro è rosso e il nipote sinistro è di qualsiasi colore:
+  \begin{figure}[H]
+    \centering
+    \begin{forest}
+    for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+  [b?
+      [a(x)]
+      [d
+        [c?]
+        [\color{red}e]
+      ]
+  ]
+  \end{forest}
+  \end{figure}
+\end{enumerate}
+\noindent Proviamo ad implementare tramite codice e applicarlo sull'albero:
+\begin{lstlisting}[language=Scala]
+  color[d] <- color[b]
+  color[b] <- black
+  color[e] <- black
+  rotation-sx(b)
+
+  x <- root
+\end{lstlisting}
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+  for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=2em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=1cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+}
+[d?
+    [b
+      [a]
+      [c?]
+    ]
+    [e]
+]
+\end{forest}
+\end{figure}
+Abbiamo presentato quattro scenari diversi e per ciascuno di questi scenari abbiamo fatto una trasformazione 
+e ci siamo assicurati ceh quest'ultima mantenga le proprietà dell'RB-Tree. Dobbiamo anche assicurarci che non ci siano nodi rossi figli di rossi.
+\\
+Riassiumiamo in breve questi casi prendendo come riferimento i nipoti del nodo anomalo:
+\begin{itemize}
+  \item C nero, E nero (caso 2)
+  \item \colorbox{red!40!white}{C rosso}, E nero (caso 3)
+  \item C nero, \colorbox{red!40!white}{E rosso} (caso 4)
+  \item \colorbox{red!40!white}{C rosso, E rosso} (caso 4)
+\end{itemize}
+Tutti i casi sono esaustivi poiché abbiamo coperto ogni caso. Il caso 1 è il caso in cui D è rosso.
+\begin{itemize}
+  \item Il caso 3 e il caso 4 sono casi terminali perché portano al termine dell'algoritmo.
+  \item Il caso 2 non termina ma porta l'anomalia in alto.
+  \item Il caso 1 porta l'anomalia in \textbf{basso} e questo è un gran problema. Dopo il caso 1 non può verificarsi nuovamente il caso 1. Se è seguito da un caso 3 e 4 allora l'algoritmo termina.
+  Se invece è seguito dal caso 2 nonostante il caso 2 non sia un algoritmo che termina, \textbf{l'algoritmo termina} perché l'anomalia è stata spostata in alto e B era rosso.
+  Quindi anche questo algoritmo termina in tempo $O(\log n)$.
+\end{itemize}
 
 \end{document}
