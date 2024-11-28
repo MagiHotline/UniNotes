@@ -378,8 +378,22 @@ Ora sostituiamo $v(t) = h(t)$ e $u(t) = \delta(t)$ nell'equazione del sistema:
 \end{cases}
 \]
 
-
 \[h(t) = \left(\frac{1}{6}e^{-2t} - \frac{1}{6}e^{-t}\right)\delta_{-1}(t)\]
+Ora facciamo la convoluzione con $u(t)$:
+\begin{equation*}
+    \scalebox{0.8}
+    {
+    $\begin{aligned}
+        (h \ast u)(t) &= \int_{-\infty}^{+\infty} \left(\frac{1}{6}e^{-2t} - \frac{1}{6}e^{-t}\right)\delta_{-1}(t)(e^{-2(t-\tau)}\delta_{-1}(t-\tau))d\tau\\
+        &= \frac{1}{6}\int_{\cancel{-\infty}\;0}^{\cancel{+\infty}\;t} \cancel{e^{-2\tau}}e^{-2t+\cancel{2\tau}}\cancel{\delta_{-1}(\tau)\delta_{-1}(t-\tau)}d\tau + \frac{1}{6}\int_{\cancel{-\infty}\;0}^{\cancel{+\infty}\;t} \cancel{e^{-\tau}}e^{-2t+\cancel{2\tau}}\cancel{\delta_{-1}(\tau)\delta_{-1}(t-\tau)}d\tau\\
+        &= \frac{1}{6}e^{-2t}t + \frac{1}{6}e^{-2t}\int_{0}^{t} e^{\tau}d\tau\\
+        &= \frac{1}{6}e^{-2t}t + \frac{1}{6}e^{-2t}(e^t-1)\\
+        &= \frac{1}{6}e^{-2t}t + \frac{1}{6}e^{-t} - \frac{1}{6}e^{-2t}\\
+        &= \frac{1}{6}\left(e^{-2t}t + e^{-t} - e^{-2t}\right)
+    \end{aligned}$
+    }
+\end{equation*}
+
 \pagebreak
 \section{Esercizi fatti in classe}
 \subsection{Esercizio 1}

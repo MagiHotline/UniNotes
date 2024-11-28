@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 
     initVideo(window, renderer);
     // Set the draw color (RGBA)
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red color
+
 
 
     // Setting the seed for the random number generator

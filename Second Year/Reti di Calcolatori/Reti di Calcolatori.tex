@@ -1326,8 +1326,93 @@ Il DHCP server fornisce anche una serie di informazioni oltre all'indirizzo IP:
 \end{itemize}
 Protocollo chiamato "Plug \& Play" perché l'utente può non fare niente e direttamente connettersi alla rete
 
+\subsection{ICMP (Internet Control Message Protocol)}
+
+\begin{definition}
+  ICMP è un protocollo di rete utilizzato per inviare messaggi di errore e informazioni di controllo tra i router e gli host.
+\end{definition}
+\noindent
+Esempio: cosa succede se un router riceve un pacchetto con TTL = 0? Il router manda un messaggio ICMP al mittente per informarlo che il pacchetto è stato scartato (con Type "TTL excedeed").\\
+
+\subsection{Soluzioni alla carenza di indirizzi IP}
+
+Il protocollo IPv4 ha un limite di $2^{32}$ indirizzi IP che sono circa 4 miliardi. Per ovviare a questo problema ci sono due soluzioni:
+\begin{itemize}
+  \item \textbf{IPv6} $\rightarrow$ Nuova versione del protocollo IP che ha un limite di $2^{128}$ indirizzi IP.
+  \item Introduzione della classe degli indirizzi \textbf{privati}
+\end{itemize}
+
+\subsubsection{NAT (Network Address Translation)}
+Blocchi di indirizzi privati:
+\begin{itemize}
+  \item 10.0.0.0/8
+  \item 172.16.0.0/12
+  \item 192.168.0.0/16
+  \item 169.254.0.0/16 
+\end{itemize}
+Gli indirizzi IP privati possono essere utilizzati in una rete privata e non possono essere spostati verso la rete pubblica.
+Più LAN private possono utilizzare lo stesso blocco di indirizzi IP privati. Per connettere una rete privata con la rete pubblica è necessario utilizzare il NAT (Network Address Translation).
+\\
+Idea di base: utilizzare l'indirizzo IP pubblico dell'interfaccia del router verso l'ISP per rappresentare l'intera rete privata.
+\\
+Come fa il Router di bordo a conosere l'associazione tra il pacchetto in ingresso e l'hosto che ha inviato la richiesta?
+Il router mantiene una tabella NAT con l'informazione legato allo scambio di pacchetti:
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    IP Sorg & IP Dest & Porta sorg & Porta dest & TTL\\
+    \hline
+    192.168.0.3 & 80.70.60.2 & 7312 & 80 & \\
+    192.168.0.4 & 44.12.16.8 & & & \\
+    192.168.0.4 & 80.70.60.2 & 10412 & 80 & \\
+    \hline
+  \end{tabular}
+\end{table}
+\noindent
+La tabella NAT contiene, oltre agli indirizzi IP, anche le porte del livello di trasporto. Questo perché un host può avere più connessioni contemporanee con lo stesso server. (NAPT $\rightarrow$ Network Address Port Translation)
+Spesso ci si riferisce a "NAT" implicitamente per indicare il NAPT.
+Ad ogni rigo viene associato un timer, se non ci sono messaggi che coinvolgono quella riga e il timer scade, la riga viene cancellata.
+Un vantaggio del NAT è quello di 
+
+ Limito l'utilizzo agli indirizzi IP pubblici ad un
+ 1 solo IP pubblico, per un intera rete privata
 
 
+\subsection{Contattare utenti all'interno di una rete privata}
+Una soluzione per contattare un utente all'interno di una rete privata $\rightarrow$ RELAY
+$\rightarrow$ \underline{Dipende dall'applicazione}:\\
+\indent 
+ogni utente per quella applicvazione ha un identificativo univoco $\rightarrow$ per es ZOOM $\rightarrow$ l'indirizzo email
+\\
+\noindent
+Esiste un server chiamato "Directory" che contiene lo stato degli utenti $\rightarrow$ online/offline + indirizzo IP attuale.
+\\ 
+Ogni volta che un utente accede all'applicazione, informa il server Directory del suo stato e con il proprio IP. 
+Quando un utente vuole contattatare un altro utente, chiede al server Directory l'indirizzo IP dell'utente destinatario $\rightarrow$ se l'IP è pubblico, 
+lo contatta direttamente; altrimenti si appoggia ad un altro server chiamato "Relay". 
 
+\subsection{IPv6}
+
+\begin{itemize}
+  \item \dots
+  \item \textbf{\underline{Next Header}} $\rightarrow$ Codice con un doppio scopo:
+  \begin{itemize}
+    \item Se non ci sono estensioni, identifica il protocollo di trasporto nel payload (TCP, UDP, DHCP)
+    \item Se c'è un extension header, identifica il tipo di extension header. Gli extension header vengono aggiunti tra l'header IP e il payload.Posso agganciare quanti extension header voglio.
+    Esempi di tipi di Extension Header:
+    \begin{itemize}
+      \item Frammentazione
+      \item Routing (viene indicato un percorso IP router da preferire)
+    \end{itemize}
+  Gli extension header sono presenti \textbf{solo se necessari.} Se un router non è aggiornato
+  (non è in grado di riconoscere l'ext header) lo ignora. Questo rende il protocollo \textbf{estensibile} e nuove 
+  funzionalità vengono implementate con nuovi extension header.
+  \end{itemize}
+\end{itemize}
+
+\pagebreak
+
+\section{Livello Data-Link}
 
 \end{document}

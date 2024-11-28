@@ -49,7 +49,7 @@ rbtree *create_node(int item, color color) {
 rbtree *add(rbtree *bt, int item) {
     // If the btree is empty create a new node
     if(bt == NULL) {
-        bt = create_node(item);
+        bt = create_node(item, BLACK);
     } else if(bt->item > item) {
         // if the item is less than the current node, go to the left
         bt->left = add(bt->left, item);
