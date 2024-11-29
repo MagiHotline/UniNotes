@@ -1237,7 +1237,7 @@ I nodi si riscambiano i messaggi (Questi messaggi trasportano informazioni sulla
   \item in caso di guasti/cambio di topologia
 \end{enumerate}
 
-\subsubsection{Algoritmo Distance-Vector}
+\subsection{Algoritmo Distance-Vector}
 
 Costo dell'arco da i a j $\rightarrow$ $c(i,j)$ (I nodi i e j sono adiacenti $\rightarrow$ collegamento diretto).
 Il costo di un cammino dal nodo $i$ al nodo $k$ (dove $i$ e $k$ non sono necessariamente adiacenti) 
@@ -1394,12 +1394,23 @@ lo contatta direttamente; altrimenti si appoggia ad un altro server chiamato "Re
 
 \subsection{IPv6}
 
+Ecco come è composto l'header dell'IPv6:
 \begin{itemize}
-  \item \dots
+  \item \textbf{\underline{Versione}} (4 bit) $\rightarrow$ Indica la versione del protocollo IP (in questo caso 6)
+  \item \textbf{\underline{Traffic class}} (12 bit) $\rightarrow$ Indica la classe di servizio (QoS) serve a gestire la priorità dei pacchetti
+  \item \textbf{\underline{Flow Label}} (16 bit) $\rightarrow$ È un numero univoco assegnato ad un flusso (IPs,IPd, PORTs, PORTd). Visto 
+  che non si può accedere alla porta che si trova al livello di trasporto, il flow label permette di identificare univocamente un flusso di comunicazione seza accedere ad altri livelli.
+  \item \textbf{\underline{Lunghezza Payload}} (16 bit) $\rightarrow$ Lunghezza del payload (dati)
+  \item \textbf{\underline{Hop Limit}} (8 bit) $\rightarrow$ Come il TTL per l'IPv4
   \item \textbf{\underline{Next Header}} $\rightarrow$ Codice con un doppio scopo:
   \begin{itemize}
     \item Se non ci sono estensioni, identifica il protocollo di trasporto nel payload (TCP, UDP, DHCP)
     \item Se c'è un extension header, identifica il tipo di extension header. Gli extension header vengono aggiunti tra l'header IP e il payload.Posso agganciare quanti extension header voglio.
+    L'extension header è composto nel seguente modo: 
+    \begin{itemize}
+      \item \textbf{Next Header} (8 bit) $\rightarrow$ Indica il tipo di extension header
+      \item \textbf{Length} $\rightarrow$ Lunghezza dell'extension header
+    \end{itemize}
     Esempi di tipi di Extension Header:
     \begin{itemize}
       \item Frammentazione

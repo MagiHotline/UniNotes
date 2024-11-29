@@ -321,5 +321,48 @@ LAN1 contiene l'indirizzo 46.144.141.41
     \item Blocco CIDR totale
     \item Indirizzi di rete per le 4 LAN
 \end{itemize}
+Ora, cominciamo a calcolare quanti bit servono per ogni LAN e per indirizzare ogni host
+\begin{itemize}
+    \item LAN 1 \# host = 130 $\rightarrow$ $130 < 2^8$ $\rightarrow$ 8 bit
+    \item LAN 2 \# host = 270 $\rightarrow$ $270 < 2^9$ $\rightarrow$ 9 bit
+    \item LAN 3 \# host = 65 $\rightarrow$ $65 < 2^7$ $\rightarrow$ 7 bit
+    \item LAN 4 \# host = 35 $\rightarrow$ $35 < 2^6$ $\rightarrow$ 6 bit
+    \item TOTALE \# host = 500 $\rightarrow$ $2^9 < 500 < 2^9$ $\rightarrow$ 9 bit
+\end{itemize}
+Sappiamo che il blocco CIDR totale è 9 bit. Utilizzando l'indirizzo di rete della LAN1 possiamo calcolare gli indirizzi di rete per le altre LAN.
+\\
+Blocco CIDR totale:
+\[\overbrace{\colorbox{blue!30!white}{0010 1001}}^{46} \; \; \overbrace{\colorbox{blue!30!white}{10010000}}^{144} \; \; \overbrace{\colorbox{blue!30!white}{100011}00}^{140} \; \; \overbrace{00000000}^{0} \Longrightarrow 46.144.140.0/22\]
+Per la \textbf{LAN 2}, quella che contiene più host, abbiamo bisogno di 9 bit. Quindi, il blocco CIDR per la LAN 2 sarà:
+\[46.144.\overbrace{\colorbox{blue!30!white}{1000110}\colorbox{green!30!white}{1}0}^{142} \; \; \overbrace{00000000}^{0} \rightarrow 46.144.142.0/23\]
+Per la \textbf{LAN 1} abbiamo bisogno di 8 bit. Quindi, il blocco CIDR per la LAN 1 sarà:
+\[46.144.\overbrace{\colorbox{blue!30!white}{100011}\colorbox{green!30!white}{01}}^{141} \; \; \overbrace{00000000}^{0} \rightarrow 46.144.141.0/24\]
+Per la \textbf{LAN 3} abbiamo bisogno di 7 bit. Quindi, il blocco CIDR per la LAN 3 sarà:
+\[46.144.\overbrace{\colorbox{blue!30!white}{100011}\colorbox{green!30!white}{00}}^{140} \; \; \overbrace{\colorbox{green!30!white}{1}0000000}^{128} \rightarrow 46.144.140.128/25\]
+Per la \textbf{LAN 4} abbiamo bisogno di 6 bit. In tutto questo procedimento abbiamo allungato il prefisso praticamente ad ogni LAN. Così abbiamo ottimizzato l'uso degli indirizzi IP.
+\[46.144.\overbrace{\colorbox{blue!30!white}{100011}\colorbox{green!30!white}{00}}^{140} \; \; \overbrace{\colorbox{green!30!white}{01}000000}^{64} \rightarrow 46.144.140.64/26\]
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        % Draw a full circle using arcs
+        \draw[thick] (0,0) circle (3cm); % Base circle for reference
+    
+        % Draw an arc from 0° to 90°
+        
+        \draw[thick] (0,3) -- (0,-3);
+        \draw[thick] (0,0) -- (-3,0);
+        \draw[thick] (0,0) -- (-3,0) arc[start angle=180, end angle=225,radius=3cm] node [midway, left]{001} -- (0,0);
+        \draw[thick] (0,0) -- (0,-3) arc[start angle=270, end angle=247,radius=3cm] node [midway, below]{0001} -- (0,0);
+
+        % Add labels to each arc
+        \node at (3, 2.5) {0};
+        \node[blue] at (1.5, 0) {LAN 2: 512};
+        \node at (-3, 2.5) {01};
+        \node[blue] at (-1.3, 1.3) {LAN 1: 256};
+        \node[blue] at (-1.8, -0.7) {LAN 3};
+        \node[blue, scale=0.7] at (-0.5, -2.2) {LAN 4};
+    \end{tikzpicture}
+\end{figure}
 
 \end{document}
