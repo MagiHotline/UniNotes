@@ -672,8 +672,83 @@ Prendiamo per esempio il sistema massa molla smorzatore:
     \item \textbf{Spostamento dei nodi dopo un blocco}: posso spostare i nodi dopo un blocco
 \end{enumerate}
 
-\subsection{Operazioni sui blocchi}
+\section{Diagrammi di flusso}
 
+I diagrammi di flusso sono una rappresentazione grafica di un sistema a blocchi. 
+\\
+Guardiamo ora le diverse componenti di un diagramma di flusso:
+\begin{itemize}
+    \item \textbf{Percorso in avanti:} Un cammino che unisce un nodo di input ad un nodo di output
+    \item \textbf{Percorso ad anello:} Un cammino che inizia e finisce nello stesso nodo e senza passare più volte in altri nodi intermedi
+    \item \textbf{$\rightarrow$ Self loop:} Un cammino che inizia e finisce nello stesso nodo e non tocca altri nodi intermedi
+    \item \textbf{Guadagno}: prodotto di tutti i pesi degli archi lungo un percorso
+\end{itemize}
 
+\subsection{Convertire un Sistema a blocchi in un diagramma di flusso}
+
+Per convertire un sistema a blocchi in un diagramma flussi (così che sia più facile da gestire) dobbiamo convertire gli archi e i nodi nel seguente modo:
+
+\begin{enumerate}
+    \item Indiviiamo i nodi di input e output
+    \item Per ogni nodo somma si aggiunge un nodo 
+    \item Per ogni nodo dello schema a blocchi si aggiunge un nodo al diagramma di flusso
+    \item Unisco i nodi con gli archi il cui peso è la funzione dentro al blocco. Se tra un nodo e l'altro non ci sono blocchi, il suo peso vale 1.
+\end{enumerate}
+
+\subsection{Funzione di Mason}
+
+\begin{definition}
+    La funzione di Mason è una funzione che permette di calcolare la funzione di trasferimento di un sistema a blocchi.
+    \[T = \sum_i \frac{P_i \Delta_i}{\Delta} \]
+    dove 
+    \begin{itemize}
+        \item $P_i$ è il guadagno del percorso i
+        \item $\Delta_i$ è il determinante del percorso i
+        \item $\Delta$ è il determinante del sistema
+        \begin{align*}
+            \Delta &= 1 - (-1)^{k+1} \sum_k \sum_j P_{jk}\\
+            &= 1 - \left(\sum_j P_{j1} + \sum_j P_{j2} + ... \right)\\
+            &= 1 - \left(\parbox{5cm}{Somma dei guadagni di tutti gli alberi}\right) + \left(\parbox{4cm}{Somma dei dei guadagni\\dei prodotti degli anelli\\che non toccano a due}\right) \\
+            &+ \left(\parbox{5cm}{somma dei guadagni dei prodotti degli anelli che non si toccano 3 a 3}\right) + ...
+        \end{align*}
+    \end{itemize}       
+\end{definition}
+
+\begin{examplebox}{Esempio 1}
+    Prendiamo come esempio il diagramma di flusso visto a lezione (guarda gli punt) e calcoliamo la funzione di Mason.
+    Troviamo i guadagni per ogni percorso:
+    \[P_1 =(x_1, x_2, x_3, x_4) = 1 \cdot G \cdot 1 =  G\]
+    \[P_{1,1} = (x_2, x_3) = -GH\]
+    L'ordine in cui vengono chiamati i percorsi è arbitrario. Sono stati scelti semplicemente nell'ordine in cui li abbiamo notati.
+    I guadagni che hanno 1 non vengono considerati.
+    Calcoliamo ora il determinante del sistema:
+    \[\Delta = 1 - (P_{1,1}) = 1 + GH\]
+    Annulo tutti gli archi che toccano il percorso i-esimo:
+    \[\Delta_1 = 1 - \cancel{P_{1,1}} = 1 - 0 = 1\]
+    \[T = \frac{P_1 \Delta_1}{\Delta} = \frac{G \cdot 1}{1 + GH} = \frac{G}{1 + GH}\]
+\end{examplebox}
+
+\begin{examplebox}{Esempio 2}
+    TODO\dots
+    \begin{table}[H]
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline
+            & Anelli & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $x_6$ & $x_7$ & $x_8$ & $x_9$ & $x_{10}$\\
+            \hline
+            $A_1^1$ & -AB &  &  & 1 & 1 &  &  &  &  &  & \\
+            \hline
+            $A_2^1$& -CD & &  &  &  & &  & 1 & 1 & 1 & \\
+            \hline
+            $A_3^1$ & FCE & 1 & 1 &  &  &  & 1 & 1 & 1 & 1 & \\
+            \hline
+            $A_4^1$ & FGE & 1 & 1 &  &  &  & 1 & 1 & 1 & 1 & 1\\
+            \hline
+            $A_5^1$& ACE & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\
+            \hline
+            $A_6^1$ & AGE & 1 & 1 & 1 & 1 & 1 & 1 &  & 1 & 1 & 1\\
+            \hline
+        \end{tabular}
+    \end{table}
+\end{examplebox}
 
 \end{document}

@@ -1506,13 +1506,13 @@ for tree={
   scale=0.8
 }
   [11
-    [\color{red}2
+    [2, red
       [1]
       [7
-        [\color{red}5
-          [\color{red}4(x)]
+        [5, red
+          [4(x), red]
         ]
-        [\color{red}8(y)]
+        [8(y), red]
       ]
     ]
     [14]
@@ -1535,11 +1535,11 @@ for tree={
   scale=0.8
 }
   [11
-    [\color{red}2
+    [2, red
       [1]
-      [\color{red}7(x)
+      [7(x), red
         [5
-          [\color{red}4]
+          [4, red]
         ]
         [8]
       ]
@@ -1563,11 +1563,11 @@ for tree={
   scale=0.8
 }
   [11
-    [\color{red}7
-      [\color{red}2(x)
+    [7, red
+      [2(x), red
         [1]
         [5
-          [\color{red}4]
+          [4, red]
         ]
       ]
       [8]
@@ -1590,14 +1590,14 @@ for tree={
   scale=0.8
 }
   [7
-    [\color{red}2
+    [2, red
       [1
       ]
       [5
-        [\color{red}4]
+        [4, red]
       ]
     ]
-    [\color{red}11
+    [11, red
       [8]
       [14]
     ]
@@ -1625,7 +1625,7 @@ L'algoritmo che ribilancia l'albero anch'esso cerca di spostare l'anomalia verso
   }
   [b
       [a (x)]
-      [\color{red}d
+      [d, red
         [c]
         [e]
       ]
@@ -1646,7 +1646,7 @@ L'algoritmo che ribilancia l'albero anch'esso cerca di spostare l'anomalia verso
     scale=0.8
   }
   [d
-      [\color{red} b
+      [b, red
         [a(x)]
         [c]
       ]
@@ -1690,7 +1690,7 @@ L'algoritmo che ribilancia l'albero anch'esso cerca di spostare l'anomalia verso
   }
   [b?(x)
       [a]
-      [\color{red}d
+      [d, red
         [c]
         [e]
       ]
@@ -1712,7 +1712,7 @@ L'algoritmo che ribilancia l'albero anch'esso cerca di spostare l'anomalia verso
   [b??
       [a(x)]
       [d
-        [\color{red}c
+        [c, red
           [$\alpha$]
           [$\beta$]
         ]
@@ -1740,7 +1740,7 @@ L'algoritmo che ribilancia l'albero anch'esso cerca di spostare l'anomalia verso
       [a(x)]
       [c
         [$\alpha$]
-        [\color{red}d
+        [d, red
           [$\beta$]
           [e
             [$\delta$]
@@ -1767,7 +1767,7 @@ L'algoritmo che ribilancia l'albero anch'esso cerca di spostare l'anomalia verso
       [a(x)]
       [d
         [c?]
-        [\color{red}e]
+        [e, red]
       ]
   ]
   \end{forest}
@@ -1821,4 +1821,170 @@ Tutti i casi sono esaustivi poiché abbiamo coperto ogni caso. Il caso 1 è il c
   Quindi anche questo algoritmo termina in tempo $O(\log n)$.
 \end{itemize}
 
+\subsection{Estrazione in un RB-Albero}
+
+Se nell'albero binario posso andare a sinistra o a destra per ogni passaggio, ora sicuramente so che la complessità del mio algoritmo in un RB-Albero è $O(\log n)$.
+
+Per sapere la posizione effettiva della mia radice, posso aggiungere alla mia struttura del nodo una proprietà \textit{size} che mi permette di sapere quanti nodi ci sono sotto al nodo x. 
+Per sapere la posizione effettiva di ogni nodo, posso utilizzare la seguente formula:
+\[
+  size(left(x)) + 1
+\]
+Lo pseudocode per l'estrazione di un nodo in un RB-Albero è il seguente:
+\begin{lstlisting}[language=Scala]
+// X e' la lista
+// i e' la posizione del nodo da estrarre
+Select(x, i)
+  r <- size(leftx) + 1
+  if r = i
+    return x
+  else if(r > i)
+    ret select[left[x], i]
+  else 
+    ret select[right[x], i - r]
+\end{lstlisting}
+Tuttavia una volta aver estratto il valore, devo aggiornare la proprietà \textit{size} di tutti i nodi che sono stati toccati.
+\begin{examplebox}{Esempio}
+  \begin{figure}[H]
+    \centering
+    \begin{forest}
+    for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+  [x
+      [y
+        [$\alpha$]
+        [$\beta$]
+      ]
+      [$\gamma$]
+  ]
+  \end{forest}
+  \end{figure}
+  \noindent
+  Proviamo a ruotare e poi cambiare la proprietà \textit{size} in questa maniera:
+  \begin{figure}[H]
+    \centering
+    \begin{forest}
+    for tree={
+    draw, % Disegna i nodi
+    circle, % Forma dei nodi
+    minimum size=2em, % Dimensione minima dei nodi
+    inner sep=1pt, % Spaziatura interna dei nodi
+    s sep=1cm, % Spaziatura verticale tra i livelli
+    scale=0.8
+  }
+  [y
+      [$\alpha$]
+      [x
+        [$\beta$]
+        [$\gamma$]
+      ]
+  ]
+  \end{forest}
+  \end{figure}
+  \noindent
+  \[
+  size(x) \leftarrow size(left[x]) + size(right[x]) + 1
+  \]
+  La size di y dopo la rotazione è esattamente la size di x prima della rotazione.
+  Gli unici che cambiano la size quindi, sono x e y e la complessità di questo algoritmo
+  è O(1) e quindi è costante.
+\end{examplebox}
+
+\subsection{Campi aggiuntivi}
+Si possono aggiornare dei campi aggiuntivi all'interno della struttura dell'RB-Albero per velocizzare alcuni algoritmi (come abbiamo visto per size)
+ma dobbiamo prestare attenzione a mantenere la complessità delle operazioni inalterate.
+\begin{theorem}
+  Sia $F$ un campo aggiuntivo, se 
+  \[\exists f. \; \forall x F[x] = f(key[x], f[left[x]], f[right[x]], key[left[x]], key[right[x]])\]
+  allora $F$ mantenibile in tempo logaritmico. 
+  \\
+  Cioè se il campio aggiuntivo è calcolabile utilizzando le operazioni definite in $f$ allora la complessità di $F$ rimane inalterata.
+\end{theorem}
+\textbf{Osservazione. } Se siamo in un Albero AVL possiamo aggiungere un campo aggiuntivo tuttavia il teorema appena enunciato non varrà poiché l'inserimento e la rimozione impiega tempo $O((\log n)^2)$.
+Perché deve svolgere le rotazioni (che impiegano tempo logaritmico) per ogni nodo all'interno del cammino radice-foglia.
+
+\begin{examplebox}{Esempio 1}
+  Se volessi aggiungere il campo "Rank(x)" che ritorna la posizione che occupa quel nodo in un ordinamento crescente all'interno dell'albero.
+  \begin{lstlisting}[language=Scala]
+// x: Nodo da cui si parte per la selezione
+// y: Nodo dove bisogna trovare la 
+Rank(x, y) 
+  count = size[left[x]] + 1
+  // finche' x non e' la radice
+  while(x != root)
+    // Se sei figlio destro allora aggiungo la size del sottoalbero sinistro e il padre
+    if (x == right[parent[x]]) 
+      return count + size[left[parent[x]]] + 1
+    // altrimenti x diventa il suo parent e vai sopra
+    x = parent[x]
+  
+  return count
+\end{lstlisting}
+
+\end{examplebox}
+\begin{examplebox}{Esempio 2}
+  Se si volessero inserire gli elementi di un RB-Albero in un array ordinato, si potrebbe usare un algoritmo di visita in-order dell'albero. 
+  Esistono diversi modi per visitare un albero:
+  Lo pseudocodice è il seguente:
+  \begin{lstlisting}[language=Scala]
+// x: Nodo da cui si parte la visita
+// i: indice dell'array in cui inserire x
+pre_visit(x, i)
+  if x != null
+    visit(x)
+    pre_visit(left[x], i)
+    pre_visit(right[x], i)
+  
+in_visit(x, i) 
+  if x != null
+    invisit(left[x], i)
+    visit(x)
+    invisit(right[x], i)
+
+post_visit(x, i)
+  if x != null
+    post_visit(left[x], i)
+    post_visit(right[x], i)
+    visit(x)
+  \end{lstlisting}
+\noindent
+Possiamo dimostrare che la visita ha complessità $O(n)$. Per dimostrarlo possiamo usare l'equazione di ricorrenza:
+\begin{align*}
+  T(n) &= T(n_{left}) + T(n_{right}) + 1\\
+  &= n_{left} + {n_right} + 1 = n
+\end{align*}
+\noindent
+Supponiamo per induzione che $T(n_{left})$ e $T(n_{right})$ sono rispettivamente $n_{left}$ e $n_{right}$.
+Quindi possiamo visitare i nodi degli RB-Alberi in \textbf{tempo lineare}.
+\end{examplebox}
+Se volessi inserire gli elementi di un RB-Albero in un array ordinato, posso usare la visita in-order dell'albero. 
+Tuttavia la sua complessità è $O(n\log n)$ poiché facendo una 
+sequenza di inserimento:
+\[1 + \log 1 + \log 2 + \dots + \log n = \log n! =  \Theta(n \log n)\]
+Ci chiediamo se possiamo costruire un RB-Albero partendo da un array in un tempo più basso di $O(n \log n)$.
+Se è così, allora otteniamo un array ordinato e questo vuol dire che riesco a scrivere un algoritmo di ordinamento con complessità inferiore di $O(n \log n)$.
+\begin{lstlisting}[language=Scala]
+sort(A)
+  T <- build_tree(A)
+  B <- in_visit(T)
+\end{lstlisting}
+Tuttavia avevamo già dimostrato che non è possibile fare un ordinamento in tempo inferiore a $O(n \log n)$. 
+Riusciamo a scrivere una funzione "buildtree" che dato un array ordinato mi costruisce un RB-Albero
+\begin{lstlisting}[language=Scala]
+build_tree(A)
+  if A = []
+    return null
+  else
+    m <- A.length / 2
+    x <- new Node(A[m])
+    left[x] <- build_tree(A[0, m-1])
+    right[x] <- build_tree(A[m+1, A.length])
+    return x
+\end{lstlisting}
 \end{document}
