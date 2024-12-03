@@ -1426,4 +1426,72 @@ Ecco come è composto l'header dell'IPv6:
 
 \section{Livello Data-Link}
 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=0.8]
+    \draw (0,4) rectangle ++(3,1) node[midway] {Applicazione};
+    \draw (0,3) rectangle ++(3,1) node[midway] {Trasporto};
+    \draw (0,2) rectangle ++(3,1) node[midway] {Rete};
+    \draw (0,1) rectangle ++(3,1) node[midway,align=center]{\colorbox{blue!30!white}{Data Link}};
+    \draw (0,0) rectangle ++(3,1) node[midway] {Fisico};
+  \end{tikzpicture}
+\end{figure}
+
+Ogni tecnologia di rete ha il proprio protocollo di livello data-link. Questo protocollo è responsabile della trasmissione dei dati tra due nodi adiacenti.
+Lo scopo del livello data link è gestire le problematiche associate ala trasmissione nel singolo hop. 
+L'header del livello 2 dipende dalla tecnologia utilizzata. Un esempio è il WiFi (IEEE 802.11) o Ethernet (IEEE 802.3) o Fibra ottica (SDH)
+
+\subsection{Problematiche legate alla trasmissione}
+
+\begin{itemize}
+  \item Gestione del mezzo condiviso
+  \item Delimitazione delle trame
+\end{itemize}
+
+\subsubsection{Gestione del mezzo condiviso}
+
+Come possiamo regolare l'accesso al mezzo condiviso, in modo da minimizzare le collisioni (più utenti trasmetto contemporaneamente) e massimizzare l'utilizzo del mezzo? 
+Sono due metodi distinti ma allo stesso tempo importanti.
+
+\vspace{1em}
+\noindent
+\textbf{Metodologie dell'allocazione del canale:}
+\begin{itemize}
+  \item \textbf{\underline{Allocazione statica}}, risorse suddivise staticamente tra i partecipanti, come TDM, Time Division Multiplex() è un esempio di allocazione statica che divide il tempo in slot temporali e assegna uno slot ad ognuno degli utenti.
+  Tuttavia non è un buon utilizzo delle risorse perché può capitare che un utente non utilizzi il suo slot temporale e quindi delle risorse vanno sprecate
+  \item \textbf{\underline{Allocazione Dinamica}}
+  \begin{itemize}
+    \item A turno (Token Ring), viene passato un token tra gli utenti e solo chi ha il token può trasmettere. Ogni utente può avere il token per un tempo massimo (100ms), tuttavia se finisce di trasmettere prima della scadenza del token lo passa al prossimo utente.
+    Questa è una tecnica che non fa sprecare risorse perché se non ha niente da trasmettere passa direttamente il token. Il problema è che devo definire un ordine di trasmissione in cui viene passato il token.
+    \item A contesa 
+    \begin{itemize}
+      \item Aloha
+      \item Slotted Aloha
+      \item CSMA (Base e varianti)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Aloha}
+
+\begin{enumerate}
+  \item Se la stazione ha dati da trasmettere
+  \begin{itemize}
+    \item[$\rightarrow$] Li trasmette
+  \end{itemize}
+  \item Mentre trasmette, la stazione ascolta il canale
+  \begin{itemize}
+    \item[$\rightarrow$] Se c'è collisione (potenza rilevata > potenza trasmessa) 
+    la stazione estra un tempo casuale, aspetta tale tempo e torna al punto 1
+  \end{itemize}
+\end{enumerate}
+\begin{examplebox}{Esempio}
+  Un esempio del protocollo tra due staizoni A e B:
+  \textbf{DISEGNO} 
+  \\
+  La scelta di un tempo canale per la ritrasmissione serve per la desincronizzazione le stazioni.
+  Il protocollo definisce una costante $M$ che è molto maggiore del tempo $T$ (tempo di trama (tempo che impiego a trasmettere la trama)) e il tempo causale è scelto uniformemente tra 0 e $n$.
+  E in caso di collisioni consecutive, $M$ viene raddoppiato.
+\end{examplebox}
+
 \end{document}

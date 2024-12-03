@@ -1935,12 +1935,14 @@ Rank(x, y)
   \begin{lstlisting}[language=Scala]
 // x: Nodo da cui si parte la visita
 // i: indice dell'array in cui inserire x
+// prima si scrive la radice, poi il sottoalbero sinistro e poi il sottoalbero destro
 pre_visit(x, i)
   if x != null
     visit(x)
     pre_visit(left[x], i)
     pre_visit(right[x], i)
   
+// la radice si trova al centro e a sinistra si trovo il sottoalbero sinistro e a destra il sottoalbero destro
 in_visit(x, i) 
   if x != null
     invisit(left[x], i)
@@ -1957,7 +1959,7 @@ post_visit(x, i)
 Possiamo dimostrare che la visita ha complessità $O(n)$. Per dimostrarlo possiamo usare l'equazione di ricorrenza:
 \begin{align*}
   T(n) &= T(n_{left}) + T(n_{right}) + 1\\
-  &= n_{left} + {n_right} + 1 = n
+  &= n_{left} + n_{right} + 1 = n
 \end{align*}
 \noindent
 Supponiamo per induzione che $T(n_{left})$ e $T(n_{right})$ sono rispettivamente $n_{left}$ e $n_{right}$.
@@ -1987,4 +1989,54 @@ build_tree(A)
     right[x] <- build_tree(A[m+1, A.length])
     return x
 \end{lstlisting}
+Proviamo ora a scrivere un algoritmo che costruisce un nodo e prende in input due stringhe prese dalla previsita e dalla invisita.
+\begin{lstlisting}[language=Scala]
+buildtree(p, i)
+  if(length(i) == 0) {
+    return null
+  } else {
+    x <- add[p[0]]
+    newP <- i.indexOf(p[0])
+    left(x) <- buildtree(P[1 .. newP], I[0 .. newP-1])
+    right(x) <- buildtree(P[newP+1 .. p.length], I[newP+1 .. I.length])
+  }
+\end{lstlisting}
+Prendiamo come esempio le due stringhe:
+\begin{align*}
+  PREvisit &= \text{[A, B, D, E, C, C, G, H, I]}\\
+  INvisit &= \text{[E, D, B, F, A, G, C, H, I]}
+\end{align*}
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+  for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=2em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=1cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+}
+[A, green
+    [B, red
+      [D, red
+        [E, red]
+        [, no edge, draw=none]
+      ]
+      [F, red]
+    ]
+    [C, blue
+      [G, blue]
+      [H, blue
+        [, no edge, draw=none]
+        [I, blue]
+      ]
+    ]
+    ]
+\end{forest}
+\end{figure}
+
+
+
+
 \end{document}
