@@ -1493,5 +1493,104 @@ Sono due metodi distinti ma allo stesso tempo importanti.
   Il protocollo definisce una costante $M$ che è molto maggiore del tempo $T$ (tempo di trama (tempo che impiego a trasmettere la trama)) e il tempo causale è scelto uniformemente tra 0 e $n$.
   E in caso di collisioni consecutive, $M$ viene raddoppiato.
 \end{examplebox}
+Periodo di vulnerabilità: intervallo di tempo in cui una trama può subire collisioni dipende dall'algoritmo.
+Per Aloha assumiamo  che il tempo di trama sia fisso o uguale a $T$ \(\left(T = \frac{B}{v}\right)\)
+\subsubsection{Slotted Aloha}
+
+Introduce un piccolo meccanismo ovvero la \textit{sincronizzazione}: il tempo è suddiviso
+  in intervalli di durata $T$ etutte le stazioni sono sincronizzate.
+\begin{enumerate}
+  \item Quando una stazione genera una trama
+  \begin{itemize}
+    \item Aspetta l'inizio dello slot successivo per inviarla
+  \end{itemize}
+  \item uguale ad Aloha
+\end{enumerate}
+Periodo di vulnerabilità: $T$.
+
+\subsubsection{CSMA (Carrier Sense Multiple Access)}
+
+\begin{enumerate}
+  \item Se una stazione ha una trama da trasmettere:
+  \begin{itemize}
+    \item Ascolta il canale 
+  \end{itemize}
+  \item Se il canale è libero
+  \begin{itemize}
+    \item Allora trasmette la trama
+    \item Altrimenti, continua ad ascoltare fino a quando il canale si libera e poi trasmette
+  \end{itemize}
+  \item Se c'è collisione
+  \begin{itemize}
+    \item Estrae un tempo casuale e torna al punto 1
+  \end{itemize}
+\end{enumerate}
+Questa variante del CSMA si chiama \textbf{persistent}.
+La variante "Non Persistent" invece cambia il punto 2 in questo modo:
+\begin{enumerate}
+  \item[2. ] Se il canale è libero
+  \begin{itemize}
+    \item trasmette
+    \item Altrimenti, estrae un tempo casuale e torna al punto 1
+  \end{itemize}
+\end{enumerate}
+Questa variante diminuisce il numero di collisioni ma aumenta il tempo di latenza.
+
+\vspace{1em}
+\noindent
+La variante \textbf{CSMA p-persistent} segue la seguente procedura:
+\begin{enumerate}
+  \item ...
+    
+    \begin{enumerate}
+      \item ...
+        \begin{itemize}
+          \item Se il canale è libero
+            \begin{itemize}
+              \item Trasmette
+            \end{itemize}
+
+          \item Altrimenti
+            \begin{itemize}
+              \item Aspetta che si liberi il canale
+              \item Con probabilità \( p \) trasmette
+              \item Con probabililtà \( 1 - p \) rimanda il tentativo di un micro slot \( t_m \ll T \) 
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{enumerate}
+
+\vspace{1em}
+\noindent
+La variante \textbf{CSMA-CD} (Collision Detection) è utilizzata nelle reti ethernet.
+Si può combinare con le varianti viste in precedenza (persistent, non persistent, p-persistent)
+e va a modificare soltanto il punto 1.b
+\begin{enumerate}
+  \item ...
+    \begin{enumerate}
+      \item ...
+      \item Se c'è collisione:
+        \begin{itemize}
+          \item Interrompe la trasmissione
+          \item Estrae un tempo casuale e torna al punto 1.
+        \end{itemize}
+    \end{enumerate}
+\end{enumerate}
+
+
+\vspace{1em}
+\noindent
+L'efficienza di CSMA è la seguente:
+
+\vspace{1em}
+\noindent
+Il \textbf{ritardo di propagazione} è il tempo che impiega un segnale a propagarsi
+da un punto all'altro. Consideriamo due stazioni \( A \) e \( C \), se la stazione
+\( A \) genera una trama il segnale ci impiega un tempo \( t_1 + \tau \) per arrivare
+alla stazione \( C \) e finirà di trasmettere a \( t_1 + T + \tau \):
+\label{04-12-D10}
+Se \( A \) genera una trama tra \( [t_1+T,t_1+T+2\tau] \) c'è un tempo di 
+vulnerabilità di \( 2\tau \).
+
 
 \end{document}
