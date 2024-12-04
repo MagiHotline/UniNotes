@@ -1,0 +1,286 @@
+\documentclass[a4paper]{article}
+\usepackage{import}
+\input{../../setup.sty}
+\title{Introduzione alla programmazione di Smart Contract per Ethereum}
+\author{Università di Verona\\Imbriani Paolo - VR500437\\Professoressa Migliorini Sara}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.3\textwidth]{UniversityofVerona.png}
+\end{figure}
+
+\maketitle 
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{Blockchain}
+
+\begin{definition}
+    Una \textit{blockchain} è una catena di blocchi. I blocchi contengono informazioni sulle transazioni eseguite. 
+\end{definition}
+
+\begin{definition}
+    Una \textit{transazione} è una struttura dati che racchiude informazioni circa il trasferimento di un certo quantitativo di token.
+\end{definition}
+
+\begin{examplebox}{Esempio}
+
+    Supponiamo di voler creare un consorzio tra noi studenti, dove ci vogliamo scambiare appunti. 
+    Di cosa abbiamo bisogno? 
+    \begin{itemize}
+        \item Un \textbf{registro} condiviso e immutabile in cui memorizziamo gli scambi che vengono effettuati
+        \item Per ogni \textbf{transazioni} vengono memorizzate informazioni come: quando, cosa, quanto, ecc.
+    \end{itemize}
+    Chi lo tiene il registro? Un entità terza scelta dal gruppo quindi bisogna mettersi d'accordo a chi affidare questo incarico.
+    In una rete piccola come il nostro consorzio, potrebbe anche andare bene fare un'accordo tra di noi. Ma quando il consorzio diventa molto grande diventa difficile scegliere un entità centrale
+    che si occupi di tenere il registro. L'idea per le blockchain è quella di eliminare l'entità centrale e affidare il compito di tenere il registro a \textbf{tutti} i partecipanti della rete.
+    Quindi ciascun membro mantiene una \textit{copia} personale del registro. 
+\end{examplebox}
+\noindent
+\subsection{Caratteristiche delle blockchain}
+\begin{itemize}
+    \item Il \textbf{protocollo di consenso decentralizzata} permette di scrivere sul registro ma solo ad un costo. Se qualcuno "mente" riceve una penalità 
+    che rende tale comportamento non conveniente. 
+    \item \textbf{Immutabilità} significa che una volta che un blocco è stato scritto non può essere modificato.
+\end{itemize}
+
+\subsection{Bitcoin}
+
+L'innovazione principale della blockchain è la definizione di un protocollo per la costruzione di una rete peer-to-peer in grado di raggiiungere un consenso
+circa uno stato globale senza l'intervento di \textbf{un'entità centrale}.
+
+\subsection{Ciclo di vita di una transazione bitcoin}
+
+Prendiamo come esempio Alice e Bob che vogliono scambiarsi dei bitcoin.
+\begin{enumerate}
+    \item \underline{\textbf{Alice crea e firma la transazione}}. Dichiara che vuole spedire un certo quantitativo di bitcoin a Bob. Utilizza uno strumento chiamato \textit{wallet} per fare ciò, ovvero un software che consente di memorizzare le proprie chiavi private, 
+    di mantenere l'elenco dei token in nostro possesso, ci permette di riceve, inviare e spendere le proprie criptovalute. 
+    La funzionalità principale di un \textbf{wallet} è quella di firmare le transazioni e la creazione degli indirizzi. Un indirizzo può essere visto come un IBAN. La probabilità che vengano creati due indirizzi uguali è molto bassa ma non è zero.
+    Quando il wallet di Alice viene avviato per la prima volta:
+    \begin{itemize}
+        \item Genera una sequenza finita di bit generati casualmente ma SICURI (una chiave privata segreta).
+        \item Calcola un indirizzo attraverso un'estrazione della chiave privata (hashing).
+        \item Mostra l'indirizzo come una stringa alfanumerica o QR Code.
+        \item L'indirizzo non è un informazione sensibile: Alice può pubblicarlo sulla sua pagina web.
+        \item La chiave privata è un segreto: Alice deve mantenerla al sicuro.
+        \begin{definition}
+            Un \textit{wallet gerarchico deterministico} è un tipo di wallet che genera una serie di chiavi private e pubbliche che vengono derivate secondo una struttura ad albero.
+        \end{definition}
+        \begin{definition}
+            In bitcoin un \textit{Unspent Transaction Output (UTXO)} è un insieme di token che sono attualmente asseganti ad un indirizzo e che non sono stati ancora spesi.
+            L'insieme degli UTXO è una parte fondamentale dello stato globale della blockchian di Bitcoin.
+            \\
+            Il wallet di Alice seleziona un insieme di UTXO tra quelli a disposizione di Alice come input delle transazione in modo da avere un quantitativo sufficiente di token.
+              
+        \end{definition}
+    \end{itemize}  
+    \item \underline{\textbf{Broadcast e validazione della transazione}}: Alice invia la transazione al network.
+    \item \underline{\textbf{Mining o creazione dei blocchi}}: Decidono che transazioni includere nel blocco. 
+    \begin{definition}
+        Il \textit{mining} è il processo attraverso il quale i nodi creano nuovi blocchi a partire da un insieme di transazioni "pendenti". 
+        La costruzione di un blocco richiede lavoro (risoluzione di un problema matematico complesso).
+    \end{definition}
+    Ogni nodo (miner) riceve dalla rete le nuove transazioni e le memorizza in un'area temporeanea chiamata \textit{mempool}. 
+    Circa ogni 10 minuti, ogni nodo individualmente sceglie un gruppo di queste per tentare la creazione di un nuovo blocco.
+    Durante la creazione di un nuobo blocco (mining) ciascun nodo include:
+    \begin{enumerate}
+        \item Le transazioni da lui selezionate
+        \item Coinbase (transazione speciale che non ha input e ha come l'output l'indirizzo del miner e una quantità di token pari all'attuale mining reward, inizialmente 50 BTC ora 6.25)
+        \item hashing del blocco precedente
+        \item Bisogna aggiungere un Nonce (numero casuale tale per cui l'hash del blocco inizia con un certo numero di zeri all'inizio prefissato basato dalla difficoltà)
+    \end{enumerate}
+    \item \textbf{\underline{Transazione confermata}}: Il blocco viene aggiunto alla blockchain e 
+    la transazione è confermata solo dopo 6 conferme (dopo aver aggiunto 6 blocchi dopo il mio). 
+\end{enumerate}
+
+\subsubsection{Fork Blockchain di Bitcoin}
+
+\begin{enumerate}
+    \item Stato iniziale: tutti i nodi hanno una visione comune della rete.
+    \item Fork: due nodi espandono la blockchain in modo diverso. Si verifica uno "split" della rete.
+    \item Uno split si espande ulteriormente.
+    \item La rete riconverge e vince la rete più lunga.
+\end{enumerate}
+Ecco perché servono più conferme. Per garantire che ad un certo punto tutti i nodi della rete abbiano ricevuto tutti i blocchi della rete.
+
+\section{Ethereum e Smart Contracts}
+
+\begin{definition}
+    Uno \textit{smart contract} è un accordo tra due o più parti, il cui rispetto può essere forzato automaticamente senza il bisogno di intermediario.
+\end{definition}
+\noindent
+\textbf{Ethereum} è stato il primo progetto che ha implementato il concetto di Smart Contract in una blockchain.
+\begin{definition}
+    In Ethereum uno smart contract è \textit{programma} memorizzato all'interno della blockchain che viene eseguito automaticamente quando si verifica un evento (scheduling di una transazione) specifico.
+\end{definition}
+\begin{theorem}
+    Gli smart contract di Ethereum sono scritti in un linguaggio \textbf{Turing completo} e compilati in bytecode eseguibile sulla \textbf{Ethereum Virtual Machine (EVM)}.
+\end{theorem}
+\subsection{Smart Contract}
+Una volta che ho scritto e ho compilato il mio programma, lo devo pubblicare. Devo PAGARE per fare in modo che esso venga inserito nella blockchain.
+Quindi anche l'esecuzione deve essere pagata.
+
+\vspace{1em}
+\noindent
+\textbf{Osservazione. } Ethereum non è solamente una criptovaluta (ETH).
+\begin{itemize}
+    \item I nodi di una rete Ethereum costituiscono quello che viene definito un computer globale
+    \item I nodi di Ethereum mettono a disposizione una EVM in grado di eseguire i programmi.
+    \item Le risorse computazionali all'interno della EVM sono \textbf{limitate}. (non si tratta di un computer distribuito, ma di un computer replicato).
+\end{itemize}
+
+
+\subsection{Ethereum}
+\begin{theorem}
+    Ethereum può essere inteso come una macchina a stati ("infiniti") deterministica: ogni transazione produce un cambiamento da uno stato $s$ ad uno stato successivo $t$. 
+\end{theorem}
+\noindent
+Una blockchain è un registro distribuito che memorizza transazioni, aggregate in blocchi. 
+In Ethereum una transazione rappresenta un cambiamento all'interno di una memoria general purpose (una mappa che contiene qualsiasi tipo di coppia [chiave, valore]).
+
+\vspace{1em}
+\noindent
+\textbf{Attenzione!} I cambiamenti apportati alla memoria devono essere deterministici, altrimenti non è possibile raggiungere un consenso.
+
+\vspace{1em}
+\noindent
+Ethereum si comporta come un \textbf{computer globale decentralizzato}. Gli smart contract sono programmi che vengono eseguiti all'interno della EVM.
+
+\begin{definition}
+    La \textit{Ethereum Virtual Machine (EVM)} è una singleton globale: ciascun nodo mantiene una propria copia della EVM il cui stato deve essere consistente con la versione detenuta dagli altri nodi.
+\end{definition}
+\noindent
+Ciascun nodo deve eseguire individualmente sulla propria copia locale le chiamate agli smart contract che sono attivate attraverso le transazioni.
+
+\subsubsection{Externally Owned Account (EOA) e contratti}
+
+In Ethereum esistono due tipi di indirizzi:
+\begin{itemize}
+    \item Externally Owned Account (EOA): indirizzo associato ad una chiave privata. Fondi associati e generati dai wallet. Hanno il controllo sull'accesso ai fondi.
+    \item Account di contratti: sono associati agli smart contract. Non hanno una chiave privata associata e possono inviare e ricevere token.
+\end{itemize}
+\noindent
+Una transazione può essere inizializzata solo da un EOA (mittente). Se il destinatiario della transazione è l'indirizzo di un contratto, lo scheduling
+della transazione causa l'esecuzione del contratto della EVM.
+Le transazioni possono contenere dei dati aggiuntivi che indicano quale funziona speciifica del contratto deve essere eseguita e quali parametri vanno passati.
+Un contratto può - durante la sua esecuzione - richiamare le funzionalità di altri contratti.
+
+\begin{definition}
+    Deployare un contratto vuol dire registrare un contratto sulla blockchain e creare una transazione speicale che ha come indirizzo di destinazione 0x0 (chiamato indirizzo zero).
+\end{definition}
+
+\subsubsection{Transazioni di Ethereum}
+
+Ogni volta che viene effettuata una transazione verso un indirizzo del contratto, questa causa l'esecuzione del metodo indicato sulla EVM.
+Una transazione verso l'indirizzo di un contratto può contenere parametri \textbf{ether, data} o entrambi.
+\begin{itemize}
+    \item \textbf{Ether}: quantità di token da inviare al contratto
+    \item \textbf{Data}: dati aggiuntivi che vengono passati al contratto
+\end{itemize}
+Anche qua abbiamo il numero \textbf{Noance} associato a ciascun account che conta quante transazioni sono state inviate da un indirizzo. Garantendo così che
+tutte le transazioni mandate da un singolo indirizzo siano ordinate.
+Questo perché dobbiamo garantire lo stato progressivo che è presente nella memoria.
+
+\subsubsection{GAS}
+
+Una valuta parallela di scambio, chiamata \textbf{Gas}, è il "carburante" per controllare la quantità massima di risorse che una transazione può consumare durante la sua esecuzione.
+Ciascuna transazione che invoca una funzione di uno smart contract deve indicare:
+\begin{itemize}
+    \item \textbf{gasPrice}: prezzo che il mittente è disposto a pagare per unità di gas (maggiore è il prezzo, potenzialmente maggiore è la velocità dello scheduling della transazione)
+    \item \textbf{gasLimit}: massimo numero di unità di Gas che si è disposti a pagare per completare la transazione.
+\end{itemize}
+\noindent
+\textbf{Attenzione!} Se termina il Gas prima che il contratto abbia completato la sua esecuzione, quest'ultima viene terminata con un errore ed il Gas consumato fino a questo momento viene perso!
+
+\subsection{Consenso}
+
+\begin{definition}
+    Il \textit{consenso} è un accordo generalizzato che deve essere raggiunto.
+\end{definition}
+\noindent
+Esistono più definizioni:
+\begin{definition}
+    In [informatica] il \textit{consenso} è legato al problema più generale di sincronizzare dello stato di un sistema distribuito, in modo tale che i partecipanti ad un sistema
+    distribuito possano raggiungere un accordo circa lo stato globale del sistema
+\end{definition}
+
+\subsection{Proof of Stake}
+
+Chi possiede più token più ha il diritto di scrivere sulla blockchain.
+La blockchain tiene traccia di una serie di \textit{validatori} chiunque possiede degli Ethereum può dientare un validatore attraverso una transazione attraverso una transazione speciale
+con cui blocca i propri token in un deposito. 
+I validatori possono perdere i propri depositi se mentono.
+
+\subsubsection{Validatori di Ethereum}
+
+Per partecipare alla rete Ethereum come validatore, un utente deve 32 ETH in un contratto di deposito a mettere in esecuzione 3 software sul proprio sistema.
+\begin{itemize}
+    \item Execution client (impacchetta le transazioni e le esegue localmente)
+    \item Consensus client (Creazione dei blocchi che poi verranno trasmessi sulla rete)
+    \item Validator client (verifica che i blocchi siano validi)
+\end{itemize}
+Verrai inserito in una lista di attesa e verrai scelto per scrivere sulla blockchain in base al numero di token che possiedi.
+Quando un blocco è stato validato da un validatore, questo manda un voto (attestation) a favore del blocco ricevuto agli altri nodi della rete.
+
+\vspace{1em}
+\noindent
+Nella PoS di Ethereum, il tempo è diviso in slot (12 secondi) ed in epoche (32 slots).
+
+\subsection{Esecuzione di una transazione}
+
+\begin{enumerate}
+    \item Creazione e firma della transazinoe
+    \item Verifica della validità della transazione (che abbia firmato e pagato abbastanza Eth)
+    \item Aggiunta alla mempool locale
+    \item Broadcast
+\end{enumerate}
+
+\subsubsection{Validazione di una transazione}
+
+\begin{enumerate}
+    \item Scelta del proponente del nuovo blocco
+    \item Scelta ed esecuzione delle transazioni
+    \item Costruzione del blocco: transazioni + payload
+    \item Broadcast 
+\end{enumerate}
+
+\subsubsection{Validazione di un blocco}
+
+\begin{enumerate}
+    \item Ricezione di un nuovo blocco
+    \item Ri-esecuzione delle transazioni
+    \item Verifica di un blocco
+    \item Broadcast
+\end{enumerate}
+alla fine, dobbiamo finalizzarla. Ci sta bisogno di un certo numero di slot che però sono molto più brevi rispetto a Bitcoin (12 secondi)
+Ogni epoca andiamo a verificare cosa sia successo dei 32 slot precedenti e andiamo a vedere come hanno votato i validatori dei 32 slot che hanno composto l'epoca.
+I validatori votano le coppie di checkpoint che considerano valide:
+\begin{itemize}
+    \item Se una coppia di checkpoint (primo blocco di ogni epoca) raccoglie il 66\% , il checkpoint viene aggiornato
+    \item Il checkpoint più recente diventa justified
+    \item Il checkpoint precedente diventa finalized
+\end{itemize}
+Per eliminare un blocco finalizzato, un attacante deve essere disposto a perdere 1/3 del totale degli Ether messi in stack dalla rete.
+La finalizzazione richiede i 2/3 della maggioranza.
+Chi vota in maniera opposto rispetto alla maggioranza perde il deposito dopo un certo numero di voti "sbagliati".
+\\
+I fork in una rete PoS sono molto più rari rispetto ai bitcoin.
+\\
+Benifici della PoS:
+\begin{itemize}
+    \item Migliore efficienza energetica
+    \item Minori barriere per l'entrata nella rete (democratizzazione)
+    \item Maggiore sicurezza: gli svantaggi economici per chi non si comporta correttamente nel PoS sono sensibilmente più alte rispetto al PoW. I validatori sono disincentivati a mentire essendo che hanno più token in stake.
+\end{itemize}
+
+
+
+
+
+\end{document}

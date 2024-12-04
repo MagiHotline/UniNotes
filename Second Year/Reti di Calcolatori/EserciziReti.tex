@@ -379,5 +379,62 @@ Applicazione A a B 77500 byte
     \item RTO = 2RTT
     \item DOWN DI RETE: [8, 10] e da [13.5, 14.5]   
 \end{itemize}
+Quindi:
+\begin{itemize}
+    \item \# segmenti da mandare: 62 segmenti
+    \item RCWND = 8 = STT
+    \item $t > 4$ RCWND = 14
+    \item $t > 8$ RCWND = 10
+  \end{itemize}
+
+  \begin{figure}[H]
+    \centering
+\begin{tikzpicture}
+    \begin{axis}[
+        axis lines=middle,
+        xlabel={$t$},
+        ylabel={$w$},
+        xtick={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15, 16, 17, 18},
+        ytick={1,2,4,8,16,20},
+        ymin=0, ymax=23,
+        xmin=0, xmax=18,
+        axis line style={->},
+        every axis x label/.style={
+            at={(ticklabel* cs:1.05)},
+            anchor=west,
+        },
+        every axis y label/.style={
+            at={(ticklabel* cs:1.05)},
+            anchor=south,
+        }
+    ]
+    
+    % Draw the STT Threshold
+    \addplot[domain=0:11, samples=100, color=blue, thick]{8};
+    \addplot[color=blue, thick] coordinates {(11, 8) (11, 6)};
+    \addplot[domain=11:15, samples=100, color=blue, thick]{6};
+    \addplot[color=blue,thick] coordinates {(15, 6) (15, 3)};
+    \addplot[domain=15:20, samples=100, color=blue, thick]{3};
+
+    \addplot[color=red, thick] coordinates {(5, 8) (5, 14)};
+    \addplot[domain=5:11, samples=100, color=red, thick]{14};
+    \addplot[color=red, thick] coordinates {(11, 14) (11, 10)};
+    \addplot[domain=11:20, samples=100, color=red, thick]{10};
+
+    % Draw the plot and points
+    \addplot[thick, mark=*] coordinates {(0,1) (1,2) (2, 4) (3, 8) (4, 8) (5, 9) (6, 10) (7,11) (8,12) (10, 1) (11, 2) (12, 4) (13, 6) (15, 1) (16, 2) (17, 3)};
+    \fill[orange!40, opacity=0.5] (13.5, 0) rectangle (14.5, 23);
+    \fill[orange!40, opacity=0.5] (8, 0) rectangle (10, 23);
+    
+    \end{axis}
+  \end{tikzpicture}
+\end{figure}
+
+
+\[SEG = 1 + 2 + 4 + 8 + 8 + 9 + \cancel{10} + 1 + 2 + 4 + \cancel{6} + 1 + \overbrace{\cancel{2}}^{1} = 62 \]
+\[CWND_{finale} = CWND_{old} + \frac{\# ACK}{CWND_{old}} = 2 + \frac{1}{2}\]
+
+
+
 
 \end{document}
