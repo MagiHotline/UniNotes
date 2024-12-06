@@ -431,10 +431,28 @@ Quindi:
 \end{figure}
 
 
-\[SEG = 1 + 2 + 4 + 8 + 8 + 9 + \cancel{10} + 1 + 2 + 4 + \cancel{6} + 1 + \overbrace{\cancel{2}}^{1} = 62 \]
-\[CWND_{finale} = CWND_{old} + \frac{\# ACK}{CWND_{old}} = 2 + \frac{1}{2}\]
+\[SEG = 1 + 2 + 4 + 8 + 8 + 9 + 10 + 11 + \cancel{12} + 1 + 2 + 4 + \cancel{6} + 1 + \overbrace{\cancel{2}}^{1} = 62 \]
+\[CWND_{finale} = CWND_{old} + \# ACK = 3\]
 
+\subsection{}
 
+Tre lan con i seguenti vincoli sul numero di host:
+
+\begin{itemize}
+    \item 400
+    \item 300
+    \item 1200
+\end{itemize}
+
+La LAN1 contiene un host con indirizzo 178.242.85.168
+
+\begin{itemize}
+    \item Blocco CIDR più piccolo
+    \item Indirizzi di rete delle 3 LAN
+    \item Tabella di Routing del Router A considerando come metrica il numero di Hop
+    e assumendo che il router X abbia annunciato di raggiungere tutti gli host su internet con 5 hop
+\end{itemize}
 
 
 \end{document}
+

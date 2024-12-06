@@ -751,4 +751,268 @@ Per convertire un sistema a blocchi in un diagramma flussi (così che sia più f
     \end{table}
 \end{examplebox}
 
+\section{Diagrammi di Bode}
+
+I diagrammi di Bode sono un modo per rappresentare graficamente la risposta in frequenza di un sistema.
+
+\begin{examplebox}{Esempio}
+    \begin{align*}
+        u(t) &= \sin\left(\frac{1}{2}t\right)\\
+        &= \frac{1}{2}\frac{rad}{s}\alpha Hz
+    \end{align*}
+    
+    \begin{align*}
+        v(t) &= 2u(t) + \int u(t)dt\\
+        &= 2sin\left(\frac{1}{2}t\right) + \int sin\left(\frac{1}{2}t\right)dt\\
+        &= 2sin\left(\frac{1}{2}t\right) - 2cos\left(\frac{1}{2}t\right)\\
+        &= \sqrt{2^2+2^2} \sin\left(\frac{1}{2}t + a\tan\left(\frac{-2}{2}\right)\right)\\
+        &= 2.83 \sin\left(\frac{1}{2}t - 0.785\right)\\
+        &= A \sin(\omega t + \phi)
+    \end{align*}
+\end{examplebox}
+\noindent
+Questo diagramma ci aiuta a capire come si comporta un sistema descritto da segnali
+\textbf{sinusoidali}. 
+\subsection{Motivo delle sinusoidi}
+I sistemi descritti da segnali sinusoidali sono utili perchè
+vedremo che qualsiasi segnale può essere rappresentato come una somma di sinusoidi.
+
+\vspace{1em}
+\noindent
+Un sistema LTI causale permette le seguenti operazioni:
+\begin{itemize}
+  \item \( u(t) \cdot a \) 
+  \item \( \frac{d u(t)}{t} \) 
+  \item \( \int u(t) \,dt \) 
+  \item \( u_1(t) + u_2(t) \) 
+\end{itemize}
+L'output del sistema è un onda scalata rispetto all'ampiezza o ritardata rispetto al
+tempo:
+
+\begin{examplebox}{Esempio}
+  Prendiamo ad esempio il seguente sistema:
+  \[
+  \begin{aligned}
+    u(t) &= \sin(\frac{1}{2}t)\\
+    \omega &= \frac{1}{2} \frac{rad}{s} \alpha Hz
+  \end{aligned}
+  \] 
+  Calcoliamo l'ingresso:
+  \[
+  \begin{aligned}
+    v(t) &= 2 \cdot u(t) + \int u(t) \,dt\\
+         &= 2 \sin(\frac{1}{2}t) + \int \sin(\frac{1}{2}t) \,dt\\
+         &= 2 \sin(\frac{1}{2}t) - 2 \cos(\frac{1}{2}t)
+  \end{aligned}
+  \] 
+  Utilizziamo un'\textbf{identità trigonometrica}, cioè:
+  \[
+    \begin{aligned}
+      \color{red}a \color{black} sin(x) + \color{red} b \color{black} cos(x) =\\
+      = \sqrt{a^2 + b^2} \cdot \sin(x + \rho )
+    \end{aligned}
+  \] 
+  dove: \( \rho = atan\left(\frac{b}{a}\right) \quad a \ge 0 \) 
+  \[
+  \begin{aligned}
+    v(t) &= \overbrace{2}^{a} \sin(\overbrace{\frac{1}{2}t}^{x}) \overbrace{- 2}^{b} \cos(\frac{1}{2}t)\\
+         &= \sqrt{2^2 + (-2)^2} \cdot  \sin\left(\frac{1}{2}t + atan\left(\frac{-2}{2}\right)\right)\\
+         &= \sqrt{8} \cdot  \sin\left(\frac{1}{2}t + atan(-1)\right)\\
+         &= 2.83 \cdot \sin\left(\frac{1}{2}t - 0.785\right)\\
+         &= A \cdot \sin(\omega + \phi)
+  \end{aligned}
+  \] 
+\end{examplebox}
+
+\subsection{Rappresentazione del diagramma di Bode}
+Il diagramma di bode permette di rappresentare il comportamento di un sistema LTI formato 
+da sinusoidi, di seguito guardiamo un diagramma semi-logaritmico 
+(cioè con un asse lineare e uno logaritmico) che rappresenta l'ampiezza e la fase di un
+sistema LTI:
+
+\vspace{1em}
+\noindent
+\textbf{Osservazione}:
+
+\noindent
+  Il decibel \( dB \) è un unità di misura inventata nel 1920 per misurare quanto si
+  disperde il segnale acustico su una transmission unit (\( 1TU = 10 \log_{10} \Delta_{\text{Potenza}} \)).
+  Quindi un decibel è il minimo di potenza che un orecchio umano può percepire.
+  \[
+    \text{Potenza} = \text{Ampiezza}^2
+  \] 
+  \[
+    1 bel = 1 TU = 10\log_{10} A^2 = 20 \log_{10} A
+  \] 
+  \[
+    1 dB = \frac{1}{10} bel
+  \] 
+
+  \begin{examplebox}{Esempio}
+    \[
+      \begin{aligned}
+        u(t) &= \sin(\frac{1}{2}t) \quad \omega = \frac{1}{2}\\
+        v(t) &= 2.83 \cdot \sin\left(\frac{1}{2}t - 0.785\right)\\
+      \end{aligned}
+    \] 
+    Studiamo il sistema in frequenza:
+    \label{05-12-D4}
+    \[
+      \begin{aligned}
+        V(s) &= \left( 2 + \frac{1}{s} \right) U(s)\\
+        \frac{V(s)}{U(s)} &= 2 + \frac{1}{s} = \frac{2s + 1}{s} \quad \text{Funzione di trasferimento del sistema}\\
+      \end{aligned}
+    \] 
+    \( s \) è un numero complesso:
+    \[
+      s = \sigma + j \omega
+    \] 
+    Con la risposta in frequenza la \( s \) diventa solo \( s = j \omega \), quindi
+    otteniamo:
+    \[
+      \begin{aligned}
+        \frac{V(s)}{U(s)} &= \frac{2j\omega + 1}{j\omega}\\
+                          &= \frac{2 \cancel{j \omega}}{\cancel{j \omega}} + \frac{1}{j \omega} \cdot \frac{j}{j}\\
+                          &= 2 - \frac{1}{\omega} \cdot j\\
+      \end{aligned}
+    \] 
+    La rispsota del sistema nel piano dei complessi è:
+    \label{05-12-D5}
+    dove:
+    \[
+      \begin{aligned}
+        \text{Ampiezza} &= l = \sqrt{\Re^2 + \Im^2}\\ 
+        \text{Fase} &= \theta = atan2\left( \Im, \Re \right)
+      \end{aligned}
+    \]
+    \[
+      atan2(\sigma ,j \omega) =
+      \begin{cases}
+        atan \left( \frac{\omega}{\sigma } \right) & \text{se } \sigma > 0,\;\; \omega \in \mathbb{R}\\
+        segno(\omega) \cdot \frac{\pi}{2} & \text{se } \sigma = 0,\;\; \omega \neq 0\\
+        atan \left( \frac{\omega}{\sigma } \right) + \pi \cdot segno(\omega) & \text{se } \sigma < 0,\;\; \text{ o } \sigma =0\;\; \omega \ge  0
+      \end{cases}
+    \] 
+    Il diagramma di Bode sarà:
+  \end{examplebox}
+
+\subsection{Risposta in frequenza}
+
+\[u(t) = Ae^{\omega_0 + \phi} \Longrightarrow Ae^{j\phi}e^{j\omega_0t} \Longrightarrow LTI{BIBO} \Longrightarrow v(t)\]
+
+\[A \in \mathbb{R}_+ \; \;\phi,\omega \in \mathbb{R}\]
+\begin{align*}
+    H(j\omega) &:= \int_{-\infty}^{+\infty} h(\tau)e^{-j\omega t}d\tau \; \; \text{per ogni } \omega \in \mathbb{R}\\
+    &:= \mathcal{L}[h(t)]\bigg|_{s = j\omega}(s)\\
+\end{align*}
+\noindent
+Prendiamo come esempio un fasore:
+\[u(t) = Ae^{j\phi}e^{j\omega t}\] 
+\[u(t) \rightarrow [h(t)] \rightarrow v(t)\]
+\begin{align*}
+    v(t) &= \int_{-\infty}^{+\infty} h(\tau)u(t-\tau)d\tau\\
+    &= \int_{-\infty}^{+\infty} h(\tau)Ae^{j\phi}e^{j\omega(t-\tau)}d\tau\\
+    &= Ae^{j\phi}e^{j\omega t}\int_{-\infty}^{+\infty} h(\tau)e^{-j\omega \tau}d\tau\\
+    &= Ae^{j\phi}e^{j\omega t}H(j\omega) = Ae^{j\phi}e^{j\omega t}A(\omega)e^{j\phi(\omega)}\\
+    &= AA(\omega)e^{j(\phi + \phi(\omega))}e^{j\omega t}
+\end{align*}
+Dove $A$ è l'ampiezza di $u(t)$, $A(\omega)$ è l'ampiezza della risposta in frequenza, $\phi$ è la fase di $u(t)$ e $\phi(\omega)$ è la fase della risposta in frequenza, $\omega$ è la frequenza iniziale e 
+rimane invariata.
+\textit{Bode ci serve a capire il comportamento del sistema al variare della frequenza del segnale d'ingresso.} Che sia un fasore o una sinusoide ci dice cosa succede se aumentiamo o diminuiamo la frequenza del nostro segnale d'ingresso.
+
+
+\subsection{Operazioni tra numeri complessi}
+
+\begin{property}
+    Siano $a$ e $b$ due numeri complessi, allora:
+    \begin{itemize}
+        \item $|ab| = |a||b|$
+        \item arg$(ab)$ = arg$(a)$ + arg$(b)$
+        \item  $|a / b| = |a| / |b|$
+        \item arg$(a / b)$ = arg$(a)$ - arg$(b)$
+        \item $|a^n| = |a|^n$
+        \item arg$(a^n)$ = n arg$(a)$
+    \end{itemize}
+\end{property}
+\begin{property}
+    Sia $s$ un numero complesso con $x \in \mathbb{C} t.c.:$
+    \[\log s = x \Longleftrightarrow s = e^x\]
+    E scrivendo S in forma esponenziale e x in forma complessa:
+    \[S = \rho e^{j\omega} \; \; x = \sigma + j\omega\]
+    \begin{align*}
+        \log s &= x\\
+        &= \log \rho + j\phi\\
+        &= \log |s| + j arg(s)
+    \end{align*}
+\end{property}
+
+\subsection{Forma di Bode}
+
+\begin{align*}
+    H(s) &= \frac{{\sum_j b_j S^j}}{{\sum_i a_i S^i}}U(s)\\
+    &= K\frac{(s-z_1)^{\mu_1} \dots (s - z_e)^{\mu_e}}{(s-p_1)^{\gamma_1} \dots (s - z_r){^\gamma_r}}
+\end{align*}
+Molteplicità delle soluzioni algebriche:
+\[l \le m, \mu_1 + \dots + \mu_e = m\]
+\[r \le n, \gamma_1 + \dots + \gamma_r = n\]
+\begin{theorem}
+    La forma di Bode di un sistema LTI è:
+\begin{align*}
+    H(s) &= K_b \frac{\prod_i (1 + s\tau_i')^{\mu_i'} \prod_k \left(1 + 2\zeta_k' \frac{s}{\omega_{n,k}'} + \frac{s^2}{(\omega_{n,k}^2)}\right)^{\mu_k'}}{(S^{r_1})\prod_i (1 + s\tau_i)^{\mu_i} \prod_k \left(1 + 2\zeta_k \frac{s}{\omega_{n,k}} + \frac{s^2}{(\omega_{n,k}^2)}\right)^{\mu_k}}
+\end{align*}
+\begin{itemize}
+    \item[] $K_b$: è il termine costante (o guardagno di Bode)
+    \item[] $S^r$: raggruppa tutti le radici nulle
+    \item[] $(1+s\tau_i)^{\mu_i}$: raggruppa la singola radice reale 
+    \item[] $\left(1 + 2\zeta_k \frac{s}{\omega_{n,k}} + \frac{s^2}{(\omega_{n,k}^2)}\right)^{\mu_k}$: raggrupa la singola radice complessa coniugata
+\end{itemize}
+\end{theorem}
+Per arrivare a questa forma dobbiamo raccogliere le "costanti":
+\begin{examplebox}{Esempio}
+    \[H(s) = 4\frac{s^3+s^2-2s}{s^3+s^2}\]
+    \begin{enumerate}
+        \item Poli/Zeri Nulli
+        \[H(s) = 4 \frac{s(s+2)(s-1)}{s^2(s+1)} = 4 \frac{1}{2} \frac{s^2+s-2}{s+1}\]
+        \item Poli e zeri reali e cerco di arrivare alla forma di bode: $(1 + s\tau)^{\mu}$
+        \begin{align*}
+            H(s) &= 4\frac{1}{s}\frac{s^2+s-2}{s+1}\\
+            &= 4\frac{1}{s}\frac{(s+2)(s-1)}{s+1}\\
+            &= 4\frac{1}{s} \frac{-(1 - s)2\left(1 + \frac{s}{2}\right)}{(1 + s)} \\
+            &= \frac{-8}{1} \frac{1}{s} \frac{(1-s)\left(1-\frac{s}{2}\right)}{1+s}\\
+            &= -8 \frac{1}{s} \frac{(1-s)\left(1 + \frac{s}{2}\right)}{1+s}\\
+            &= -8 \frac{1}{s} \frac{(1 - s) + \left(1 + \frac{s^2}{2}\right)}{1+s}\\
+            &= K_b \frac{1}{s^\mu} \frac{(1+s\tau_1)^{\mu_i} (1+s\tau_2)^{\mu_2}}{(1+s\tau_1)^{mu_1}}
+        \end{align*}
+        \item Polo o zero complesso coniugato
+        \begin{align*}
+            &= (s-(\sigma + j\omega))(s-(\sigma - j\omega)) = s^2 - 2\sigma s + \sigma^2 + \omega^2\\
+            &= (s^2-s\sigma + sj\omega - s\sigma - sj\omega + |z|^2)\\
+            &= (s^2 - 2s\sigma + |z|^2)^\mu\\
+            &= |z|^{2\mu} \left(1 - 2\frac{2\sigma}{|z|^2}s + \frac{s^2}{|z|^2}\right)^\mu\\
+            &= |z|^{2\mu} \left(1 -2\zeta\frac{s}{\omega_n} + \frac{s^2}{\omega_n^2}\right)^\mu
+        \end{align*}
+        dove $\zeta = \frac{-\sigma}{|z|} = -\frac{-Re(z)}{|z|}$ è il coeff. di smorzamento e $w_n = |z|$ ovvero la pulsazione naturale.
+    \end{enumerate}
+\end{examplebox}
+\noindent
+Dobbiamo trasformare $H(s) \rightarrow H(j\omega)$: Analisi in frequenza
+\[H(j\omega) = K_b \frac{\prod_i (1 + j\omega\tau_i')^{\mu_i'} \prod_k \left(1 + j2\zeta_k' \frac{j\omega}{\omega_{n,k}'} - \frac{(j\omega)^2}{(\omega_{n,k}^2)}\right)^{\mu_k'}}{(S^{r_1})\prod_i (1 + j\omega\tau_i)^{\mu_i} \prod_k \left(1 + j2\zeta_k \frac{j\omega}{\omega_{n,k}} - \frac{(j\omega)^2}{(\omega_{n,k}^2)}\right)^{\mu_k}}\]
+\begin{examplebox}{Esempio 2}
+    
+    \begin{align*}
+        H(s) &= \frac{s^2-2s^2-8s}{s^4 - 2s^3 + 2s^2} = \frac{s(s^2-2s-8)}{s^2(s^2-2s+2)} = \frac{s^2-2s-8}{s(s^2-2s+2)}\\
+        &= \frac{(s-4)(s+2)}{s(s^2-2s+2)}\\
+        &= \frac{-4\left(1 - \frac{s}{4}\right)\cancel{2}\left(1 + \frac{s}{2}\right)}{s\cancel{(2)}\left(1 - s + \frac{s^2}{2}\right)} = -4\frac{1}{s}\frac{\left(1 - \frac{s}{4}\right)\left(1 + \frac{s}{2}\right)}{\left(1 - s + \frac{s^2}{2}\right)}\\
+    \end{align*}
+    Ora vediamo ogni singolo $(1 + s\tau)^{\mu}$:
+    \begin{itemize}
+        \item $\left(1 - \frac{s}{4}\right)$ dove $\tau_1 = -\frac{1}{4}$
+        \item $\left(1 + \frac{s}{2}\right)$ dove $\tau_2 = \frac{1}{2}$
+        \item $\left(1 - s + \frac{s^2}{2}\right)$ dove $w_n^2 = 2 \rightarrow w_n = \sqrt{2}$
+        \[\frac{2\zeta}{w_n} = -1 \Longrightarrow \frac{2\zeta}{\sqrt{2}} = -1 \Longrightarrow \zeta = \frac{-1\sqrt{2}}{2} = -\frac{\sqrt{2}}{2}\]
+    \end{itemize}
+   
+\end{examplebox}
+
+
 \end{document}
