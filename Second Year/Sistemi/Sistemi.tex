@@ -1014,5 +1014,99 @@ Dobbiamo trasformare $H(s) \rightarrow H(j\omega)$: Analisi in frequenza
    
 \end{examplebox}
 
+\subsubsection{Quattro possibili diagrammi di Bode}
+
+\begin{enumerate}
+    \item Terminte costante $K_b$
+    \item Uno zero o un polo nullo $S^\mu$ dove $\mu$ è la moltepliicità
+    \item Polo o zero reale $(1 + s\tau)^{\mu}$
+    \item Polo o zero complesso coniugato $\left(1 + 2\zeta \frac{s}{\omega_n} + \frac{s^2}{\omega_n^2}\right)^\mu$
+    dove $\zeta$ è il coeffiicente di smorzamento e $\omega_n$ è la pulsazione naturale.
+\end{enumerate}
+Partiamo dal primo:
+\begin{enumerate}
+    \item  \[A = |H(j\omega) = |K_b|\]
+     Un numero reale ha 2 fasi:
+    \[\phi = atan2(\sigma + j\omega) = \begin{cases}
+        0\degree & \text{se } \sigma > 0\\
+        -180\degree & \text{se } \sigma < 0 
+    \end{cases}\]
+    \item Polo nullo 
+    con $\mu \in \mathbb{Z}, \mu > 0$ zero, $\mu < 0$ polo
+    \[H(s) = H(j\omega) = (j\omega)^{\mu}\]
+    Consideriamo l'ampiezza di $H(j\omega)$:
+    \[|H(s)| = |(jw)^\mu| = |\omega|^\mu = \omega^\mu\]
+    \begin{align*}
+        A(\omega) = |H(j\omega)|_{dB} &= 20\log_{10} \omega^\mu = 20\mu \log_{10} \omega\\
+    \end{align*}
+    Questa è una rette che cresce/decresce di $20\mu$ dB/decade.
+    Cosa succede invece alla fase?
+    \[\phi(\omega) = atan2(j\omega)^{\mu} = \mu \cdot atan2(j\omega) = \mu 90\degree\]
+    Retta costante che passa per per $\mu$ di $90\degree$. Consideriamo i seguenti zeri e poli di $H(j\omega)$:
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{c|c|c|c}
+            $\omega$ & $S^1$ & $S^{-1}$ & $S^{-2}$\\
+            \hline
+            $10^{-2}$ &-40 & 40 & 80\\
+            $10^{-1}$ &-20 & 20 & 40\\
+            $10^0$ & 0 & 0 & 0\\
+            $10^1$ & 20 & 20 & 40\\
+            $10^2$ & 40 & -40 & 80\\
+        \end{tabular}
+    \end{table}
+    \item Zeri e poli reali 
+    \\
+    I poli possono essere scritti così:
+    \[\frac{1}{1+\frac{s}{\omega_0}} = \frac{1}{1+  \tau s}\]
+    \[\omega_0 = \frac{1}{|\tau|}\]
+    \[A(\omega) = 20\log_{10} (\sqrt(\Re^2 + \Im^2))\]
+    \[\phi(\omega) = atan2(\Im , \Re)\]
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{c|c|c}
+            $\omega < \omega_0$ & $\omega = \omega_0$ & $\omega > \omega_0$\\
+            \hline
+            $A(\omega) = 20\log_{10} 1 = 0$ & $A(\omega) = 20\log_{10} \sqrt{-2} = -3db$ & $A(\omega) = 20\log_{10} \sqrt{\omega^2\tau^2 + 1} = 20db$\\
+            $\phi(\omega) = atan2(1) = 0$ & $\phi(\omega) = atan2(2) = -45\degree$ & $\phi(\omega) = atan2(\omega\tau) = -90\degree$\\
+        \end{tabular}
+    \end{table}
+    \item Poli e zeri complessi coniugati
+    \[H(s) = \left(1 + 2\zeta\frac{\omega}{\omega_n} + \frac{\omega^2}{\omega_n^2}  \right)^{\mu}\]
+    Partiamo del caso di un polo:
+    \[H(s) = \frac{\omega_0^2}{s^2 + 2\zeta\omega_0s+ \omega_0^2} \stackrel{\text{Bode}}{\Longrightarrow} \frac{1}{1 + 2\zeta\frac{s}{\omega_0} + \frac{s^2}{\omega_0^2}} \stackrel{s=j\omega}{\Longrightarrow} \frac{1}{1 +2j\omega\frac{\omega}{\omega_0} + \frac{\omega^2}{\omega_0^2}}\]
+    Fattorizziamo:
+    \[\Re = \frac{1 - \left(\frac{\omega}{\omega_0}\right)^2}{\left(1- \left(\frac{\omega}{\omega_0}\right)^2\right)^2 + \left(2\zeta\frac{\omega}{\omega_0}\right)^2}\]
+    \begin{itemize}
+        \item Se $\omega << \omega_0$
+        \[A(\omega) = -20\log_{10}(1) = 0\]
+        \[\phi(\omega) = atan2(0) = 0\degree\]
+        \item Se $\omega >> \omega_0 = \omega_n$
+        \[A(\omega) = -20\log_{10} \left(\frac{\omega}{\omega_0}\right)^2 = -40\log \left(\frac{\omega}{\omega_0}\right)\]
+        È una retta che decresce di 40db/decade
+        \[\phi(\omega) = atan2\left(2\zeta\frac{\omega}{\omega_0}\right) = -180\degree\]
+        \item $\omega = \omega_0 = \omega_n$
+        Per $\zeta \ge 0.5$:
+        \[A(\omega) = -20\log_{10} (2\zeta) = 0\]
+        Il grafico passa per $\omega_0$, ma se $\zeta <0.5$? Picco di risonanza.
+        Se $\zeta = 0$ c'è discontinuità.
+        \[\phi(\omega)  = -90\degree\]
+        In generali le fomule per calcolare l'ampiezza di un polo o zero complesso coniugato sono:
+        \begin{itemize}
+            \item $\omega >> \omega_0$
+            \[A(\omega) = -20\log_{10} \left(\frac{\omega}{\omega_0}\right)^2 = -40\log_{10} \left(\frac{\omega}{\omega_0}\right)\]
+            \[\phi(\omega) = \mu sgn(\zeta) = -180\degree\]
+            \begin{itemize}
+                \item $\zeta = 0$ asintoto verticiale in $A(\omega)$ in $\omega_n$
+                \item $0 < \zeta < 0.5$ picco di risonanza, per cui la pulsazione naturale: $\omega_r = \omega_n\sqrt{1-2\zeta^2}$ e l'ampiezza del picco: $M_r = 20\mu\log_{10}(2\zeta\sqrt{1-\zeta^2})$
+                \item $\zeta = 0.5$ $A(\omega) = 0$
+                \item $0.5 > \zeta > 1$ "Passa sotto" il grafico asintotico
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+
+
 
 \end{document}

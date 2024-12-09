@@ -462,7 +462,7 @@ Distinguiamo tre casi:
 \begin{enumerate}
     \item \[f(n) \in O(n^{\log_ba - \epsilon}) \Longrightarrow T(n) \in \Theta(n^{\log_ba})\]
     \item \[f(n) \in \Theta(n^{\log_ba}) \Longrightarrow T(n) \in \Theta(f(n)\log n)\]
-    \item \[f(n) \in \Omega(n^{\log_ba} + \epsilon) \Longrightarrow T(n) \in \Theta(f(n))\]
+    \item \[f(n) \in \Omega(n^{\log_ba + \epsilon} ) \Longrightarrow T(n) \in \Theta(f(n))\]
 \end{enumerate}
 
 \begin{examplebox}{Esempio 1}
@@ -1821,7 +1821,7 @@ Tutti i casi sono esaustivi poiché abbiamo coperto ogni caso. Il caso 1 è il c
   Quindi anche questo algoritmo termina in tempo $O(\log n)$.
 \end{itemize}
 
-\subsection{Estrazione in un RB-Albero}
+\subsubsection{Estrazione in un RB-Albero}
 
 Se nell'albero binario posso andare a sinistra o a destra per ogni passaggio, ora sicuramente so che la complessità del mio algoritmo in un RB-Albero è $O(\log n)$.
 
@@ -1896,7 +1896,7 @@ Tuttavia una volta aver estratto il valore, devo aggiornare la proprietà \texti
   è O(1) e quindi è costante.
 \end{examplebox}
 
-\subsection{Campi aggiuntivi}
+\subsubsection{Campi aggiuntivi}
 Si possono aggiornare dei campi aggiuntivi all'interno della struttura dell'RB-Albero per velocizzare alcuni algoritmi (come abbiamo visto per size)
 ma dobbiamo prestare attenzione a mantenere la complessità delle operazioni inalterate.
 \begin{theorem}
@@ -2035,8 +2035,211 @@ Prendiamo come esempio le due stringhe:
     ]
 \end{forest}
 \end{figure}
+\noindent
+Non è possibile unire due RB-Alberi in tempo logaritmico in modo deterministico perché:
+\begin{itemize}
+  \item L'operazione richiede spesso una manipolazione globale della struttura.
+  \item Il bilanciamento degli RB-Alberi impone vincoli che possono richiedere tempo lineare rispetto alla dimensione degli alberi coinvolti.
+\end{itemize}
 
+\subsection{Heap Binomiale}
 
+Un heap binomiale è una collezione di alberi binomiali. Un albero binomiale di dimensione $0$ è un singolo nodo.
+
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+  for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=3em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=1cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+}
+[]
+\end{forest}
+\end{figure}
+\noindent
+Un albero di dimensione $1$ è un albero binario con un solo figlio.
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+  for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=3em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=1cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+}
+[
+  []
+]
+  \end{forest}
+\end{figure}
+\noindent
+Un albero di dimensione $2$ diventa:
+\begin{figure}[H]
+\centering
+\begin{forest}
+for tree={
+draw, % Disegna i nodi
+circle, % Forma dei nodi
+minimum size=3em, % Dimensione minima dei nodi
+inner sep=1pt, % Spaziatura interna dei nodi
+s sep=1cm, % Spaziatura verticale tra i livelli
+scale=0.8
+}
+[
+  [
+    []
+  ]
+  []
+]
+\end{forest}
+\end{figure}
+\noindent
+Un albero di dimensione $3$ diventa:
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+  for tree={
+  draw, % Disegna i nodi
+  circle, % Forma dei nodi
+  minimum size=3em, % Dimensione minima dei nodi
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=1cm, % Spaziatura verticale tra i livelli
+  scale=0.8
+  }
+  [
+    [
+      [
+        []
+      ]
+      []
+    ]
+    [
+      []
+    ]
+    []
+  ]
+  \end{forest}
+  \end{figure}
+  
+Dato un albero di dimensione $i$ posso costruire un albero di dimensione $i+1$ in tempo costante. Questi alberi hanno una serie di proprietà:
+\begin{lemma}
+  In un albero binomiale di dimensione $k$: 
+  \begin{itemize}
+    \item ci sono $2^k$ nodi.
+    \item L'altezza è $k$.
+    \item A profondità $i$ ci sono $\binom{k}{i}$ nodi.
+    \item I figli della radice da sx a dx sono radici di alberi binomiali di dimensione $k-1, k-2, \dots, 0$.
+  \end{itemize}
+\end{lemma}
+\noindent
+Cerchiamo di dimostrare le proprietà che abbiamo appena elencato:
+\begin{proof}
+  \textbf{Ci sono $2^k$ nodi}: Supponiamo per induzione che in albero di dimensione $k$ ci siano $2^k$ nodi.
+  Come è fatto un albero di dimensione $k+1$?
+  
+\end{proof}
+
+\begin{proof}
+  \textbf{L'altezza è $k+1$}:
+  Supponiamo per induzione che in albero di dimensione $k$ ci siano $2^k$ nodi.
+  Come è fatto un albero di dimensione $k+1$?
+  \noindent
+  L'albero di dimensione $k+1$ è formato da un albero di dimensione $k$ e un albero di dimensione $k$.
+  Quindi ci sono $2 \cdot 2^k = 2^{k+1}$ nodi.
+  L'altezza è $k+1$.
+  A profondità $i$ ci sono $\binom{k+1}{i}$ nodi.
+  I figli della radice da sx a dx sono radici di alberi binomiali di dimensione $k, k-1, \dots, 0$.
+\end{proof}
+
+\begin{proof}
+  \textbf{I figli dellla radice da sx a dx sono radici di alberi binomiali di dimensione $k-1, k-2, \dots, 0$}: 
+  Per $k=0$ è vero.
+  Dato che l'altezza è $k+1$, il figlio sinistro della radice è un albero binomiale di dimensione $k$ e il figlio destro è un albero binomiale di dimensione $k-1$.
+\end{proof}
+
+\begin{proof}
+  \textbf{A profondità $i$ ci sono $\binom{k}{i}$ nodi}: 
+  Supponiamo per induzione che in albero di dimensione $k$ ci siano $\binom{k}{i}$ nodi.
+  Come è fatto un albero di dimensione $k+1$?
+  \noindent
+  L'albero di dimensione $k+1$ è formato da un albero di dimensione $k$ e un albero di dimensione $k$.
+  Quindi ci sono $\binom{k}{i} + \binom{k}{i-1}$ nodi.
+  Quindi, tramite l'identità di Pascal, otteniamo $\binom{k+1}{i}$ nodi.
+  L'identità di Pascal dice che \[\binom{k}{i} + \binom{k}{i-1} = \binom{k+1}{i}\]
+  A profondità $i$ ci sono $\binom{k+1}{i}$ nodi.
+  I figli della radice da sx a dx sono radici di alberi binomiali di dimensione $k, k-1, \dots, 0$.
+\end{proof}
+\noindent
+Quindi riassumendo: \textit{La Heap Binomiale è una lista di alberi binomiali} dove
+\begin{itemize}
+  \item I contenuti dei nodi sono oggetti su cui è definita una relazione di ordinamento
+  \item Per ogni di dimensione c'è al più un albero binomiale
+  \item I vari nodi soddisfano la proprietà di heap (chiave[x] $\leq$ chiave[children[x]])
+\end{itemize}
+\begin{examplebox}{Esempio 1}
+  La complessità di trovare il minimo all'interno di questo Heap Binomiale si basa sul numero di radici. Dove $n$ è il numero di nodi:
+  \[k > \log_2 n\]
+  \[2^k > 2^{\log_2 n} = n\]
+  Quindi la complessità è $O(\log n)$, anzi $\Omega(\log n)$ perché devo scorrere tutti gli alberi.
+\end{examplebox}
+
+\begin{examplebox}{Esempio 2}
+  Se volessi costruire uno Heap Binomiale con $n$ nodi fissato, è possibile perché essendo ogni albero rappresentabile come $2^k$ 
+  posso scomporre il valore $n$ come somma di potenze di due.
+  \[n = 2^{k_1} + 2^{k_2} + \dots + 2^{k_m}\]
+  Per esempio:
+  \[37 = 2^5 + 2^2 + 2^0\]
+  Quindi posso costruire uno Heap Binomiale con qualsiasi $n$ nodi.
+\end{examplebox}
+
+\subsubsection{Unione di Heap Binomiali}
+
+Supponiamo di voler fare l'unione di due heap binomiali $H_1$ e $H_2$. TODO TODO
+Massimo di iterazione massimo $O(\log n)$ e quindi la complessità è $O(\log n)$.
+\\
+L'inserimento di un nodo non è altro che l'unione di un nodo di dimensione $0$ con l'heap binomiale a cui vogliamo aggiungere il nodo.
+
+\subsubsection{Rimozione di un nodo}
+Se voglio rimuovere un nodo (magari il più piccolo) dovrei eliminare la radice.
+L'idea è quella di rimuovere il nodo e poi unire tutti gli alberi binomiali che sono stati divisi.
+Rimuovere la radice si può fare in tempo $O(\log n)$.
+
+\subsubsection{Diminuzione di una chiave e rimuovere un elemento arbitrario}
+
+Se voglio dimunuire una chiave in un nodo devo stare attento a non violare la proprietà di heap.
+Se la chiave diminuita è minore della chiave del padre, allora devo scambiare il nodo con il padre e così via fino a che non violo la proprietà di heap.
+La complessità di questa operazione è $O(\log n)$.
+Ridurre una chiave potrebbe essere utili in diversi campi. Ci sono molte operazioni molto potenti che però portano a complessità maggiori.
+Per \textbf{rimuovere un nodo arbitrario} grazie alla diminuzione della chiave, posso portarla fino alla radice in modo che poi rimuovere la radice sia un'operazione $O(\log n)$.
+Quindi in tempo logaritmico con una Heap posso:
+\begin{itemize}
+  \item Inserire un nodo
+  \item Trovare il minimo
+  \item Unire due Heap Binomiali
+  \item Rimuovere un nodo
+  \item Diminuire una chiave
+  \item Rimuovere un nodo arbitrario
+\end{itemize}
+Cosa non posso fare in tempo logaritmico?
+\begin{itemize}
+  \item Trovare il massimo
+  \item Cercare un elemento arbitrario
+\end{itemize}
+\subsubsection{Dividere un heap binomiale}
+Se io volessi dividere un heap grande in due heap più piccoli mantenendo la differenza
+al più di uno bisogna mantenere da parte il nodo di dimensione 0 e dividere il resto. il
+nodo da parte verrà poi riaggiunto ad una delle due liste utilizzando un unione.
+
+\subsubsection{Trovare il mediano}
+
+Essendo l'array non ordinato, trovare il mediano è un'operazione che richiede tempo lineare.
+La chiave è trasformare i dati nell'array in un heap binomiale e poi procedere per trovare il mediano. Poiché l'heap binomiale non supporta direttamente l'accesso al mediano, sono necessari alcuni passaggi aggiuntivi.
 
 
 \end{document}
