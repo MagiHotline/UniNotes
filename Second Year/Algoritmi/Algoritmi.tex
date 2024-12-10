@@ -2306,12 +2306,54 @@ Tuttavia, alcune operazioni non possono essere eseguite in tempo \( O(\log n) \)
 
 \subsubsection{Trovare il mediano}
 
-
 Poiché l'array di partenza non è ordinato, trovare il mediano richiede generalmente un'operazione di tempo lineare, ovvero \(O(n)\). Tuttavia, è possibile ottimizzare questo processo trasformando l'array in un heap binomiale. L'heap binomiale, sebbene non permetta l'accesso diretto al mediano, offre una struttura che può facilitare il processo.
 \\
 Per trovare il mediano utilizzando un heap binomiale, è necessario seguire alcuni passaggi aggiuntivi. In particolare, dopo aver costruito l'heap binomiale, si può procedere ad estrarre gli elementi in ordine crescente (o decrescente), fino a raggiungere l'elemento centrale. Sebbene l'heap binomiale non fornisca un accesso diretto alla posizione del mediano, l'ordinamento parziale che essa garantisce può ridurre il numero di operazioni necessarie rispetto a un ordinamento completo dell'array.
 \\
 In alternativa, un approccio come l'algoritmo di selezione del k-esimo elemento potrebbe essere utilizzato in combinazione con l'heap binomiale per trovare il mediano in modo più efficiente. 
 
+\subsubsection{RB-Alberi e Euristiche}
+
+Se in un RB-Albero non dobbiamo cercare la chiave precisa ma la chiave più vicina dobbiamo cercare di utilizzare l'RB Albero
+in modo tale da poter usare la potenza del suo ordinamento.
+Come chiave di ordinamento uso la chiave x-k ovvera la differenza tra le due misure.
+
+\begin{lstlisting}[language = Scala]
+// Primo candidato
+// k valore a cui voglio avvicinarmi
+// BestCandidate e' un ulteriore candidato
+searchClosest(x,k) 
+  if x == null
+      return null
+  else if(key[x] > k)
+      bestCandidate = searchClosest(right[x], k)
+  else if (key[x] < k)
+      bestCandidate = searchClosest(left[x], k)
+
+  if bestCandidate == null ||  (key[x] - k) < (bestCandidate - k) 
+    return x
+  else 
+    return bestCandidate
+\end{lstlisting}
+Questo algoritmo ha complessità $O(\log n)$ poiché dobbiamo comunque passare per il cammino radice foglia.
+
+\begin{examplebox}{Esempio}
+Ora immaginiamo questo problema: Siamo dei venditori di macchine e conteniamo i dati delle macchine all'interno 
+di un record dove sono contenuti informazioni come: prezzo di vendita, data di vendita, ecc. Vogliamo trovare la somma dei prezzi delle macchine che abbiamo venduti fino ad una certa data.
+Per costruire questo tipo di albero possiamo servirci della possibilità di aggiungere campi aggiuntivi mantenibili in tempo logaritmico.
+\begin{lstlisting}[language = Scala]
+SearchDate(x, k)
+  if(x == null) 
+    return null
+  else if (date[x] <= k) 
+    bestDate = SearchDate(right[x], k)
+    return best ?? x //equivalente a scrivere -> best != null ? best : x
+  else if (date[x] > k) 
+    bestDate = SearchDate(left[x], k)
+    return best ?? x
+\end{lstlisting}
+Quindi ora abbiamo trovato il candidato migliore della data a cui possiamo applicare il rango per trovare la somma dei prezzi delle macchine vendute fino a quella data.
+
+\end{examplebox}
 
 \end{document}

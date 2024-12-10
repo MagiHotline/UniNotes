@@ -434,7 +434,7 @@ Quindi:
 \[SEG = 1 + 2 + 4 + 8 + 8 + 9 + 10 + 11 + \cancel{12} + 1 + 2 + 4 + \cancel{6} + 1 + \overbrace{\cancel{2}}^{1} = 62 \]
 \[CWND_{finale} = CWND_{old} + \# ACK = 3\]
 
-\subsection{}
+\subsection{ Esercizio 2 02/07/2020}
 
 Tre lan con i seguenti vincoli sul numero di host:
 
@@ -482,6 +482,50 @@ La tabella di routing del ROUTER A:
         Internet & $X$ & 6 \\
     \end{tabular}
 \end{table}
+
+\section{Esercizi sul livello 2}
+
+Esercizi su algoritmi di accesso al mezzo condiviso (Aloha, CSMA).
+\\
+Data una serie di trame generate dalle stazioni determinare l'evoluzione
+della trasmissione.
+\textbf{Osservazione importante:} il generatore di numeri casuali che viene utilizzato negli esercizi
+in realtà è pseudocasuale, il generatore di numeri casuali che utilizzeremo è una versione semplificata
+che non garantisce le proprietà statistiche di uniformità del campione.
+La procedura è la seguente:
+Si usano le cifre che compongono l'istante di inizio trasmissione, si sommano, 
+    si moltiplicano per il numero di collisioni consecutive e si aggiunge il tempo di Trama
+    \begin{examplebox}{Esempio}
+        Trama trasmessa a $t = 512ms$, ho già subito una collisione (questo è il secondo tenativo di trasmissione) e il tempo di trama è $T = 10ms$.
+        \[z \rightarrow ((5+1+2)\cdot 2) + 10 = 26\]
+    \end{examplebox}
+
+\subsection{Esercizio su ALOHA}
+
+3 stazioni collegate d aun mezzo condiviso, $\tau = 0$ che generano le seguenti trame:
+\begin{itemize}
+    \item $A \rightarrow t_A = 410ms$
+    \item $B \rightarrow t_B = 418ms$
+    \item $C \rightarrow t_C = 454ms$
+\end{itemize}
+di cui la velocità di trasmissione $v = 2,5\frac{Mbit}{s}$ e lunghezza delle trame $L = 3750$ byte.
+Tempo di trama $T = \frac{L}{v}$,
+\textbf{Determinare l'evoluzione della trasmissione}:
+(Guarda OneNote per il continuo)
+
+\subsection{Esercizio su CSMA persistente} 
+
+\begin{itemize}
+    \item $v = 2,5\frac{Mbit}{s}$
+    \item $L = 3750$ byte
+    \item $T = \frac{L}{v} = 12ms$
+\end{itemize}
+Per le trame: 
+\begin{itemize}
+    \item $A \rightarrow 2$ trame, $t_A = 225ms$ e $t_{A2} = 240ms$
+    \item $B \rightarrow 1$ trama, $t_B = 228ms$
+\end{itemize}
+
 
 \end{document}
 

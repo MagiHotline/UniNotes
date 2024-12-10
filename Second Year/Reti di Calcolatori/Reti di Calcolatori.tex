@@ -1494,7 +1494,7 @@ Sono due metodi distinti ma allo stesso tempo importanti.
   E in caso di collisioni consecutive, $M$ viene raddoppiato.
 \end{examplebox}
 Periodo di vulnerabilità: intervallo di tempo in cui una trama può subire collisioni dipende dall'algoritmo.
-Per Aloha assumiamo  che il tempo di trama sia fisso o uguale a $T$ \(\left(T = \frac{B}{v}\right)\)
+Per Aloha assumiamo  che il tempo di trama sia fisso o uguale a $T$ \(\left(T = \frac{B}{v}\right)\) (B = lunghezza trama, v = velocità di trasmissione)
 \subsubsection{Slotted Aloha}
 
 Introduce un piccolo meccanismo ovvero la \textit{sincronizzazione}: il tempo è suddiviso
@@ -1592,5 +1592,40 @@ alla stazione \( C \) e finirà di trasmettere a \( t_1 + T + \tau \):
 Se \( A \) genera una trama tra \( [t_1+T,t_1+T+2\tau] \) c'è un tempo di 
 vulnerabilità di \( 2\tau \).
 
+Perché abbiamo bisogno di indirizzi Hardware se ci sono già indirizzi IP? 
+\begin{itemize}
+  \item Gli indirizzi IP sono utilizzati per instradare i pacchetti tra i nodi
+  \item Gli indirizzi MAC sono utilizzati per instradare i pacchetti tra i nodi adiacenti
+\end{itemize}
+Il livello due è necessario per trasmettere i dati in una connessione indiretta. 
+
+\subsection{Indirizzi MAC e ARP (Address Resolution Protocol)}
+
+Come fa un host a conoscere gli indirizzi MAC degli altri host (della propria rete o del router)?
+Qui entra in gioco il protocollo ARP (Address Resolution Protocol). Lo scopo del protocollo ARP è quello di \textit{mappare un indirizzo IP con un indirizzo MAC.}
+\begin{enumerate}
+  \item L'host manda in broadcast una richiesta ARP (Broadcast di livello 2)
+  La richiesta ARP contiene delle informazioni:
+  \begin{itemize}
+    \item Codice identificativo del messaggio ARP (Request o Reply)
+    \item Indirizzo IP per il quale si chiede il corrispondente indirizzo Hardware
+  \end{itemize}
+  \item Solo chi possiede l'indirizzo IP indicato nella richiesta risponde direttamente a chi ha fatto richiesta.
+  \begin{itemize}
+    \item La risposta contiene l'indirizzo MAC cercato
+    \item La risposta ARP è unicast
+  \end{itemize}
+\end{enumerate}
+
+Le risposte ARP ottenute vengono memorizzate in una tabella ARP.
+Questa tabella contiene le coppie IP-MAC e ha un tempo di vita (TTL) di 20 minuti.
+
+\subsection{LAN Estese}
+
+Esistono degli apparati di rete di livello 2 che sostiuiscono il cavo coassiale nelle LAN:
+Come per esempio lo \textbf{switch}. Lo switch è un apparato di rete che permette di collegare più host tra loro.
+Gli switch hanno una tabella contenente l'indirizzo MAC e la porta dello switch corrispondente a cui collegato l'host. 
+Il pacchetto \textit{non viene} modificato dallo switch, ma solo quando passa nel livello di Rete andrò a scartare il livello e appenderò
+un ulteriore livello 2. Esistono diverse configurazioni: gli switch si possono collegare tra di loro:
 
 \end{document}
