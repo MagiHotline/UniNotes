@@ -2140,9 +2140,10 @@ Dato un albero di dimensione $i$ posso costruire un albero di dimensione $i+1$ i
 \noindent
 Cerchiamo di dimostrare le proprietà che abbiamo appena elencato:
 \begin{proof}
-  \textbf{Ci sono $2^k$ nodi}: Supponiamo per induzione che in albero di dimensione $k$ ci siano $2^k$ nodi.
-  Come è fatto un albero di dimensione $k+1$?
-  
+  \textbf{Dimostrazione per induzione: Ci sono $2^k$ nodi}: La proprietà è valida per gli alberi di dimensione 0 ($B_0$) perché ha $2^0 = 1$ nodo.
+  supponiamo per induzione che in un albero di dimensione $k$ ($B_k$) ci siano $2^k$ nodi. Dimostriamo che nell'albero di dimensione $k+1$ ($B_{k+1}) $
+  formato da due alberi $B_k$ sono dunque presenti:
+  \[2^k + 2^k = 2 \cdot 2^k = 2^{k+1}\]
 \end{proof}
 
 \begin{proof}
@@ -2200,46 +2201,117 @@ Quindi riassumendo: \textit{La Heap Binomiale è una lista di alberi binomiali} 
 
 \subsubsection{Unione di Heap Binomiali}
 
-Supponiamo di voler fare l'unione di due heap binomiali $H_1$ e $H_2$. TODO TODO
+Supponiamo di voler fare l'unione di due heap binomiali $H_1$ e $H_2$. 
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[every node/.style={circle, draw, minimum size=7mm, inner sep=0pt}, 
+    sibling distance=1.5cm, edge from parent/.style={draw, -latex}, level distance=1.2cm]
+  
+  % Primo Heap Binomiale
+  \node[draw=blue] (A) {10}
+      child {node[draw=blue] (B) {20}
+          child {node[draw=blue] (C) {40}}
+          child {node[draw=blue] (D) {50}}
+      }
+      child {node[draw=blue] (E) {30}};
+  
+  % Secondo Heap Binomiale
+  \node[draw=red, right=6cm of A] (F) {15}
+      child {node[draw=red] (G) {25}
+          child {node[draw=red] (H) {45}}
+      }
+      child {node[draw=red] (I) {35}};
+  
+  % Heap Unito
+  \node[draw=green, below=5.5cm of A, xshift=3cm] (J) {10}
+      child {node[draw=green] (K) {15}
+          child {node[draw=green] (L) {25}
+              child {node[draw=green] (M) {45}}
+          }
+          child {node[draw=green] (N) {35}}
+      }
+      child {node[draw=green] (O) {20}
+          child {node[draw=green] (Q) {50}}
+      }
+      child {node[draw=green] (R) {30}};
+  \node[draw=none, below=1cm of J] {Heap Binomiale Unito};
+  
+  % Linee orizzontali per radici
+  \draw[dashed, gray] (-1,0.8) -- (7,0.8);
+  \draw[dashed, gray] (-1,-4.2) -- (7,-4.2);
+  
+  % Frecce di fusione
+  \draw[->, thick] (A.south) .. controls +(down:2cm) and +(up:2cm) .. (J.north west);
+  \draw[->, thick] (F.south) .. controls +(down:2cm) and +(up:2cm) .. (J.north east);
+  
+  \end{tikzpicture}
+\end{figure}
+
+
 Massimo di iterazione massimo $O(\log n)$ e quindi la complessità è $O(\log n)$.
 \\
 L'inserimento di un nodo non è altro che l'unione di un nodo di dimensione $0$ con l'heap binomiale a cui vogliamo aggiungere il nodo.
 
 \subsubsection{Rimozione di un nodo}
-Se voglio rimuovere un nodo (magari il più piccolo) dovrei eliminare la radice.
-L'idea è quella di rimuovere il nodo e poi unire tutti gli alberi binomiali che sono stati divisi.
-Rimuovere la radice si può fare in tempo $O(\log n)$.
+La rimozione di un nodo in uno heap binomiale è un'operazione che può essere eseguita in tempo 
+$O(logn)$. Supponendo di voler rimuovere il nodo con la chiave più piccola (che corrisponde sempre alla radice dell'heap), il processo si articola nei seguenti passi:
 
-\subsubsection{Diminuzione di una chiave e rimuovere un elemento arbitrario}
+\begin{itemize}
+  \item Identificazione della radice con chiave minima:
+La radice con chiave minima può essere trovata scorrendo l'elenco delle radici degli alberi binomiali. Questo richiede tempo 
 
-Se voglio dimunuire una chiave in un nodo devo stare attento a non violare la proprietà di heap.
-Se la chiave diminuita è minore della chiave del padre, allora devo scambiare il nodo con il padre e così via fino a che non violo la proprietà di heap.
-La complessità di questa operazione è $O(\log n)$.
-Ridurre una chiave potrebbe essere utili in diversi campi. Ci sono molte operazioni molto potenti che però portano a complessità maggiori.
-Per \textbf{rimuovere un nodo arbitrario} grazie alla diminuzione della chiave, posso portarla fino alla radice in modo che poi rimuovere la radice sia un'operazione $O(\log n)$.
-Quindi in tempo logaritmico con una Heap posso:
+$O(logn)$, dato che il numero massimo di alberi binomiali in uno heap è proporzionale a 
+logn.
+
+\item Rimozione della radice:
+Una volta identificata la radice minima, essa viene rimossa. A seguito della rimozione, i sottoalberi figli della radice vengono "scompattati". Ciascuno di questi sottoalberi è un albero binomiale separato, che può essere gestito individualmente.
+
+\item Ricostruzione dello heap:
+Per ripristinare la struttura dello heap binomiale, i sottoalberi risultanti vengono uniti tra loro e con il resto dello heap. L'operazione di unione avviene combinando alberi di gradi uguali, procedendo come nell'algoritmo di fusione. Anche questa operazione richiede 
+$O(logn)$.
+
+\end{itemize}
+In sintesi, l'operazione di rimozione implica un'iterazione sugli alberi binomiali (per identificare la radice minima), seguita dalla fusione dei sottoalberi generati. Entrambe le fasi hanno complessità 
+$O(logn)$, rendendo l'intero processo efficiente.
+
+
+
+\subsubsection{Diminuzione di una chiave e rimozione di un elemento arbitrario}
+
+Per diminuire la chiave di un nodo in uno heap binomiale, è necessario prestare attenzione a non violare la proprietà di heap. Se la chiave diminuita è minore della chiave del padre, occorre scambiare il nodo con il padre e ripetere questa operazione (nota come \textit{risalita}) fino a quando la proprietà di heap non è più violata. La complessità di questa operazione è \( O(\log n) \), poiché la profondità massima di un albero binomiale è \( O(\log n) \).
+\\
+La diminuzione della chiave è utile in molte applicazioni, come negli algoritmi di ottimizzazione. Tuttavia, ci sono operazioni più potenti che potrebbero comportare una complessità maggiore.
+\\
+Per \textbf{rimuovere un nodo arbitrario}, possiamo sfruttare l'operazione di diminuzione della chiave. Riducendo la chiave del nodo a \(-\infty\), il nodo verrà spinto alla radice, rendendo la sua rimozione equivalente a quella della radice, che richiede \( O(\log n) \) tempo.
+\\
+Quindi, con uno heap binomiale, è possibile eseguire le seguenti operazioni in tempo \( O(\log n) \):
+
 \begin{itemize}
   \item Inserire un nodo
   \item Trovare il minimo
-  \item Unire due Heap Binomiali
-  \item Rimuovere un nodo
+  \item Unire due heap binomiali
+  \item Rimuovere la radice
   \item Diminuire una chiave
   \item Rimuovere un nodo arbitrario
 \end{itemize}
-Cosa non posso fare in tempo logaritmico?
+
+Tuttavia, alcune operazioni non possono essere eseguite in tempo \( O(\log n) \):
+
 \begin{itemize}
   \item Trovare il massimo
   \item Cercare un elemento arbitrario
 \end{itemize}
-\subsubsection{Dividere un heap binomiale}
-Se io volessi dividere un heap grande in due heap più piccoli mantenendo la differenza
-al più di uno bisogna mantenere da parte il nodo di dimensione 0 e dividere il resto. il
-nodo da parte verrà poi riaggiunto ad una delle due liste utilizzando un unione.
+
 
 \subsubsection{Trovare il mediano}
 
-Essendo l'array non ordinato, trovare il mediano è un'operazione che richiede tempo lineare.
-La chiave è trasformare i dati nell'array in un heap binomiale e poi procedere per trovare il mediano. Poiché l'heap binomiale non supporta direttamente l'accesso al mediano, sono necessari alcuni passaggi aggiuntivi.
+
+Poiché l'array di partenza non è ordinato, trovare il mediano richiede generalmente un'operazione di tempo lineare, ovvero \(O(n)\). Tuttavia, è possibile ottimizzare questo processo trasformando l'array in un heap binomiale. L'heap binomiale, sebbene non permetta l'accesso diretto al mediano, offre una struttura che può facilitare il processo.
+\\
+Per trovare il mediano utilizzando un heap binomiale, è necessario seguire alcuni passaggi aggiuntivi. In particolare, dopo aver costruito l'heap binomiale, si può procedere ad estrarre gli elementi in ordine crescente (o decrescente), fino a raggiungere l'elemento centrale. Sebbene l'heap binomiale non fornisca un accesso diretto alla posizione del mediano, l'ordinamento parziale che essa garantisce può ridurre il numero di operazioni necessarie rispetto a un ordinamento completo dell'array.
+\\
+In alternativa, un approccio come l'algoritmo di selezione del k-esimo elemento potrebbe essere utilizzato in combinazione con l'heap binomiale per trovare il mediano in modo più efficiente. 
 
 
 \end{document}
