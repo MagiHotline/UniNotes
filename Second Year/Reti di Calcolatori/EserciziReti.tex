@@ -526,6 +526,37 @@ Per le trame:
     \item $B \rightarrow 1$ trama, $t_B = 228ms$
 \end{itemize}
 
+\subsection{Esercizio con Bridge (Switch a 2 porte)}
+
+In questi esercizi viene sempre riportato il comportamento di Bridge.
+Anche il Bridge ha un processo di "Store and Forward", prima memorizza completamente la trama sulla sua memoria interna e
+gestisce la trasmissione come se fosse generata dal bridge in quell'istante.
+\\
+Il comportamento delle due porte del Bridge sono indipendenti. Quindi ci possono essere trasmissioni contemporaneamente nel bridge.
+\begin{examplebox}{Esempio con ALOHA}
+    \[\tau_1 = \tau_2 = \varnothing\]
+    \[v_1 = v_2 = 1,6 \frac{Mbit}{s}\]
+    \[L = 800 byte\]
+\[A: t_{A1} = 216ms,\; t_{A2} = 256ms \text{ entrambe dirette a B}\]
+\[B: t_{B1} = 233ms \text{ diretta ad A}\]
+\[C: t_{C1} = 219ms \text{ diretta ad A}\]
+Calcoliamo il tempo della trama:
+\[T = \frac{L}{v} = \frac{800 \cdot 8 bit}{1.6 \cdot 10^6 \frac{bit}{s}} = 4ms\]
+\end{examplebox}
+
+\subsubsection{24/09/2019 Esercizio 3 d'esame}
+
+\begin{itemize}
+    \item Vi è una stazione per ogni segmento di rete
+    \item Il protocollo utilizzato è CSMA Persistent 
+    \item $\tau_1 = 1ms$ e $\tau_2 = 2ms$ 
+    \item $L = 1500 byte$
+    \item $v = 1,5 \frac{Mbit}{s}$
+    \item $A: t_{A1} = 713ms, t_{A2} = 715ms$ entrambe dirette a $B$
+    \item $B: t_{B1} = 719ms, t_{B2} = 730ms$ entrambe dirette a $A$
+\end{itemize}
+
+
 
 \end{document}
 

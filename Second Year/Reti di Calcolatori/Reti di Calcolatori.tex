@@ -1628,4 +1628,59 @@ Gli switch hanno una tabella contenente l'indirizzo MAC e la porta dello switch 
 Il pacchetto \textit{non viene} modificato dallo switch, ma solo quando passa nel livello di Rete andrò a scartare il livello e appenderò
 un ulteriore livello 2. Esistono diverse configurazioni: gli switch si possono collegare tra di loro:
 
+\subsubsection{LAN Wireless 802.11}
+
+Le reti wireless sono molto simili alle reti cablate, ma con alcune differenze:
+\begin{itemize}
+  \item Il mezzo trasmissivo è l'aria
+  \item Il canale è condiviso
+  \item La trasmissione è half-duplex
+  \item La trasmissione è broadcast
+  \item La trasmissione è soggetta a interferenze
+\end{itemize}
+Bisogna prima capire cosa sia il \textbf{Time Slot} definito come tempo di propagazione minimo tra Access Point e le stazioni associate.
+La distanza massima che ci può essere tra una AP e un Host Fisico è legato da condizioni fisiche. 
+Dipende dalla frequenza utilizzata $\tau << T$. 
+\begin{examplebox}{Esempio}
+  802.11b: \( \tau = 10 \mu s \) e \( T = 1 ms \)
+\end{examplebox}
+\noindent 
+Definiamo 2 intervalli:
+\begin{enumerate}
+  \item SIFS (Short Interframe Space) $\rightarrow$ Intervallo tra due trame consecutive $\tau$ 
+  \item DIFS (Distributed Interframe Space) $\rightarrow$ Intervallo tra due trame consecutive di stazioni diverse $3\tau$
+\end{enumerate}
+Il tempo viene slottizzatto ed è determinato dall'Access Point. 
+\subsubsection{CSMA-CA (Congestion Avoidance)}
+
+Quando una stazione ha una trama da trasmettere:
+\begin{itemize}
+  \item Ascolta il canale
+\end{itemize}
+\begin{enumerate}
+  \item Se il canale è libero
+  \begin{itemize}
+    \item Continuo ad ascoltare il canale per un intervallo pari a DIFS, se il canale continua ad essere libero, trasmette la trama
+  \end{itemize}
+  \item Se il canale è occupato (fin da subito o durante DIFS) continuo ad ascoltare il canale finché non si libera
+  \item Quando si è liberato, ascolto per un ulteriore intervallo DIFS. Se il canale torna occupato, torno al punto 2
+  \item Se il canale rimane libero per un intervallo DIFS:
+  \begin{itemize}
+    \item La stazione estra un numero causale uniformemente distribuito (tra 0 e $CW-1$) (Contention Window)),
+    questo numero casuale $s$ viene interpretato come: 
+    \[s = \# \text{ di slot (SIFS)}\]
+    che devi attendere prima di poter trasmettere
+    \item Fintantoché il canale rimane libero la stazione decrementa $s$.
+    \item Se $s = 0$ trasmette la trama
+    \item Se il canale torna occupato prima che $s$ diventi $0$ congelo il countdown, torno al punto 2, 
+    ma al punto 4 utilizzerò il numero $s$ congelato.
+  \end{itemize}
+  \item Se c'è collisione:
+  \begin{itemize}
+    \item Interrompo la trasmissione
+    \item Estrae un numero casuale e torna al punto 1
+  \end{itemize}
+\end{enumerate}
+
+
 \end{document}

@@ -288,9 +288,9 @@ L'ambiente di sviluppo permette di testare e debuggare i contratti, dashboards p
 
 \subsection{Primo contratto in Solidity: definizione di keywords}
 
+
 \subsubsection{Modificatori di visibilità}
 
-//TODO INTEGRARE dalle SLIDE
 Le funzioni private di uno smart contract possono visibili da tutti, quindi hanno effetto solo sulla possibilità
 o meno di eseguire quella chiamata.
 
@@ -310,19 +310,19 @@ Quello che costa è la scrittura in una blockchain.
 \subsubsection{Tipi e valori di ritorno}
 
 Solidity permette di \textbf{far ritornare più valori} da una funzione.
-\begin{lstlisting}
-    function split(int n, int divisor) public returns (int , int) {
-        return (n / divisor, n % divisor);
-    }
+\begin{lstlisting}[language=Java]
+function split(int n, int divisor) public returns (int , int) {
+    return (n / divisor, n % divisor);
+}
 \end{lstlisting}
 \noindent
 Nell'istruzione returns si può anche specificare il tipo ma anche il nome e la funzione ritornerà
 automaticamente i valori con i nomi specificati.
-\begin{lstlisting}
-    function split(int n, int divisor) public returns (int quotien , int rest) {
-        quotient = n / divisor;
-        rest = n % divisor;
-    }
+\begin{lstlisting}[language=Java]
+function split(int n, int divisor) public returns (int quotien , int rest) {
+    quotient = n / divisor;
+    rest = n % divisor;
+}
 \end{lstlisting}
 
 \subsubsection{Tipi base}
@@ -358,7 +358,7 @@ I seguenti sono i tipi base di Solidity:
     \item Strutture
 \end{itemize}
 
-\subsection{Tipi di memoria in Solidity}
+\subsubsection{Tipi di memoria in Solidity}
 
 Ethereum prevede 4 tipi di memoria:
 \begin{itemize}
@@ -367,10 +367,12 @@ Ethereum prevede 4 tipi di memoria:
     \item Stack: Memoria utilizzata per variabili locali gratis
     \item Calldata: Per copiare parametri di una funzione
 \end{itemize}
-
 I parametri (non i valori di ritorno) di funzione dichiarate devono essere messe nella CallData
 Le variabili di stato invece vanno salvate nello storage.
 Le variabili di stato (per convenzione) hanno un underscore davanti al nome per distinguerle dai parametri, perché le variabili di stato non possono avere lo stesso nome dei parametri.
+
+
+
 
 
 
