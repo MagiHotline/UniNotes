@@ -279,4 +279,99 @@ Benifici della PoS:
     \item Maggiore sicurezza: gli svantaggi economici per chi non si comporta correttamente nel PoS sono sensibilmente più alte rispetto al PoW. I validatori sono disincentivati a mentire essendo che hanno più token in stake.
 \end{itemize}
 
+\subsubsection{Utilizzo di Solidity}
+
+La fase di testing è essenziale quando si programma in Solidity, questo perché, essendo basato su Javascript non è
+fortemente tipizzato e quindi è facile commettere errori e bug.
+\\
+L'ambiente di sviluppo permette di testare e debuggare i contratti, dashboards per l'interazione con Metamask.
+
+\subsection{Primo contratto in Solidity: definizione di keywords}
+
+\subsubsection{Modificatori di visibilità}
+
+//TODO INTEGRARE dalle SLIDE
+Le funzioni private di uno smart contract possono visibili da tutti, quindi hanno effetto solo sulla possibilità
+o meno di eseguire quella chiamata.
+
+\subsubsection{Modificatori di Side Effect}
+
+\begin{itemize}
+    \item View: la funzione può accedere ma non può alterare lo stato delle variabili del contratto
+    Quindi in una funzione view posso leggere le variabili definite nel contratto ma \textbf{non} modificarle
+    \item Pure: la funzione non accede e non modifica lo stato del contratto.
+    \item Payable: la funzione può ricevere pagamenti
+\end{itemize}
+
+Perché sono importanti questi modificatori? In realtà qualsiasi operazione
+in lettura non costa niente. Quindi non c'è necessita di pagare per leggere il contenuto di una blockchain.
+Quello che costa è la scrittura in una blockchain. 
+
+\subsubsection{Tipi e valori di ritorno}
+
+Solidity permette di \textbf{far ritornare più valori} da una funzione.
+\begin{lstlisting}
+    function split(int n, int divisor) public returns (int , int) {
+        return (n / divisor, n % divisor);
+    }
+\end{lstlisting}
+\noindent
+Nell'istruzione returns si può anche specificare il tipo ma anche il nome e la funzione ritornerà
+automaticamente i valori con i nomi specificati.
+\begin{lstlisting}
+    function split(int n, int divisor) public returns (int quotien , int rest) {
+        quotient = n / divisor;
+        rest = n % divisor;
+    }
+\end{lstlisting}
+
+\subsubsection{Tipi base}
+I seguenti sono i tipi base di Solidity:
+\begin{itemize}
+    \item Booleani
+    \begin{itemize}
+        \item costanti true e false e operatori logici
+    \end{itemize}
+    \item Integer (int, unint)
+    \begin{itemize}
+        \item signed e unsigned si possono dichiarare di dimensioni crescente con un incremento di 8bit
+        \item Se non viene specificata la dimensione si assume int256 e unint256 rispettivamente
+    \end{itemize}
+    \item Numeri decimali a virgola fissa (fixed, ufixed)
+    \begin{itemize}
+        \item signed o unsigned dove M è la dimensione totale in bit e N è la dimensione della parte decimale
+    \end{itemize}
+    \item Address, oggetto che rappresente un indirizzo Ethereum a 20-bytes
+    \begin{itemize}
+        \item Offre diverse funzioni utili, le principali sono balance and transfer
+        \item Non esiste un operatore instanceof quindi i cast non falliscono mai
+    \end{itemize}
+    \item Array, Array di array, stringhe
+    \item Mappe o Array associativi
+    \begin{itemize}
+        \item Le chiavi possono essere interi, booleani, indirizzi, byte e stringhe
+        \item I valori possono essere di qualunque tipo
+        \item Non c'è un metodo contains(): è necessario memorizzare in un altro modo le informazioni oppure usare le librerie esterne
+        \item Non è possibilire calcolare l'insieme delle chiavi o l'insieme dei valori
+    \end{itemize}
+    \item Enumerazioni
+    \item Strutture
+\end{itemize}
+
+\subsection{Tipi di memoria in Solidity}
+
+Ethereum prevede 4 tipi di memoria:
+\begin{itemize}
+    \item Storage: area di memoria dove risiedono le variabili di stato di un contratto, rappresenta il contenuto di una blockchain, tuttavia è costosa da utilizzare
+    \item Memoria Volatile: Area di memoria economica per memorizzare valori temporanei e viene cancellata tra due chiamate esterne
+    \item Stack: Memoria utilizzata per variabili locali gratis
+    \item Calldata: Per copiare parametri di una funzione
+\end{itemize}
+
+I parametri (non i valori di ritorno) di funzione dichiarate devono essere messe nella CallData
+Le variabili di stato invece vanno salvate nello storage.
+Le variabili di stato (per convenzione) hanno un underscore davanti al nome per distinguerle dai parametri, perché le variabili di stato non possono avere lo stesso nome dei parametri.
+
+
+
 \end{document}
