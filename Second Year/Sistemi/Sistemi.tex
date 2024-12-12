@@ -1098,7 +1098,7 @@ Partiamo dal primo:
             \[\phi(\omega) = \mu sgn(\zeta) = -180\degree\]
             \begin{itemize}
                 \item $\zeta = 0$ asintoto verticiale in $A(\omega)$ in $\omega_n$
-                \item $0 < \zeta < 0.5$ picco di risonanza, per cui la pulsazione naturale: $\omega_r = \omega_n\sqrt{1-2\zeta^2}$ e l'ampiezza del picco: $M_r = 20\mu\log_{10}(2\zeta\sqrt{1-\zeta^2})$
+                \item $0 < \zeta \le 0.5$ picco di risonanza, per cui la pulsazione naturale: $\omega_r = \omega_n\sqrt{1-2\zeta^2}$ e l'ampiezza del picco: $M_r = 20\mu\log_{10}(2\zeta\sqrt{1-\zeta^2})$
                 \item $\zeta = 0.5$ $A(\omega) = 0$
                 \item $0.5 > \zeta > 1$ "Passa sotto" il grafico asintotico
             \end{itemize}
@@ -1106,6 +1106,240 @@ Partiamo dal primo:
     \end{itemize}
 \end{enumerate}
 
+\begin{examplebox}{Esempio}
+    \[H(s) = \frac{s^2(s+1)(s^2+3s+16)}{(2s-1)}\]
+    \begin{enumerate}
+        \item Portare la funzione di trasferimento in forma di Bode. Se si dovessero trovare trinomi scomponibili, ricordarsi di scomporli. In questo caso
+        il trinomio al denominatore ha soluzioni coniugate complesse e quindi non lo andremo a scomporre.
+        \begin{align*}
+            H(s) &= \frac{s^2(1)\left(1+\frac{s}{1}\right)^1(16)\left(1 + \frac{3}{16}s + \frac{s^2}{16}\right)^1}{-(1 - 2s)^1}\\
+            &= -16 \frac{s^2(1+s)\left(1 +\frac{3}{16}s + \frac{s^2}{16}\right)}{(1-2s)}
+        \end{align*}
+        \item Cominciamo a calcolare i diagrammi di Bode dei diversi termini:
+        \begin{itemize}
+            \item $K_b = -16$: 
+            \[A = 20\log_{10} (|-16|) = 24\]
+            \[\phi = \begin{cases}
+                0\degree & \text{ se } K_b > 0\\
+                -180\degree & \text{ se } K_b < 0
+            \end{cases}\]
+            Quindi $\phi = -180\degree$
+            \begin{figure}[H]
+                % Amplitude plot
+                \centering
+            \begin{tikzpicture}
+                \begin{semilogxaxis}[
+                    title={Bode Plot: Amplitude},
+                    xlabel={Frequency (Hz)},
+                    ylabel={Amplitude (dB)},
+                    grid=both,
+                    xmin=1e-2, xmax=1e2,
+                    ymin=20, ymax=30,
+                    width=10cm,
+                    height=6cm
+                ]
+                    % Amplitude plot
+                    \addplot[
+                        thick,
+                        blue
+                    ]
+                    coordinates {
+                        (1e-2, 27.6) (1e-1, 27.6) (1, 27.6) (10, 27.6) (1e2, 27.6)
+                    };
+                \end{semilogxaxis}
+            \end{tikzpicture}
+            \end{figure}
+            \begin{figure}[H]
+                \centering
+                % Phase plot
+                \begin{tikzpicture}
+                    \begin{semilogxaxis}[
+                        title={Bode Plot: Phase},
+                        xlabel={Frequency (Hz)},
+                        ylabel={Phase (degrees)},
+                        grid=both,
+                        xmin=1e-2, xmax=1e2,
+                        ymin=-200, ymax=-160,
+                        width=10cm,
+                        height=6cm
+                    ]
+                        % Phase plot
+                        \addplot[
+                            thick,
+                            red
+                        ]
+                        coordinates {
+                            (1e-2, -180) (1e-1, -180) (1, -180) (10, -180) (1e2, -180)
+                        };
+                    \end{semilogxaxis}
+                \end{tikzpicture}
+            \end{figure}
+
+            \item $(1+s)$ dove $\mu = 1$ e $\tau = 1$ e quindi $\omega = \frac{1}{|\tau|} = 1$:
+            \[A = 20\log_{10} \omega_n = 0\]
+            Quindi prima di $10^0$ il grafico è piatto in 0. Ma per ogni decade il grafico sale di 20db poichè $A = 20\mu\log_{10}(\omega|\tau|)$.
+            La fase ha un comportamento molto simile. 
+            \[\phi = \mu sgn(\tau)90\degree = 90\degree\]
+            Quindi prima di $(10^{-1}, 0\degree) \phi = 0$ e da $(10^1, 90\degree)$ la fase è di $90\degree$.
+            \begin{figure}[H]
+                % Amplitude plot
+                \centering
+            % Amplitude plot
+            \begin{tikzpicture}
+                \begin{semilogxaxis}[
+                    title={Bode Plot: Amplitude},
+                    xlabel={Frequency (Hz)},
+                    ylabel={Amplitude (dB)},
+                    grid=both,
+                    xmin=1e-2, xmax=1e2,
+                    ymin=-10, ymax=60,
+                    width=10cm,
+                    height=6cm
+                ]
+                    % Amplitude plot
+                    \addplot[
+                        thick,
+                        blue
+                    ]
+                    coordinates {
+                        (1e-2, 0) (1e-1, 0) (1, 0) (10, 20) (100, 40)
+                    };
+                \end{semilogxaxis}
+            \end{tikzpicture}
+            \end{figure}
+            \begin{figure}[H]
+                \centering
+                \begin{tikzpicture}
+                    \begin{semilogxaxis}[
+                        title={Bode Plot: Phase},
+                        xlabel={Frequency (Hz)},
+                        ylabel={Phase (degrees)},
+                        grid=both,
+                        xmin=1e-2, xmax=1e2,
+                        ymin=-10, ymax=100,
+                        width=10cm,
+                        height=6cm
+                    ]
+                        % Phase plot
+                        \addplot[
+                            thick,
+                            red
+                        ]
+                        coordinates {
+                            (1e-2, 0) (1e-1, 0) (1, 45) (10, 90) (100, 90)
+                        };
+                    \end{semilogxaxis}
+                \end{tikzpicture}                
+            \end{figure}
+            \item $s^2$ dove $\mu = 2$:
+            \[A = 20\mu\log(\mu) = 40db/dec\]
+            \[\phi = \mu 90\degree = 180\degree\]
+            \begin{figure}[H]
+                % Amplitude plot
+                \centering
+                \begin{tikzpicture}
+                    \begin{semilogxaxis}[
+                        title={Bode Plot: Amplitude},
+                        xlabel={Frequency (Hz)},
+                        ylabel={Amplitude (dB)},
+                        grid=both,
+                        xmin=1e-2, xmax=1e2,
+                        ymin=-10, ymax=80,
+                        width=10cm,
+                        height=6cm
+                    ]
+                        % Amplitude plot
+                        \addplot[
+                            thick,
+                            blue
+                        ]
+                        coordinates {
+                            (1e-2, 0) (1e-1, 20) (1, 40) (10, 60) (100, 80)
+                        };
+                    \end{semilogxaxis}
+                \end{tikzpicture}
+            \end{figure}
+            \begin{figure}[H]
+                \centering
+                \begin{tikzpicture}
+                    \begin{semilogxaxis}[
+                        title={Bode Plot: Phase},
+                        xlabel={Frequency (Hz)},
+                        ylabel={Phase (degrees)},
+                        grid=both,
+                        xmin=1e-2, xmax=1e2,
+                        ymin=170, ymax=190,
+                        width=10cm,
+                        height=6cm
+                    ]
+                        % Phase plot
+                        \addplot[
+                            thick,
+                            red
+                        ]
+                        coordinates {
+                            (1e-2, 180) (1e-1, 180) (1, 180) (10, 180) (100, 180)
+                        };
+                    \end{semilogxaxis}
+                \end{tikzpicture}
+            \end{figure}
+            \item $\left(1 + \frac{3}{16}s + \frac{s^2}{16}\right)$ dove $\mu = 1$ e $\omega_n = \sqrt{16} = 4$ e $\frac{2\zeta}{\omega_n} = \frac{3}{16} \Longrightarrow \zeta = \frac{3}{8}$:
+            \[A = 40\mu\log_{10}\left(\frac{\omega}{\omega_n}\right) = 40db/decade\]
+            quindi prima di $4$, $A = 0$ e dopo $4$, $A = 40db/decade$. Ora calciamo $\omega_r$ e $M_r$: \dots
+            Per la fase
+            \[\phi = 180\mu sgn(\zeta) = 180\degree\]
+            Dopo $\omega_n$ la fase è di $180\degree$ mentre prima la fase rimane a $\phi = 0\degree$
+            \begin{figure}[H]
+                \centering
+                \begin{tikzpicture}
+                    \begin{semilogxaxis}[
+                        title={Bode Plot: Amplitude},
+                        xlabel={Frequency (Hz)},
+                        ylabel={Amplitude (dB)},
+                        grid=both,
+                        xmin=1e-2, xmax=1e2,
+                        ymin=-10, ymax=80,
+                        width=10cm,
+                        height=6cm
+                    ]
+                        % Amplitude plot
+                        \addplot[
+                            thick,
+                            blue
+                        ]
+                        coordinates {
+                            (1e-2, 0) (1, 0) (4, 0) (10, 20) (100, 60)
+                        };
+                    \end{semilogxaxis}
+                \end{tikzpicture}
+            \end{figure}
+            \begin{figure}[H]
+                \centering
+                \begin{tikzpicture}
+                    \begin{semilogxaxis}[
+                        title={Bode Plot: Phase},
+                        xlabel={Frequency (Hz)},
+                        ylabel={Phase (degrees)},
+                        grid=both,
+                        xmin=1e-2, xmax=1e2,
+                        ymin=-10, ymax=190,
+                        width=10cm,
+                        height=6cm
+                    ]
+                        % Phase plot
+                        \addplot[
+                            thick,
+                            red
+                        ]
+                        coordinates {
+                            (1e-2, 0) (1, 0) (4, 0) (10, 180) (100, 180)
+                        };
+                    \end{semilogxaxis}
+                \end{tikzpicture}
+            \end{figure}
+        \end{itemize}
+    \end{enumerate}
+\end{examplebox}
 
 
 

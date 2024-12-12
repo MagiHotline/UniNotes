@@ -468,7 +468,7 @@ Per la \textbf{LAN 1}, abbiamo bisogno di 9 bit. Quindi, il blocco CIDR per la L
 Per la \textbf{LAN 3} abbiamo bisogno di 11 bit. Quindi, il blocco CIDR per la LAN 3 sarà:
 \[\overbrace{\colorbox{blue!30!white}{1011 0010}}^{178} \; \; \overbrace{\colorbox{blue!30!white}{1111 0010}}^{242} \; \; \overbrace{\colorbox{blue!30!white}{0101}\colorbox{green!30!white}{1}000}^{88} \; \; \overbrace{00000000}^{0} \Longrightarrow 178.242.88.0/21\]
 Per la \textbf{LAN 2} abbiamo bisogno di 9 bit. Quindi, il blocco CIDR per la LAN 2 sarà:
-\[\overbrace{\colorbox{blue!30!white}{1011 0010}}^{178} \; \; \overbrace{\colorbox{blue!30!white}{1111 0010}}^{242} \; \; \overbrace{\colorbox{blue!30!white}{0101}\colorbox{green!30!white}{000}0}^{80} \; \; \overbrace{00000000}^{0} \Longrightarrow 178.242.80.0/21\]
+\[\overbrace{\colorbox{blue!30!white}{1011 0010}}^{178} \; \; \overbrace{\colorbox{blue!30!white}{1111 0010}}^{242} \; \; \overbrace{\colorbox{blue!30!white}{0101}\colorbox{green!30!white}{011}0}^{86} \; \; \overbrace{00000000}^{0} \Longrightarrow 178.242.86.0/21\]
 
 La tabella di routing del ROUTER A:
 
@@ -476,9 +476,9 @@ La tabella di routing del ROUTER A:
     \centering
     \begin{tabular}{c|c|c}
         \textbf{Destinazione} & \textbf{Next Hop} & \textbf{Costo} \\ \hline
-        $X$ & $X$ & 1 \\
-        $B$ & $B$ & 1 \\
-        $C$ & $X$ & 2 \\
+        LAN1 & diretto  & 1 \\
+        LAN2 & diretto & 1 \\
+        LAN3 & $B$ & 2\\
         Internet & $X$ & 6 \\
     \end{tabular}
 \end{table}
