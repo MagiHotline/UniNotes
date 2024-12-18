@@ -2356,4 +2356,282 @@ Quindi ora abbiamo trovato il candidato migliore della data a cui possiamo appli
 
 \end{examplebox}
 
+\subsection{Strutture dati facilmente partizionabili}
+
+Vogliamo una struttura dati che sia formata da insiemi disgiunti di oggetti e possega le seguenti operazioni:
+\begin{itemize}
+  \item \texttt{MakeSet(x)}: Crea un insieme contenente l'oggetto x.
+  \item \texttt{Union(x, y)}: Unisce gli insiemi contenenti x e y.
+  \item \texttt{FindSet(x)}: Restituisce l'insieme contenente x. Cerca quindi il \textbf{rappresentante} dell'insieme a cui appartiene x.
+  Quindi quando voglio capire se due oggetti appartengono allo stesso insieme posso controllare se il risultato di \texttt{FindSet(x)} e \texttt{FindSet(y)} sono uguali.
+\end{itemize}
+posso organizzare gli oggetti nelle liste concatenate in cui il rappresentante è il primo oggetto
+della lista. 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    [
+    every node/.style={draw,minimum size=0.7cm,node distance = 0cm},
+    ]
+    \node (a) {a};
+    \node[above=of a] (at) {};
+    \node[below=of a] (ab) {};
+
+    \node[right=1cm of a] (b) {b};
+    \node[above=of b] (bt) {};
+    \node[below=of b] (bb) {/};
+    
+    \draw[->] (at.center) -- (a.north);
+    \draw[->] (ab.east) -- ++(0.5,0) |- (b.west);
+    \draw[->] (bt) -- ++(0,0.8) -| (at);
+  \end{tikzpicture}
+  \caption{Esempio di una lista concatenata}
+\end{figure}
+\noindent
+in questo modo \texttt{MakeSet(x)} e \texttt{FindSet(x) }hanno complessità costante, ma la \texttt{Union(x,y)}
+avrebbe complessità lineare perché devo capire se i due oggetti hanno lo stesso rappresentante, poi scorrere uno dei due insiemi fino alla fine e poi cambiare
+il puntatore dell'insieme aggiunto al nuovo rappresentante per risolvere il primo problema che causa linearità potrei aggiungere al rappresentante il puntatore all'ultimo elemento.
+\subsubsection{Ottimizzazione della complessità con alberi e unione per rango}
+Se vengono effettuate \( m \) operazioni di cui \( n \) sono \texttt{make\_set} (cioè il numero di oggetti, di conseguenza il numero di union possibili),
+la complessità nel caso pessimo è \( O(m*n) \). Di tutte queste operazioni, le
+\texttt{union} saranno al massimo \( n-1 \) perchè non si possono unire più di
+\( n \) insiemi. Tutte le rimanenti saranno operazioni di tempo costante, di
+conseguenza un altro limite superiore corretto sarebbe \( O(m+n^2) \). Un limite
+superiore migliore si può ottenere calcolando la complessità media di tutte le operazioni
+e quindi la complessità finale diventa: \( O(\frac{m+n^2}{m}) = O(1 + \frac{n^2}{m}) \).
+
+\vspace{1em}
+\noindent
+Per capire se questa complessità è accurata bisogna trovare un insieme di operazioni
+da fare che portino ad avere quella complessità.
+
+\begin{enumerate}
+  \item Si fanno \( n \) \texttt{make\_set} creando \( n \) insiemi
+  \item Si uniscono le coppie di insiemi. Per la prima coppia il costo è \( 1 \),
+    per la seconda \( 2 \) e così via. Il costo totale è:
+    \[
+      1 + 2 + 3 + \ldots + n = \frac{n(n+1)}{2} = \Theta(n^2)
+    \] 
+\end{enumerate}
+Per fare meglio di \( \Theta (n ^2) \) bisogna ottimizzare la union, cioè l'aggiornamento
+di tutti i puntatori. Si potrebbe unire l'insieme più piccolo a quello più grande,
+al posto di unire quello più grande a quello più piccolo e a questo punto bisogna cambiare
+soltanto un puntatore, nel caso in cui l'elemento più piccolo abbia un elemento.
+Questo metodo è chiamato \textbf{unione per rango}.
+Il numero massimo di volte che si può modificare il puntatore al rappresentante dopo
+questa tecnica diventa \( \log_2 n \) perchè:
+\begin{enumerate}
+  \item Se ad un insieme di un elemento viene cambiato il puntatore al rappresentante
+    allora sappiamo che l'insieme risultante avrà minimo 2 elementi:
+    \[
+    \ge 2
+    \] 
+  \item Se ad un insieme di due elementi viene cambiato il puntatore al rappresentante
+    allora sappiamo che l'insieme risultante avrà al minimo 4 elementi (perchè sappiamo
+    che bisogna unire l'insieme più piccolo ad un altro insieme, di conseguenza se
+    sappiamo che l'insieme di due elementi è il più piccolo, l'altro insieme avrà
+    al massimo 2 elementi):
+    \[
+    \ge 4 = 2^2
+    \] 
+
+  \item ...
+
+  \item Se ad un insieme di \( i \) elementi viene cambiato il puntatore al rappresentante
+    allora sappiamo che l'insieme risultante avrà al minimo \( 2^i \) elementi:
+    \[
+    \ge 2^i
+    \]
+\end{enumerate}
+Questa costruzione si chiama \textbf{iterative squaring}.
+\noindent
+La complessità con l'unione per rango diventa:
+\[
+\frac{m + n \log n}{m} = 1 + \frac{n \log n}{m} \le  1 + \log n
+\] 
+
+\vspace{1em}
+\noindent
+Per fare meglio si può rappresentare in un modo alternativo gli insiemi, quindi con
+degli alberi.
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+    for tree={
+      circle,
+      draw,
+      minimum size=2em,
+      inner sep=1pt,
+      s sep=1cm,
+    }
+    [a
+     [b
+       [d]
+       [,draw=none,no edge]
+     ]
+     [c
+       [,draw=none,no edge]
+       [e]
+     ]
+    ]
+  \end{forest}
+  \hspace{1cm}
+  \begin{forest}
+    for tree={
+      circle,
+      draw,
+      minimum size=2em,
+      inner sep=1pt,
+      s sep=1cm,
+    }
+    [f
+     [g
+      [h]
+     ]
+    ]
+  \end{forest}
+  \caption{Esempio di alberi come insiemi}
+\end{figure}
+\begin{itemize}
+  \item \texttt{make\_set(x)}: si crea un albero con un solo nodo
+    \[
+      O(1)
+    \] 
+
+  \item \texttt{find\_set(x)}: si risale l'albero fino alla radice
+    \[
+      O(n)
+    \]
+
+  \item \texttt{union(x,y)}: si fa diventare la radice di un albero il figlio dell'altra
+    \[
+      O(n)
+    \]
+\end{itemize}
+
+\vspace{1em}
+\noindent
+Come prima si può usare l'unione per rango per migliorare la complessità. Ogni volta
+che un nodo aumenta di profondità (grazie all'unione ad un altro albero), il numero
+di nodi raddoppia. Facendo l'unione per rango sappiamo che la complessità della ricerca
+del rappresentante è \( O(\log n) \) e la complessità dell'unione è \( O(\log n) \).
+
+\vspace{1em}
+\noindent
+Siccome la \texttt{find\_set} è \( O(\log n) \) siamo comunque peggio di prima, quindi
+si può far puntare ogni nodo direttamente al rappresentante, ma questo viene fatto
+soltanto quando viene richiamata la \texttt{find\_set}, im modo da non farlo più alle
+chiamate successive. L'algoritmo è il seguente:
+\begin{lstlisting}[language=Scala]
+find_set(x):
+  if parent(x) == x
+    return x
+  else
+    parent(x) = find_set(parent(x))
+    return parent(x)
+\end{lstlisting}
+oppure più compatto:
+\begin{lstlisting}[language=Scala]
+find_set(x):
+  if parent(x) != x
+    x <- find_set(parent(x))
+  return parent(x)
+\end{lstlisting}
+Man mano che vengono eseguite le \texttt{find\_set} la struttura si comprime 
+(\textbf{tecnica di compressione dei cammini}):
+\begin{figure}[H]
+  \centering
+  \begin{forest}
+    for tree={
+      circle,
+      draw,
+      minimum size=2em,
+      inner sep=1pt,
+      s sep=1cm,
+    }
+    [f
+      [a]
+      [b]
+      [c]
+      [...]
+      [g]
+      [h]
+    ]
+  \end{forest}
+\end{figure}
+\noindent
+Di conseguenza la complessità della \texttt{find\_set} diventa costante.
+
+\vspace{1em}
+\noindent
+La nuova complessità sapendo di avere \( m \) operazioni di cui \( n \) \texttt{make\_set}
+diventa:
+\[
+O(m \alpha(m,n))
+\] 
+dove \( \alpha \) è l'inversa della funzione di Ackermann:
+\[
+  \alpha(m,n) = min \left\{ i \ge 1 , \left| A \left( i, \left\lfloor \frac{m}{n} \right\rfloor > \log n \right)  \right.  \right\}
+\] 
+\[
+  A(i,1) = 2^{2^{2^{2^{{\vdots i}^{2}}}}}
+\] 
+Siccome la funzione di Ackermann cresce molto velocemente, la sua inversa
+cresce molto lentamente. Di conseguenza non si riuscirà mai a superare una certa
+costante, quindi la complessità diventa costante.
+
+\subsection{Il concetto di funzione calcolabile}
+
+Le funzioni descritte in maniera \textbf{costruttiva} non sono la totalità delle funzioni
+esistenti perché esse sono maggiori della cardinalità stessa dei naturali (Infinito non numerabile).
+I fratelli maggiori Robison partendo da assiomi di Peano:
+\begin{itemize}
+  \item $0$ è un numero naturale
+  \item $\forall x \in \mathbb{N}, \; x=x$
+  \item $x+0=x$
+  \item $x+(y+1)=(x+y)+1$
+\end{itemize}
+hanno dimostrato che l'insieme delle funzioni costruttive sono ricorsive primitive.
+Ackermann aveva capito che la seguente struttura confutava ciò che i Robinson avevano dimostrato:
+\begin{align*}
+  x &\ast 1 = x\\
+  x &\ast (y+1) = x + x \ast y
+\end{align*}
+oppure
+\begin{align*}
+  x^1 &= x\\
+  x^{y+1} &= x \cdot x^y
+\end{align*}
+Questo dimostrava come ci fossero funzioni che non erano ricorsive primitive.
+\begin{lstlisting}[language=Scala]
+// Funzione di Ackermann in Pseudocodice
+A(x, y) 
+  if x == 0
+    return y + 1
+  else if y == 0
+    return A(x-1, 1)
+  else
+    return A(x-1, A(x, y-1))
+\end{lstlisting}
+
+\subsubsection{Esempio di mantenimento di un campo in un RB-Albero}
+
+\begin{examplebox}{Esempio}
+  Immaginiamo di gestire un agenda in cui poter inserire e togliere appuntamenti con inizio e fine, poi anche
+  una funzione che preso un intervallo di tempo mi restituisce un appuntamento in cui andrebbe in collisione.
+
+  Usiamo gli RB-Alberi in cui i nodi rappresentano gli appuntamenti. In ogni nodo $x$ teniamo il campo $max[x]$ che mantiene
+  il massimo del tempo finale tra tutti i nodi radicati in $x$. Questo campo è mantenibile in tempo logaritmico.
+
+  \begin{lstlisting}[language=Scala]
+search(x,i)
+  if x == nil || i in x
+    return x
+  else if left[x] != nil && max[left[x]] > min[i]
+    return search(left[x], i)
+  else
+    return search(right[x], i)
+  \end{lstlisting}
+\end{examplebox}
+
 \end{document}
