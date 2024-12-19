@@ -1341,6 +1341,80 @@ Partiamo dal primo:
     \end{enumerate}
 \end{examplebox}
 
+\subsection{Diagrammi di Bode Totale}
+
+\pagebreak
+
+\section{Trasformata di Fourier}
+
+Fourier ha scoperto che qualsiasi segnale periodico (o aperiodico) può essere scomposto in una somma di sinusoidi.
+Con Fourier si riesce a rappresentare con somma di frequenze che non sono necessariamente armoniche.
+Le trasformate di Fourier vengono usate in molti campi come la comunicazione, analisi del suono, modulazione o demoloduzione dei segnali, meccanica, cambiamento climatico, ecc.
+
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            axis lines = middle, 
+            xlabel={$x$}, ylabel={$y$},
+            domain=0:2*pi, 
+            grid=both,
+            xmin=0, xmax=2*pi, ymin=-1.5, ymax=1.5
+        ]
+            \addplot[blue, thick, samples=100] {sin(4*deg(x))};
+            \legend{f(x) = $\sin(4t)$}
+        \end{axis}
+        \end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            axis lines = middle, 
+            xlabel={$x$}, ylabel={$y$},
+            domain=0:2*pi, 
+            grid=both,
+            xmin=0, xmax=2*pi, ymin=-1.5, ymax=1.5
+        ]
+            \addplot[red, thick, samples=100] {sin(6.59*deg(x))};
+            \legend{g(x) = $\sin(6.59t)$}
+        \end{axis}
+        \end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            axis lines = middle, 
+            xlabel={$x$}, ylabel={$y$},
+            domain=0:2*pi, 
+            grid=both,
+            xmin=0, xmax=2*pi, ymin=-3, ymax=3
+        ]
+            \addplot[green!70!black, thick, samples=100] {sin(6.59*deg(x)) + sin(4*deg(x))};
+            \legend{$\sin(x)$}
+        \end{axis}
+        \end{tikzpicture}
+        \caption{Somma di f(x) e g(x)}
+\end{figure}
+Ci sono diversi tipi di onde che psosono essere sommate per creare un segnale complesso.
+Come per esempio le onde quadre, triangolari, ecc. 
+
+\subsection{Winding Frequency e la quasi-trasformata di Fourier}
+
+Calcoliamo il centro di massa come la media dei punti sul grafico:
+
+\[cdm = \frac{1}{n} \sum_{k=1}^n g(t_k)e^{-2\pi f_0t}\]
+per cui possiamo trovare il limite:
+\[\lim_{n \rightarrow \infty} \frac{1}{n} \sum_{k=1}^n g(t_k)e^{-2\pi f_0t} = \underbrace{\frac{1}{t_2 - t_1}\bigg|_{t_1}^{t_2} -g(t_k i f_0t) dt}_{\text{Quasi TdF}}\]
+Quindi:
+\begin{align*}
+    TdF &= \int_{-\infty}^{+\infty} g(t)e^{-2\pi i f_0t} dt\\
+\end{align*}
+Proprio come la trasformata di LaPlace ci è utile spostarsi nel dominio delle frequenze da quello del tempo.
 
 
 \end{document}

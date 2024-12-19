@@ -1681,6 +1681,32 @@ Quando una stazione ha una trama da trasmettere:
     \item Estrae un numero casuale e torna al punto 1
   \end{itemize}
 \end{enumerate}
+Nelle WLAN c'è la possibilità di attivare il riscontro al livello 2.
+Il riscontro deve essere mandato dopo un SIFS.
+\subsection{Problema del terminale nascosto}
+Il problema del terminale nascosto è specifico delle reti wireless.
+Una trasmissione wireless è omnidirezionale quindi la potenza trasmessa
+si distribuisce sulla superficie di una sfera. Una volta aver superato il range di trasmissione, la potenza del segnale si riduce, di conseguenza
+il segnale non è più ricostruibile.
 
+\begin{examplebox}{Esempio}
+  Cosa succede con il CSMA-CA se mentre la stazione A trasmette, la stazione B vuole trasmettere una trama con l'Access Point?
+  \begin{itemize}
+    \item La stazione B ascolta il canale e vede che è libero
+    \item L'AP percepisce due segnali $\rightarrow$ collisione e nessuna 
+    delle due stazioni si accorge che c'è stata una collisione
+  \end{itemize}
+
+  Ci sono tre possibili soluzioni:
+  \begin{enumerate}
+    \item ACK di Livello di 2
+    \item Limitare lo spazio di responsabilità dell'access point
+    \item Soluzione protocollare, introduzione di due messaggi RTS e CTS ovvero Request to Send e Clear to Send.
+    L'uso di RTS e CTS permette di risparmiare energia, spengo il circuito di ricezione dopo aver ricevuto un CTS. 
+    Se non c'è RTS e CTS c'è comunque la possibilità di risparmia energia sul canale: ogni volta che c'è una trama e guardo il MAC address destinatario
+    e il campo della lunghezza della trama. Se non sono la destinazione, spengo il canale di ricezione per il tempo necessario per la ricezione della trama.
+    Questo meccanismo viene chiamato NAV (Network Allocation Vector).
+  \end{enumerate}
+\end{examplebox}
 
 \end{document}
