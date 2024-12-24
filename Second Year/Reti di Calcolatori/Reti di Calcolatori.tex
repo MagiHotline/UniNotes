@@ -140,10 +140,6 @@ La banda end-to-end a disposizione viene definito "\textit{troughput}" ed è det
 \section{Modello a strati}
 Il modello a strati affronta la \textbf{comunicazione tra due entità} secondo la modalità
 \textbf{divide et impera}.
-\begin{figure}[H]
-  \centering
-  % \includegraphics[width=0.70\textwidth]{comunicazione}
-\end{figure}
 Per scambiare informazioni le due entità devono comunicare. La comunicazione si divide in:
 \begin{itemize}
   \item \textbf{Comunicazione logica}: Gestisce le problematiche relative all'informazione
@@ -341,11 +337,6 @@ Per identificare un processo servono 2 informazioni:
   \item \textbf{Porta}: Codice numerico che identifica il processo all'interno del 
     calcolatore
 \end{enumerate}
-\begin{figure}[H]
-  \centering
-  % \includegraphics[width=0.7\textwidth]{comunicazione-processi}
-  \caption{Comunicazione tra processi}
-\end{figure}
 Un flusso di comunicazione è identificato univocamente dalla tupla:
 \[
   (IP_A, IP_B, Porta_A, Porta_B)
@@ -553,7 +544,8 @@ Il simbolo "$0x$" vuol dire che sta rappresentando con la notazione esadecimale:
 \[0xFFFFF000 \rightarrow \underbrace{1111  \; \; 1111 \; \; 1111 \; \; 1111  \; \;1111}_{20} \; \; \underbrace{0000  \; \;0000 \; \; 0000}_{12}\]
 Quindi la rete a cui sono connesso è $/20$.
 \end{examplebox}
-Altre inforamzioni sulla rete (dato un indirizzo IP si possono ottenere con il calcolo "\textit{whois}"
+\noindent
+Altre informazioni sulla rete (dato un indirizzo IP si possono ottenere con il calcolo "\textit{whois}".
 \\\\
 \textit{Perché ifconfig dice che il mio indirizzo è associato ad una rete /20, mentre whois dice che è associata ad una rete /16?}
 \\\\
@@ -903,12 +895,27 @@ Quindi avviene uno scambio di segmenti TCM (header senza payload) chiamata \text
   \item \textbf{Ack}: Il client risponde con un segmento con il flag ACK a 1 e l’acknow- ledgment number uguale all’ISN del server + 1.
   \item \textbf{Altri parametri}: MSS (Maximum Segment Size): Indica la dimensione massima di un segmento che il client e il server possono ricevere. Client e server utilizzeranno il valore minimo tra le 2 MSS comunicate. La MSS è contenuta nelle opzioni dell’header TCP, che sono utilizzate solo se necessario.
 \end{itemize}
-Dopo aver instaurato la connessione gli host si possono scambiare i messaggi: Quando lo scambio dei messaggi è terminato, la connessione viene chiusa attra- verso uno scambio di header. Siccome il canale è biirezionale, la chiusura deve avvenire indipendentemente nelle due direzioni. I 2 messaggi sono:
+Dopo aver instaurato la connessione gli host si possono scambiare i messaggi. 
+Ciascuno dei due processi, ossia quello in lato client e quello in lato server, possono terminare indipendentemente la connessione TCP quando non hanno più dati da trasmettere. I casi di chiusura sono due:
 \begin{itemize}
-  \item \textbf{FIN}: sarà un messaggio con il flag \texttt{FIN} a 1.
-  \item \textbf{ACK}: sarà un messaggio con il flag \texttt{ACK} a 1.
+  \item Chiusura unilaterale (visto da client):
+  \begin{enumerate}
+    \item Il client invia un segmento al server con flag FIN = 1.
+    \item Il server risponde inviando un segmento con flag ACK = 1 e si chiude la connes-
+    sione lato client.
+  \end{enumerate}
+  \item Chiusura simultanea (visto da client):
+  \begin{enumerate}
+    \item Il client invia un segmento al server con flag FIN = 1.
+    \item Il server risponde inviando un segmento con flag ACK = 1 e FIN = 1.
+    \item Il client risponde invia un segmento con flag ACK = 1. La connessione si chiude
+    sia lato client sia server.
+  \end{enumerate}
 \end{itemize}
-TCP è un protocollo affidabile, cioè quando un host invia un segmento si aspetta di ricevere il riscontro entro un tempo massimo (RTO, Retransmission Ti- meOut). L’RTO dovrà tenere in conto l’RTT (Round Trip Time), cioè il tempo che impiega un segmento a viaggiare da un host all’altro e tornare indietro.
+Analogamente quando il server vuole chiudere la connessione invia gli stessi messaggi, ma
+in direzione inversa. Alla chiusura della connessione ognuno dealloca le risorse utilizzate.
+\\
+TCP è un protocollo affidabile, cioè quando un host invia un segmento si aspetta di ricevere il riscontro entro un tempo massimo (RTO, Retransmission Timeout). L’RTO dovrà tenere in conto l’RTT (Round Trip Time), cioè il tempo che impiega un segmento a viaggiare da un host all’altro e tornare indietro.
 
 \subsubsection{RTO e RTT}
 
@@ -1131,7 +1138,7 @@ L'header del protocollo IP contiene le seguenti specifiche:
 \subsubsection{Frammentazione IP}
 
 Data una tecnologia di trasmissione (Scheda di rete, a livello datalink) c'è una dimensione massima
-di trasmissione chiamata MTU. \\
+di trasmissione chiamata MTU (Maximum Transmission Unit). \\
 Che cosa succede se un pacchetto durante il percorso incontra una MTU minore di quella del pacchetto?
 \textit{Il pacchetto viene frammentato in pacchetti più piccoli}.
 
@@ -1143,8 +1150,11 @@ I campi dell'header coninvolti nella frammentazione sono:
 \begin{itemize}
   \item \textbf{Identification} $\rightarrow$ Numero progressivo dato dalla sorgente (livello di rete) ad ogni pacchetto (nessuna relazione con il \# sequenza del TCP)
   \item \textbf{Flag} $\rightarrow$ 3 bit: \begin{itemize}
-    \item $\rightarrow$ Bit "M", se il pacchetto non è stato frammentato 0 oppure se è l'ultimo frammento.
-    altrimenti 1 se il pacchetto è un frammento tranne l'ultimo
+    \item Bit "M" 
+    \begin{itemize}
+      \item 0 se il pacchetto non è stato frammentato oppure se è l'ultimo frammento
+      \item 1 se il pacchetto è un frammento tranne l'ultimo
+    \end{itemize}
   \end{itemize}
   \item \textbf{Fragment Offset} $\rightarrow$ Indica la posizione del frammento all'interno del pacchetto originale (diviso per 8.)
 
