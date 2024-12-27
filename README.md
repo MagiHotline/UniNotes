@@ -1,3 +1,4 @@
+[![License: GPL v3](https://img.shields.io/badge/license-MIT-blue)](https://en.wikipedia.org/wiki/MIT_License)
 # Introduction
 
 This collection of notes (only in Italian) is made for everyone who wants to consult it. *These notes are not in any way professional or
