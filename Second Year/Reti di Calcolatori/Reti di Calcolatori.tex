@@ -1383,24 +1383,29 @@ Il router mantiene una tabella NAT con l'informazione legato allo scambio di pac
 La tabella NAT contiene, oltre agli indirizzi IP, anche le porte del livello di trasporto. Questo perché un host può avere più connessioni contemporanee con lo stesso server. (NAPT $\rightarrow$ Network Address Port Translation)
 Spesso ci si riferisce a "NAT" implicitamente per indicare il NAPT.
 Ad ogni rigo viene associato un timer, se non ci sono messaggi che coinvolgono quella riga e il timer scade, la riga viene cancellata.
-Un vantaggio del NAT è quello di 
-
- Limito l'utilizzo agli indirizzi IP pubblici ad un
- 1 solo IP pubblico, per un intera rete privata
+Un vantaggio del NAT è quello di limitare l'utilizzo agli indirizzi IP pubblici ad un
+ 1 solo IP pubblico, per un intera rete privata e quindi sopperire alla mancanza di indirizzi IP.
 
 
 \subsection{Contattare utenti all'interno di una rete privata}
-Una soluzione per contattare un utente all'interno di una rete privata $\rightarrow$ RELAY
-$\rightarrow$ \underline{Dipende dall'applicazione}:\\
-\indent 
-ogni utente per quella applicvazione ha un identificativo univoco $\rightarrow$ per es ZOOM $\rightarrow$ l'indirizzo email
+
+Tuttavia uno degli \textbf{svantaggi} del NAT è che \textit{non è possibile contattare un utente all'interno di una rete privata da un utente esterno}.
+Una rete pubblica non può inviare connessioni ad una rete privata perché è composta da IP privati. 
+Utilizzare l'IP dell'interfaccia del router non serve a niente perché il tuo intento è paralre direttamente con gli host della rete e il router non sa tradurre una connessione in arrivo, ma solo
+solo una connessione in uscita perché conosce la destinazione.
+Di conseguenza la il modo migliore per gestire la comunicazione tra una rete privata e una rete pubblica è gestirla a livello applicativo, creando una specie di "ponte" tra le due reti.
 \\
-\noindent
-Esiste un server chiamato "Directory" che contiene lo stato degli utenti $\rightarrow$ online/offline + indirizzo IP attuale.
-\\ 
-Ogni volta che un utente accede all'applicazione, informa il server Directory del suo stato e con il proprio IP. 
-Quando un utente vuole contattatare un altro utente, chiede al server Directory l'indirizzo IP dell'utente destinatario $\rightarrow$ se l'IP è pubblico, 
-lo contatta direttamente; altrimenti si appoggia ad un altro server chiamato "Relay". 
+Ogni applicazione ha una soluzione diversa per contattare un utente all'interno di una rete, ad esempio, Zoom ha come soluzione l'indirizzo email, Whatsapp ha come soluzione il numero di telefono, ecc.
+I server directory tengono memorizzati questi ID Univoci insieme all'indirizzo IP attuale dell'utente. Quando un utente vuole contattare un altro utente (sulla stessa applicazione) chiede al server directory l'indirizzo IP dell'utente destinatario.
+\begin{itemize}
+  \item Se l'indirizzo IP è pubblico, lo contatta direttamente
+  \item Se l'indirizzo IP è privato, si appoggia ad un altro server chiamato "Relay"
+\end{itemize}
+Se l'IP destinatario è \textbf{pubblico} ci si appoggia al server directory per inviare dei messaggi per stabilire la connessione diretta tra i due utenti
+sfruttando l'IP pubblico. 
+\\
+Se l'IP destinatario è \textbf{privato} entrambi gli untenti aprono una connnessione con il server relay (che fungerà da intermediate) e i pacchetti passeranno attraverso il server relay per 
+permettere la comunicazione tra i due utenti.
 
 \subsection{IPv6}
 
