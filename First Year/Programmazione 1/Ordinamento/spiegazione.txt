@@ -1,0 +1,24 @@
+Algoritmi di ordinamento
+
+- Ordinare una sequenza di elementi(array)
+- Molti algoritmi equivalenti
+    1) Quanto sono intuitivi
+    2) Quanto sono efficienti 
+
+* Naive Sort -> Semplice, intuitivo ma poco efficiente
+* Bubble Sort -> Intuitivo (ma meno del Naive), leggermente più efficiente
+* Insert Sort
+* Merge Sort -> Principio di Divide et Impera
+* Quick Sort -> Complesso ma più veloce 
+
+L'efficienza di un algoritmo di ordinamento si misura in numero di confronti.
+
+----------
+Naive Sort
+----------
+
+while(array non ordinato) {
+    1) trovare posizione P del massimo 
+    2) scambio v[n-1] con P <- v[n-1] contiene il massimo
+    3) posso restringere le mie attenzioni sulle prime n-1 posizioni
+}

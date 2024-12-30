@@ -1,0 +1,74 @@
+--------------[MEMORIA DINAMICA | HEAP]--------------
+
+- Variabili locali -> Vuol dire che possiamo utilizzarla e il suo valore può essere utilizzato solo all'interno della funzione in cui
+la variabile è definita
+- Variabili globali -> Definite all'esterno di qualunque funzione: Il suo valore può essere usato da qualsiasi funzione del programma
+
+Le variabili globali sono inizializzate con valore di default = 0
+int array[10] -> tutti gli elementi inizializzati a 0
+
+Variabili ->  Automatiche: una variabile è detta automatica ogni volta che si dichiara una funzione (STACK)
+          ->  Statiche: STATIC, la particolarità è che vengono create una sola volta quando viene riavviato il programma principale
+                        e quando la funzione termina, la variabile statica mantiene il proprio valore per le prossime invocazioni
+
+-------[ALLOCAZIONE]---------
+In modo STATICO
+In modo AUTOMATICO
+
+-> Allocazione Statica (STACK)
+L'allocazione avviene in modo automatico quando si entra in un blocco di codice e viene rilasciata automaticamente
+quando si esce da questo blocco.
+Richiedono di conoscere la dimensione delle variabili A TEMPO DI COMPILAZIONE (EVITARE INSERIRE DIMENSIONE IN UN ARRAY IN VAR LOCALI)
+
+-> Allocazione Dinamica (HEAP)
+Lo spazio necessario per memorizzare altre variabili è nota solo durante l'esecuzione del programma
+Richiede istruzioni specifiche ed ESPLICITE per allocare e liberare!!!! (deallocarla) la memoria
+
+[ALLOCAZIONE DINAMICA]
+
+calloc() -> 2 argomenti: # elementi da riservare, dimensione, l'area di memoria viene posta a 0 e viene restituito un
+            puntatore all'inizio dell'area di memoria allocata, puntatore di tipo void => Quindi CAST ESPLICITO
+
+malloc() -> 1 argomento: # totale di byte, non pone a 0 la memoria, mi restituisce sempre un puntatore void
+            all'inizio dell'area di memoria allocata => void
+
+[CAPIRE LA DIMENSIONE IN BYTE]
+
+sizeof() -> restituisce la dimensione in byte di un elemento passato come parametro
+
+ESEMPIO:
+
+int x;
+sizeof(x) -> # byte necessari per memorizzare un intero
+
+int array[10];
+sizeof(array); -> array
+
+sizeof(int); -> Nome tipo dato fondamentale
+
+sizeof(struct date); -> nome di un tipo dato derivato (struct)
+
+sizeof(5*int); -> spazio necessario per memorizzare 5 interi
+
+OPERATORE (sizeof) -> NON è UNA FUNZIONE
+HANNO LA CARATTERISTICA CHE VENGONO VALUTATI A TEMPO DI COMPILAZIONE, il risultato del calcolo sostituisce l'operatore
+nel compilato
+
+ESEMPIO:
+
+int *ptr;
+
+ptr = (int *)calloc(1000, sizeof(int));
+            OR
+ptr = (int *)malloc(1000*sizeof(int));
+
+SE SI RICHIEDE Più MEMORIA DI QUELLA DISPONIBILE
+ALLORA IN QUESTO CASO CI VIENE RESTITUITO => NULL
+
+VA CONTROLLATO IL RISULTATO DELL'ALLOCAZIONE!
+
+if(ptr != null)
+
+[LIBERARE LA MEMORIA ALLOCATA]
+
+free(ptr);  //RICORDARSI SEMPRE DI LIBERARE LA MEMORIA!!

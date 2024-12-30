@@ -1,0 +1,54 @@
+DEFINIZIONE INDUTTIVA -> NUMERO PARI
+
+1) 0 è un numero PARI [CASO BASE]
+2) se n è un numero pari allora anche n+2 è un numero pari [PASSO INDUTTIVO
+
+
+- FATTORIALE in una versione iterativa
+
+int fattoriale(int n) {
+
+    int res = 1;
+    for(int i = 0; i <= n; i++) {
+        res = res*i;
+    }
+
+    return res;
+}
+
+- FATTORIALE in una versione ricorsiva
+
+CASO BASE -> n = 0;
+PASSO INDUTTIVO -> n! = n*(n-1)! 
+Scomponiamo il problema in un problema più semplice
+
+Questa ricorsiona è ben definita quando si richiama la funzione in una versione più semplice
+
+int fattric(int n) {
+
+    if(n == 0) {
+        return 1;
+    } else {
+        return n*fattric(n-1);
+    }
+
+}
+
+x^y esponente -> versione iterativa
+
+res = 1;
+for(int i = 1; i <= y; i++) {
+    res *= x;
+}
+
+VERSIONE ricorsiva
+è sempre possibile trovare una versione ricorsiva e iterativa
+
+int esponenziale(int x, y) {
+    if(y==0) {
+        return 1;
+    } else {
+        return x * esponenziale(x, y-1);
+    }
+}
+

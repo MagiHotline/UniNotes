@@ -1,0 +1,56 @@
+FILE
+
+- Persistente
+- Acceduto con più con programmi
+
+[OPERAZIONI]
+
+[1] Creazione / Cancellazione
+[2] Scrittura / Lettura
+[3] Controllo degli errori
+
+    -> Binari
+File
+    -> Testuali => Sequenze di caratteri
+
+                                        -> Posizione corrente nel file ) Sequenziale
+Descrittore del file => Struttura dati
+                                        -> Modalità di accesso ) Lettura/Scrittura
+                                        -> Stato dell'accesso } Errori
+
+-> Tabella dei file aperti => Memoria centrale (Nome del file, cursore, modalità accesso) <-> File
+
+[OPERAZIONI DA POTER ESEGUIRE IN UN PROGRAMMA C PER POTER USARE UN FILE]
+
+(1) Aprire "Flusso di comunicazione" => Aprire il file (Recuperare il Descrittore del file)
+(2) Accedere al file in lettura/scrittura => Eseguire le operazioni del file
+(3) Chiudere il "flusso di comunicazione" => Chiudere il file
+
+FILE *fid; } Puntatore ad una variabile di tipo FILE dove FILE è uns tipo di dato che rappresenta un descrittore
+
+(1) (FOPEN)
+
+fid = FOPEN(nomefile, modalità); (1) Aprire il flusso di comunicazione con il file di "nome" -> "nomefile" o percorso (path) completo o relativo
+
+stringa "w", "r" per scrivere o leggere. -> La modalità di accesso in scrittura SOVRASCRIVE il file. -> FOPEN mi restituisce il puntatore del descrittore
+
+Può succere che FOPEN non possa aprire il file; se non riesce, restituisce NULL Controllare il valore restituito da FOPEN
+
+(3) (FCLOSE (fid))
+
+Chiude il flusso di comunicazione  e prendere come parametro un puntaore a un file.
+
+(2)
+
+[Operazioni]
+Scrittura -> FPRINTF(FID, Stringa di controllo, Lista_Var) Scrive una stringa all'interno del file -> Scrittura sequenziale
+Lettura -> FSCANF(FID, Stringa di controllo, lista_var) Legge una serie di valori da file, quando arriva alla fine del file, non modifica il contenuto delle var,
+FEOF (End of File) a cui passiamo FID controlla se siamo arrivati alla fine del file e mi restituisce 1 se siamo arrivati alla fine altrimenti 0.
+
+--------[Altri comandi]----------
+
+FGETS(Riga, Line)
+-> Legge una riga fino a \n
+-> Riga: char riga[line]
+-> Line: # Caratteri max da leggere
+-> Fid: File *

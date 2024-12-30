@@ -1,0 +1,29 @@
+[LISTE CONCATENATE O LINKED LIST]
+
+Ciascun elemento nelle liste è formato da due parti
+
+[Valore | Puntatore al prossimo elemento]
+
+Utili per gli inserimenti e le cancellazioni
+
+struct node {
+    int data; // char, float ...
+    struct node* nextPtr; //puntatore al prossimo nodo } anche chiamato "link"
+}
+
+// l'ultimo elemento della lista punterà a NULL
+
+I nodi della lista non sono memorizzati necessariamente in modo contiguo
+
+
+[LISTE DOPPIAMENTE CONCATENATE]
+
+Ogni nodo è collegato sia al nodo precendete sia al nodo successivo
+
+Utile nel caso io debba scorrere la lista in entrambe le direzioni
+
+
+
+[PILE o STACK] => Inserimento e cancellazione solo in cima LAST IN FIRST OUT
+[CODA o QUEUE] => Inserimento e cancellazione solo in fondo FIRST IN FIRST OUT
+[ALBERI BINARI o BINARYTREE] => Ricerca veloce, inserimento e cancellazione ordinati efficiente
