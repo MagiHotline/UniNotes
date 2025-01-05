@@ -1,14 +1,12 @@
 package gameoflife;
 
-public class Board {
+import java.io.IOException;
+import java.util.Random;
+
+public class Board  {
     private final int width;
     private final int height;
     private boolean[][] current;
-    private final int howManyAlive;
-
-    public interface NextAliveProcessor {
-        boolean isAliveNextAt(int x, int y);
-    }
 
     /**
      * Inizializza la tavola alle dimensioni indicate, in modo che
@@ -22,13 +20,22 @@ public class Board {
      *         oppure se howManyAlive è negativo o maggiore del numero di cellule della tavola
      */
     public Board(int width, int height, int howManyAlive) {
+        if (width < 0 || height < 0 || howManyAlive < 0 || howManyAlive > width * height)
+            throw new IllegalArgumentException();
+
         this.width = width;
         this.height = height;
-        this.howManyAlive = howManyAlive;
         this.current = new boolean[width][height];
 
-        if(this.width < 0 || this.height < 0 || this.howManyAlive < 0 || this.howManyAlive > (width * height)) {
-            throw new IllegalArgumentException();
+        // Put alive cells in random positions
+        Random random = new Random();
+        while (howManyAlive > 0) {
+            int x = random.nextInt(width);
+            int y = random.nextInt(height);
+            if (!current[x][y]) {
+                current[x][y] = true;
+                howManyAlive--;
+            }
         }
     }
 
@@ -40,6 +47,9 @@ public class Board {
         return height;
     }
 
+    /**
+     * Determina se la cellula (x,y) è viva o morta.
+     */
     public boolean isAliveAt(int x, int y) {
         return current[x][y];
     }
@@ -64,6 +74,10 @@ public class Board {
      */
     public void play(NextAliveProcessor processor) throws InterruptedException {
         while (true) {
+            //Clears Screen in java
+            // ANSI escape code to clear screen
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
             System.out.println(this);
             System.out.println("----------------------------------------");
             next(processor);
@@ -75,9 +89,19 @@ public class Board {
      * Modifica la tavola in modo che la cellula (x,y) sarà viva
      * se e solo se processor.isAliveNextAt(x,y) è vero.
      */
+    /**
+     * Modifica la tavola in modo che la cellula (x,y) sarà viva
+     * se e solo se processor.isAliveNextAt(x,y) è vero.
+     */
     private void next(NextAliveProcessor processor) {
-        if(processor.isAliveNextAt(, ) {
-            current[width - 1][height - 1] = true;
+        boolean[][] next = new boolean[width][height];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                next[x][y] = processor.nextAlive(x, y);
+            }
         }
+
+        current = next;
     }
 }

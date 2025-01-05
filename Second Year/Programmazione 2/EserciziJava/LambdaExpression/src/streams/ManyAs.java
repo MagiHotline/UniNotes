@@ -20,7 +20,6 @@ public class ManyAs {
                 .limit(10)
                 .map(s -> s + " [" + s.length() + "]")
                 .forEach(System.out::println);
-
     }
 
 }

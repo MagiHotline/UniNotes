@@ -27,7 +27,7 @@ public class Server {
 
     public void run() throws IOException {
 
-        
+
         while (true) {
             System.out.println("Server in attesa... ");
 
