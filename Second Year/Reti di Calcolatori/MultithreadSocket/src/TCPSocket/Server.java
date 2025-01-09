@@ -28,6 +28,7 @@ public class Server {
     public void run() throws IOException {
 
 
+
         while (true) {
             System.out.println("Server in attesa... ");
 
@@ -42,7 +43,6 @@ public class Server {
                 ) {
                     // Leggi il messaggio dal client
                     String clientMessage = br.readLine();
-
 
                     System.out.println("Messaggio ricevuto dal client: " + clientMessage);
 

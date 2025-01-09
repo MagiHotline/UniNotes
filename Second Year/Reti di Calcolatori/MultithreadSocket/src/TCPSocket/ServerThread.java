@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ServerThread extends Server {
-
     public ServerThread(int port) throws IOException {
         super(port);
     }

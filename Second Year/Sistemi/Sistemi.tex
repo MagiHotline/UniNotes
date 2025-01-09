@@ -1417,4 +1417,67 @@ Quindi:
 Proprio come la trasformata di LaPlace ci è utile spostarsi nel dominio delle frequenze da quello del tempo.
 
 
+\[\underbrace{e^{j\omega_k t}}_{input} \rightarrow LTI \rightarrow \underbrace{H(\omega_k)}_{Transf. Fun}e^{j\omega_k t}\]
+Questo è il principio di sovrapposizione. Il principio di sovrapposizione dice 
+che se un sistema è lineare e invariante nel tempo, allora la risposta a una somma di segnali è la somma delle risposte ai singoli segnali.
+
+\subsection{Segnali periodici e aperiodici}
+
+Se abbiamo un segnale \textbf{periodico} possiamo scomporlo in una somma (finita) di funzioni elementari tramite la serie di Fourier.
+Invece per un segnale \textbf{aperiodico}, quindi privo di periodicità, andremo ad utilizzare la trasformata di Fourier.
+Mentre nella serie di Fourier le funzioni sono strettamente \textit{collegate} a livello armonico, nella trasformata di Fourier le funzioni sono \textit{indipendenti}.
+
+\subsection{Serie di Fourier}
+
+Prendiamo come un segnale periodico $x(t)$ con periodo $t_0$:
+\[x(t) = x(t + t_0)\]
+\[\omega_0 = \frac{2\pi}{t_0} = 2\pi f_0 \leftarrow \text{ funzione fondamentale}\]
+Se passiamo alla rappresentazione complessa:
+\[e^{j\omega_0t} \rightarrow t_0 = \frac{2\pi}{\omega_0}\]
+\[\phi_k(t) = e^{jk\omega_0 t} \rightarrow t_0 = \frac{2\pi}{k\omega_0}\]
+Questa è una famiglia di funzioni che sono armonicamente collegate perché 
+come si può vedere i loro periodi sono soltanto multipli interi del periodo fondamentale.
+Riscriviamo $x(t)$ come combinazione lineare di $\phi_k$:
+\[x(t) = \sum_{k = -\infty}^{+\infty} a_k e^{jk\omega_0 t}\]
+Dove $a_k$ sono i coefficienti della serie di Fourier.
+\begin{theorem}
+    Si può riscrevere un segnale periodico in somme di sengnali elementari.
+    \[x(t) = \sum_{k = -\infty}^{+\infty} a_k e^{jk\omega_0 t}\]
+    dove $a_k$ sono i coefficienti della serie di Fourier, $k$ è l'indice di armonica e 
+    $\omega_0$ è la frequenza fondamentale. Viene anche chiamata \textbf{equazione di sintesi}.
+\end{theorem}
+I coefficienti $a_k$ si possono calcolare come:
+\begin{align*}
+    a_k &= A_k e^{j\theta k}\\
+    &= B_k + j C_k
+\end{align*}
+Quindi modificando trigonometricamente:
+\begin{align*}
+ e^{jk\omega_0 t} &= \cos(k\omega_0 t) + j\sin(k\omega_0 t)\\
+ x(t) &= a_0 + 2\sum_{k = 1}^{+\infty} A_k \cos(k\omega_0 t + \phi_k)\\
+ \text{oppure } &=   a_0 + 2\sum_{k = 1}^{+\infty} \left[B_k\cos(k\omega_0 t) - iC_k\sin(k\omega_t)\right]\\
+\end{align*}
+Come facciamo a calcolare i coefficienti $a_k$?
+\begin{align*}
+    a_k &= \int_{t_0} e^{-jk\omega_0 t} dt = \begin{cases}
+        t_0 & \text{ se } k = 0\\
+        0 & \text{ se } k \neq 0
+    \end{cases}\\
+    &= \int_{t_0} \cos(k\omega_0 t) dt - \int_{t_0} \sin(k\omega_0 t) dt\\
+\end{align*}
+Si fa quindi l'integrale sul periodo di $x(t)$.
+\begin{align*}
+    \int_{t_0} x(t) e^{-jN\omega_0 t} dt &= \int_{t_0} \sum_{k = -\infty}^{+\infty} a_k e^{jk\omega_0 t} e^{-jN\omega_0 t} dt\\
+    &= \sum_{k = -\infty}^{+\infty} a_k  \underbrace{\int_{t_0} e^{-j(k - N)\omega_0 t} dt}_{\begin{cases}
+        t_0 & \text{ se } k = N\\
+        0 & \text{ se } k \neq N
+    \end{cases}}
+\end{align*}
+\begin{theorem}
+    L'equazione di analisi di Fourier è:
+    \[a_k = \frac{1}{t_0} \int_{t_0} x(t) e^{-jk\omega_0 t} dt\]
+\end{theorem}
+
+
+
 \end{document}
