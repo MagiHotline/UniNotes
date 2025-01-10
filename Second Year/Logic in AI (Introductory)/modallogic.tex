@@ -1,0 +1,134 @@
+\documentclass[a4paper]{article}
+\usepackage{import}
+\input{../../setup.sty}
+\title{Logic in AI - Proof theory of Modal Logical Systems}
+\author{Università di Verona\\Imbriani Paolo -VR500437\\Professor Margherita Zorzi}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.3\textwidth]{UniversityofVerona.png}
+\end{figure}
+
+\maketitle 
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{What is a modal logic?}
+
+In Modal logic are added modalities: $\square, \diamond.$ If $A$ is a formula then $\square A$ and $\diamond A$ are formulas
+There are many type of modalities and meaning we can give to this operator such as:
+
+\begin{itemize}
+    \item Temporal 
+    \item Epistemic
+    \item Doxastic
+\end{itemize}
+
+\subsection{Semantic Models with Kripke}
+
+Structure: $\mathcal{M} = \left<\mathcal{W}, \mathcal{R}, \rho\right>$
+\begin{itemize}
+    \item $\mathcal{W}$ set of possible
+    \item $\rho : \mathcal{W} \rightarrow 2^{AT}$
+    \item $\mathcal{R} \subset \mathcal{W} x \mathcal{W}:$ accessability relation
+\end{itemize}
+There are different axioms in Normal Modal Logic such as:
+\begin{itemize}
+    \item Axiom K: $\square(A \rightarrow B) \rightarrow (\square A \rightarrow \square B)$ which is the kernel
+    of the normal mode logic.
+    \item Axiom D: $\square A \rightarrow \diamond B$
+    \item Axiom T: $\square A \rightarrow A$
+    \item Axiom 4: $\square A \rightarrow \square \square A$
+    \item Axiom 5: $A \rightarrow \square \diamond A$
+\end{itemize}
+And what we can say about this axioms?
+
+\begin{itemize}
+    \item Axiom T, forces the relaiton R in the Kripke model to be \textit{reflexive}.
+    \item Axiom 4, forces the relation R in the Kripke Model to be \textit{transitive}.
+    \item Axiom D, forces the relation R in the Kripke model to be \textit{serial}.
+    \item Axiom 5, forces the relation R in the Kripke model to be \textit{symmetric}. 
+\end{itemize}
+
+\subsection{Logics of Knowledge}
+
+\textbf{Epistemic Modal Logic} where
+\begin{itemize}
+    \item $\square$ is a Knowledge
+    \item $\diamond$ is a Belief
+\end{itemize}
+
+this logic is useful when we want to reason inconsistencies.
+
+\begin{itemize}
+    \item If we know something, that is true
+    \item If we know something, we know that we know something
+\end{itemize}
+
+\subsection{Proof Theory, Deductive Systems in Modal Logic}
+
+There are different deductive styles: sequent calculus, analytic tableaux, natural deduction.
+And there are several approaches, including: labelled deductive systems and geometric/multidimensional deductive systems.
+The desiderata is \textit{cut elimination/normalization and modularity}.
+
+\vspace{1em}
+\noindent
+Another approach is \textbf{"Multidimensional"} systems, formulaes are enriches with a spatial coordinate (index/position)
+that provies information within the proof.
+In this way we can treat modalities in analogy as quantifiers are treated in first-orders systems.
+Only modal operators can "change" the spatial position of the formulae.
+
+\[\forall \leftrightarrow \square\]
+\[\exists \leftrightarrow \diamond\]
+
+
+\subsubsection{General Picture}
+
+According to the assumption we make on the spatial coordinate $S$ of formulas $A^S$ we can "tune" the system to a specific (normal) modal logic:
+\begin{itemize}
+    \item $S$ is a sequence: by seetting some constraints on the rule $\diamond E$ and $\diamond I$ one obtains all the logic from $K$ to $S4$
+    \item $S$ is a set, one captures the system $S4.2$.
+    \item $S$ is a singleton set: one captures $S5$.
+\end{itemize}
+
+\subsection{Position and modalities}
+
+\begin{lemma}
+    A formula $A$ interacts with a formula $B$ with respect to variable $x$ if $x$ occurs in free in both $A$ and $B$.
+\end{lemma}
+We have the possibility to add or remove the $\square$ operator through modal interaction, "playing" with the spatial coordinate and costraint.
+\subsubsection{Position}
+
+\begin{definition}
+    A position is a \textit{sequence of uninterpreted tokens}.
+\end{definition}
+\noindent
+We have associative concatenations and a Successor.
+
+\subsection{What adds S4.2?}
+
+\begin{itemize}
+    \item $S4.2 = S4 + \diamond \square A \rightarrow \square \diamond A (.2)$ 
+\end{itemize}
+This is still an enexplored country but this Logic describes Knowledge and Belief.
+
+\subsection{Beyond S4: the Logic S5}
+
+\begin{itemize}
+    \item S5 = S4 + $\phi \rightarrow \square \diamond \phi \text{ or } K + T + D + \diamond A \rightarrow \square \diamond A$.
+\end{itemize}
+We obtain soundness and completeness $w.r.t$ Hilbert-style.
+
+\subsection{Curry Howard Correspondence and the Intuitionistic}
+
+Through BHK we can interpret proof as we can compute the proofs.
+
+
+\end{document}
+
