@@ -1479,5 +1479,2004 @@ Si fa quindi l'integrale sul periodo di $x(t)$.
 \end{theorem}
 
 
+\subsubsection{Segnali simmetrici e asimmetrici}
+\begin{itemize}
+  \item \textbf{Segnale periodico non-simmetrico}
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[
+          scale=1.5,
+          width=8cm,
+          height=5cm,
+          ylabel = \( v(t) \),
+          xlabel = \( t \),
+          ymin=-2, ymax=2,
+          xmin=-5, xmax=5,
+          xtick = {-1,1},
+          xticklabels = {$-\frac{T_0}{2}$, $\frac{T_0}{2}$},
+          yticklabel style = {anchor=south west, scale=0.8},
+          xticklabel style = {anchor=south west, scale=0.8},
+          axis lines = center
+          ]
+          \addplot[blue, thick] coordinates {
+            (-4,-1) (-4,1)
+            (-3,1) (-3,-1)
+            (-2,-1) (-2,1)
+            (-1,1) (-1,-1)
+            (0,-1) (0,1)
+            (1,1) (1,-1)
+            (2,-1) (2,1)
+            (3,1) (3,-1)
+            (4,-1) (4,1)
+          };
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Segnale periodico non-simmetrico}
+    \end{figure}
+    \[
+      a_k = \frac{1}{T_0} \int_{\frac{-T_0}{2}}^{0} \stackrel{v(t)}{(-1)} \cdot e^{-j k \omega_0 t} \, dt +
+      \frac{1}{T_0} \int_{0}^{\frac{T_0}{2}} \stackrel{v(t)}{1} \cdot e^{-j k \omega_0 t} \, dt
+    \] 
+    \[
+      \stackrel{\vdots}{\downarrow}
+    \] 
+    \[
+      a_k = \frac{1}{j \pi k} \left[ 1 - (-1)^k \right] \quad k \neq 0
+    \] 
+
+    \vspace{1em}
+    \noindent
+    Il grafico dei coefficienti è il seguente:
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[
+          width = 1\textwidth,
+          height = 0.6\textwidth,
+          ylabel = \( j \pi a_k \),
+          xlabel = \( \omega \),
+          ymin=-3, ymax=3,
+          xmin=-6, xmax=6,
+          ytick=\empty,
+          xtick = {-5,-4,...,5},
+          xticklabel style = {scale=0.8},
+          axis lines = center
+          ]
+          \addplot[blue, mark=*, mark size=1.5pt] coordinates {
+              (-5,-2/5) (-4,0) (-3,-2/3) (-2,0) (-1,-2) (0,0)
+              (1,2) (2,0) (3,2/3) (4,0) (5,2/5)
+          };
+          
+          \node[below, scale=0.8] at (axis cs:-5,-2/5) {\( -\frac{2}{5} \)};
+          \node[below, scale=0.8] at (axis cs:-3,-2/3) {\( -\frac{2}{3} \)};
+          \node[below, scale=0.8] at (axis cs:-1,-2) {\( -2 \)};
+          \node[above, scale=0.8] at (axis cs:1,2) {\( 2 \)};
+          \node[above, scale=0.8] at (axis cs:3,2/3) {\( \frac{2}{3} \)};
+          \node[above, scale=0.8] at (axis cs:5,2/5) {\( \frac{2}{5} \)};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Coefficienti \( a_k \) per segnale non-simmetrico}
+    \end{figure}
+
+    \begin{itemize}
+      \item Armoniche dispari
+      \item \( a_k \) immaginari
+      \item \( a_k = -a_{-k}\) antisimmetrico
+    \end{itemize}
+    Siccome tutti i coefficienti sono immaginari si ha una serie di seni e si può
+    riscrivere come:
+    \[
+      v(t) = a_0 + \sum_{k=1}^{+\infty} \underbrace{2j}_{\text{Per avere termini reali}} \cdot a_k \sim(k \omega_0 t)
+    \] 
+
+  \item \textbf{Segnale periodico simmetrico}
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[
+          scale=1.5,
+          width=8cm,
+          height=3.5cm,
+          ylabel = \( v(t) \),
+          xlabel = \( t \),
+          ymin=0, ymax=1.5,
+          xmin=-5, xmax=5,
+          xtick = {-2.5,-1.5,1.5,2.5},
+          ytick = {1},
+          xticklabels = {$-T_0$, $-\frac{T_0}{2}$, $\frac{T_0}{2}$, $T_0$},
+          yticklabel style = {anchor=south west, scale=0.8},
+          xticklabel style = {anchor=north, scale=0.8},
+          axis lines = center
+          ]
+          \addplot[blue, thick] coordinates {
+            (-4,0) (-4,1)
+            (-3,1) (-3,0)
+            (-2,0) (-2,1)
+            (-1,1) (-1,0)
+            (0,0) (0,1)
+            (1,1) (1,0)
+            (2,0) (2,1)
+            (3,1) (3,0)
+            (4,0) (4,1)
+          };
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Segnale periodico simmetrico}
+    \end{figure}
+    \[
+    a_k = \begin{cases}
+      \frac{1}{2} & k = 0\\
+      \frac{\sin\left( \frac{\pi k}{2} \right)}{\pi k} & k \neq 0
+    \end{cases}
+    \] 
+
+    \vspace{1em}
+    \noindent
+    Il grafico dei coefficienti è il seguente:
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[
+          clip=false,
+          width = 1\textwidth,
+          height = 0.6\textwidth,
+          ylabel = \( j \pi a_k \),
+          xlabel = \( \omega \),
+          ymin=-1/2, ymax=2,
+          xmin=-5.5, xmax=5.5,
+          ytick=\empty,
+          xtick = {-5,-4,...,5},
+          xticklabel style = {scale=0.8},
+          axis lines = center
+          ]
+          \addplot[blue, mark=*, mark size=1.5pt] coordinates {
+              (-5,1/5) (-4,0) (-3,-1/3) (-2,0) (-1,1) (0,1/2)
+              (1,1) (2,0) (3,-1/3) (4,0) (5,1/5)
+          };
+          
+          \node[above right, scale=0.8] at (axis cs:0,1/2) {\( \frac{1}{2} \)};
+          \node[above, scale=0.8] at (axis cs:1,1) {\( 1 \)};
+          \node[below, scale=0.8] at (axis cs:3,-1/3) {\( -\frac{1}{3} \)};
+          \node[above, scale=0.8] at (axis cs:5,1/5) {\( \frac{1}{5} \)};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Coefficienti \( a_k \) per segnale simmetrico}
+    \end{figure}
+
+    \begin{itemize}
+      \item Armoniche dispari
+      \item \( a_k \) è reale
+      \item \( a_k = a_{-k} \) simmetrico
+    \end{itemize}
+    Siccome tutti i coefficienti sono reali si ha una serie di coseni e si può riscrivere
+    come:
+    \[
+      v(t) = a_0 + \sum_{k=1}^{+\infty} 2 \cdot a_k \cos(k \omega_0 t)
+    \] 
+\end{itemize}
+
+\subsubsection{Serie di Fourier troncata}
+Serve per limitare la sommatoria a \( N \) termini.
+
+\vspace{1em}
+\noindent
+Sia \( N \in \mathbb{Z} \) 
+\[
+  \underbrace{v_N(t)}_{\text{\( v(t) \) rappresentato con \( N \) componenti}} =
+  \sum_{k=-N}^{N} \tilde{a}_k \cdot e^{j k \omega_0 t} \quad a_k \in \mathbb{C}, \quad \omega_0,t \in \mathbb{R},
+  \quad k \in \mathbb{Z}
+\] 
+Calcoliamo l'errore quadratico medio (MSE, Mean Square Error) che è la misura
+dell'errore di approssimazione
+\[
+  MSE\left(v(t),v_N(t)\right) := \frac{1}{T_0} \int_{T_0} |v(t) - v_N(t)|^2 \, dt
+\] 
+misura l'energia della differenza di due segnali.
+\[
+  \tilde{a}_k = a_k = \lim_{N \to \infty} MSE\left(v(t),v_N(t)\right) = 0
+\] 
+\begin{examplebox}{Definizione}
+  \textbf{Fenomeno di Gibs}: Aumentando il numero di armoniche si ha un aumento
+  di armoniche ad alta frequenza nei punti di discontinuità.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        scale=1.5,
+        width=8cm,
+        height=5cm,
+        ylabel = \( v(t) \),
+        xlabel = \( t \),
+        ymin=-2, ymax=2,
+        xmin=-5, xmax=5,
+        xtick = {-1,1},
+        xticklabels = {$-\frac{T_0}{2}$, $\frac{T_0}{2}$},
+        yticklabel style = {anchor=south west, scale=0.8},
+        xticklabel style = {anchor=south west, scale=0.8},
+        axis lines = center
+        ]
+        \addplot[blue, thick] coordinates {
+            (-4,-1) (-4,1)
+            (-3,1) (-3,-1)
+            (-2,-1) (-2,1)
+            (-1,1) (-1,-1)
+            (0,-1) (0,1)
+            (1,1) (1,-1)
+            (2,-1) (2,1)
+            (3,1) (3,-1)
+            (4,-1) (4,1)
+          };
+
+        \node[font=\tiny, pin=280:{Discontinuità}] at (axis cs:1,-1) {};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Discontinuità}
+  \end{figure}
+  \[
+  T = 2 \pi \quad \text{Non simmetrico}
+  \] 
+  \[
+  t = k \pi 
+  \]
+  \[
+    \begin{aligned}
+      v(t) &= a_0 + \sum_{k=-\infty}^{+\infty} B_k \sin(k \omega_0 t)\\
+      a_k  &= \frac{1}{2 \pi } \int_{0}^{2 \pi} v(t) e^{-j k \omega_0 t} \, dt \\
+           &= \frac{-i}{2 \pi k} \left( 2 - 2 e^{-j \pi t} \right) 
+    \end{aligned}
+  \] 
+  \[
+  a_k = \begin{cases}
+    \frac{-2 j}{k \pi } & k \text{ è dispari}\\
+    0 & \text{altrimenti}
+  \end{cases}
+  \] 
+\end{examplebox}
+
+\subsection{Dalla serie di Fourier alla trasformata di Fourier}
+Se si ha un segnale non periodico che va da \( \left[ -T_1, T_1 \right] \):
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \def\Tone{2}
+    \begin{axis}[
+      height = 0.4\textwidth,
+      ylabel = $v(t)$,
+      xlabel = $t$,
+      xmin=-\Tone*2, xmax=\Tone*2,
+      ymin= 0, ymax = 3,
+      ytick = \empty,
+      xtick = {-\Tone, \Tone},
+      xticklabels = {$-T_1$, $T_1$},
+      axis lines = middle,
+      declare function ={ f(\x) = sin(deg(\x))/2 + 1.5; },
+    ]
+      \addplot[blue,thick,domain=-\Tone:\Tone,samples=100]{f(x)};
+      \draw[dashed] (axis cs:-\Tone,0) -- (axis cs:-\Tone,{f(-\Tone)});
+      \draw[dashed] (axis cs:\Tone,0) -- (axis cs:\Tone,{f(\Tone)});
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Segnale non periodico}
+\end{figure}
+
+\[
+  \underbrace{\tilde{v}(t)}_{\text{Periodico}} = \underbrace{v(t)}_{\text{Non periodico}}
+\] 
+\[
+|t| < \frac{T_0}{2}
+\] 
+Se \( T_0 \to \infty \) si ha che \( \tilde{v}(t) \to v(t) \). Cioè si prende un segnale
+periodico e si fa tendere il periodo a infinito facendolo sembrare non periodico.
+Questo passaggio si può fare anche al contrario, cioè prendere un segnale non periodico
+e farlo diventare periodico.
+\begin{itemize}
+  \item Usiamo la serie di Fourier per rappresentare \( \tilde{v}(t) \) 
+  \item Facciamo tendere \( T_0 \) a infinito \( T_0 \to \infty \) per rappresentare \( v(t) \)
+\end{itemize}
+
+\begin{examplebox}{Esempio}
+  Partiamo da un segnale non periodico e lo replichiamo nel tempo con periodo \( T_0 \) 
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \def\Tone{2}
+      \def\Tzero{2.5*\Tone}
+      \begin{axis}[
+        clip=false,
+        width = 1\textwidth,
+        height = 0.4\textwidth,
+        ylabel = $\tilde{v}(t)$,
+        xlabel = $t$,
+        xmin=-\Tzero*1.5, xmax=\Tzero*1.5,
+        ymin= 0, ymax = 3,
+        ytick = \empty,
+        xtick = {-\Tzero, -\Tone, \Tone, \Tzero},
+        xticklabels = {$-T_0$, $-T_1$, $T_1$, $T_0$},
+        axis lines = middle,
+        declare function ={ f(\x) = sin(deg(\x))/2 + 1.5; },
+        ]
+        \addplot[blue,thick,domain=-\Tone:\Tone,samples=100]{f(x)};
+        \draw[dashed] (axis cs:-\Tone,0) -- (axis cs:-\Tone,{f(-\Tone)});
+        \draw[dashed] (axis cs:\Tone,0) -- (axis cs:\Tone,{f(\Tone)});
+
+        \addplot[green!50!black,thick,domain=-\Tone -\Tzero:\Tone - \Tzero,samples=100]{f(x + \Tzero)};
+        \draw[dashed] (axis cs:-\Tone-\Tzero,0) -- (axis cs:-\Tone-\Tzero,{f(-\Tone)});
+        \draw[dashed] (axis cs:\Tone-\Tzero,0) -- (axis cs:\Tone-\Tzero,{f(\Tone)});
+
+
+        \addplot[green!50!black,thick,domain=-\Tone +\Tzero:\Tone + \Tzero,samples=100]{f(x - \Tzero)};
+        \draw[dashed] (axis cs:-\Tone+\Tzero,0) -- (axis cs:-\Tone+\Tzero,{f(-\Tone)});
+        \draw[dashed] (axis cs:\Tone+\Tzero,0) -- (axis cs:\Tone+\Tzero,{f(\Tone)});
+
+        \node[coordinate, pin={[green!50!black,align=center,pin distance=1cm]above:Segnale non periodico\\replicato con periodo $T_0$}] at (axis cs:\Tzero,{f(0)}) {};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Segnale non periodico replicato}
+  \end{figure}
+  \[
+    \tilde{v}(t) = v(t) \quad |t| < \frac{T_0}{2}
+  \] 
+  Applichiamo la serie di Fourier su \( \tilde{v}(t) \):
+  \[
+    \tilde{v}(t) = \sum_{k=-\infty}^{+\infty} \tilde{a}_k \cdot e^{j k \omega_0 t}
+  \] 
+  \[
+    \omega_0 = \frac{2 \pi}{T_0} = 2 \pi f_0
+  \] 
+  \[
+    \begin{aligned}
+      a_k &= \frac{1}{T_0} \int_{-\frac{T_0}{2}}^{\frac{T_0}{2}} \tilde{v}(t) e^{-j k \omega_0 t} \, dt\\
+          &= \frac{1}{T_0} \int_{-\infty}^{+\infty} v(t) e^{-j k \omega_0 t} \, dt
+    \end{aligned}
+  \] 
+  Rappresentiamo \( k \omega_0 \) con una funzione \( V(\omega) \) 
+  \[
+    V(\omega) := \int_{-\infty}^{+\infty} v(t) e^{-j \omega t} \, dt \quad \to \quad
+    T_0 a_k = V(\omega) \Big|_{\omega = k \omega_0}
+  \] 
+  \( V(\omega) \) è l'\textbf{inviluppo} di \( T_0 a_k \):
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+        width = 1\textwidth,
+        height = 0.6\textwidth,
+        ylabel = \( j \pi a_k \),
+        xlabel = \( \omega \),
+        ymin=-3, ymax=3,
+        xmin=-6, xmax=6,
+        ytick=\empty,
+        xtick={1,...,5},
+        xticklabel style = {scale=0.8},
+        axis lines = center
+        ]
+        \addplot[blue, mark=*, mark size=1.5pt] coordinates {
+            (-5,-2/5) (-4,0) (-3,-2/3) (-2,0) (-1,-2) (0,0)
+            (1,2) (2,0) (3,2/3) (4,0) (5,2/5)
+          };
+
+        \node[pin={[]right:$T_0 a_k$}] at (axis cs: 1, 2) {};
+        \node[pin={[blue]above:$V(w)$}] at (axis cs: 4.5, 0.1) {};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Inviluppo di \( T_0 a_k \)}
+  \end{figure}
+
+  \vspace{1em}
+  \noindent
+  \[
+    \begin{aligned}
+      \tilde{v}(t) &= \sum_{k=-\infty}^{+\infty} a_k \cdot e^{j k \omega_0 t}\\
+                   &= \sum_{k=-\infty}^{+\infty} \frac{1}{T_0} V(k \omega_0) \cdot e^{j k \omega_0 t}\\
+    \end{aligned}
+  \] 
+  \[
+  \downarrow
+  \] 
+  \[
+    \tilde{v}(t) = \frac{1}{2 \pi } \sum_{k=-\infty}^{+\infty} V(k \omega_0) \cdot e^{j k \omega_0 t} \omega_0
+  \] 
+  Se \( T_0 \to \infty \) otteniamo che:
+  \begin{itemize}
+    \item \( \omega_0 \to 0 \) 
+    \item \( \tilde{v}(t) \to v(t) \) 
+    \item \( \omega_0 \to d \omega \) 
+    \item \( \sum \to \int \) 
+  \end{itemize}
+  Con queste premesse possiamo riscrivere la funzione come:
+  \[
+    \tilde{v}(t) = \frac{1}{2 \pi } \sum_{-\infty}^{+\infty} V(k \omega_0) \cdot e^{j k \omega_0 t} \omega_0
+  \] 
+  \[
+  \downarrow
+  \] 
+  \[
+    v(t) = \frac{1}{2 \pi } \int_{-\infty}^{+\infty} V(\omega) \cdot e^{j \omega t} \, d\omega
+  \] 
+  È la trasformata di Fourier inversa.
+
+  \vspace{1em}
+  \noindent
+  \[
+    V(\omega) = \int_{-\infty}^{+\infty} v(t) \cdot e^{-j \omega t} \, dt
+  \] 
+  È la trasformata di Fourier.
+\end{examplebox}
+
+\begin{definition}
+  \[
+    v(t) = \frac{1}{2 \pi } \int_{-\infty}^{+\infty} V(\omega) \cdot e^{j \omega t} \, d\omega
+  \] 
+  È l'\textbf{equazione di sintesi per un segnale non periodico} che equivale alla
+  trasformata \textbf{inversa} di Fourier.
+
+  \vspace{1em}
+  \noindent
+  \[
+    V(\omega) = \int_{-\infty}^{+\infty} v(t) \cdot e^{-j \omega t} \, dt
+  \] 
+  È l'\textbf{equazione di analisi per un segnale non periodico} che equivale alla
+  \textbf{trasformata di Fourier}.
+\end{definition}
+
+\begin{examplebox}{Esempio}
+  Prendiamo ad esempio un segnale non periodico:
+  \[
+    v(t) = e^{-at}
+  \] 
+  Calcoliamo la trasformata di Fourier:
+  \[
+    \begin{aligned}
+      V(\omega) &= \int_{-\infty}^{+\infty} v(t) \cdot e^{-j \omega t} \, dt\\
+                &= \int_{-\infty}^{+\infty} e^{-t (a+j \omega)} \, dt\\
+                &= \frac{-1}{a + j \omega} \cdot e^{-(a+j \omega)t} \Big|_{\infty}^{0}\\
+                &= \frac{1}{a + j \omega}
+    \end{aligned}
+  \] 
+
+  \vspace{1em}
+  \noindent
+  Con Laplace sarebbe stato:
+  \[
+    e^{\lambda t} = \frac{1}{s - \lambda}
+  \] 
+  \[
+  \downarrow
+  \] 
+  \[
+    e^{-at} = \frac{1}{s + a} = \frac{1}{a + j \omega}
+  \] 
+\end{examplebox}
+
+\subsubsection{Sviluppo dei coefficienti di Fourier}
+Prendiamo in considerazione il segnale rettangolare:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \def\Tone{1/2}
+    \def\Tzero{2.5*\Tone}
+    \def\A{1}
+    \begin{axis}[
+      clip=false,
+      width = .6\textwidth,
+      height = .4\textwidth,
+      ylabel = $x(t)$,
+      xlabel = $t$,
+      xmin=-\Tzero*1.5, xmax=\Tzero*1.5,
+      ymin= -0.5, ymax = \A * 2,
+      ytick = \empty,
+      xtick = {-\Tzero, -\Tone, \Tone, \Tzero},
+      xticklabels = {$-T_0$, $-T_1$, $T_1$, $T_0$},
+      axis lines = middle,
+      xlabel style = {below},
+      declare function ={ 
+        rect(\x) = 
+        (abs(\x) > \Tone) * 0 +
+        (abs(\x) == \Tone) * 0 +
+        (abs(\x) < \Tone-0.0001) * \A
+      ;},
+      ]
+      \addplot[blue,thick,domain=-\Tone:\Tone,samples=100]{rect(x)};
+
+      % \addplot[green!50!black,thick,domain=-\Tone -\Tzero:\Tone - \Tzero,samples=100]{rect(x + \Tzero)};
+      % \addplot[green!50!black,thick,domain=-\Tone +\Tzero:\Tone + \Tzero,samples=100]{rect(x - \Tzero)};
+      \node[align=center,opacity=0,scale=0.8] at (axis description cs:0.5,-0.15) {Inviluppo dei\\coefficienti};
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \def\Tone{1/2}
+    \def\Tzero{2.5*\Tone}
+    \def\A{1}
+    \begin{axis}[
+      clip=false,
+      width = .6\textwidth,
+      height = .4\textwidth,
+      ylabel = $\frac{1}{T_0}X(\omega)$,
+      xlabel = $\omega$,
+      xmin=-15, xmax=15,
+      ymin= -0.5, ymax = \A * 1.9,
+      ytick = \empty,
+      axis lines = middle,
+      xlabel style = {below},
+      declare function ={ 
+        sinc(\x) = 
+        (\x == 0) * \A +
+        sin(deg(\x))/\x
+      ;},
+      ]
+      \addplot[cyan,thick,domain=-15:15,samples=100]{sinc(x)};
+
+      \node[align=center,scale=0.8] at (axis description cs:0.5,-0.15) {Inviluppo dei\\coefficienti};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Segnale rettangolare}
+\end{figure}
+\noindent
+Replichiamo il segnale in un periodo \( T_0 \) e osserviamo il cambiamento dei coefficienti
+di Fourier:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \def\Tone{1/2}
+    \def\Tzero{2.5*\Tone}
+    \def\A{1}
+    \begin{axis}[
+      clip=false,
+      width = .6\textwidth,
+      height = .4\textwidth,
+      ylabel = $x(t)$,
+      xlabel = $t$,
+      xmin=-\Tzero*1.5, xmax=\Tzero*1.5,
+      ymin= -0.5, ymax = \A * 2,
+      ytick = \empty,
+      xtick = {-\Tzero, -\Tone, \Tone, \Tzero},
+      xticklabels = {$-T_0$, $-T_1$, $T_1$, $T_0$},
+      axis lines = middle,
+      xlabel style = {below},
+      declare function ={ 
+        rect(\x) = 
+        (abs(\x) > \Tone) * 0 +
+        (abs(\x) == \Tone) * 0 +
+        (abs(\x) < \Tone-0.0001) * \A
+      ;},
+      ]
+      \addplot[blue,thick,domain=-\Tone:\Tone,samples=100]{rect(x)};
+
+      \addplot[green!50!black,thick,domain=-\Tone -\Tzero:\Tone - \Tzero,samples=100]{rect(x + \Tzero)};
+      \addplot[green!50!black,thick,domain=-\Tone +\Tzero:\Tone + \Tzero,samples=100]{rect(x - \Tzero)};
+      \node[align=center,opacity=0,scale=0.8] at (axis description cs:0.5,-0.15) {Inviluppo dei\\coefficienti};
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \def\Tone{1/2}
+    \def\Tzero{2.5*\Tone}
+    \def\A{1}
+    \begin{axis}[
+      clip=false,
+      width = .6\textwidth,
+      height = .4\textwidth,
+      ylabel = $\frac{1}{T_0}X(\omega)$,
+      xlabel = $\omega$,
+      xmin=-15, xmax=15,
+      ymin= -0.5, ymax = \A * 1.9,
+      ytick = \empty,
+      axis lines = middle,
+      xlabel style = {below},
+      declare function ={ 
+        sinc(\x) = 
+        (\x == 0) * \A +
+        sin(deg(\x))/\x
+      ;},
+      ]
+      \addplot[cyan,thick,domain=-15:15,samples=100]{sinc(x)};
+
+      \node[align=center,scale=0.8] at (axis description cs:0.5,-0.15) {Inviluppo dei\\coefficienti};
+
+      \def\inc{1.5}
+      \pgfplotsinvokeforeach{-15,-15 + \inc,...,15}{
+        \draw[cyan, -latex] (axis cs:#1,0) -- (axis cs:#1,{sinc(#1)});
+      }
+    \end{axis}
+  \end{tikzpicture}
+  \caption{$T_0 = 4T_1$}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \def\Tone{1/2}
+    \def\Tzero{3.5*\Tone}
+    \def\A{1}
+    \begin{axis}[
+      clip=false,
+      width = .6\textwidth,
+      height = .4\textwidth,
+      ylabel = $x(t)$,
+      xlabel = $t$,
+      xmin=-\Tzero*1.5, xmax=\Tzero*1.5,
+      ymin= -0.5, ymax = \A * 2,
+      ytick = \empty,
+      xtick = {-\Tzero, -\Tone, \Tone, \Tzero},
+      xticklabels = {$-T_0$, $-T_1$, $T_1$, $T_0$},
+      axis lines = middle,
+      xlabel style = {below},
+      declare function ={ 
+        rect(\x) = 
+        (abs(\x) > \Tone) * 0 +
+        (abs(\x) == \Tone) * 0 +
+        (abs(\x) < \Tone-0.0001) * \A
+      ;},
+      ]
+      \addplot[blue,thick,domain=-\Tone:\Tone,samples=100]{rect(x)};
+
+      \addplot[green!50!black,thick,domain=-\Tone -\Tzero:\Tone - \Tzero,samples=100]{rect(x + \Tzero)};
+      \addplot[green!50!black,thick,domain=-\Tone +\Tzero:\Tone + \Tzero,samples=100]{rect(x - \Tzero)};
+      \node[align=center,opacity=0,scale=0.8] at (axis description cs:0.5,-0.15) {Inviluppo dei\\coefficienti};
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \def\Tone{1/2}
+    \def\Tzero{2.5*\Tone}
+    \def\A{1}
+    \begin{axis}[
+      clip=false,
+      width = .6\textwidth,
+      height = .4\textwidth,
+      ylabel = $\frac{1}{T_0}X(\omega)$,
+      xlabel = $\omega$,
+      xmin=-15, xmax=15,
+      ymin= -0.5, ymax = \A * 1.9,
+      ytick = \empty,
+      axis lines = middle,
+      xlabel style = {below},
+      declare function ={ 
+        sinc(\x) = 
+        (\x == 0) * \A +
+        sin(deg(\x))/\x
+      ;},
+      ]
+      \addplot[cyan,thick,domain=-15:15,samples=100]{sinc(x)};
+
+      \node[align=center,scale=0.8] at (axis description cs:0.5,-0.15) {Inviluppo dei\\coefficienti};
+
+      \def\inc{0.75}
+      \pgfplotsinvokeforeach{-15,-15 + \inc,...,15}{
+        \draw[cyan, -latex] (axis cs:#1,0) -- (axis cs:#1,{sinc(#1)});
+      }
+    \end{axis}
+  \end{tikzpicture}
+  \caption{$T_0 = 8T_1$}
+\end{figure}
+\[
+\ldots
+\] 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \def\Tone{1/2}
+    \def\Tzero{6.5*\Tone}
+    \def\A{1}
+    \begin{axis}[
+      clip=false,
+      width = .6\textwidth,
+      height = .4\textwidth,
+      ylabel = $x(t)$,
+      xlabel = $t$,
+      xmin=-\Tzero*1.5, xmax=\Tzero*1.5,
+      ymin= -0.5, ymax = \A * 2,
+      ytick = \empty,
+      xtick = {-\Tzero, -\Tone, \Tone, \Tzero},
+      xticklabels = {$-\infty$, $-T_1$, $T_1$, $\infty$},
+      axis lines = middle,
+      xlabel style = {below},
+      declare function ={ 
+        rect(\x) = 
+        (abs(\x) > \Tone) * 0 +
+        (abs(\x) == \Tone) * 0 +
+        (abs(\x) < \Tone-0.0001) * \A
+      ;},
+      ]
+      \addplot[blue,thick,domain=-\Tone:\Tone,samples=100]{rect(x)};
+
+      \addplot[green!50!black,thick,domain=-\Tone -\Tzero:\Tone - \Tzero,samples=100]{rect(x + \Tzero)};
+      \addplot[green!50!black,thick,domain=-\Tone +\Tzero:\Tone + \Tzero,samples=100]{rect(x - \Tzero)};
+      \node[align=center,opacity=0,scale=0.8] at (axis description cs:0.5,-0.15) {Inviluppo dei\\coefficienti};
+    \end{axis}
+  \end{tikzpicture}
+  \begin{tikzpicture}
+    \def\Tone{1/2}
+    \def\Tzero{2.5*\Tone}
+    \def\A{1}
+    \begin{axis}[
+      clip=false,
+      width = .6\textwidth,
+      height = .4\textwidth,
+      ylabel = $\frac{1}{T_0}X(\omega)$,
+      xlabel = $\omega$,
+      xmin=-15, xmax=15,
+      ymin= -0.5, ymax = \A * 1.9,
+      ytick = \empty,
+      axis lines = middle,
+      xlabel style = {below},
+      declare function ={ 
+        sinc(\x) = 
+        (\x == 0) * \A +
+        sin(deg(\x))/\x
+      ;},
+      ]
+      \addplot[cyan,thick,fill=cyan,fill opacity=0.5,domain=-15:15,samples=100]{sinc(x)} \closedcycle;
+
+      \node[align=center,scale=0.8] at (axis description cs:0.5,-0.15) {Inviluppo dei\\coefficienti};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{$T_0 \to \infty$}
+\end{figure}
+
+\subsubsection{Trasformata di Fourier di un segnale periodico}
+\[
+  \begin{aligned}
+    \tilde{v}(t) \leftrightarrow a_k \quad \text{Coefficienti delle serie di fourier}\\
+    \tilde{v}(t) \stackrel{\mathcal{F}}{\leftrightarrow} \tilde{V}(\omega) \quad \text{Trasformata di Fourier}\\
+    \tilde{v}(t) := \sum_{k=-\infty}^{+\infty} 2 \pi a_k \cdot \delta(\omega - k \omega_0) \text{ Treno di impulsi}\\
+  \end{aligned}
+\] 
+\[
+  \begin{aligned}
+    \tilde{v}(t) &= \frac{1}{2 \pi } \int_{-\infty}^{+\infty} \tilde{V}(\omega) \cdot e^{j \omega t} \, d\omega\\
+                 &= \frac{1}{2 \pi } \sum_{k=-\infty}^{+\infty} 2 \pi a_k \cdot
+                 \underbrace{\int_{-\infty}^{+\infty} \delta(\omega - k \omega_0) \cdot e^{-j \omega t} \, d\omega}_{e^{-j k \omega_0 t}}
+  \end{aligned}
+\] 
+
+\subsubsection{Come usare la trasformata di Fourier}
+\begin{enumerate}
+  \item \( v(t) \) non periodico
+    \begin{itemize}
+      \item Costruisco un segnale periodico \( \tilde{v}(T) \) in cui il singolo periodo
+        è definito da \( v(t) \)
+      \item \( \tilde{v}(t) \) ha serie di fourier
+      \item All'aumentare del periodo $\tilde{v}(t) \to v(t)$ e la serie di Fourier di
+        \( \tilde{v}(t) \to TdF \) di \( v(t) \) 
+    \end{itemize}
+
+  \item \( \tilde{v}(t) \) è periodico, \( v(t) \) rappresenta il singolo periodo
+    \begin{itemize}
+      \item Coefficienti della serie di Fourier \( = \frac{1}{T_0} \cdot \text{campioni delle
+        TdF di } v(t) \)
+    \end{itemize}
+
+  \item \( \tilde{v}(t) \) è periodico
+    \begin{itemize}
+      \item La trasformata di Fourier di \( \tilde{v}(t) \) è definita come \textbf{treno
+        di impulsi}
+        \[
+          \tilde{V}(\omega) = \sum_{k=-\infty}^{+\infty} 2 \pi a_k \cdot \delta(\omega - k \omega_0)
+        \] 
+        \begin{figure}[H]
+          \centering
+          \def\A{1}
+          \def\xmin{-4}
+          \def\xmax{4}
+          \begin{tikzpicture}
+            \begin{axis}[
+              clip = false,
+              height = 0.4\textwidth,
+              ylabel = \(v(t)\),
+              xlabel = \(t\),
+              xmin= \xmin, xmax= \xmax,
+              ymin= 0, ymax = 1.5,
+              ytick = \empty,
+              xtick = \empty,
+              axis lines = middle,
+              ]
+              \addplot[-latex,blue,ultra thick] coordinates {
+                  (0,0) (0,\A)
+                } node[above right,scale=0.9] {$v(t)$ non periodico};
+            \end{axis}
+          \end{tikzpicture}
+          \scalebox{2}{\( \stackrel{\mathcal{F}}{\leftrightarrow} \)}
+          \begin{tikzpicture}
+            \begin{axis}[
+              clip = false,
+              height = 0.4\textwidth,
+              ylabel = \(V(\omega)\),
+              xlabel = \(\omega\),
+              xmin= \xmin, xmax= \xmax,
+              ymin= 0, ymax = 1.5,
+              ytick = \empty,
+              xtick = \empty,
+              axis lines = middle,
+              ]
+              \addplot[cyan,thick] coordinates {
+                  (\xmin,\A) (\xmax,\A)
+                };
+            \end{axis}
+          \end{tikzpicture}
+        \end{figure}
+        \noindent
+        Se \( T_0 \to \infty\) allora il treno di impulsi diventa sempre più fitto fino
+        ad una retta costante:
+        \begin{figure}[H]
+          \centering
+          \begin{tikzpicture}
+            \def\A{1}
+            \def\xmin{-10}
+            \def\xmax{10}
+            \def\Tzero{2}
+            \begin{axis}[
+              clip = false,
+              height = 0.4\textwidth,
+              ylabel = \(\tilde{v}(t)\),
+              xlabel = \(t\),
+              xmin= \xmin, xmax= \xmax,
+              ymin= 0, ymax = 1.5,
+              ytick = \empty,
+              xtick = {-\Tzero,\Tzero},
+              xticklabels = {\(-T_0\),\(T_0\)},
+              axis lines = middle,
+              ]
+              \pgfplotsinvokeforeach{0,\Tzero,...,\xmax-0.5}{
+                \addplot[-latex,blue,domain=\xmin:\xmax,ultra thick] coordinates {
+                    (#1,0) (#1,\A)
+                  };
+              }
+
+              \pgfplotsinvokeforeach{-\Tzero, -2*\Tzero,...,\xmin+0.5}{
+                \addplot[-latex,blue,domain=\xmin:\xmax,ultra thick] coordinates {
+                    (#1,0) (#1,\A)
+                  };
+              }
+
+              \draw[opacity=0] (axis cs:0,0) -- (axis cs:0,-0.1) 
+                -- (axis cs:{(2*pi)/\Tzero},-0.1)
+                node[midway, below] {\(\frac{2\pi}{T_0}\)} -- (axis cs:{(2*pi)/\Tzero},0);
+            \end{axis}
+          \end{tikzpicture}
+          \scalebox{2}{\( \stackrel{\mathcal{F}}{\leftrightarrow} \)}
+          \begin{tikzpicture}
+            \def\A{1}
+            \def\xmin{-10}
+            \def\xmax{10}
+            \def\Tzero{2}
+            \begin{axis}[
+              clip = false,
+              height = 0.4\textwidth,
+              ylabel = \(\tilde{V}(\omega)\),
+              xlabel = \(\omega\),
+              xmin= \xmin, xmax= \xmax,
+              ymin= 0, ymax = 1.5,
+              ytick = \empty,
+              xtick = \empty,
+              axis lines = middle,
+              xlabel style = {below},
+              ]
+
+              \def\inc{(2*pi)/\Tzero}
+              \pgfplotsinvokeforeach{\xmin+0.5,\xmin+0.5 + \inc,...,\xmax}{
+                \addplot[-latex,cyan,domain=\xmin:\xmax,ultra thick] coordinates {
+                    (#1,0) (#1,\A)
+                  };
+              }
+
+              \draw (axis cs:\xmin+0.5,0) -- (axis cs:\xmin+0.5,-0.1) 
+                -- (axis cs:{\xmin+0.5+(2*pi)/\Tzero},-0.1)
+                node[midway, below] {\(\frac{2\pi}{T_0}\)} -- (axis cs:{\xmin+0.5+(2*pi)/\Tzero},0);
+            \end{axis}
+          \end{tikzpicture}
+        \end{figure}
+        \begin{figure}[H]
+          \centering
+          \begin{tikzpicture}
+            \def\A{1}
+            \def\xmin{-10}
+            \def\xmax{10}
+            \def\Tzero{4}
+            \begin{axis}[
+              clip = false,
+              height = 0.4\textwidth,
+              ylabel = \(\tilde{v}(t)\),
+              xlabel = \(t\),
+              xmin= \xmin, xmax= \xmax,
+              ymin= 0, ymax = 1.5,
+              ytick = \empty,
+              xtick = {-\Tzero,\Tzero},
+              xticklabels = {\(-T_0\),\(T_0\)},
+              axis lines = middle,
+              ]
+              \pgfplotsinvokeforeach{0,\Tzero,...,\xmax-0.5}{
+                \addplot[-latex,blue,domain=\xmin:\xmax,ultra thick] coordinates {
+                    (#1,0) (#1,\A)
+                  };
+              }
+
+              \pgfplotsinvokeforeach{-\Tzero, -2*\Tzero,...,\xmin+0.5}{
+                \addplot[-latex,blue,domain=\xmin:\xmax,ultra thick] coordinates {
+                    (#1,0) (#1,\A)
+                  };
+              }
+
+              \draw[opacity=0] (axis cs:0,0) -- (axis cs:0,-0.1) 
+                -- (axis cs:{(2*pi)/\Tzero},-0.1)
+                node[midway, below] {\(\frac{2\pi}{T_0}\)} -- (axis cs:{(2*pi)/\Tzero},0);
+            \end{axis}
+          \end{tikzpicture}
+          \scalebox{2}{\( \stackrel{\mathcal{F}}{\leftrightarrow} \)}
+          \begin{tikzpicture}
+            \def\A{1}
+            \def\xmin{-10}
+            \def\xmax{10}
+            \def\Tzero{4}
+            \begin{axis}[
+              clip = false,
+              height = 0.4\textwidth,
+              ylabel = \(\tilde{V}(\omega)\),
+              xlabel = \(\omega\),
+              xmin= \xmin, xmax= \xmax,
+              ymin= 0, ymax = 1.5,
+              ytick = \empty,
+              xtick = \empty,
+              axis lines = middle,
+              xlabel style = {below},
+              ]
+
+              \def\inc{(2*pi)/\Tzero}
+              \pgfplotsinvokeforeach{\xmin+0.5,\xmin+0.5 + \inc,...,\xmax}{
+                \addplot[-latex,cyan,domain=\xmin:\xmax,ultra thick] coordinates {
+                    (#1,0) (#1,\A)
+                  };
+              }
+
+              \draw (axis cs:\xmin+0.5,0) -- (axis cs:\xmin+0.5,-0.1) 
+                -- (axis cs:{\xmin+0.5+(2*pi)/\Tzero},-0.1)
+                node[midway, below] {\(\frac{2\pi}{T_0}\)} -- (axis cs:{\xmin+0.5+(2*pi)/\Tzero},0);
+            \end{axis}
+          \end{tikzpicture}
+        \end{figure}
+        \begin{figure}[H]
+          \centering
+          \begin{tikzpicture}
+            \def\A{1}
+            \def\xmin{-10}
+            \def\xmax{10}
+            \def\Tzero{8}
+            \begin{axis}[
+              clip = false,
+              height = 0.4\textwidth,
+              ylabel = \(\tilde{v}(t)\),
+              xlabel = \(t\),
+              xmin= \xmin, xmax= \xmax,
+              ymin= 0, ymax = 1.5,
+              ytick = \empty,
+              xtick = {-\Tzero,\Tzero},
+              xticklabels = {\(-\infty\),\(\infty\)},
+              axis lines = middle,
+              ]
+              \pgfplotsinvokeforeach{0,\Tzero,...,\xmax-0.5}{
+                \addplot[-latex,blue,domain=\xmin:\xmax,ultra thick] coordinates {
+                    (#1,0) (#1,\A)
+                  };
+              }
+
+              \pgfplotsinvokeforeach{-\Tzero, -2*\Tzero,...,\xmin+0.5}{
+                \addplot[-latex,blue,domain=\xmin:\xmax,ultra thick] coordinates {
+                    (#1,0) (#1,\A)
+                  };
+              }
+
+              \draw[opacity=0] (axis cs:0,0) -- (axis cs:0,-0.1) 
+                -- (axis cs:{(2*pi)/\Tzero},-0.1)
+                node[midway, below] {\(\frac{2\pi}{T_0}\)} -- (axis cs:{(2*pi)/\Tzero},0);
+            \end{axis}
+          \end{tikzpicture}
+          \scalebox{2}{\( \stackrel{\mathcal{F}}{\leftrightarrow} \)}
+          \begin{tikzpicture}
+            \def\A{1}
+            \def\xmin{-10}
+            \def\xmax{10}
+            \def\Tzero{10}
+            \begin{axis}[
+              clip = false,
+              height = 0.4\textwidth,
+              ylabel = \(\tilde{V}(\omega)\),
+              xlabel = \(\omega\),
+              xmin= \xmin, xmax= \xmax,
+              ymin= 0, ymax = 1.5,
+              ytick = \empty,
+              xtick = \empty,
+              axis lines = middle,
+              xlabel style = {below},
+              ]
+
+              \addplot[cyan,domain=\xmin:\xmax,ultra thick] coordinates {
+                  (\xmin+0.5,\A) (\xmax-0.5,\A)
+                };
+              \addplot[fill=cyan,fill opacity=0.5,domain=\xmin:\xmax,draw opacity=0] coordinates {
+                  (\xmin+0.5,\A) (\xmax-0.5,\A)
+                  (\xmax-0.5,0) (\xmin+0.5,0)
+                } \closedcycle;
+
+              \def\inc{(2*pi)/\Tzero}
+              \pgfplotsinvokeforeach{\xmin+0.5,\xmin+0.5 + \inc,...,\xmax-0.5}{
+                \addplot[-latex,cyan,opacity=0.2,domain=\xmin:\xmax,ultra thick] coordinates {
+                    (#1,0) (#1,\A)
+                  };
+              }
+
+              \draw (axis cs:\xmin+0.5,0) -- (axis cs:\xmin+0.5,-0.1) 
+                -- (axis cs:{\xmin+0.5+(2*pi)/\Tzero},-0.1)
+                node[midway, below] {\(\frac{2\pi}{T_0}\)} -- (axis cs:{\xmin+0.5+(2*pi)/\Tzero},0);
+            \end{axis}
+          \end{tikzpicture}
+          \caption{Trasformata di Fourier all'aumentare di \(T_0\)}
+        \end{figure}
+    \end{itemize}
+\end{enumerate}
+
+% -----------------
+\subsection{Condizioni di esistenza della trasformata di Fourier}
+\begin{definition}[Equazione di sintesi]
+  Sia \( v(t), \; t \in \mathbb{R} \) un segnale a valori reali o complessi, si definisce
+  la trasformata di Fourier del segnale come:
+  \[
+    \mathcal{F} \left[ v(t) \right](f) := \int_{-\infty}^{+\infty} v(t) \cdot
+    e^{-j \omega_0 t} \, dt = V(f)
+  \] 
+  Dove \( V \) è una funzione che va da \( \mathbb{R} \to \mathbb{C} \), con \( f \in \mathbb{R} \).
+  Questa viene chiamata \textbf{equazione di sintesi}.
+\end{definition}
+\begin{definition}[Equazione di analisi]
+  Data una funzione \( V: \mathbb{R} \to \mathbb{C} \) si definisce anti-trasformata di
+  Fourier la funzione:
+  \[
+    \mathcal{F}^{-1}\left[ V(f) \right](t) := \frac{1}{2 \pi } \int_{-\infty}^{+\infty} V(f) \cdot
+    e^{j \omega_0 t} \, df = v(t)
+  \] 
+  Dove \( v \) è una funzione che va da \( \mathbb{R} \to \mathbb{C} \), con \( t \in \mathbb{R} \).
+  Questa viene chiamata \textbf{equazione di analisi}.
+\end{definition}
+\vspace{1em}
+\noindent
+\textbf{Condizioni di esistenza della trasformata di Fourier}:
+\begin{theorem}
+  Sia \( v(t), \; t \in \mathbb{R} \) un segnale a valori reali o complessi. Se almeno
+  una delle seguenti condizioni è vera, allora la funzione è trasformabile secondo
+  \( \mathcal{F} \):
+  \begin{enumerate}
+    \item \( v(t) \) è sommabile, cioè: 
+      \[
+        \int_{-\infty}^{+\infty} \left| v(t) \right| \,dt < \infty
+      \]
+      e a variabile limitata su ogni intervallo finito di \( \mathbb{R} \), cioè è
+      esprimibile come differenza di funzioni limitate non decrescenti.
+
+    \item \( v(t) \) è un segnale di energia, cioè:
+      \[
+        \int_{-\infty}^{+\infty} \left| v(t) \right|^2 \, dt < \infty
+      \]
+
+    \item \( v(t) \) è un segnale di potenza, cioè:
+      \[
+        \lim_{T \to \infty} \frac{1}{2T} \int_{-\infty}^{+\infty} \left| v(t) \right|^2 \, dt < \infty
+      \] 
+      bisogna però "\textbf{finestrare}" il segnale, cioè moltiplicarlo per una
+      finestra rettangolare
+  \end{enumerate}
+\end{theorem}
+
+\subsection{Trasformate notevoli}
+Le trasformate di Fourier notevoli sono le seguenti:
+\begin{itemize}
+  \item \textbf{Impulso}
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[scale=1.5]
+        \draw[->] (-1.5,0) -- (1.5,0) node[right] {$t$};
+        \draw[->] (0,-0.1) -- (0,1.5) node[above] {$v(t)$};
+
+        \draw[-latex,blue,thick] (0,0) -- (0,1) node[right] {$A$};
+      \end{tikzpicture}
+      \caption{Impulso unitario}
+    \end{figure}
+    \noindent
+    La trasformata di Fourier è:
+    \[
+      \begin{aligned}
+        \mathcal{F}\left[ A \delta_0(t) \right](f) &= A 
+        \int_{-\infty}^{+\infty} \delta_0(t) \cdot e^{-j 2 \pi f t} \, dt\\
+                                                   &= A \int_{-\infty}^{+\infty}
+                                                   \delta_0(t) \cdot 1 \, dt\\
+                                                   &= A
+      \end{aligned}
+    \] 
+    (per le regole del campionamento)
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[scale=1.5]
+        \draw[->] (-1.5,0) -- (1.5,0) node[right] {$f$};
+        \draw[->] (0,-0.1) -- (0,1.5) node[above] {$V(\omega)$};
+
+        \draw[cyan,thick] (-1.5,1) -- (1.5,1) node[right] {$A$};
+      \end{tikzpicture}
+      \caption{Trasformata di Fourier dell'impulso}
+    \end{figure}
+
+
+  \item \textbf{Esponenziale causale}
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[
+          axis lines = middle,
+          xmin= 0, xmax= 6,
+          ymin= 0, ymax = 6,
+          ylabel = $v(t)$,
+          xlabel = $t$,
+          xtick = \empty,
+          ytick = \empty,
+          xlabel style = {below},
+          ylabel style = {left},
+          ]
+          \addplot[blue,thick,domain=0:6, samples=50]{exp(x/2)};
+          \addplot[red,thick,domain=0:6, samples=50]{exp(-x/2)};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Esponenziale causale}
+    \end{figure}
+    \noindent
+    La trasformata di Fourier è:
+    \[
+      \mathcal{F}\left[ A e^{j \phi} e^{\lambda t} 
+      \underbrace{\delta_{-1}(t)}_{\text{Causalità}} \right](t) =
+      \frac{A e^{j \phi}}{j 2 \pi  f - \lambda}
+    \] 
+
+    \vspace{1em}
+    \noindent
+    La trasformata di Laplace è molto simile, basta infatti sostituire la \( s \) 
+    con \( j \omega = j 2 \pi f \) e si ottiene la trasformata di Fourier:
+    \[
+      \mathcal{L}\left[ A e^{j \phi} e^{\lambda t} 
+      \delta_{-1}(t) \right](s) = \frac{A e^{j \phi}}{s - \lambda}
+    \] 
+
+
+  \item \textbf{Finestra rettangolare di altezza \( A \) e supporto \( T \)}
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \def\T{1/2}
+        \def\xmin{-\T*3}
+        \def\xmax{\T*3}
+        \def\A{1}
+        \begin{axis}[
+          clip=false,
+          width = .6\textwidth,
+          height = .4\textwidth,
+          ylabel = $v(t)$,
+          xlabel = $t$,
+          xmin=\xmin, xmax=\xmax,
+          ymin= -0.5, ymax = \A * 2,
+          ytick = {\A},
+          yticklabels = {$A$},
+          yticklabel style = {above right},
+          xtick = {-\T, \T},
+          xticklabels = {$-\frac{T}{2}$, $\frac{T}{2}$},
+          axis lines = middle,
+          xlabel style = {below},
+          declare function ={ 
+            rect(\x) = 
+            (abs(\x) > \T) * 0 +
+            (abs(\x) == \T) * 0 +
+            (abs(\x) < \T-0.0001) * \A
+          ;},
+          ]
+          \addplot[blue,thick,domain=\xmin:\xmax,samples=100]{rect(x)};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Finestra rettangolare}
+    \end{figure}
+    \noindent
+    La trasformata di Fourier è:
+    \[
+      \mathcal{F}\left[ A \Pi\left(\frac{t}{T}\right) \right](f) = AT \cdot sinc(fT)
+    \]
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \def\Tone{1/2}
+        \def\Tzero{2.5*\Tone}
+        \def\A{1}
+        \begin{axis}[
+          clip=false,
+          width = .6\textwidth,
+          height = .4\textwidth,
+          ylabel = $V(\omega)$,
+          xlabel = $\omega$,
+          xmin=-15, xmax=15,
+          ymin= -0.5, ymax = \A * 1.9,
+          ytick = {\A},
+          yticklabels = {$A$},
+          yticklabel style = {above right},
+          xtick = \empty,
+          axis lines = middle,
+          xlabel style = {below},
+          declare function ={ 
+            sinc(\x) = 
+            (\x == 0) * \A +
+            sin(deg(\x))/\x
+          ;},
+          ]
+          \addplot[cyan,thick,domain=-15:15,samples=100]{sinc(x)};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Trasformata di Fourier della finestra rettangolare}
+    \end{figure}
+    \noindent
+    Questa funzione è chiamata \textbf{sinc}.
+
+
+  \item \textbf{Funzione costante}
+    \vspace{1em}
+    \noindent
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \def\T{1/2}
+        \def\xmin{-\T*3}
+        \def\xmax{\T*3}
+        \def\A{1}
+        \begin{axis}[
+          clip=false,
+          width = .5\textwidth,
+          height = .4\textwidth,
+          ylabel = $v(t)$,
+          xlabel = $t$,
+          xmin=\xmin, xmax=\xmax,
+          ymin= -0.5, ymax = \A * 2,
+          ytick = {\A},
+          yticklabels = {$A$},
+          yticklabel style = {above right},
+          xtick = {-\T, \T},
+          xticklabels = {$-\frac{T}{2}$, $\frac{T}{2}$},
+          axis lines = middle,
+          xlabel style = {below},
+          declare function ={ 
+            rect(\x) = 
+            (abs(\x) > \T) * 0 +
+            (abs(\x) == \T) * 0 +
+            (abs(\x) < \T-0.0001) * \A
+          ;},
+          ]
+          \addplot[orange,domain=\xmin:\xmax,samples=100]{rect(x)};
+
+          \addplot[blue,thick,domain=\xmin:\xmax]{\A/2};
+
+          \node[pin={[orange]45:{$\Pi\left( \frac{t}{T} \right)$}}] at (axis cs:\T,\A) {};
+        \end{axis}
+      \end{tikzpicture}
+      \scalebox{2}{\( \to \)}
+      \begin{tikzpicture}
+        \def\T{1/2}
+        \def\xmin{-\T*3}
+        \def\xmax{\T*3}
+        \def\A{1}
+        \begin{axis}[
+          clip=false,
+          width = .5\textwidth,
+          height = .4\textwidth,
+          ylabel = $v(t) \cdot \Pi \left( \frac{t}{T} \right) $,
+          xlabel = $t$,
+          xmin=\xmin, xmax=\xmax,
+          ymin= -0.5, ymax = \A * 2,
+          ytick = {\A},
+          yticklabels = {$A$},
+          yticklabel style = {above right},
+          xtick = {-\T, \T},
+          xticklabels = {$-\frac{T}{2}$, $\frac{T}{2}$},
+          axis lines = middle,
+          xlabel style = {below},
+          declare function ={ 
+            rect(\x) = 
+            (abs(\x) > \T) * 0 +
+            (abs(\x) == \T) * 0 +
+            (abs(\x) < \T-0.0001) * \A
+          ;},
+          ]
+          \addplot[blue,thick,domain=\xmin:\xmax,samples=100]{rect(x)};
+
+          \addplot[blue,dotted,thin,domain=\xmin:\xmax]{\A/2};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Funzione costante}
+    \end{figure}
+    La funzione costante non può essere trasformata facilmente, quindi bisogna
+    "finestrarla", cioè moltiplicare il segnale per una finestra rettangolare:
+    \[
+    v(t) = A \to v_T(t) = A \cdot \Pi(\frac{t}{T})
+    \] 
+    La sua trasformata di Fourier è la stessa del segnale rettangolare:
+    \[
+      \mathcal{F}\left[\underbrace{v(t)}_{\text{Ampiezza } = A} \cdot 
+      \underbrace{\Pi\left(\frac{t}{T}\right)}_{\text{Ampiezza } = 1} \right](f)
+      = AT \cdot sinc(fT)
+    \] 
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \def\Tone{1/2}
+        \def\Tzero{2.5*\Tone}
+        \def\A{1}
+        \begin{axis}[
+          clip=false,
+          width = .6\textwidth,
+          height = .4\textwidth,
+          ylabel = $V(\omega)$,
+          xlabel = $\omega$,
+          xmin=-15, xmax=15,
+          ymin= -0.5, ymax = \A * 1.9,
+          ytick = {\A},
+          yticklabels = {$A$},
+          yticklabel style = {above right},
+          xtick = \empty,
+          axis lines = middle,
+          xlabel style = {below},
+          declare function ={ 
+            sinc(\x) = 
+            (\x == 0) * \A +
+            sin(deg(\x))/\x
+          ;},
+          ]
+          \addplot[cyan,thick,domain=-15:15,samples=100]{sinc(x)};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Trasformata di Fourier della funzione costante}
+    \end{figure}
+
+
+  \item \textbf{Fasore}
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[scale=1.5]
+        \draw[->] (-1.5,0) -- (1.5,0) node[right] {$\Re$};
+        \draw[->] (0,-1.5) -- (0,1.5) node[above] {$\Im$};
+
+        \draw (0,0) circle (1);
+
+        \draw[blue,thick,->] (1,0) arc (0:60:1);
+      \end{tikzpicture}
+      \caption{Fasore}
+    \end{figure}
+    \[
+      v(t) = A \cdot e^{j 2 \pi f_0 t}
+    \] 
+    Anche in questo caso bisogna moltiplicare per il segnale rettangolare:
+    \[
+      v_T(t) = A \cdot e^{j 2 \pi f_0 t} \cdot \Pi\left(\frac{t}{T}\right)
+    \] 
+    La trasformata di Fourier è:
+    \[
+      \mathcal{F}\left[ v_T(t) \right](f) = AT \cdot sinc((f - f_0) \cdot t)
+    \] 
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \def\Fzero{7}
+        \def\A{1}
+        \begin{axis}[
+          clip=false,
+          width = .6\textwidth,
+          height = .4\textwidth,
+          ylabel = $V(\omega)$,
+          xlabel = $\omega$,
+          xmin=-15, xmax=15,
+          ymin= -0.5, ymax = \A * 1.9,
+          ytick = {\A},
+          yticklabels = {$A$},
+          yticklabel style = {above right},
+          xtick = \empty,
+          axis lines = middle,
+          xlabel style = {below},
+          declare function ={ 
+            sinc(\x) = 
+            (\x == 0) * \A +
+            sin(deg(\x))/\x
+          ;},
+          ]
+          \addplot[cyan,thick,domain=-15:15,samples=100]{sinc(x - \Fzero)};
+
+          \draw[dashed] (axis cs:\Fzero,\A) -- (axis cs:\Fzero,0) node[below] {$f_0$};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Trasformata di Fourier del fasore}
+    \end{figure}
+  \item \textbf{Seno}
+    \vspace{1em}
+    \noindent
+    Possiamo derivare il seno utilizzando la formula di Eulero su un fasore:
+    \[
+    v(t) = A \cdot \sin(2 \pi f_0 t)
+    \] 
+    La trasformata di Fourier è:
+    \[
+      \mathcal{F}\left[ v(t) \right](f) = \frac{A}{2j} \left( \delta(f - f_0) - \delta(f + f_0) \right)
+    \]
+    Il seno è solo la parte immaginaria del fasore.
+  \item \textbf{Coseno}
+    \vspace{1em}
+    \noindent
+    \[
+    v(t) = A \cdot \cos(2 \pi f_0 t)
+    \] 
+    La trasformata di Fourier è:
+    \[
+      \mathcal{F}\left[ v(t) \right](f) = \frac{A}{2} \left( \delta(f - f_0) + \delta(f + f_0) \right)
+    \]
+    Il coseno è solo la parte reale del fasore.
+\end{itemize}
+
+\subsection{Proprietà della trasformata di Fourier}
+La trasformata di Laplace è un caso specifico della trasformata di Fourier:
+\[
+\begin{aligned}
+  TdL &\to TdF\\
+  s &\to j \omega
+\end{aligned}
+\] 
+Quindi alcune proprietà di Laplace valgono anche per Fourier.
+\begin{enumerate}
+  \item \textbf{Linearità}
+    \[
+      a v_1(t) + b v_2(t) \stackrel{\mathcal{F}}{\leftrightarrow} a V_1(f) + b V_2(f)
+    \] 
+
+  \item \textbf{Riflessione e coniugazione}
+    \[
+      v(-t) \stackrel{\mathcal{F}}{\leftrightarrow} V(-f) \quad \text{Riflessione}
+    \] 
+    \[
+      \left.
+      \begin{aligned}
+        v^*(t) \stackrel{\mathcal{F}}{\leftrightarrow} V^*(-f)\\
+        v^*(-t) \stackrel{\mathcal{F}}{\leftrightarrow} V^*(f)
+      \end{aligned}
+    \right\}
+    \text{ Coniugazione}
+    \]
+
+  \item \textbf{Convoluzione nel dominio del tempo}
+    \[
+      \left[ v_1 \ast v_2 \right](t) \stackrel{\mathcal{F}}{\leftrightarrow} V_1(f) \cdot V_2(f)
+    \] 
+
+  \item \textbf{Traslazione nel dominio del tempo}
+    \[
+      v(t - \tau) \stackrel{\mathcal{F}}{\leftrightarrow} e^{-j 2 \pi f \tau} \cdot V(f)
+    \] 
+
+  \item \textbf{Traslazione nel dominio delle frequenze}
+    \[
+      e^{j 2 \pi f_0 t} \cdot v(t) \stackrel{\mathcal{F}}{\leftrightarrow} V(f - f_0)
+    \]
+
+  \item \textbf{Modulazione/Prodotto nel dominio del tempo}
+    \[
+      v_1(t) \cdot v_2(t) \stackrel{\mathcal{F}}{\leftrightarrow} \left[ V_1 \ast V_2 \right](f)
+    \]
+\end{enumerate}
+
+\begin{examplebox}{Esempio}
+  Consideriamo il seguente sistema a blocchi:
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node (u) {$u(t)$};
+      \node[right=of u,circle,draw,minimum size=0.7cm] (mul) {$X$};
+      \node[below=of mul] (w) {$w(t)$};
+      \node[right=of mul,draw,minimum size=1cm] (h) {$h(t)$};
+
+      \draw[->] (u) -- (mul);
+      \draw[->] (w) -- (mul);
+      \draw[->] (mul) -- (h) node[midway,above] {$\color{blue}a(t)$};
+      \draw[->] (h) -- ++(1.5,0) node[midway,above] {$\color{blue}b(t)$};
+
+      \node[pin={[align=center,scale=0.8]above:{Convoluzione nelle frequenze/\\Prodotto nel tempo}}]
+        at (mul.north) {};
+      \node[pin={[align=center,scale=0.8,xshift=0.4cm]below:{Prodotti nelle frequenze/\\Convoluzioni nel tempo}}]
+        at (h.south) {};
+    \end{tikzpicture}
+    \caption{Sistema a blocchi}
+  \end{figure}
+  \noindent
+  Vogliamo capire come si comporta questo segnale nelle frequenze ($a(t)$) e cosa succede quando
+  viene alterato dalla sequenza degli operatori ($b(t)$).
+  \[
+    \begin{aligned}
+      u(t) &= 3 \cdot \cos(6 \pi t) + \cos(2 \pi t)\\
+      w(t) &= 2 \cdot \cos(4 \pi t) \\
+      h(t) &= 4 \cdot sinc(4t)\\
+      \color{blue}b(t) &= ?
+    \end{aligned}
+  \] 
+  Possiamo risolvere in maniera grafica questo problema:
+  \begin{enumerate}
+    \item Applichiamo le trasformate di Fourier per andare nel dominio delle frequenze:
+      \[
+      \text{Trasformata notevole: } A \cos(2 \pi f_0 t) = \frac{A}{2} \left( \delta(f - f_0) + \delta(f + f_0) \right)
+      \] 
+      \[
+        \begin{aligned}
+          3 \cdot \cos(2 \pi \cdot 3 \cdot t) \stackrel{\mathcal{F}}{=} \frac{3}{2} \left( \delta(f - 3) + \delta(f + 3) \right)\\
+          \cos(2 \pi \cdot t) \stackrel{\mathcal{F}}{=} \frac{1}{2} \left( \delta(f - 1) + \delta(f + 1) \right)\\
+          U(f) = \frac{3}{2} \left( \delta(f - 3) + \delta(f + 3) \right) + \frac{1}{2} \left( \delta(f - 1) + \delta(f + 1) \right)
+        \end{aligned}
+      \] 
+      \vspace{1em}
+      \noindent
+      \[
+      W(f) = \frac{2}{2} \left( \delta(f - 2) + \delta(f + 2) \right) 
+      = \delta(f - 2) + \delta(f + 2)
+      \] 
+      \vspace{1em}
+      \noindent
+      \[
+        \text{Trasformata notevole: } AT sinc(tT) = A \Pi\left(\frac{f}{T}\right)
+      \] 
+      \[
+        H(f) = 1 \cdot \Pi(\frac{f}{4}) = \Pi(\frac{f}{4})
+      \] 
+
+    \item Disegnamo tutti i singoli elementi su un grafico:
+      \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+          \begin{axis}[
+            width=0.8\textwidth,
+            height=0.4\textwidth,
+            xlabel = $f$,
+            ylabel = $U(f)$,
+            xmin= -6, xmax=6,
+            ymin= 0, ymax = 3,
+            xtick = {-3,-1,1,3},
+            ytick = {1/2,3/2},
+            yticklabels = {$\frac{1}{2}$,$\frac{3}{2}$},
+            axis lines = middle,
+            ]
+            \addplot[-latex,blue,thick] coordinates {
+                (-3,0) (-3,3/2)
+              };
+            \addplot[-latex,blue,thick] coordinates {
+                (-1,0) (-1,1/2)
+              };
+            \addplot[-latex,blue,thick] coordinates {
+                (1,0) (1,1/2)
+              };
+            \addplot[-latex,blue,thick] coordinates {
+                (3,0) (3,3/2)
+              };
+          \end{axis}
+        \end{tikzpicture}
+        \caption{Segnale \(U(f)\)}
+      \end{figure}
+
+      \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+          \begin{axis}[
+            width=0.8\textwidth,
+            height=0.4\textwidth,
+            xlabel = $f$,
+            ylabel = $W(f)$,
+            xmin= -6, xmax=6,
+            ymin= 0, ymax = 3,
+            xtick = {-2,2},
+            ytick = {1},
+            axis lines = middle,
+            ]
+            \addplot[-latex,green!50!black,thick] coordinates {
+                (-2,0) (-2,1)
+              };
+            \addplot[-latex,green!50!black,thick] coordinates {
+                (2,0) (2,1)
+              };
+          \end{axis}
+        \end{tikzpicture}
+        \caption{Segnale \(W(f)\)}
+      \end{figure}
+
+      \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+          \def\T{4}
+          \def\A{1}
+          \begin{axis}[
+            width=0.8\textwidth,
+            height=0.4\textwidth,
+            xlabel = $f$,
+            ylabel = $H(f)$,
+            xmin= -6, xmax=6,
+            ymin= 0, ymax = 3,
+            xtick = {-2,2},
+            xticklabels = {$\underset{-\frac{T}{2}}{-2}$,$\underset{\frac{T}{2}}{2}$},
+            ytick = {1},
+            yticklabel style = {above left},
+            axis lines = middle,
+            declare function ={ 
+              rect(\x) = 
+              (abs(\x) > \T/2) * 0 +
+              (abs(\x) == \T/2) * 0 +
+              (abs(\x) < (\T/2)-0.0001) * \A
+            ;},
+            ]
+            \addplot[magenta,thick,domain=-\T/2:\T/2,samples=100]{rect(x)};
+          \end{axis}
+        \end{tikzpicture}
+        \caption{Segnale \(H(f)\)}
+      \end{figure}
+
+    \item Calcoliamo la convoluzione tra \( U(f) \) e \( W(f) \) per trovare \( A(f) \) :
+      \vspace{1em}
+      \noindent
+      Eseguiamo la convoluzione tra \( U(f) \) e \( W(f) \) fissando un segnale e
+      spostare l'altro specchiato. A livello più alto il segnale che si muove viene replicato
+      ogni volta che l'asse centrale corrisponde con il segnale fermo:
+      \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+          \begin{axis}[
+            width=0.8\textwidth,
+            height=0.4\textwidth,
+            xlabel = $f$,
+            ylabel = $\color{blue}U(f)\color{black} \ast \color{green!50!black}W(f)$,
+            xmin= -6, xmax=6,
+            ymin= 0, ymax = 3,
+            xtick = {-5,-3,-1,1,3,5},
+            ytick = {1/2,1,3/2,2},
+            yticklabels = {$\frac{1}{2}$,1,$\frac{3}{2}$,2},
+            axis lines = middle,
+            ]
+
+
+            \addplot[-latex,green!50!black,thick] coordinates {
+                (-5,0) (-5,3/2)
+              };
+            \addplot[-latex,green!50!black,thick] coordinates {
+                (-3,0) (-3,1/2)
+              };
+            \addplot[-latex,green!50!black,thick] coordinates {
+                (-1,0) (-1,3/2)
+              };
+            \addplot[-latex,green!50!black,thick] coordinates {
+                (-1,3/2) (-1,3/2+1/2) 
+              };
+            \addplot[-latex,green!50!black,thick] coordinates {
+                (1,0) (1,1/2)
+              };
+            \addplot[-latex,green!50!black,thick] coordinates {
+                (1,1/2) (1,1/2+3/2)
+              };
+            \addplot[-latex,green!50!black,thick] coordinates {
+                (3,0) (3,1/2)
+              };
+            \addplot[-latex,green!50!black,thick] coordinates {
+                (5,0) (5,3/2)
+              };
+
+            \addplot[-latex,blue,thin,dashed] coordinates {
+                (-3,0) (-3,3/2)
+              };
+            \addplot[-latex,blue,thin,dashed] coordinates {
+                (-1,0) (-1,1/2)
+              };
+            \addplot[-latex,blue,thin,dashed] coordinates {
+                (1,0) (1,1/2)
+              };
+            \addplot[-latex,blue,thin,dashed] coordinates {
+                (3,0) (3,3/2)
+              };
+          \end{axis}
+        \end{tikzpicture}
+        \[
+          \Downarrow
+        \] 
+        \begin{tikzpicture}
+          \begin{axis}[
+            width=0.8\textwidth,
+            height=0.4\textwidth,
+            xlabel = $f$,
+            ylabel = $A(f)$,
+            xmin= -6, xmax=6,
+            ymin= 0, ymax = 3,
+            xtick = {-5,-3,-1,1,3,5},
+            ytick = {1/2,3/2,2},
+            yticklabels = {$\frac{1}{2}$,$\frac{3}{2}$,2},
+            axis lines = middle,
+            ]
+            \addplot[-latex,red,thick] coordinates {
+                (-5,0) (-5,3/2)
+              };
+            \addplot[-latex,red,thick] coordinates {
+                (-3,0) (-3,1/2)
+              };
+            \addplot[-latex,red,thick] coordinates {
+                (-1,0) (-1,3/2+1/2)
+              };
+            \addplot[-latex,red,thick] coordinates {
+                (1,0) (1,1/2+3/2)
+              };
+            \addplot[-latex,red,thick] coordinates {
+                (3,0) (3,1/2)
+              };
+            \addplot[-latex,red,thick] coordinates {
+                (5,0) (5,3/2)
+              };
+          \end{axis}
+        \end{tikzpicture}
+        \caption{Segnale \(A(f)\)}
+      \end{figure}
+      \noindent
+      Le altezze dei nuovi segnali replicati saranno la moltiplcazione dei segnali
+      che si sovrappongono sommata alle altezze dei diversi segnali che si sovrappongono
+      nello stesso punto.
+
+    \item Calcoliamo il prodotto tra \( A(f) \) e \( H(f) \) per trovare \( B(f) \):
+      \vspace{1em}
+      \noindent
+      \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+          \def\T{4}
+          \def\A{1}
+          \begin{axis}[
+            width=0.8\textwidth,
+            height=0.4\textwidth,
+            xlabel = $f$,
+            ylabel = $\color{red}A(f)\color{black}\cdot \color{magenta}H(f)$,
+            xmin= -6, xmax=6,
+            ymin= 0, ymax = 3,
+            xtick = {-5,-3,-2,-1,1,2,3,5},
+            ytick = {1/2,1,3/2,2},
+            yticklabels = {$\frac{1}{2}$,,$\frac{3}{2}$,2},
+            axis lines = middle,
+            declare function ={ 
+              rect(\x) = 
+              (abs(\x) > \T/2) * 0 +
+              (abs(\x) == \T/2) * 0 +
+              (abs(\x) < (\T/2)-0.0001) * \A
+            ;},
+            ]
+            \addplot[-latex,red,thick] coordinates {
+                (-5,0) (-5,3/2)
+              };
+            \addplot[-latex,red,thick] coordinates {
+                (-3,0) (-3,1/2)
+              };
+            \addplot[-latex,red,thick] coordinates {
+                (-1,0) (-1,3/2+1/2)
+              };
+            \addplot[-latex,red,thick] coordinates {
+                (1,0) (1,1/2+3/2)
+              };
+            \addplot[-latex,red,thick] coordinates {
+                (3,0) (3,1/2)
+              };
+            \addplot[-latex,red,thick] coordinates {
+                (5,0) (5,3/2)
+              };
+
+            \addplot[magenta,thick,domain=-\T/2:\T/2,samples=100]{rect(x)};
+          \end{axis}
+        \end{tikzpicture}
+        \[
+          \Downarrow
+        \] 
+        \begin{tikzpicture}
+          \def\T{4}
+          \def\A{1}
+          \begin{axis}[
+            width=0.8\textwidth,
+            height=0.4\textwidth,
+            xlabel = $f$,
+            ylabel = $B(f)$,
+            xmin= -6, xmax=6,
+            ymin= 0, ymax = 3,
+            xtick = {-1,1},
+            ytick = {2},
+            axis lines = middle,
+            ]
+            \addplot[-latex,orange,thick] coordinates {
+                (-1,0) (-1,3/2+1/2)
+              };
+            \addplot[-latex,orange,thick] coordinates {
+                (1,0) (1,1/2+3/2)
+              };
+          \end{axis}
+        \end{tikzpicture}
+        \caption{Segnale \(B(f)\)}
+      \end{figure}
+  \end{enumerate}
+\end{examplebox}
+
+\subsection{Campionamento e replicazione}
+Prendiamo in considerazione il seguente sistema a blocchi
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \node (u) {$u(t)$};
+    \node[right=of u,circle,draw,minimum size=0.7cm] (mul) {$X$};
+    \node[below=of mul] (w) {$w(t)$};
+    \node[right=of mul,draw,minimum size=1cm] (h) {$h(t)$};
+
+    \draw[->] (u) -- (mul);
+    \draw[->] (w) -- (mul);
+    \draw[->] (mul) -- (h) node[midway,above] {$\color{blue}a(t)$};
+    \draw[->] (h) -- ++(1.5,0) node[midway,above] {$\color{blue}b(t)$};
+
+    \node[pin={[align=center,scale=0.8]above:{Convoluzione nelle frequenze/\\Prodotto nel tempo}}]
+      at (mul.north) {};
+    \node[pin={[align=center,scale=0.8,xshift=0.4cm]below:{Prodotti nelle frequenze/\\Convoluzioni nel tempo}}]
+      at (h.south) {};
+  \end{tikzpicture}
+  \caption{Sistema a blocchi}
+\end{figure}
+\[
+  \begin{aligned}
+    a(t) &= u(t) \cdot w(t)\\
+    b(t) &= \left[ h(t) \ast a(t) \right](f)
+  \end{aligned}
+\] 
+Esiste un operatore chiamato \textbf{campionatore} che si chiude a intervalli regolari
+derivati da \( T_c \) (\textbf{frequenza di campionamento} [\( Hz \)]) e "compone" il
+segnale. È il componente che permette di passare dal segnale a tempo continuo a quello
+a tempo discreto.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=1.5]
+    \draw (0,0) -- ++(0.5,0) -- ++(0.5,0.5) node[midway,below,yshift=-0.2cm] {$T_c$};
+    \draw (0,0) ++(0.5,0) ++(0.5,0) -- ++(0.5,0);
+  \end{tikzpicture}
+  \caption{Campionatore}
+\end{figure}
+\noindent
+Quindi se prendiamo in considerazione il seguente segnale si ha un passaggio da continuo
+a discreto:
+\label{16-01-D1}
+
+\vspace{1em}
+\noindent
+Nella realtà dopo il campionatore si inserisce uno \textbf{zero-holder} che mantiene il valore
+del segnale fino al prossimo campione:
+\label{16-01-D2}
+
+\noindent
+Un segnale discreto può essere \textbf{quantizzato}, cioè approssimato ad un valore
+discreto. Questo processo è chiamato \textbf{quantizzazione}.
+
+Inoltre un segnale quantizzato può essere \textbf{codificato} in binario, cioè rappresentato
+da una sequenza di bit, ovvero segnali alti e bassi:
+\label{16-01-D3}
+
+\subsubsection{Treno campionatore/impulsi}
+Un treno di impulsi a distanza \( T_c \) moltiplicato per un altro segnale fa ottenere
+un segnale campionato in quel punto \( kT_c \):
+\label{16-01-D4}
+\[
+  \begin{aligned}
+    \hat{\delta}_{T_c}(t) &= \sum_{k = -\infty}^{\infty} \delta(t - kT_c)\\
+                       &\updownarrow \mathcal{F}\\
+    \frac{1}{T_c} \hat{\delta}_{\frac{1}{T_c}}(f) &= \frac{1}{T_c} \sum_{k = -\infty}^{\infty} \delta(f - \frac{k}{T_c})
+  \end{aligned}
+\] 
+
+\subsubsection{Campionamento}
+\begin{definition}
+  Dato un segnale \( v(t), \; t \in \mathbb{R} \) e un periodo di campionamento 
+  \( 0 < T_c \in \mathbb{R} \), il campionamento è deinito come:
+  \[
+    \left[ samp_{T_c} v \right](t) = \sum_{k = -\infty}^{\infty} v(kT_c)
+  \] 
+  \[
+  \downarrow \text{ Per la proprietà del campionamento dell'impulso}
+  \] 
+  \[
+    \begin{aligned}
+      \left[ samp_{T_c} v \right](t) &= \sum_{k = -\infty}^{\infty} v(kT_c) \cdot \delta(t - kT_c)\\
+                                     &= v(t) \cdot \hat{\hat{\delta}}_{T_c}(t)\\
+    \end{aligned}
+  \] 
+  \label{16-01-D5}
+\end{definition}
+
+\subsubsection{Replicazione}
+\begin{definition}
+  Sia un segnale \( v(t), t \in \mathbb{R} \) e un periodo di campionamento \( 0 < T_c \in \mathbb{R} \),
+  la replicazione è definita come:
+  \[
+    \begin{aligned}
+      \left[ rep_{T_c} v \right](t) &= \sum_{k = -\infty}^{\infty} v(t - kT_c)\\
+                                    &= \sum_{k = -\infty}^{\infty} v(t) \ast \delta(t - kT_c)\\
+                                    &= \left[ v \ast \hat{\delta}_{T_C} \right](t)
+    \end{aligned}
+  \]
+  \label{16-01-D6}
+\end{definition}
+
+\vspace{1em}
+\noindent
+Se si replica nel tempo si ottiene un campionamento scalato nelle frequenze
+\[
+  \left[ rep_{T_c} v\right](t) \stackrel{\mathcal{F}}{\leftrightarrow} \frac{1}{T_c} \left[ samp_{T_c} V \right](f)
+\] 
+Se si campiona nel tempo si ottiene una replicazione scalata nelle frequenze
+\[
+  \left[ samp_{T_c} v \right](t) \stackrel{\mathcal{F}}{\leftrightarrow} \frac{1}{T_c} \left[ rep_{T_c} V \right](f)
+\] 
+
+\subsubsection{Teorema del campionamento ideale di Shannon}
+\begin{theorem}
+  Sia \( v(t), \; t \in \mathbb{R} \) un segnale campionato con frequenza di campionamento
+  \( f_c = \frac{1}{T_c} \) ottenendo:
+  \[
+    \begin{aligned}
+      v(k) &= v_0(kT_c)\\
+           &= \sum_{n = -\infty}^{\infty} v_0(t) \cdot \delta(t - kT_c)\\
+           &= \left[ samp_{T_c} v_0 \right](t)
+    \end{aligned}
+  \] 
+  Se:
+  \begin{enumerate}
+    \item \( v_0(t) \) è limitato in banda, cioè esiste almeno un \( B > 0 \) tale che
+      \( V_0(f) = 0 \) per frequenze \( |f| > B \), e \( B \) è il più piccolo per cui
+      questo è vero. Ad esempio:
+      \label{16-01-D7}
+
+    \item e la frequenza di campionamento \( f_c \) è tale per cui \( f_c > 2B \),
+      dove \( 2B \) è detta \textbf{frequenza di Nyquist}. Ad esempio:
+      \label{16-01-D8}
+      Se:
+      \[
+      \begin{aligned}
+        B &= 10 Hz\\
+        f_c &= 5 Hz \\
+      \end{aligned}
+      \] 
+      \[
+        f_c > 2B \to 5 > 20 \text{ (FALSO)}
+      \] 
+
+      \vspace{1em}
+      \noindent
+      Se:
+      \[
+      \begin{aligned}
+        B &= 5 Hz \\
+        f_c &= 20 Hz \\
+      \end{aligned}
+      \] 
+      \[
+        f_c > 2B \to 20 > 10 \text{ (VERO)}
+      \] 
+  \end{enumerate}
+  Allora \( v_0(t) \) è ricostruibile a partire dal segnale campionato 
+  \( \left[ samp_{T_c} v_0\right](t) \) utilizzando un filtro di ricostruzione \( H_r \):
+  \[
+  H_r(f) = T_c \Pi \left( \frac{f}{2f_L} \right) = \frac{1}{f_c} \Pi \left( \frac{f}{2f_L} \right) 
+  \] 
+  \[
+  B < f_L < f_c - B
+  \] 
+  Quindi:
+  \[
+    v_0(t) = \left[ (samp_{T_c} v_0) \ast \underbrace{h(T)}_{sinc \left( \frac{t}{T_c} \right) } \right](t)
+  \] 
+  
+  \vspace{1em}
+  \noindent
+  Se \( f_c < 2B \) si presenta il fenomeno di \textbf{aliasing}
+  \label{16-01-D9}
+  \noindent
+  Cioè il segnale si mescola con le repliche delle bande laterali e la ricostruzione
+  da origine ad un segnale diverso da quello originale.
+\end{theorem}
+
 
 \end{document}

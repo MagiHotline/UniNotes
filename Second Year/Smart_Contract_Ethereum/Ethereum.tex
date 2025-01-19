@@ -371,8 +371,52 @@ I parametri (non i valori di ritorno) di funzione dichiarate devono essere messe
 Le variabili di stato invece vanno salvate nello storage.
 Le variabili di stato (per convenzione) hanno un underscore davanti al nome per distinguerle dai parametri, perché le variabili di stato non possono avere lo stesso nome dei parametri.
 
+\section{Fase di testing}
+
+Il passo successivo consiste nello scrivefe dei test per verificare che si comportino come ci aspettiamo.
+
+Il testin dei contratti si avvale delle seguenti librerie:
+\begin{itemize}
+    \item Ethers.js
+    \item Mocha
+    \item Chai
+\end{itemize}
+Il progetto di test creato tramite il comando \texttt{npm hardhat init} contiene al suo interno degli esempi di test.
+L'esecuizione dei test avviene tramite il comando \texttt{npm run test}. Possono essere creati vari script di test ed è possibile eseguirli tutti insieme o singolarmente.
+
+\subsection{Transazioni e Calls}
+
+\begin{definition}
+    Una transazione modifica lo stato della rete (contenuto della blockchain).
+\end{definition}
+\begin{definition}
+    Una call può essere utilizzata per eseguire il codice sulla rete che non modificare permamentemente lo stato della rete. 
+    Accesso in sola lettura (pure, view).
+\end{definition}
 
 
+\section{Smart Contract Issues}
+
+\subsection{Re-entrancy}
+
+In Ethereum uno smart contract può richiamare ed utilizzare funzioni definite in altri smart contract.
+Gli smart contract possono getstire Ether ed inviare Ether a degli EOA.
+\begin{itemize}
+    \item Per eseguire il trasferimento di Ether, devono eseguire la funzioni external \texttt{transfer()} o \texttt{send()}
+    \item Una external call può essere deviata da un attaccante, il quale può forzare uno smart contract ad eseguire del codice diverso attraverso la funzione di fallback, incluso delle chiamate ricorsive che ritornano all'attacante stesso.
+    \item \textbf{Re-entrancy} è un attacco che sfrutta la possibilità di eseguire chiamate ricorsive in Ethereum.
+    \begin{itemize}
+        \item L'attacco diventa particolarmente pericoloso quando lo smart contract che viene attaccato gestisce Ether.
+        \item Il codice malevolo esegue una funzione sul contratto vulnerabile, eseguendo delle operazioni che lo sviluppatore non aveva previsto. 
+    \end{itemize}
+\end{itemize}
+
+Send() e Transfer() non sono sicure e quindi hanno introdotto un limite di gas (2300) attualmente non sufficienti per un attacco di reentrancy; in futuro potrebbero essere deprecate. 
+
+\subsection{Wrap Around Data Types: Arithmetic Overflow and Underflow}
+
+L'EVM prevede per gli interi dei tipi di dato a lunghezza fissa.
+La dimensione delle variabili può essere sfruttata da un attaccante per causare un overflow o un underflow. 
 
 
 
