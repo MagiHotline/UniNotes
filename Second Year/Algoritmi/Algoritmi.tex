@@ -2876,6 +2876,98 @@ optimal_multiply(S, A, i, j)
          optimal_multiply(S, A, S[i,j] + 1, j)
 \end{lstlisting}
 
+\subsection{Programmazione Greedy}
 
+La tecnica di programmazione Greedy, o in italiano \enquote{avida} è una tecnica di programmazione simile a quella dinamica 
+ma che non garantisce la soluzione ottimale. L'idea è quella di \textit{prendere la decisione che sembra la migliore in quel momento}, senza 
+pensare alle conseguenze future. Questo approccio è molto più veloce rispetto alla programmazione dinamica, ma non sempre garantisce
+la soluzione ottimale. A volte ci troveremo davanti a problemi non risolvibili con la programmazione greedy, ma in molti casi
+è possibile trovare una soluzione tramite la programmazione dinamica. 
+\begin{examplebox}{Selezione di Attività}
+  Prendiamo come problema esempio il seguente:
+  $S = \{1, ... , n\}$ che è un insieme di attività. Ogni attività ha un tempo di inizio $S_i$ e un tempo di fine $F_i$. Due attività sono in conflitto
+  se i loro intervalli hanno un intersezione non vuota. Il mio obiettivo è quello di selezionare un sottoinsieme di attività non in conflitto di cardinalità 
+  massima. Scriviamo la lista delle attività con i loro intervalli:
+\begin{center}
+  
+
+\begin{tabular}{c|c|c}
+  N & S & F\\
+  \hline
+  1 & 3 & 8\\
+  2 & 8 & 12\\
+  3 & 1 & 4\\
+  4 & 2 & 13\\
+  5 & 3 & 5\\
+  6 & 0 & 6\\
+  7 & 5 & 9\\
+  8 & 12 & 14\\
+  9 & 6 & 10\\
+  10 & 5 & 7\\
+  11 & 8 & 11
+\end{tabular}
+\end{center}
+\noindent
+Un esempio di attività compatabili di cardinalità tre sono la 3 la 7 e la 8, oppure 3, 10, 11. E di cardinalità 4?
+Abbiamo la 3, 10, 11 e la 8. E invece cinque? Forse non esistono, ed è difficile da mostrare con una grande quantità di dati.
+Proviamo ad ordinare la tabella secondo i tempi di fine delle attività (reinserendo anche il numero delle attività):
+\begin{center}
+\begin{tabular}{c|c|c}
+  N & S & F\\
+  \hline
+  1 & 1 & 4\\
+  2 & 3 & 5\\
+  3 & 0 & 6\\
+  4 & 5 & 7\\
+  5 & 3 & 8\\
+  6 & 5 & 9\\
+  7 & 6 & 10\\
+  8 & 8 & 11\\
+  9 & 8 & 12\\
+  10 & 2 & 13\\
+  11 & 12 & 14
+\end{tabular}
+\end{center}
+
+\begin{lemma}
+  Esiste una soluzione che contiene l'attività uno.
+\end{lemma}
+Selezionando la prima attività sono sicuro di trovare una soluzione con questa attività. Ora posso eliminare tutte le attività che sono in conflitto con la prima.
+Questo lemma ci permette di risolvere il problema ricorsivamente, riapplicando la stessa procedura sulle attività rimanenti e quindi ad un sottoproblema della stessa
+natura ma più piccolo. Alla fine dell'algoritmo ottengo il mio insieme di attività compatibili. 
+Questo algoritmo è considerato \textbf{greedy} perché \textit{ho selezionato un'attività senza risolvere i sottoproblemi che ne derivano e spero che la mia scelta sia la migliore}.
+\begin{proof}
+  Sia $A$ una soluzione al problema, cioè un insieme compatibile di cardinalità massima. 
+  Se l'attività $1 \in A$ abbiamo finito. Altrimenti sia $k \in A$ l'attività con tempo di $A$ che termina per prima.
+  \\
+  Allora \[A' = (A - \{k\}) \cup {1}\] è una soluzione. Come faccio a dire che l'attività $1$ è compatibile con tutte le altre attività?
+  Questo perché:
+  \[f_1 < f_k\] 
+  Sia $i \in A - \{k\}$ allora sicuramente $S_i$ è maggiore di $f_k$ e quindi sicuramente anche $f_1 < f_k$.
+  Quindi sappiamo che in qualsiasi soluzione ottimale l'attività $1$ è presente.
+  Tuttavia nel caso pessimo questo algoritmo ha complessità $O(n^2)$, perché devo eliminare tutte le attività in conflitto con l'attività selezionata.
+  \begin{lstlisting}[language=Scala]
+greedy_activity_selector(s,f)
+ordina s,f per f decrescente
+n <- length(s)
+A <- {1}
+j <- 1
+for i <- 2 to n 
+    if s[i] >= f[j]
+        A <- A U {i}
+        j <- i
+return A
+  \end{lstlisting}
+Questo algoritmo ha complessità $O(n\log n)$ questo a causa dell'ordinamento presente nell'algoritmo.
+\end{proof}
+\end{examplebox}
+\noindent
+Un altro tipo di problema a cui ci possiamo ricondurre è il seguente: immaginiamoci dei ladri
+che possiedono uno zaino di capienza limitata. Ogni oggetto ha un peso e un valore, e il ladro 
+deve scegliere quali oggetti mettere nello zaino in modo da massimizzare il valore totale degli oggetti.
+Questo problema è chiamato \textbf{problema dello zaino} e può essere risolto con la programmazione greedy.
+Questo perché bisogna per forza risolvere tutte le sottoistanze del problema per poter risolvere il problema principale in maniera ottimale.
+Questo problema infatti fa parte della classe di problemi \textbf{NP-completi}, cioè problemi per i quali non esiste un algoritmo polinomiale che possa risolverli in maniera ottimale.
+Infatti l'unico modo per risolvere il problema dello zaino in maniera ottimale è quello di provare tutte le combinazioni possibili, e questo ha complessità esponenziale, che cresce molto velocemente.
 
 \end{document}
