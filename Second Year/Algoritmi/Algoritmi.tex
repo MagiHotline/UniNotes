@@ -2970,4 +2970,76 @@ Questo perché bisogna per forza risolvere tutte le sottoistanze del problema pe
 Questo problema infatti fa parte della classe di problemi \textbf{NP-completi}, cioè problemi per i quali non esiste un algoritmo polinomiale che possa risolverli in maniera ottimale.
 Infatti l'unico modo per risolvere il problema dello zaino in maniera ottimale è quello di provare tutte le combinazioni possibili, e questo ha complessità esponenziale, che cresce molto velocemente.
 
+
+\section{Tabelle di Hash}
+
+Quando per esempio stiamo scrivendo un programma e dobbiamo memorizzare delle variabili, vogliamo che ad ogni variabile
+sia associato un indirizzo di memoria. Per esempio:
+
+\begin{center}
+
+\begin{tabular}{|c|c|}
+  \hline
+  Nome & Indirizzo\\
+  \hline
+  pippo & 0x0001\\
+  pluto & 0x0002\\
+  x & 0x0003\\
+  \hline
+\end{tabular}
+\end{center}
+Piuttosto che una tabella, non sarebbe comodo creare un array indicizzato da stringhe?
+Quale è il problema? Il problema è che il numero di stringhe componibili sono veramente tante, e quindi non possiamo creare un array di dimensione troppo grande.
+Ci converebbe trasformare l'insieme delle chiavi delle stringhe in un insieme di indici, e questo è possibile tramite la \textbf{funzione di Hash}.
+\[A[i] \Longleftrightarrow A[H(i)]\]
+Questo ci permette di trovare un buon compromesso per la dimensione dell'array e il numero di chiavi possibili.\\
+Tuttavia se $H(i) = H(j)$ abbiamo un problema, e questo è chiamato \textbf{conflitto}.
+Per quanto sufficientemente grande possa creare l'array, non posso evitare che ci siano conflitti.\\
+Come posso risolvere i conflitti? Dobbiamo costruire una funzione hash che minimizzi al più possibile i conflitti.
+
+\subsection{Gestione dei conflitti}
+
+Costruiamo un array di $m$ elementi e lo riempiamo con $n$ elementi.
+Chiamiamo $\alpha = \frac{n}{m}$ il fattore carico dell'array. Se $H(i)$ è casuale,
+in media, quanti elementi ci aspettiamo in una cella $a$ di $b$? Un elemento finisce in una cella $a$ con probabilità $\frac{1}{m}$ e chiamiamo $X_{ia}$ la variabile casuale 
+che vale uno se $i$ finisce in $a$. Ho in mano $X_{i1a} ... X_{ina}$ che rappresentano gli elementi che finiscono in $a$.
+$X_{i1a} + ... + X_{ina}$ è una variabile casuale che conta gli elementi che fininiscono in $a$. Ma mediamente, quanti elementi mi aspetto di trovare in $a$? 
+\[E[X_{i1a} + ... + X_{ina}] = E[X_{i1a}] + ... + E[X_{ina}] = \frac{1}{m} + ... + \frac{1}{m} = \frac{n}{m} = \alpha \]
+Quindi ricapitolando: riduciamo l'insieme di chiavi in un insieme di indici tramite la funzione di Hash e poi trasformo l'array ottenuto in una lista concatenata.
+Così che anche se si ha $H(i) = H(j)$ ci si può ricondurre all'elemento successivo della lista concatenata.\\
+Calcolo $H(i)$ e cerco $B[H(i)]$ e se $B[H(i)] = i$ (dove B è l'array costruito) allora ho trovato l'elemento, altrimenti vado ad aggiungere alla lista l'elemento alla lista concatenata.
+\\
+\vspace{1em}
+\noindent
+Quanto costa accedere ad $A$? 
+\begin{itemize}
+  \item Calcolare $H(i)$ (A(1))
+  \item Ricerca nella lista $B[H(i)]$ se $A(i)$ è presente $\alpha$, altrimenti mediamente $\frac{\alpha}{2}$
+\end{itemize}
+Quindi possiamo dire che accedere ad $A$ ha costo $O(1+\alpha)$ che è costante ed è quindi è come accedere un array.
+
+\subsection{Creazione della funzione Hash}
+
+\subsection{Metodo di divisione}
+
+Definiamo una funzione $h$ in questo modo:
+
+\[h(k) \stackrel{\Delta}{=} k \; \; mod \; \;  m \] 
+ma attenzione al valore di $m$! Se $m$ è una potenza di due, allora stiamo scartando
+i bit più significativi di $k$. Non ha senso creare una funzione Hash che permette di occupare solo 
+una parte dell'array, sarebbe preferibile utilizzare una funzione Hash che permetta di utilizzare tutto l'array.
+Meglio utilizzare un $m$ con potenze diverse da due (o da dieci). Vogliamo un valore $m$ che sia capace di incasinare il tutto e i numeri primi fanno al caso nostro.
+
+\subsection{Metodo della moltiplicazione}
+
+Definiamo una funzione $h$ in questo modo:
+
+\[h(k) \stackrel{\Delta}{=} \left(\floor*{m(ka \; \; mod \; \; 1)}\right) \] 
+dove $A$ è un numero reale positivo fissato. Cosa sta succedendo qui? Stiamo moltiplicando $k$ per $A$ e poi prendiamo la parte frazionaria di $ka$ e moltiplichiamo per $m$.
+Ci esce un numero compreso tra $0$ e $m$ escluso (e quindi che permette di contenere gli elementi dell'array). Quindi il valore della funzione di Hash dipende da $A$.
+Tuttavia come si sceglie il valore $A$? Il valore ideale di $A$ è $\frac{\sqrt{5}-1}{2}$, trovato da Knuth.
+Questo numero è molto vicino a $0.6180339887$ che è il numero aureo. Questo valore permette di avere una distribuzione uniforme degli elementi nell'array.
+
+
+
 \end{document}
