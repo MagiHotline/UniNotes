@@ -1,0 +1,116 @@
+\documentclass[a4paper]{article}
+\usepackage{import}
+\input{../../setup.sty}
+\title{Physics 2 Report}
+\author{SETU - South East Technological University\\Imbriani Paolo - W20114452\\Professor Joe Murphy}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{SETU.png}
+    \label{fig:centered-image}
+\end{figure}
+
+\maketitle 
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{Lab 1 -  Specific Heat Capacity by Electical Heating}
+
+\subsection{Introduction}
+
+By electrically heating a lagged metal block and carefully noting the rate of heating 
+and the temperature changes caused, the specific heat capacity of a metal can be evaluated
+by plotting a suitable graph.
+\\
+Table of measurements:
+
+\begin{center}
+    
+\begin{tabular}{c|c|c|c|c|c}
+    \textbf{V (volt)} & \textbf{I (Ampere)} & \textbf{t (s)} & \textbf{Temp (°C)} & \textbf{$\Delta$ T} & \textbf{Q (mc$\Delta$ T)} \\
+    \hline
+    0 & 0 & 0 & 17 & 0 & 0\\
+    8.34 & 1.34 & 120 & 20.5 & 3.5 & 2702.16\\
+    8.34 & 1.34 & 240 & 27 & 10 & 5404.32\\
+    8.34 & 1.38 & 360 & 35 & 18 & 8106 \\
+    8.4 & 1.38 & 480 & 43 & 26 &  10808\\
+    8.3 & 1.38 & 600 & 51 & 34 & 13510.8\\
+    
+\end{tabular}
+
+\end{center}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            axis lines=middle,
+            xlabel={$t$},
+            ylabel={$\Delta T$},
+            xtick={2,4,6,8,10},
+            ytick={1,2,4,8,16,20, 30},
+            ymin=0, ymax=35,
+            xmin=0, xmax=10,
+            axis line style={->},
+            every axis x label/.style={
+                at={(ticklabel* cs:1.05)},
+                anchor=west,
+            },
+            every axis y label/.style={
+                at={(ticklabel* cs:1.05)},
+                anchor=south,
+            }
+        ]
+        
+    
+        % Draw the plot and points
+        \addplot[thick, mark=*] coordinates {(0,0) (2, 3.5) (4, 10) (6, 18) (8, 26) (10, 34)};
+        
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Graph of $\Delta T$ against t}
+    \end{figure}
+
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                axis lines=middle,
+                xlabel={$\Delta T$},
+                ylabel={$Q$},
+                xtick={5,10,15,20,25,30,35},
+                ytick={0,1000,5000,10000,15000,20000},
+                ymin=0, ymax=20000,
+                xmin=0, xmax=40,
+                axis line style={->},
+                every axis x label/.style={
+                    at={(ticklabel* cs:1.05)},
+                    anchor=west,
+                },
+                every axis y label/.style={
+                    at={(ticklabel* cs:1.05)},
+                    anchor=south,
+                }
+            ]
+            
+        
+            % Draw the plot and points
+            \addplot[thick, mark=*] coordinates {(0, 0) (3.5, 2702.16) (10, 5404.32) (18, 8106) (26, 10808) (34, 13510.8)};
+            
+            \end{axis}
+          \end{tikzpicture}
+          \caption{Graph of Q against $\Delta T$}
+        \end{figure}
+    \noindent
+    \subsection{Conclusion}
+    We found the slope coeffienct which 379,9975. We just divide the slope by the mass of the material to get the specific heat capacity of the material. The specific heat capacity of the material is 385 J/kg°C. Which exactly matches \textbf{the specific heat capacity of the material we were testing.}
+    \\
+\end{document}
