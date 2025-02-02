@@ -22,14 +22,118 @@
 
 \section{Practical 1 -  Commands}
 
-\textcolor{green}{lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed}
-\\
-lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed
 
-\begin{lstlisting}
-C:> DIR
-dsakldnakndsajdadnn
-dkasdjkandssd
+\textcolor{green!50!black}{
+Taking a selection of Windows CLI commands from those given below, use the online help to
+examine the various options and arguments, and try them out.\\
+You're required carefully to write two A4 pages (Times 12 point or equivalent size) detailing your experiments with different options for between six and ten different commands.
+To get the online help for a command, type command /?\\
+e.g.\\
+dir /?\\
+prompt\\
+mkdir\\
+color\\
+title\\
+tree\\
+type\\
+ver\\
+print\\
+xcopy\\
+Type help at the windows command line prompt to see some more instructions
+}
 
+\begin{itemize}
+    \item Prompt - The prompt command is used to customize the text that appears before the cursor in the command prompt.
+\begin{lstlisting}[language=bash]
+prompt MyPrompt$G
 \end{lstlisting}
+This changes the prompt to MyPrompt$>$. The \$G represents the $>$ symbol.
+\item Mkdir - The mkdir command is used to create a new directory.
+\begin{lstlisting}[language=bash]
+mkdir MyDirectory
+\end{lstlisting}
+This creates a new directory called MyDirectory. To create a folder inside another folder:
+\begin{lstlisting}[language=bash]
+mkdir MyDirectory\MySubDirectory
+\end{lstlisting}
+\item Color - The color command is used to change the color of the text and background in the command prompt.
+\begin{lstlisting}[language=bash]
+color 0A
+\end{lstlisting}
+This sets a black background (0) with green text (A).
+To reset to default:
+\begin{lstlisting}[language=bash]
+color
+\end{lstlisting}
+To see all the available colors:
+\begin{lstlisting}[language=bash]
+color /?
+\end{lstlisting}
+\item Title - The title command is used to change the title of the command prompt window.
+\begin{lstlisting}[language=bash]
+title MyTitle
+\end{lstlisting}
+This changes the title of the command prompt window to MyTitle.
+\item Tree - The tree command is used to display a graphical representation of the directory structure.
+\begin{lstlisting}[language=bash]
+tree
+\end{lstlisting}
+And it will output something like this:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{treeEx.png}
+    \label{fig:centered-image}
+\end{figure}
+Displays a simple tree structure of folders in the current directory. To include all files in the display:
+\begin{lstlisting}[language=bash]
+tree /f
+\end{lstlisting}
+The /F option lists all files along with the folder structure.
+\item Type - The type command is used to display the contents of a text file.   
+\begin{lstlisting}[language=bash]
+type MyFile.txt
+\end{lstlisting}
+This displays the contents of the file MyFile.txt. Useful for quickly viewing small text files without opening them.
+\item Ver - The ver command is used to display the version of the operating system.
+\begin{lstlisting}[language=bash]
+ver
+\end{lstlisting}
+This displays the version of the operating system.
+
+
+\end{itemize}
+\textcolor{green!50!black}{What’s the purpose of the first line - @ECHO OFF? Remove it and see the
+effect}
+
+\begin{lstlisting}[language=bash]
+@ECHO OFF
+ECHO Please insert a USB memory stick
+PAUSE
+COPY *.txt I:\
+ECHO BACKUP COMPLETE
+\end{lstlisting}
+\begin{itemize}
+    \item @ECHO OFF → Hides command execution lines for cleaner output.
+    \item ECHO → Displays messages on the screen.
+    \item PAUSE → Waits for the user to press a key before continuing.
+    \item COPY *.txt I:\ → Copies all .txt files from the current folder to the USB drive (assuming it's drive I:).
+    \item ECHO BACKUP COMPLETE → Displays a completion message.
+\end{itemize}
+The first line, @ECHO OFF, is used to prevent the command prompt from displaying each command as it executes.
+\begin{lstlisting}[language=bash]
+C:\Users\YourName\Desktop> ECHO Please insert a USB memory stick
+Please insert a USB memory stick
+
+C:\Users\YourName\Desktop> PAUSE
+Press any key to continue . . .
+
+C:\Users\YourName\Desktop> COPY *.txt I:\
+3 file(s) copied.
+
+C:\Users\YourName\Desktop> ECHO BACKUP COMPLETE
+BACKUP COMPLETE
+\end{lstlisting}
+
+
+
 \end{document}
