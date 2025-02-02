@@ -3,7 +3,7 @@ package it.univr.instructions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleMachine implements Machine {
+public class PrintingMachine implements Machine {
 
     // inizialmente lo stack e' vuoto
     private final List<Integer> stack = new ArrayList<>();
@@ -16,7 +16,7 @@ public class SimpleMachine implements Machine {
      * @param program il programma da eseguire
      * @throws IllegalProgramException se l'esecuzione del programma fallisce per qualche motivo
      */
-    public SimpleMachine(List<Instruction> program) throws IllegalProgramException {
+    public PrintingMachine(List<Instruction> program) throws IllegalProgramException {
         result = execute(program);
     }
 
@@ -52,5 +52,6 @@ public class SimpleMachine implements Machine {
      */
     protected void execute(Instruction ins, List<Integer> stack) throws IllegalProgramException {
         ins.execute(stack);
+        System.out.println(ins + ": " + stack);
     }
 }
