@@ -1,0 +1,169 @@
+\documentclass[a4paper]{article}
+\usepackage{import}
+\input{../../setup.sty}
+\title{Functional Programming}
+\author{SETU - South East Technological University\\Imbriani Paolo - W20114452\\Professor Mairead Meagher}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{SETU.png}
+    \label{fig:centered-image}
+\end{figure}
+
+\maketitle 
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{Lambda Calculus, $\alpha$-equivalence, $\beta$-reduction}
+
+Lambda Calculus is a model of computation devised in the 1930s by Alonzo Church. Functional Programming 
+languages are all based on the lambda calculus. For example, Haskell, is a \textbf{pure} functional programming language, all
+its features are translatable to lambda expressions. It allows a higher degree of abstractios and composability.
+\\
+The lambda calculus is based on the concept of a function, and it is a simple mathematical model of computation. 
+We have seen the function:
+\[ \lambda x . x \]
+The variable $x$ here is not semantically meaningful except in its role in that single expression. Because of this, there's a form 
+of equivalence between lambda terms called $\alpha$-equivalence. Two lambda terms are $\alpha$-equivalent if they differ only in the names of their bound variables.
+
+\[\lambda x . x\]
+\[\lambda apple . apple\]
+\[\lambda orange . orange\]
+all mean the same thing.
+When we apply a function to an argument we 
+\begin{itemize}
+    \item substitute the input expression for all instances of bound variables within the body of the abstraction
+    \item eliminate the head of the abstraction (its only purpose was to bind a variable)
+\end{itemize}
+This is called $\beta$-reduction. 
+\begin{examplebox}{Example}
+\[(\lambda x . x) 3 \rightarrow 3\]
+The \(\lambda x . x\) is a function that takes an argument and returns it. When we apply it to 3, we substitute 3 for x and eliminate the head of the abstraction.
+This is function is also called the \textit{identity function}.
+\[\lambda x . x + 1\]
+\[(\lambda x . x + 1) 3 \rightarrow 3 + 1 = 4\]
+This other function takes an argument and returns it incremented by 1.
+\end{examplebox}
+We can also apply our identity function to another lambda astraction:
+\[(\lambda x . x) (\lambda y . y) \rightarrow \lambda y . y\]
+We can use another syntax here, $[x := z]$ to indicate that $z$ will  be substituted for $x$ in the expression.
+Here $z$ is the function $(\lambda y . y)$.\\
+We reduce this application like this:
+\[(\lambda x . x)(\lambda y . y)\]
+\begin{align*}
+    [x := &\lambda y . y]\\
+    &\lambda y . y
+\end{align*}
+Once more, but this time we'll add another argument:
+\[(\lambda x . x)(\lambda y . y)z\]
+Applications of the lambda calculus are \textit{left associative.} That is unless specific paranthesis suggest otherwise, they associate, or group, to the left. So, it can be rewritten as:
+\[((\lambda x . x)(\lambda y . y))z\]
+\begin{align*}
+    &((\lambda x . x)(\lambda y . y))z\\
+    &[x := \lambda y . y]\\
+    &(\lambda y . y)z\\
+    &[y := z]\\
+    &z
+\end{align*}    
+
+\subsection{Variables and multiple parameters}
+
+Variables can be:
+
+\begin{itemize}
+    \item \textbf{Free} if they are not bound by a lambda abstraction
+    \item \textbf{Bound} if they are bound by a lambda abstraction 
+\end{itemize}
+as the $\lambda$-calculus assumes an infinite universe of free variables. They are bound to functions in an environment, then they become 
+bound by usage in an abstraction.
+For example, the following lambda expression:
+\[\lambda x . x*y\] 
+$x$ is bound by $\lambda$ over the body $x * y$, but $y$ is a free variable. When we apply this function to an argument, nothing can be done with $y$. It remains irredicible.
+\begin{examplebox}{Example}
+    The following lambda expression:
+    \[(\lambda x . x * y)z\]
+    We apply the lambda to the argument $z$:
+    \begin{align*}
+        (\lambda x . x * &y)z\\
+        [x := &z]\\
+        &zy
+    \end{align*}
+    The head has been applied to the argument, and the body has been reduced. Since we know nothing about $y$ and $z$, we can't reduce it further.
+\end{examplebox}
+\noindent
+Each lambda can only bind one parameter. To bind multiple parameters, we can nest lambdas. For example, the following lambda expression:
+\[\lambda x . (\lambda y . x + y)\]
+This is also called a \textit{curried} function. It takes one argument, and returns another function that takes another argument. This is useful for partial application of functions.
+\begin{examplebox}{Example}
+    \[(\lambda x . (\lambda y . x + y)) 3\]
+    We apply the outer lambda to 3:
+    \begin{align*}
+        (\lambda x . (\lambda y . &x + y)) 3\\
+        &[x := 3]\\
+        &(\lambda y . 3 + y)
+    \end{align*}
+    We have reduced the outer lambda to a function that takes an argument and returns it incremented by 3.
+\end{examplebox}
+\subsection{Lambda Calculus in Haskell} 
+How do we write lambda expression in Haskell?
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Named function & Lambda Calculus & Haskell & Result\\
+        \hline
+        Identity & $\lambda x . x$ & \texttt{\textbackslash x -> x} & \texttt{id}\\
+        \hline
+        f x = x + 1 & $\lambda x . x + 1$ & \texttt{\textbackslash x -> x + 1} & \texttt{(+1)}\\
+        \hline
+        f x y = x * y & $\lambda x . \lambda y . x * y$ & \texttt{\textbackslash x -> \textbackslash y -> x * y} & \texttt{(*)}\\
+        \hline
+        f xs = 'c' : xs & $\lambda xs . 'c' : xs$ & \texttt{\textbackslash xs -> 'c' : xs} & \texttt{('c':)}\\
+        \hline
+    \end{tabular}
+\end{figure}
+\noindent
+Lambda functions are used extensively in Haskell, notably with high order functions.
+
+\subsection{Encoding Lambda Calculus}
+
+\begin{itemize}
+    \item Alonzo Church is credited with the invention of the lambda calculus in the 1930s.
+    \item Church encoding were developed to encode data structures and operations in the lambda calculus.
+    \item Church encoding are a very powerful tool for reasoning about programs.
+    \item Church found out that every concept in programming languages can be represented using functions.
+    \item Everything from boolean logic, conditionals, statements, numbers and even loops can be represented using functions.
+\end{itemize}
+But how we encode all these construcs using only functions?\\
+We'll encode the behaviour of these constructs using functions. For example, we can encode the boolean values \texttt{True} and \texttt{False} as functions that take two arguments and return the first or the second argument respectively.\\
+We can encode the boolean value \texttt{True} as:
+\[\lambda x . \lambda y . x\]
+and the boolean value \texttt{False} as:
+\[\lambda x . \lambda y . y\]
+To encode the logic of the NOT operator, we can define a function that takes a boolean value and returns the opposite value.\\
+The NOT operator can be encoded as:
+\begin{definition}
+    \[NOT := \lambda b . b \text{ False True}\]
+\end{definition}
+\noindent
+To encode the logic of the AND operator, we can define a function that takes two boolean values and returns \texttt{True} if both are \texttt{True}, otherwise it returns \texttt{False}.\\
+The AND operator can be encoded as:
+\begin{definition}
+    \[AND := \lambda x . \lambda y . x y \text{ False}\]
+\end{definition}
+\noindent
+To encode the logic of the OR operator, we can define a function that takes two boolean values and returns \texttt{True} if at least one of them is \texttt{True}, otherwise it returns \texttt{False}.\\
+The OR operator can be encoded as:
+\begin{definition}
+    \[OR := \lambda x . \lambda y . x \text{ True y}\]
+\end{definition}
+
+
+\end{document}
