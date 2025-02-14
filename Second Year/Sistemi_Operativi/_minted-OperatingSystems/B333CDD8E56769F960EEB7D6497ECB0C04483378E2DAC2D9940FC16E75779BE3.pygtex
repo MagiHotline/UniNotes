@@ -1,0 +1,64 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} The three pathetic knock\PYGZhy{}knock jokes program!}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Date: 26/09/17}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} For: BSc (Hons) Computer Forensics and Security}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} initialisation section}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} first question}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+Clear\PYGZhy{}Host
+
+\PYG{k}{while}\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYGZhy{}ne\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Who is there?\PYGZdq{}}\PYG{o}{)\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }read\PYGZhy{}host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Knock Knock!\PYGZdq{}}
+\PYG{o}{\PYGZcb{}}
+Clear\PYGZhy{}Host
+\PYG{k}{while}\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYGZhy{}ne\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Orange who?\PYGZdq{}}\PYG{o}{)\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }read\PYGZhy{}host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Orange\PYGZdq{}}
+\PYG{o}{\PYGZcb{}}
+Clear\PYGZhy{}Host
+Write\PYGZhy{}Output\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Orange you glad you created this PowerShell script?\PYGZdq{}}
+Start\PYGZhy{}Sleep\PYG{+w}{ }\PYGZhy{}Seconds\PYG{+w}{ }\PYG{l+m}{5}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Second Question}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+Clear\PYGZhy{}Host
+\PYG{k}{while}\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYGZhy{}ne\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Who is there?\PYGZdq{}}\PYG{o}{)\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }read\PYGZhy{}host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Knock Knock!\PYGZdq{}}
+\PYG{o}{\PYGZcb{}}
+Clear\PYGZhy{}Host
+\PYG{k}{while}\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYGZhy{}ne\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Orange who?\PYGZdq{}}\PYG{o}{)\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }read\PYGZhy{}host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Orange\PYGZdq{}}
+\PYG{o}{\PYGZcb{}}
+Clear\PYGZhy{}Host
+Write\PYGZhy{}Output\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Oranges are oranges but this is PowerShellscripting!\PYGZdq{}}
+Start\PYGZhy{}Sleep\PYG{+w}{ }\PYGZhy{}Seconds\PYG{+w}{ }\PYG{l+m}{5}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Third Question}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+Clear\PYGZhy{}Host
+\PYG{k}{while}\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYGZhy{}ne\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Who is there?\PYGZdq{}}\PYG{o}{)\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }read\PYGZhy{}host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Knock Knock!\PYGZdq{}}
+\PYG{o}{\PYGZcb{}}
+Clear\PYGZhy{}Host
+\PYG{k}{while}\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYGZhy{}ne\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Banana who?\PYGZdq{}}\PYG{o}{)\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}userReply}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }read\PYGZhy{}host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Banana\PYGZdq{}}
+\PYG{o}{\PYGZcb{}}
+Clear\PYGZhy{}Host
+Write\PYGZhy{}Output\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Orange you glad I didn\PYGZsq{}t say orange?\PYGZdq{}}
+Start\PYGZhy{}Sleep\PYG{+w}{ }\PYGZhy{}Seconds\PYG{+w}{ }\PYG{l+m}{5}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Farewell Message}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+Clear\PYGZhy{}Host
+Write\PYGZhy{}Output\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Goodbye!nn\PYGZdq{}}
+\end{Verbatim}

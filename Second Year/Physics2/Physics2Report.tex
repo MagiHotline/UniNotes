@@ -20,17 +20,30 @@
 
 \pagebreak
 
-\section{Lab 1 -  Specific Heat Capacity by Electical Heating}
+\section{Lab 1 -  Specific Heat Capacity by Electical Heating, 28/01/2025}
 
-\subsection{Introduction}
+\subsection{Theory}
 
 By electrically heating a lagged metal block and carefully noting the rate of heating 
 and the temperature changes caused, the specific heat capacity of a metal can be evaluated
 by plotting a suitable graph.
-\\
-Table of measurements:
+
+\subsubsection{Aim(s)}
+
+The aim of this experiment is to find the specific heat of the material we are heating electrically.
+
+\subsubsection{Procedure}
+
+As in Lab manual.
 
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{IMG_5527.jpg}
+\end{figure}
+
+
+\subsection{Experiment}
 \begin{figure}[H]
 \centering
 \begin{tabular}{c|c|c|c|c|c}
@@ -117,12 +130,106 @@ Table of measurements:
         the electrical energy supplied to the block is used to increase its temperature rather than 
         being lost to the surroundings.
         \item \textbf{If you were to increase the current (A) used in this experiment, to a value higher than you used, would it change the experiment in any way? Give reasons as to your answer.}
-        Yes, increasing the current beyond 2.7 Ampere, would change the experiment. The rate of heating would increase, and the temperature of the block would increase more rapidly. This would make it more difficult to measure the temperature accurately and to record the data in a timely manner.
+        Uncreasing the current beyond 2.7 Ampere, would definitely change the experiment. The rate of heating would increase, and the temperature of the block would increase more rapidly. This would make it more difficult to measure the temperature accurately and to record the data in a timely manner.
         \item \textbf{What is the function of the big variable resistor (rheostat) in this experiment? Give reasons as to you answer.}
         The big variable resistor (rheostat) is used to control the current flowing through the circuit. By adjusting the resistance of the rheostat, the current can be adjusted to the desired value. This allows the rate of heating of the block to be controlled and the temperature changes to be measured accurately.
     \end{enumerate}
 
     \subsection{Conclusion}
     We found the slope coeffienct which 379,9975. We just divide the slope by the mass of the material to get the specific heat capacity of the material. The specific heat capacity of the material is 385 J/kg°C. Which exactly matches \textbf{the specific heat capacity of the material we were testing.}
+
+\section{Lab 2 - Calibration of a Thermocouple, 11/02/2025}
+
+\subsection{Theory}
+
+A Thermocouple is formed by joining two metals. When two different metals are joined and connected through a sensitive voltmeter, it is found that whenever
+a temperature difference exists between the junctions a reading is recorded on the voltmeter.
+The greater the temperature difference between the junctions the larget the reading.
+This property of the Thermocouple can be used to measure temperature. In practice the cold conjuction is maintained 
+at a fix temperature i.e 0° C.
+
+\subsubsection{Aim(s)}
+
+The aim of the experiment is to calibrate a Thermocouple.
+
+\subsubsection{Procedure}
+
+As in lab manual.
+
+\subsection{Diagrams/Apparaths}
+
+Voltmeter, 2 Becker, Thermocouple, thermometer.
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c}
+        Temperature (°C) & Voltage (mV) Hot & Voltage (mV) Cold & Average Voltage (mV) \\ 
+        \hline
+        0 & 0 & 0 & 0\\
+        10 & 0.1 & 0.35 & 0.05\\
+        20 & 0.4 & 0.3 & 0.35\\
+        30 & 1.1 & 0.9 & 1\\
+        40 & 1.5 & 1.3 & 1.4\\
+        50 & 2.1 & 1.6 & 1.7\\
+        60 & 2.3 & 2.1 & 2.2\\
+        70 & 2.7 & 2.4 & 2.55\\
+        80 & 3 & 2.8 & 2.9\\
+        90 & 3.5 & 3.2 & 3.35\\ 
+        100 & 3.8 & 3.7 & 3.75\\
+    \end{tabular}
+    \caption{Table of measurements}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\textwidth]{IMG_5970.jpg}
+        \label{fig:centered-image}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                axis lines=middle,
+                xlabel={$t$},
+                ylabel={$\Delta T$},
+                xtick={10, 20, 30, 40, 50, 60, 70, 80, 90, 100},
+                ytick={0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4},
+                ymin=0, ymax=4,
+                xmin=0, xmax=100,
+                axis line style={->},
+                every axis x label/.style={
+                    at={(ticklabel* cs:1.05)},
+                    anchor=west,
+                },
+                every axis y label/.style={
+                    at={(ticklabel* cs:1.05)},
+                    anchor=south,
+                }
+            ]
+            
+        
+            % Draw the plot and points
+            \addplot[thick, mark=*] coordinates {(0,0) (10, 0.05) (20, 0.35) (30, 1) (40, 1.4) (50, 1.7) (60, 2.2) (70, 2.55) (80, 2.9) (90, 3.35) (100, 3.75)};
+            
+            \end{axis}
+          \end{tikzpicture}
+          \caption{Graph of Average Voltage against Temperature}
+        \end{figure}
+
+        So we found that the equation for this graph is:
+        \[y = 0.04x - 0.2114\]
+
+\subsection{Questions}
+
+Use the thermocouple and the calibration graph to estimate:
+
+\begin{itemize}
+    \item a. Room Temperature $\rightarrow$ 19°C so using the graph equation:  $y = 0.04x - 0.2114 \rightarrow 0.5486$ 
+    \item b. Body Temperature $\rightarrow$ 37°C $\rightarrow (37 * 0.04) - 0.2114 = 1.2686$
+    \item c. The temperature of water from the tap in the lab $\rightarrow 17.5$ °C $(17.5 * 0.04) - 0.2114 = 0,4886 $ 
+\end{itemize}
+    
+
 
 \end{document}

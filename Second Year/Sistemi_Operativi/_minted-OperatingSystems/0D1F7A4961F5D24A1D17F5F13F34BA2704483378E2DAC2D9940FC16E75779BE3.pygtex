@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nv}{\PYGZdl{}mylist}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }dir
+\PYG{n+nv}{\PYGZdl{}mylist}
+\PYG{n+nv}{\PYGZdl{}mylist}\PYG{o}{[}\PYG{l+m}{0}\PYG{o}{]}.Name
+\PYG{n+nv}{\PYGZdl{}mylist}\PYG{o}{[}\PYG{l+m}{0}\PYG{o}{]}.length
+\PYG{n+nv}{\PYGZdl{}mylist}\PYG{o}{[}\PYG{l+m}{0}\PYG{o}{]}.Mode
+\PYG{n+nv}{\PYGZdl{}mylist}\PYG{o}{[}\PYG{l+m}{0}\PYG{o}{]}.LastWriteTime
+\end{Verbatim}

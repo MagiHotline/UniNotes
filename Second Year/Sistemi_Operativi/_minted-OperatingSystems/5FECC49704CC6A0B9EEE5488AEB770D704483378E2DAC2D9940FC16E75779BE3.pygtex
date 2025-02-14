@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+
+PS\PYG{+w}{ }C:\PYG{l+s+se}{\PYGZbs{}U}sers\PYG{l+s+se}{\PYGZbs{}U}ser1\PYG{l+s+se}{\PYGZbs{}g}reen\PYGZgt{}\PYG{+w}{ }Copy\PYGZhy{}Item\PYG{+w}{ }drink.txt\PYG{+w}{ }beverage.txt
+PS\PYG{+w}{ }C:\PYG{l+s+se}{\PYGZbs{}U}sers\PYG{l+s+se}{\PYGZbs{}U}ser1\PYG{l+s+se}{\PYGZbs{}g}reen\PYGZgt{}\PYG{+w}{ }Get\PYGZhy{}ChildItem\PYG{+w}{ }*.txt
+Directory:\PYG{+w}{ }C:\PYG{l+s+se}{\PYGZbs{}U}sers\PYG{l+s+se}{\PYGZbs{}U}ser1\PYG{l+s+se}{\PYGZbs{}g}reen
+
+Mode\PYG{+w}{                }LastWriteTime\PYG{+w}{         }Length\PYG{+w}{ }Name
+\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYG{+w}{                }\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYG{+w}{         }\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYG{+w}{ }\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}
+\PYGZhy{}a\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYG{+w}{        }\PYG{l+m}{2}/10/2025\PYG{+w}{   }\PYG{l+m}{10}:15\PYG{+w}{ }AM\PYG{+w}{           }\PYG{l+m}{123}\PYG{+w}{ }drink.txt
+\PYGZhy{}a\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYG{+w}{        }\PYG{l+m}{2}/10/2025\PYG{+w}{   }\PYG{l+m}{10}:15\PYG{+w}{ }AM\PYG{+w}{           }\PYG{l+m}{123}\PYG{+w}{ }beverage.txt
+PS\PYG{+w}{ }C:\PYG{l+s+se}{\PYGZbs{}U}sers\PYG{l+s+se}{\PYGZbs{}U}ser1\PYG{l+s+se}{\PYGZbs{}g}reen\PYGZgt{}\PYG{+w}{ }Get\PYGZhy{}ChildItem\PYG{+w}{ }\PYG{p}{|}\PYG{+w}{ }Select\PYGZhy{}String\PYG{+w}{ }coffee
+drink.txt:1:coffee.
+beverage.txt:1:coffee.
+PS\PYG{+w}{ }C:\PYG{l+s+se}{\PYGZbs{}U}sers\PYG{l+s+se}{\PYGZbs{}U}ser1\PYG{l+s+se}{\PYGZbs{}g}reen\PYGZgt{}\PYG{+w}{ }Set\PYGZhy{}Content\PYG{+w}{ }fruit.txt\PYG{+w}{ }\PYGZhy{}Value\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}apple`r`norange`r`nbanana\PYGZdq{}}
+PS\PYG{+w}{ }C:\PYG{l+s+se}{\PYGZbs{}U}sers\PYG{l+s+se}{\PYGZbs{}U}ser1\PYG{l+s+se}{\PYGZbs{}g}reen\PYGZgt{}\PYG{+w}{ }Get\PYGZhy{}Content\PYG{+w}{ }fruit.txt
+apple
+orange
+banana
+PS\PYG{+w}{ }C:\PYG{l+s+se}{\PYGZbs{}U}sers\PYG{l+s+se}{\PYGZbs{}U}ser1\PYG{l+s+se}{\PYGZbs{}g}reen\PYGZgt{}\PYG{+w}{ }Get\PYGZhy{}ChildItem\PYG{+w}{ }\PYG{p}{|}\PYG{+w}{ }Select\PYGZhy{}String\PYG{+w}{ }coffee
+drink.txt:1:coffee.
+beverage.txt:1:coffee.
+\end{Verbatim}

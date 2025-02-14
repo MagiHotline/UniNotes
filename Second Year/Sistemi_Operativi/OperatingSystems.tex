@@ -82,7 +82,6 @@ And it will output something like this:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{treeEx.png}
-    \label{fig:centered-image}
 \end{figure}
 Displays a simple tree structure of folders in the current directory. To include all files in the display:
 \begin{lstlisting}[language=bash]
@@ -134,6 +133,180 @@ C:\Users\YourName\Desktop> ECHO BACKUP COMPLETE
 BACKUP COMPLETE
 \end{lstlisting}
 
+\section{Practical 2 -  Powershell}
+
+\textcolor{green!50!black}{
+    2.1 Test the above using a directory that you created last week.
+}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{os1.png}
+\end{figure}
+\noindent
+Using the directory was created last week, we can use the Get-ChildItem command to list the contents of the directory.
+using the following list of commands:
+\begin{minted}{bash}
+$mylist = dir 
+$mylist
+$mylist[0].Name
+$mylist[0].length
+$mylist[0].Mode
+$mylist[0].LastWriteTime
+\end{minted}
+\noindent
+\textcolor{green!50!black}{
+Exercise of bash scripting in Powershell:
+\begin{itemize}
+    \item Simply record what happens when you run this script.
+    \item Find out how to run scripts if they’re in a directory other than the working directory.
+    \item Study the following script and see if you can figure out what it’ll do. Now type it into a file called game.ps1 (You can use copy/paste in places to reduce the labour.) Run it and see if your predictions are true.
+\end{itemize}
+}
+
+\begin{minted}{bash}
+###########################################################
+###########################################################
+##
+## The three pathetic knock-knock jokes program!
+## Date: 26/09/17
+## For: BSc (Hons) Computer Forensics and Security
+##
+###########################################################
+###########################################################
+
+############################
+## initialisation section
+############################
+$userReply = ""
+############################
+## first question
+############################
+Clear-Host
+
+while($userReply -ne "Who is there?"){
+    $userReply = read-host "Knock Knock!"
+}
+Clear-Host
+while($userReply -ne "Orange who?"){
+    $userReply = read-host "Orange"
+}
+Clear-Host
+Write-Output "Orange you glad you created this PowerShell script?"
+Start-Sleep -Seconds 5
+############################
+## Second Question
+############################
+Clear-Host
+while($userReply -ne "Who is there?"){
+    $userReply = read-host "Knock Knock!"
+}
+Clear-Host
+while($userReply -ne "Orange who?"){
+    $userReply = read-host "Orange"
+}
+Clear-Host
+Write-Output "Oranges are oranges but this is PowerShellscripting!"
+Start-Sleep -Seconds 5
+############################
+## Third Question
+############################
+Clear-Host
+while($userReply -ne "Who is there?"){
+    $userReply = read-host "Knock Knock!"
+}
+Clear-Host
+while($userReply -ne "Banana who?"){
+    $userReply = read-host "Banana"
+}
+Clear-Host
+Write-Output "Orange you glad I didn't say orange?"
+Start-Sleep -Seconds 5
+############################
+## Farewell Message
+############################
+Clear-Host
+Write-Output "Goodbye!nn"    
+\end{minted}
+When you run game.ps1, here’s the interactive sequence you’ll experience:
+
+\begin{enumerate}
+    \item The script will prompt you with “Knock Knock!”
+    \item You’ll need to respond with “Who is there?”
+    \item The script will then prompt you with “Orange”
+    \item Until you respond with “Orange who?”
+    \item The script will then output “Orange you glad you created this PowerShell script?”
+    \item The second and third questions follow a similar pattern.
+    \item The script will then output “Goodbye!”
+\end{enumerate}
+\textcolor{green!50!black}{
+To do:
+\begin{enumerate}
+    \item Create another file called beverage.txt identical to drink.txt.
+    (Hint: Use what you learned in practical 1 to do this.)
+    \item Issue this command again\\
+    Get-ChildItem | select-string coffee\\
+    and see what happens.
+    \item Create a file called fruit.txt with the list apple, orange, banana in it.
+    \item Issue this command again\\
+    Get-ChildItem | select-string coffee\\
+    and see what happens.
+\end{enumerate}
+}
+\begin{minted}{bash}
+
+PS C:\Users\User1\green> Copy-Item drink.txt beverage.txt
+PS C:\Users\User1\green> Get-ChildItem *.txt
+Directory: C:\Users\User1\green
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        2/10/2025   10:15 AM           123 drink.txt
+-a----        2/10/2025   10:15 AM           123 beverage.txt
+PS C:\Users\User1\green> Get-ChildItem | Select-String coffee
+drink.txt:1:coffee.
+beverage.txt:1:coffee.
+PS C:\Users\User1\green> Set-Content fruit.txt -Value "apple`r`norange`r`nbanana"
+PS C:\Users\User1\green> Get-Content fruit.txt
+apple
+orange
+banana
+PS C:\Users\User1\green> Get-ChildItem | Select-String coffee
+drink.txt:1:coffee.
+beverage.txt:1:coffee.
+\end{minted}
+\noindent
+\textcolor{green!50!black}{
+Find out and explain how to get help about any cmdlet.
+\begin{itemize}
+    \item Find out and explain what F7 does in PowerShell.
+    \item  What is the purposes of (a) the –whatif switch and (b) the –confirm
+    \item Write a note to explain how you can use tab to complete a command as soon as
+    it’s unambiguous.  
+\end{itemize}
+}
+\noindent
+In PowerShell, you can obtain help for any cmdlet by typing Get-Help followed by the name of the cmdlet.
+\begin{minted}{bash}
+Get-Help Get-Process
+\end{minted}
+This will display detailed information about the Get-Process cmdlet, including a description, syntax, parameters, examples, and more.
+When you press F7 in a PowerShell console, it brings up a graphical popup window displaying your command history from the current session.
+You can use the arrow keys to navigate through the list of previously executed commands. This is a handy feature to quickly recall and reuse commands without retyping them.
+\\
+The -WhatIf switch is used to simulate the execution of a command. It shows you what would happen if the command ran but does not make any actual changes.
+Use -WhatIf with potentially destructive or impactful commands to verify what actions would be performed.
+\begin{minted}{bash}
+Remove-Item C:\Temp\* -WhatIf
+\end{minted}
+The -Confirm switch forces the command to prompt for your confirmation before executing each action. This extra safety measure helps prevent accidental changes.
+\begin{minted}{bash}
+Remove-Item C:\Temp\* -Confirm
+\end{minted}
+\noindent
+PowerShell supports intelligent tab completion. As you start typing a command, cmdlet name, parameter, or even file path, you can press the Tab key to auto-complete the text.
+If the text you've entered uniquely identifies a command or parameter, pressing Tab will automatically complete it.
+If \textbf{multiple completions are possible repeatedly pressing Tab cycles through the available options until you reach the one you want.}
 
 
 \end{document}

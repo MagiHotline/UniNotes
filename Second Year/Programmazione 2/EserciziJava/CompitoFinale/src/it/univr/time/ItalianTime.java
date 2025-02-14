@@ -8,7 +8,7 @@ public class ItalianTime extends AbstractTime {
 	}
 
 	public final Time next() {
-		if(this.getSecondsFromStartOfDay() == 86399)
+		if(this.getSecondsFromStartOfDay() == SECONDS_IN_ONE_DAY - 1)
 			return new ItalianTime(0);
 		else
 			return new ItalianTime(getSecondsFromStartOfDay() + 1);
