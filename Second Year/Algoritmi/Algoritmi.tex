@@ -259,10 +259,10 @@ In questo caso la $j$ sarà chiamata variabile "invariante" ovvero che mantiene 
 for j <- 2 to length[A]
     key <- A[j]
     i <- j - 1
-    while i > 0 and A[i] > key
-        A[i+1] <- A[i]
-        i--
-    a[i+1] <- key
+    while i > 0 and A[j] > key
+        A[j+1] <- A[j]
+        j--
+    a[j+1] <- key
 \end{lstlisting}
 Ora dobbiamo capire quale sia la complessità di questo algoritmo. Se le cose vanno bene, l'algoritmo potrebbe terminare in $O(n)$. Tuttavia, seppur giusto, non è preciso. Infatti, nel peggiore dei casi, l'algoritmo termina in $O(n^2)$. Infatti il caso peggiore di input che mi può arrivare è un array ordinato al contrario con complessità uguale a:
 \[1 + 2 + 3 + ... + n = \frac{n(n+1)}{2} \in \Theta(n^2)\]

@@ -113,7 +113,7 @@ Let's say we want to start an I/O operation. What does the process look like?
     the device to its local buffer. 
     \item Once the transfer of data is complete, the device
     controller informs the device driver via an interrupt that it has finished its
-    operation. 
+    operation. s
     \item The device driver then returns control to the operating system,
     possibly returning the data or a pointer to the data if the operation was a read.
     For other operations, the device driver returns status information. [1]
@@ -130,12 +130,36 @@ Communication between the CPU and peripherals is facilitated by buses and interf
 \end{itemize}
 These interfaces are widely spread in the world and now standardized in the world of communication protocols and ensure that data is transferred efficienctly and reliably.
 
+\subsection{Direct Memory Access (DMA)}
+
+When CPU need to fetch an instruction or data from memory, it always controls the status of the device and that could be done using \textbf{interrupts} that is a hardware signals 
+that interrupts the normal flow of execution only when the device is ready. But to
+ transfer large amounts of data from an input/output device to memory, it is
+not advisable to use interrupts because it would be a waste of resources. DMA is used, which 
+is a device that allows data to be transferred from memory to the input/output device without passing 
+through the CPU. [1] [2]
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{DMA.png}
+\end{figure}
+
+\section{I/O Software and Operating System Support}
+
+The software layer of I/O systems is very important since it has to manage hardware resources effectively and efficienctly.
 
 
 \begin{thebibliography}{9}
     \bibitem{texbook}
     Silberschatz A, Galvin PG, Gagne G. Operating System Concepts. 9th ed. Wiley; 2013.
+    \bibitem{texbook}
+    Hennessy J, Patterson D. Computer Architecture: A Quantitative Approach. 5th ed. Morgan Kaufmann; 2011.
 \end{thebibliography}
+
+
+
+
 
 
 \end{document}
