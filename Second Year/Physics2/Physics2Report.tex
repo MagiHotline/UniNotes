@@ -247,34 +247,90 @@ In this experiment we are going to show these relationships.
 To build and test an RC circuit under (a) charge and (b) discharge conditions
 
 \subsection{Experiment}
+
+\subsubsection{Charging}
+
 \begin{figure}[H]
 \centering
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|}
     \hline
-    Time (s) & Voltage (V) & Time (s) & Voltage (s)\\
+    Time (s) & Voltage (V)\\
     \hline
-    0 & 0 & 0 & 0\\
-    5 & 0.20 & 0 & 0\\
-    10 & 0.45 & 0 & 0\\
-    15 & 0.69 & 0 & 0\\
-    20 & 1.1 & 0 & 0\\
-    \vdots & \vdots & \vdots & \vdots\\
-    60 & 2.65 & 60 & 0\\
-    120 & 4.20 & 120 & 0\\
-    180 & 5.45 & 180 & 0\\
-    240 & 6.40 & 240 & 0\\
-    300 & 7.12 & 300 & 0\\
-    360 & 7.70 & 360 & 0\\
-    420 & 8.14 & 420 & 0\\
-    480 & 8.50 & 480 & 0\\
-    540 & 8.83 & 540 & 0\\
-    600 & 9.17 & 600 & 0\\
-    \vdots & \vdots & \vdots & \vdots\\
-    1380 & 9.99 & 1380 & 0\\
+    0 & 0\\
+    5 & 0.20\\
+    10 & 0.45\\
+    15 & 0.69\\
+    20 & 1.1\\
+    \vdots & \vdots\\
+    60 & 2.65\\
+    120 & 4.20\\
+    180 & 5.45\\
+    240 & 6.40\\
+    300 & 7.12\\
+    360 & 7.70\\
+    420 & 8.14\\
+    480 & 8.50\\
+    540 & 8.83\\
+    600 & 9.17\\
+    \vdots & \vdots\\
+    1380 & 9.99\\
     \hline   
 \end{tabular}
 \caption{Table of measurements while charging the circuits}
 \end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Exp5.png}
+    \caption{Graph of Voltage against Time}
+\end{figure}
+\noindent
+The RC time constant ($\tau$) is estimated to be approximately 240 seconds, as indicated by 
+the red dashed line at the time where the voltage reaches $63\%$ of its final value
+
+\subsubsection{Discharging}
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline
+        Time (s) & Voltage (V)\\
+        \hline
+        0 & 10\\
+        5 & 9.95\\
+        10 & 9.92\\
+        15 & 9.90\\
+        20 & 9.87\\
+        \vdots & \vdots\\
+        60 & 9.65\\
+        120 & 9.35\\
+        180 & 9.10\\
+        240 & 8.90\\
+        300 & 8.70\\
+        360 & 8.50\\
+        420 & 8.30\\
+        \vdots & \vdots\\
+        A long time & 0.1\\
+        \hline   
+    \end{tabular}
+\caption{Table of measurements while discharging the circuits}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Exp52.png}
+    \caption{Graph of Voltage against Time while discharging}
+\end{figure}
+\noindent
+The plot of Voltage (V) versus Time (s) for the discharging circuit shows an exponential decay. However, based on the extracted data, the estimated RC time constant ($\tau$) appears to be around 5000 seconds, which seems too large and might be due to the lack of a closer data point near $37\%$ of the initial voltage.
+\\
+\textbf{Questions:}
+\begin{itemize}
+    \item \textbf{Does the graph follow the expected shape for an RC circuit?} Yes, the graph follows the expected shape for an RC circuit which is an exponential decay for the discharging circuit and an exponential growth for the charging circuit.
+    \item \textbf{What is the value of $\tau$, the time constant for your circuit?} We have that $R = 0.230 \times 10^6 \Omega$ and $C = 1000 \times 10^{-6} F$. The theoretical RC time constant $\tau$ is 230 seconds. This is close to our earlier estimated value of 240 seconds from the charging experiment, which suggests that our experimental data is reasonably accurate.
+    \item \textbf{How does this compare to your experimental value? ($67.3\%$ of voltage in charge, $32.7\%$ of voltage in discharge).} The experimental value of the time constant for the charging circuit is close to the theoretical value, as the voltage reaches $63\%$ of its final value at 240 seconds. However, the time constant for the discharging circuit is significantly larger than the theoretical value, which might be due to the lack of a closer data point near $37\%$ of the initial voltage.
+\end{itemize}
+
 
 
 \end{document}
