@@ -1,0 +1,214 @@
+\documentclass[a4paper]{article}
+\usepackage{import}
+\usepackage{geometry}
+\usepackage{setspace}
+% Set custom margins
+\onehalfspacing
+
+\geometry{a4paper, margin=1in}
+\geometry{letterpaper, left=1.5in, right=1in, top=1in, bottom=1in}
+\input{../../setup.sty}
+\title{Analisi II}
+\author{Università di Verona\\Imbriani Paolo - VR500437\\Professor Zivcovich Franco}
+
+\usepackage{titlesec}  % For customizing section titles
+\usepackage{ulem}      % For underlining text
+
+% Make section titles bigger
+\titleformat{\section}[hang]{\huge\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}[hang]{\Large\normalfont\itshape}{\thesubsection}{1em}{}
+
+%================================
+% THEOREM BOX
+%================================
+
+\tcbuselibrary{theorems, skins, hooks}
+
+\newtcbtheorem[number within=section]{Theorem}{Teorema}
+{%
+    enhanced,
+    breakable,
+    colback=white,
+    frame hidden,
+    boxrule=0sp,
+    borderline west={2pt}{0pt}{black},
+    sharp corners,
+    detach title,
+    before upper=\tcbtitle\par\smallskip,
+    coltitle=black,
+    fonttitle=\bfseries\sffamily,
+    description font=\mdseries,
+    separator sign none,
+    segmentation style={solid, black}
+}
+{th}
+
+%================================
+% EXAMPLE BOX
+%================================
+
+\newtcbtheorem[number within=section]{Example}{\faPencil $\;$ Esempio}
+{%
+    colback=blue!5!white,
+    breakable,
+    colframe=blue!30!black,
+    coltitle=blue!40!black,
+    boxrule=1pt,
+    sharp corners,
+    detach title,
+    before upper=\tcbtitle\par\smallskip,
+    fonttitle=\bfseries,
+    description font=\mdseries,
+    separator sign none,
+    description delimiters parenthesis
+}
+{ex}
+
+%================================
+% DEFINITION BOX
+%================================
+
+\newtcbtheorem[number within=section]{Definition}{\faHandORight $\;$ Definizione}
+{%
+    enhanced,
+    before skip=2mm,
+    after skip=2mm,
+    colback=green!5,
+    colframe=green!80!black,
+    boxrule=0.5mm,
+    attach boxed title to top left={xshift=1cm, yshift*=1mm-\tcboxedtitleheight},
+    varwidth boxed title*=-3cm,
+    boxed title style={frame code={
+        \path[fill=tcbcolback]
+        ([yshift=-1mm,xshift=-1mm]frame.north west)
+        arc[start angle=0,end angle=180,radius=1mm]
+        ([yshift=-1mm,xshift=1mm]frame.north east)
+        arc[start angle=180,end angle=0,radius=1mm];
+        
+        \path[left color=tcbcolback!60!black, right color=tcbcolback!60!black, middle color=tcbcolback!80!black]
+        ([xshift=-2mm]frame.north west) -- ([xshift=2mm]frame.north east)
+        [rounded corners=1mm]-- ([xshift=1mm,yshift=-1mm]frame.north east)
+        -- (frame.south east) -- (frame.south west)
+        -- ([xshift=-1mm,yshift=-1mm]frame.north west)
+        [sharp corners]-- cycle;
+    }, interior engine=empty},
+    fonttitle=\bfseries,
+    title={#2},
+    #1
+}
+{def}
+
+\newcommand{\thm}[3][]{\begin{Theorem}{#2}{#1}#3\end{Theorem}}
+\newcommand{\ex}[3][]{\begin{Example}{#2}{#1}#3\end{Example}}
+\newcommand{\dfn}[3][]{\begin{Definition}[colbacktitle=green!75!black]{#2}{#1}#3\end{Definition}}
+
+
+\usepackage[italian]{babel}
+
+\addto\captionsitalian{% Replace "english" with the language you use
+  \renewcommand{\contentsname}%
+    {Indice}%
+}
+
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.3\textwidth]{../UniversityofVerona.png}
+\end{figure}
+
+\maketitle 
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{Equazioni differenziali}
+
+\subsection{Modelli differenziali}
+
+La fisica, per descrivere dei fenomeni fisici usano la matematica e in particolare le equazioni differenziali. Infatti, si denota $x(t)$ lo spostamento nel tempo.
+Con la derivata prima $x'(t)$ si denota la velocità della particella in quell'istante e con la derivata seconda $x''(t)$ l'accelerazione.
+Quindi quando andiamo a tradurre
+matematicamente le leggi che governano modelli naturali può essere naturale dover lavorare
+con equazioni che coinvolgono una funzione incognita e qualcuna delle sue derivate.
+
+\ex{}{La seconda legge del moto di Newton $F = ma$, che stabilisce la posizione
+$x(t)$ al tempo $t$ di un corpo di massa m costante, soggetto a una forza $F(t)$, deve soddisfare
+l'equazione differenziale:
+\[m\frac{d^2x}{dt^2} = F(t) \; \; \text{equazione del moto}\]
+}
+\noindent
+Quindi le equazioni differenziali nascono per descrivere fenomeni fisici e naturali. 
+Possono essere classificate in modi diversi. Abbiamo infatti:
+\begin{enumerate}
+    \item \textit{Equazioni differenziali ordinarie} (ODE) se vengono coinvolte solo le derivate rispetto ad una sola variabile oppure \textit{equazioni differenziali parziali} (PDE) se vengono coinvolte derivate parziali
+     dell'incognita rispetto a più variabili.
+     \ex{}{L'equazione: \[\frac{\partial^2 u}{\partial t^2}=c^2 \frac{\partial^2u}{\partial x^2}\]
+     rappresenta l'equazione delle onde che modellizza lo spostamento trasversale $u(x, t)$ nel
+punto $x$ al tempo $t$ di una corda tesa che può vibrare.
+     }
+    \item Classificazione in base all'ordine: l'ordine di una ED è l'ordine massimo di derivazione che
+    compare nell'equazione.
+\ex{}{L'equazione: \[\frac{dy^2}{dt^2} + ty^3 - \cos{y} = \sin{t} \; \; \; \; \; \; \text{è di ordine 2}\]
+ \[\frac{d^3y}{dt^3} - 2t\left(\frac{dy}{dt}\right)^2  = y \frac{dy^2}{dt^2} - e^t\; \; \; \; \; \; \text{è di ordine 3}\]
+}
+Possiamo dunque formalizzare i concetti finora introdotti attraverso la seguente definizione:
+\end{enumerate}
+\dfn{Equazione differenziale}{
+Si dice \textbf{equazione differenziale} di ordine $n$ un'equazione del tipo
+\begin{equation}
+    F(t,y',y'', \dots , y^{(n)}) = 0   
+\end{equation}
+dove $y(t)$ è la funzione incognita e $F$ è una funzione assegnata delle $n + 2$ variabili $t, y, y'
+, \dots , y(n)$ a valori reali.
+\\
+Si dice \textbf{ordine} di un'equazione differenziale il massimo ordine di derivazione che compare nell'equazione.\\
+Si dice \textbf{soluzione (o curva integrale)} di (1) nell'intervallo $I \subset \mathbb{R}$ una funzione $\varphi$, definita almeno in $I$ e a valori reali per cui risulti:
+\begin{equation*}
+F(t, \varphi'(t), \varphi''(t), \dots , \varphi^{(n)}(t)) = 0 \; \; \; \; \; \; \forall t \in I
+\end{equation*}
+Infine si dice integrale generale dell'equazione (1) una formula che rappresenti la famiglia
+di tutte le soluzioni dell'equazione (1), eventualmente al variare di uno o più parametri in essa
+contenuti.
+}
+\ex{}{
+Consideriamo una popolazione di individui, animali o vegetali che siano,
+e sia $N(t)$ il numero degli individui. Osserviamo che N è funzione di del tempo $t$, assume solo
+valori interi ed è a priori una funzione discontinua di t; tuttavia può essere approssimata da
+una funzione continua e derivabile purché il numero degli individui sia abbastanza grande.
+Supponiamo che la popolazione sia isolata e che la proporzione degli individui in età riproduttiva e la fecondità siano costanti.
+Se escludiamo i casi di morte, immigrazione, emigrazione, allora il tasso di accrescimento coincide con quello di natalità 
+e se indichiamo con $\lambda$ il tasso specifico di natalità (i.e. il numero
+di nati per unità di tempo) l'equazione che descrive il modello diventa:
+\[\frac{dN}{dt} = \lambda N(t)\]
+Questo processo risulta realistico solo in popolazioni che crescono in situazioni ideali e sono
+assenti tutti i fattori che ne impediscono la crescita.
+}
+La stessa equazione compare anche in altri modelli relativi a sistemi fisiologici ed ecologici.
+\ex{}{Studiamo ora il modello di crescita (dovuto a Malthus, 1978) relativo
+all'evoluzione di una popolazione isolata in presenza di risorse limitate ed in assenza di predatori
+o antagonisti all'utilizzo delle risorse. In questo caso l'equazione che si ottiene è la seguente:
+\begin{equation*}
+    \frac{dN}{dt} = \lambda N(t) - \mu N(t)
+\end{equation*}
+dove come prima $\lambda$ è il tasso di natalità mentre $\mu$ è il tasso di mortalità (cioè rispettivamente
+il numero di nati e morti nell'unità di tempo). Il numero $\varepsilon = \lambda - \mu$ è detto \textbf{potenziale
+biologico.}
+}
+\noindent
+Ci chiediamo ora come possiamo trovare una soluzione del problema studiato nell'Esempio
+1.5. Supponiamo per il momento che sia $N \neq 0$. Allora:
+\begin{equation*}
+N = \varepsilon N = \frac{N}{N} = \varepsilon \Longrightarrow \frac{d}{dt} (\log{|N|}) = \varepsilon,
+\end{equation*}
+da cui otteniamo:
+\begin{equation*}
+\log{|N(t)|} = \varepsilon t + c_1 \Longrightarrow |N(t)| = e^{c_1}e^{\varepsilon t} =: k^2 e^{\varepsilon t}
+\end{equation*}
+dove abbiamo posto $e^{c_1} =: k^2 > 0$ costante positiva e arbitraria. A questo punto allora:
+\[N(t) = \pm k^2e^{\varepsilon t}\]
+\end{document}

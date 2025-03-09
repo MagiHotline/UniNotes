@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nv}{\PYGZdl{}temperature}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1}
+switch\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}temperature}\PYG{o}{)}
+\PYG{o}{\PYGZob{}}
+\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}\PYGZus{}}\PYG{+w}{ }\PYGZhy{}lt\PYG{+w}{ }\PYG{l+m}{0}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Below Freezing\PYGZdq{}}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{break}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{ }\PYG{l+m}{0}\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Exactly Freezing\PYGZdq{}}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{break}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}\PYGZus{}}\PYG{+w}{ }\PYGZhy{}le\PYG{+w}{ }\PYG{l+m}{10}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Cold\PYGZdq{}}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{break}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}\PYGZus{}}\PYG{+w}{ }\PYGZhy{}le\PYG{+w}{ }\PYG{l+m}{20}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Warm\PYGZdq{}}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{break}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{ }default\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Hot\PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{do}
+\PYG{o}{\PYGZob{}}
+\PYG{+w}{    }write\PYGZhy{}host\PYG{+w}{ }\PYGZhy{}nonewline\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Enter an integer value (1\PYGZhy{}4): \PYGZdq{}}
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}inputString}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }read\PYGZhy{}host
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}value}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}inputString}\PYG{+w}{ }\PYGZhy{}as\PYG{+w}{ }\PYG{o}{[}Int\PYG{o}{]}
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}ok}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}value}\PYG{+w}{ }\PYGZhy{}ne\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}NULL}\PYG{o}{)}\PYG{+w}{ }\PYGZhy{}and\PYG{+w}{ }\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}value}\PYG{+w}{ }\PYGZhy{}ge\PYG{+w}{ }\PYG{l+m}{1}\PYG{o}{)}\PYG{+w}{ }\PYGZhy{}and\PYG{+w}{ }\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}value}\PYG{+w}{ }\PYGZhy{}le\PYG{+w}{ }\PYG{l+m}{4}\PYG{o}{)}
+
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{o}{(}\PYG{+w}{ }\PYGZhy{}not\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}ok}\PYG{+w}{ }\PYG{o}{)}\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }write\PYGZhy{}host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Invalid input. Please enter a whole number between 1 and 4.\PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\PYG{k}{until}\PYG{+w}{ }\PYG{o}{(}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}ok}\PYG{+w}{ }\PYG{o}{)}
+
+write\PYGZhy{}host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}You entered: }\PYG{n+nv}{\PYGZdl{}value}\PYG{l+s+s2}{\PYGZdq{}}
+\end{Verbatim}

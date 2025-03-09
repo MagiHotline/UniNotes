@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nv}{\PYGZdl{}listing}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }dir
+\PYG{n+nv}{\PYGZdl{}howLong}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}listing}.Length
+\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}
+\PYG{k}{while}\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYGZhy{}lt\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}howLong}\PYG{o}{)}
+\PYG{o}{\PYGZob{}}
+\PYG{+w}{    }Write\PYGZhy{}Host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nv}{\PYGZdl{}listing}\PYG{o}{[}\PYG{n+nv}{\PYGZdl{}i}\PYG{o}{]}.Mode\PYG{k}{)}\PYG{l+s+s2}{ }\PYG{k}{\PYGZdl{}(}\PYG{n+nv}{\PYGZdl{}listing}\PYG{o}{[}\PYG{n+nv}{\PYGZdl{}i}\PYG{o}{]}.Length\PYG{k}{)}
+\PYG{l+s+s2}{    }\PYG{k}{\PYGZdl{}(}\PYG{n+nv}{\PYGZdl{}listing}\PYG{o}{[}\PYG{n+nv}{\PYGZdl{}i}\PYG{o}{]}.LastWriteTime\PYG{k}{)}\PYG{l+s+s2}{ }\PYG{k}{\PYGZdl{}(}\PYG{n+nv}{\PYGZdl{}listing}\PYG{o}{[}\PYG{n+nv}{\PYGZdl{}i}\PYG{o}{]}.Name\PYG{k}{)}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}i}++
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

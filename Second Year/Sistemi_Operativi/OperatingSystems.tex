@@ -309,6 +309,257 @@ If the text you've entered uniquely identifies a command or parameter, pressing 
 If \textbf{multiple completions are possible repeatedly pressing Tab cycles through the available options until you reach the one you want.}
 
 
+\section{Practical 3 -  Powershell Part 2}
+
+\begin{minted}{bash}
+$name = Read-Host "Please type your name"
+Write-Host "Hello" $name
+\end{minted}
+\textcolor{green!50!black}{
+    Simply record what happens when you run this script. What difference
+    does it make if you leave out the text "Please type your name" from the first line of
+    the script?
+} 
+\noindent
+What happens: 
+\begin{enumerate}
+    \item Powershell prompts you with: "Please type your name:"
+    \item You enter a name (e.g., John).
+    \item Powershell outputs: "Hello John"
+    \item If you don't put the text "Please type your name" in the Read-Host command, Powershell will prompt you with a blank line instead of the text.
+\end{enumerate}
+\textcolor{green!50!black}{
+    Find out how to run scripts if they’re in a directory other than the
+    working directory.
+}
+By default, PowerShell restricts script execution for security reasons. You may need to change the execution policy before running scripts:
+If your script is stored in \texttt{C:$\backslash$Scripts$\backslash$myscript.ps1} and your working directory is elsewhere, you can run it using:
+\begin{minted}{bash}
+C:\Scripts\myscript.ps1
+\end{minted}
+or explicitly call PowerShell:
+\begin{minted}{bash}
+powershell -ExecutionPolicy Bypass -File C:\Scripts\myscript.ps1
+\end{minted}
+\begin{minted}{bash}
+$inputString = read-host
+$value = $inputString -as [Double]
+write-host "You entered: $value"
+\end{minted}
+\textcolor{green!50!black}{
+    (a) Find out how to do the same thing that the code above does except
+    that it’ll only accept integers (such as 67). (b) Once you’re found the answer, find out
+    what happens if you type a real number (such as 67.4 or 67.8)}
+\begin{itemize}
+    \item[a)] To only accept integers, you can use [Int] instead of [Double]:
+     \begin{minted}{bash}
+     $value = $inputString -as [Int]
+    \end{minted}
+    \item[b)] If you type a real number, PowerShell will round the number down to the nearest integer.
+\end{itemize}
+\begin{minted}{bash}
+do
+
+    write-host -nonewline "Enter a numeric value: "
+    $inputString = read-host
+    $value = $inputString -as [Double]
+    $ok = $value -ne $NULL
+    if ( -not $ok ) { write-host "You must enter a numeric value" }
+}
+until ( $ok )
+write-host "You entered: $value"
+\end{minted}
+\textcolor{green!50!black}{
+    Alter the above program (in brown) to require the user to enter
+    specifically integer values between 1 and 4 inclusive.
+}
+\begin{minted}{bash}
+do
+{
+    write-host -nonewline "Enter an integer value (1-4): "
+    $inputString = read-host
+    $value = $inputString -as [Int]  
+    $ok = ($value -ne $NULL) -and ($value -ge 1) -and ($value -le 4) 
+    
+    if ( -not $ok ) { write-host "Invalid input. Please enter a whole number between 1 and 4." }
+}
+until ( $ok )
+
+write-host "You entered: $value"
+\end{minted}
+\begin{minted}{bash}
+---------------------------------------------------------
+$i = 1
+while ($i -le 20)
+{
+ if(($i -ne 13) -and ($i -ne 17))
+ {
+Write-Host $i
+ }
+ $i = $i + 1
+}
+\end{minted}
+
+\textcolor{green!50!black}{
+\begin{itemize}
+    \item What does the above script do?
+    \item We don’t need the brackets round (i -ne 13) and (i -ne 17) in the code
+above. Why do we not need them? (Hint: The answer is the same as for Java). Do
+you think that it’s a good idea to put them in even if they aren’t necessary? Explain
+your answer.
+\end{itemize}
+}
+
+\begin{itemize}
+    \item \begin{itemize}
+        \item Initialize i = 1
+        \item Loop while i $<=$ 20
+        \item Condition Check: If i is not 13 and i is not 17, print i
+        \item Otherwise, skip printing.
+        \item Increment i by 1 each loop iteration.
+        \item Repeat until i exceeds 20.
+    \end{itemize}
+    \item In PowerShell (like in Java), comparison operators are evaluated first. Is it a good idea to include them anyway?
+     Using parentheses is optional but can be a good habit for clarity, especially in more complex conditions.
+\end{itemize}
+\begin{minted}{bash}   
+for($i = 1; $i -le 8; $i = $i + 1)
+{
+Write-Host $i
+}
+\end{minted}
+\textcolor{green!50!black}{
+We can replace $i = $i + 1 with something shorter, in the above two
+scripts. What do you think it is? Try it and see.
+}
+It's \texttt{\$i++}.
+\begin{minted}{bash}
+do
+{
+    Write-Host $i;
+    $i = $i + 1;
+} until ($i -eq 10);
+\end{minted}
+\textcolor{green!50!black}{
+Oops, I've put semicolons at the end of each of the lines, in the do...until
+loop above. I suppose it's because of my experience in writing programs in other
+languages that sometimes I put semicolons at the end of a line of PowerShell script,
+even when they're entirely unnecessary in PowerShell. Does PowerShell forgive me
+for doing this? Find out, and write your conclusion.
+}
+The script runs normally without errors. The semicolons do not break execution since PowerShell treats them as harmless separators.
+\begin{minted}{bash}
+$temperature = 1
+switch($temperature)
+{
+ { $_ -lt 0 } { "Below Freezing"; break }
+ 0 { "Exactly Freezing"; break }
+ { $_ -le 10 } { "Cold"; break }
+ { $_ -le 20 } { "Warm"; break }
+ default { "Hot" }
+}
+\end{minted}
+\textcolor{green!50!black}{
+    Alter this program to deal with grade categories (for example $>$70 is a
+    distinction mark etc) in an examination and also allow the user to enter a grade.
+}
+\begin{minted}{bash}
+$grade = Read-Host "Enter your exam grade"
+
+switch ($grade -as [int])  
+{
+    { $_ -ge 70 } { "Distinction"; break }
+    { $_ -ge 60 } { "Merit"; break }
+    { $_ -ge 50 } { "Pass"; break }
+    { $_ -ge 40 } { "Borderline Fail"; break }
+    default { "Fail" }
+}
+\end{minted}
+\begin{minted}{bash}
+$listing = dir
+$howLong = $listing.Length
+$i = 0;
+while($i -lt $howLong)
+{
+Write-Host $listing[$i].Name
+$i++
+}
+\end{minted}
+\textcolor{green!50!black}{
+    1. Explain what the above example does. Modify it to show fields other
+    than the Name field.
+    2. Draw up a chart to show equivalent syntaxes for different control
+    structures/data structures among Java, Unix script, and PowerShell. You'll have to
+    revisit this question when you've learned some Unix/Linux.
+    3. Compare the ways in which scripts are enabled to run in (a)
+    Unix/Linux and (b) PowerShell. Again this is a question for review when you've
+    done some Unix/Linux.
+}
+\begin{enumerate}
+    \item Retrieves a list of files and directories in the current directory (dir is an alias for Get-ChildItem).
+    \item Iterates through the list and prints the name of each item.
+    \item Prints the Name property of each file/directory (\$listing[\$i].Name).
+    \item Increments \$i by 1 in each iteration.
+\end{enumerate}
+To show additional fields like Size, LastWriteTime, and Mode, modify the script as follows:
+\begin{minted}{bash}
+$listing = dir
+$howLong = $listing.Length
+$i = 0
+while($i -lt $howLong)
+{
+    Write-Host "$($listing[$i].Mode) $($listing[$i].Length) 
+    $($listing[$i].LastWriteTime) $($listing[$i].Name)"
+    $i++
+}
+\end{minted}
+\small
+\begin{table}[h]
+ \hspace{-2cm}
+\renewcommand{\arraystretch}{1.2} % Spaziatura compatta
+\begin{tabular}{|p{3cm}|p{4cm}|p{4cm}|p{3cm}|}
+    \hline
+    \textbf{Concept	} & \textbf{PowerShell} & \textbf{Java} & \textbf{Bash} \\
+    \hline
+    Variable Assignment & \texttt{\$x = 5} & \texttt{int x = 5;} & \texttt{x=5} \\
+    \hline
+    If & \texttt{if (\$x -gt 10) \{ ... \}} & \texttt{if (x > 10) \{ ... \}} & \texttt{if [ \$x -gt 10 ]; then ... fi} \\
+    \hline
+    For & \texttt{for (\$i=0; \$i -lt 10; \$i++)} & \texttt{for (int i=0; i<10; i++)} & \texttt{for i in \{0..9\}; do ... done} \\
+    \hline
+    While & \texttt{while (\$x -lt 10)} & \texttt{while (x < 10)} & \texttt{while [ \$x -lt 10 ]; do ... done} \\
+    \hline
+    Switch & \texttt{switch (\$var) \{ ... \}} & \texttt{switch (var) \{ case 1: ... \}} & \texttt{case \$var in ... esac} \\
+    \hline
+    Array & \texttt{\$arr = @(1,2,3)} & \texttt{int[] arr = \{1,2,3\}} & \texttt{arr=(1 2 3)} \\
+    \hline
+    Function & \texttt{function MyFunc \{ ... \}} & \texttt{int myFunc(int x) \{ ... \}} & \texttt{my\_func() \{ ... \}} \\
+    \hline
+\end{tabular}
+\caption{Syntax between PowerShell, Java e Bash}
+\end{table}
+\begin{table}[h]
+\hspace{-1.5cm}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|p{3.5cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{Feature} & \textbf{PowerShell} & \textbf{Unix/Linux} \\
+    \hline
+    Default Script Execution & Disabled for security (Restricted mode) & Allowed but may require execution permissions. \\
+    \hline
+    Checking Execution Policy & \texttt{Get-ExecutionPolicy} & \texttt{ls -l script.sh} \\
+    \hline
+    Allowing Script Execution & \texttt{Set-ExecutionPolicy RemoteSigned} & \texttt{chmod +x script.sh} \\
+    \hline
+    Running a Script & \texttt{.\textbackslash script.ps1} & \texttt{./script.sh} \\
+    \hline
+    Running from Another Directory & \texttt{C:\textbackslash Scripts\textbackslash script.ps1} & \texttt{/home/user/script.sh} \\
+    \hline
+    Running Without Changing Directory & \texttt{\& "C:\textbackslash Scripts\textbackslash script.ps1"} & \texttt{bash /path/to/script.sh} \\
+    \hline
+\end{tabular}
+\caption{Comparison between the execution in PowerShell e Unix/Linux}
+\end{table}
 
 
 

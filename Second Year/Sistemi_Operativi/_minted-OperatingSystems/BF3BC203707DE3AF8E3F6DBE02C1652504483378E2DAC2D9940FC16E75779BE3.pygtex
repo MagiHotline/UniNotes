@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+powershell\PYG{+w}{ }\PYGZhy{}ExecutionPolicy\PYG{+w}{ }Bypass\PYG{+w}{ }\PYGZhy{}File\PYG{+w}{ }C:\PYG{l+s+se}{\PYGZbs{}S}cripts\PYG{l+s+se}{\PYGZbs{}m}yscript.ps1
+\end{Verbatim}

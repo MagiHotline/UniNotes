@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nv}{\PYGZdl{}inputString}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }read\PYGZhy{}host
+\PYG{n+nv}{\PYGZdl{}value}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}inputString}\PYG{+w}{ }\PYGZhy{}as\PYG{+w}{ }\PYG{o}{[}Double\PYG{o}{]}
+write\PYGZhy{}host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}You entered: }\PYG{n+nv}{\PYGZdl{}value}\PYG{l+s+s2}{\PYGZdq{}}
+\end{Verbatim}

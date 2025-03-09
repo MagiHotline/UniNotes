@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nv}{\PYGZdl{}listing}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }dir
+\PYG{n+nv}{\PYGZdl{}howLong}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}listing}.Length
+\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{;}
+\PYG{k}{while}\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYGZhy{}lt\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}howLong}\PYG{o}{)}
+\PYG{o}{\PYGZob{}}
+Write\PYGZhy{}Host\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}listing}\PYG{o}{[}\PYG{n+nv}{\PYGZdl{}i}\PYG{o}{]}.Name
+\PYG{n+nv}{\PYGZdl{}i}++
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

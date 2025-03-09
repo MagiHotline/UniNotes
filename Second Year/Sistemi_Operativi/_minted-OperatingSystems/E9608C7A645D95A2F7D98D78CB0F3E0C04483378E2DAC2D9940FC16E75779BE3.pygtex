@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nv}{\PYGZdl{}grade}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }Read\PYGZhy{}Host\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Enter your exam grade\PYGZdq{}}
+
+switch\PYG{+w}{ }\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}grade}\PYG{+w}{ }\PYGZhy{}as\PYG{+w}{ }\PYG{o}{[}int\PYG{o}{])}
+\PYG{o}{\PYGZob{}}
+\PYG{+w}{    }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}\PYGZus{}}\PYG{+w}{ }\PYGZhy{}ge\PYG{+w}{ }\PYG{l+m}{70}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Distinction\PYGZdq{}}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{break}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}\PYGZus{}}\PYG{+w}{ }\PYGZhy{}ge\PYG{+w}{ }\PYG{l+m}{60}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Merit\PYGZdq{}}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{break}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}\PYGZus{}}\PYG{+w}{ }\PYGZhy{}ge\PYG{+w}{ }\PYG{l+m}{50}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Pass\PYGZdq{}}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{break}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}\PYGZus{}}\PYG{+w}{ }\PYGZhy{}ge\PYG{+w}{ }\PYG{l+m}{40}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Borderline Fail\PYGZdq{}}\PYG{p}{;}\PYG{+w}{ }\PYG{k}{break}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{    }default\PYG{+w}{ }\PYG{o}{\PYGZob{}}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Fail\PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

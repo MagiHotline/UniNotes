@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{do}
+\PYG{o}{\PYGZob{}}
+\PYG{+w}{    }Write\PYGZhy{}Host\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}i}\PYG{p}{;}
+\PYG{+w}{    }\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }+\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{;}
+\PYG{o}{\PYGZcb{}}\PYG{+w}{ }\PYG{k}{until}\PYG{+w}{ }\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYGZhy{}eq\PYG{+w}{ }\PYG{l+m}{10}\PYG{o}{)}\PYG{p}{;}
+\end{Verbatim}

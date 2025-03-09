@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}
+\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1}
+\PYG{k}{while}\PYG{+w}{ }\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYGZhy{}le\PYG{+w}{ }\PYG{l+m}{20}\PYG{o}{)}
+\PYG{o}{\PYGZob{}}
+\PYG{+w}{ }\PYG{k}{if}\PYG{o}{((}\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYGZhy{}ne\PYG{+w}{ }\PYG{l+m}{13}\PYG{o}{)}\PYG{+w}{ }\PYGZhy{}and\PYG{+w}{ }\PYG{o}{(}\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYGZhy{}ne\PYG{+w}{ }\PYG{l+m}{17}\PYG{o}{))}
+\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+Write\PYGZhy{}Host\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}i}
+\PYG{+w}{ }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}i}\PYG{+w}{ }+\PYG{+w}{ }\PYG{l+m}{1}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}
