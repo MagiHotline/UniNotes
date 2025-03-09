@@ -11,97 +11,9 @@
 \title{Analisi II}
 \author{Università di Verona\\Imbriani Paolo - VR500437\\Professor Zivcovich Franco}
 
-\usepackage{titlesec}  % For customizing section titles
-\usepackage{ulem}      % For underlining text
-
 % Make section titles bigger
 \titleformat{\section}[hang]{\huge\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}[hang]{\Large\normalfont\itshape}{\thesubsection}{1em}{}
-
-%================================
-% THEOREM BOX
-%================================
-
-\tcbuselibrary{theorems, skins, hooks}
-
-\newtcbtheorem[number within=section]{Theorem}{Teorema}
-{%
-    enhanced,
-    breakable,
-    colback=white,
-    frame hidden,
-    boxrule=0sp,
-    borderline west={2pt}{0pt}{black},
-    sharp corners,
-    detach title,
-    before upper=\tcbtitle\par\smallskip,
-    coltitle=black,
-    fonttitle=\bfseries\sffamily,
-    description font=\mdseries,
-    separator sign none,
-    segmentation style={solid, black}
-}
-{th}
-
-%================================
-% EXAMPLE BOX
-%================================
-
-\newtcbtheorem[number within=section]{Example}{\faPencil $\;$ Esempio}
-{%
-    colback=blue!5!white,
-    breakable,
-    colframe=blue!30!black,
-    coltitle=blue!40!black,
-    boxrule=1pt,
-    sharp corners,
-    detach title,
-    before upper=\tcbtitle\par\smallskip,
-    fonttitle=\bfseries,
-    description font=\mdseries,
-    separator sign none,
-    description delimiters parenthesis
-}
-{ex}
-
-%================================
-% DEFINITION BOX
-%================================
-
-\newtcbtheorem[number within=section]{Definition}{\faHandORight $\;$ Definizione}
-{%
-    enhanced,
-    before skip=2mm,
-    after skip=2mm,
-    colback=green!5,
-    colframe=green!80!black,
-    boxrule=0.5mm,
-    attach boxed title to top left={xshift=1cm, yshift*=1mm-\tcboxedtitleheight},
-    varwidth boxed title*=-3cm,
-    boxed title style={frame code={
-        \path[fill=tcbcolback]
-        ([yshift=-1mm,xshift=-1mm]frame.north west)
-        arc[start angle=0,end angle=180,radius=1mm]
-        ([yshift=-1mm,xshift=1mm]frame.north east)
-        arc[start angle=180,end angle=0,radius=1mm];
-        
-        \path[left color=tcbcolback!60!black, right color=tcbcolback!60!black, middle color=tcbcolback!80!black]
-        ([xshift=-2mm]frame.north west) -- ([xshift=2mm]frame.north east)
-        [rounded corners=1mm]-- ([xshift=1mm,yshift=-1mm]frame.north east)
-        -- (frame.south east) -- (frame.south west)
-        -- ([xshift=-1mm,yshift=-1mm]frame.north west)
-        [sharp corners]-- cycle;
-    }, interior engine=empty},
-    fonttitle=\bfseries,
-    title={#2},
-    #1
-}
-{def}
-
-\newcommand{\thm}[3][]{\begin{Theorem}{#2}{#1}#3\end{Theorem}}
-\newcommand{\ex}[3][]{\begin{Example}{#2}{#1}#3\end{Example}}
-\newcommand{\dfn}[3][]{\begin{Definition}[colbacktitle=green!75!black]{#2}{#1}#3\end{Definition}}
-
 
 \usepackage[italian]{babel}
 
@@ -110,6 +22,7 @@
     {Indice}%
 }
 
+\numberwithin{equation}{subsection}
 
 \begin{document}
 
@@ -167,12 +80,12 @@ dove $y(t)$ è la funzione incognita e $F$ è una funzione assegnata delle $n + 
 , \dots , y(n)$ a valori reali.
 \\
 Si dice \textbf{ordine} di un'equazione differenziale il massimo ordine di derivazione che compare nell'equazione.\\
-Si dice \textbf{soluzione (o curva integrale)} di (1) nell'intervallo $I \subset \mathbb{R}$ una funzione $\varphi$, definita almeno in $I$ e a valori reali per cui risulti:
+Si dice \textbf{soluzione (o curva integrale)} di (1.1.1) nell'intervallo $I \subset \mathbb{R}$ una funzione $\varphi$, definita almeno in $I$ e a valori reali per cui risulti:
 \begin{equation*}
 F(t, \varphi'(t), \varphi''(t), \dots , \varphi^{(n)}(t)) = 0 \; \; \; \; \; \; \forall t \in I
 \end{equation*}
-Infine si dice integrale generale dell'equazione (1) una formula che rappresenti la famiglia
-di tutte le soluzioni dell'equazione (1), eventualmente al variare di uno o più parametri in essa
+Infine si dice integrale generale dell'equazione (1.1.1) una formula che rappresenti la famiglia
+di tutte le soluzioni dell'equazione (1.1.1), eventualmente al variare di uno o più parametri in essa
 contenuti.
 }
 \ex{}{
@@ -211,4 +124,151 @@ da cui otteniamo:
 \end{equation*}
 dove abbiamo posto $e^{c_1} =: k^2 > 0$ costante positiva e arbitraria. A questo punto allora:
 \[N(t) = \pm k^2e^{\varepsilon t}\]
+Quindi possiamo dire sicuramente che:
+\[N(t) = Ce^{\varepsilon t} \; \; \; C \in \mathbb{R} \backslash \{0\} \]
+Tutto questo vale se $N \neq 0$; ma è banale verificare che anche $N = 0$ soddisfa l'equazione di
+partenza, quindi possiamo dire che l'integrale generale è:
+\[N(t) = Ce^{\varepsilon t} = Ce^{(\lambda - \mu)t} \; \; \; C \in \mathbb{R}\]
+In particolare dall'ultima riga leggiamo che:
+\begin{enumerate}
+    \item Se $\lambda > \mu$ allora $N(t)$ è una funzione che cresce in maniera esponenziale.
+    \item Se $\lambda < \mu$ allora $N(t)$ è una funzione che decresce fino ad estinguersi. 
+    \item Se $\lambda = \mu$ allora $N(t)$ è una funzione stabile nel tempo.
+\end{enumerate}
+Osserviamo in particolare che non abbiamo trovato solo una soluzione, ma infinite soluzioni,
+dipendenti da una costante arbitraria.
+
+\subsection{Equazioni differenziali di primo ordine}
+
+\subsubsection{Generalità}
+
+Le equazioni differenziali di primo ordine sono le più semplici da trattare e sono di fondamentale importanza in quanto sono alla base di molte applicazioni pratiche.
+Esse sono della forma:
+\begin{equation}
+    F(t, y, y') = 0
+\end{equation}
+con $F$ funzione assegnata delle tre variabili $t, y, y'$ a valori reali.
+\ex{}{
+    La ricerca delle primitive di una funzione $f$ continua su un intervallo $I$
+    equivale a risolvere l'equazione differenziale $y'(t) = f(t)$ che ammette infinite soluzioni del tipo
+\begin{equation*}
+    y(t) = \int f(t) \; dt + C \; \; \; \; \; \; C \in \mathbb{R}
+\end{equation*}
+}
+\noindent
+\textbf{Si dimostra} che l'insieme delle soluzioni di una EDO del primo ordine è costituito da una famiglia di funzioni dipendenti da un parametro 
+$C: t \mapsto \varphi(t; c)$. Tale famiglia prende il nome di \textbf{integrale generale} dell'equazione differenziale.
+La condizione supplementare $y(t_0) = y_0$ permette di selezionare una soluzione specifica.
+\dfn{Problema di Cauchy}{
+Il problema di risolvere il seguente sistema di equazioni:
+\begin{equation}
+\begin{cases}
+    F(t, y, y') = 0 \\
+    y(t_0) = y_0
+\end{cases}
+\end{equation}
+prende il nome di \textbf{problema di Cauchy}.
+}
+\dfn{Forma Normale}{
+Un'equazione differenziale ordinaria del primo ordine si dice in \textbf{forma normale} se è scritta nella forma:
+\begin{equation}
+    y'(t) = f(t, y)
+\end{equation}
+}
+\noindent
+Per equazioni di questo tipo si può assicurare, sotto larghe ipotesi, che il problema di Cauchy (1.2.2) ammette un'unica soluzione almeno 
+localmente (cioè per valori di $t$ in un intorno di $t_0$).
+\\
+Le soluzioni dell'ED espresse dall'integrale generale potrebbero talvolta
+essere definite su insiemi diversi a seconda del valore della costante o anche su insiemi più complicati
+di un intervallo (es. $t \neq 0$). Tuttavia quando parleremo di soluzione del problema di Cauchy andremo
+sempre a intendere una funzione che:
+\begin{itemize}
+    \item[a)] è definita su un intervallo $I$ contenente $t_0$ in cui è assegnata la condizione iniziale.
+    \item[b)] è derivabile in ogni punto di $I$ e soddisfa l'equazione in ogni punto di $I$. 
+\end{itemize}
+\ex{}{
+Il problema di Cauchy 
+\begin{equation*}
+    \begin{cases}
+        N'(t) = 3N(t) \\
+        N(0) = 7
+    \end{cases}
+\end{equation*}
+ammette un'unica soluzione data da $N(t) = ce^{3t}$. Imponendo il dato iniziale otteniamo $N(t) = 7e^{3t}, \forall t \in \mathbb{R}$ (o $\mathbb{R}^+$ se si sta parlando di problema di Cauchy che modellizza un fenomeno fisico).
+}
+
+\subsubsection{Equazioni a variabili separabili}
+
+Le equazioni a variabili separabili sono una particolare clase di ED ordinarie del primo ordine
+del tipo (1.2.3) che sono caratterizzate dalla presenza di una funzione $f$ prodotto di due funzioni,
+una della sola variabile $t$ e l'altra solo dell'incognita $y$. Più nel dettaglio, sono equazioni del
+tipo:
+\begin{equation}
+    y'(t) = a(t)b(y)
+\end{equation}
+con $a$ funzione continua su un intervallo $I \subset \mathbb{R}$ e $b$ funzione continua su un intervallo $J \subset \mathbb{R}$.
+Cerchiamo di capire come determinare l'integrale generale di questo tipo di equazioni.
+Distinguiamo due casi:
+\begin{itemize}
+    \item Se $\overline{y}$ è soluzione dell'equazione $b'(\overline{y}) = 0$ allora $y(t) = \overline{y}$ è soluzione dell'ED (1.2.4). Infatti in tal caso si annulla il secondo membro della (1.2.4) e di conseguenza anche il primo
+    membro (perchè la derivata della funzione costante è zero). 
+    \item Supponiamo ora che $b(y) \neq 0$. Allora la (1.2.4) può essere riscritta come:
+    \begin{equation*}
+        \frac{y'}{b(y)} = a(t)
+    \end{equation*}
+    Quindi un'ipotetica soluzione soddisfa l'identità:
+    \begin{equation*}
+        \int \frac{y'(t)}{b(y(t))} \; dt = \int a(t) \; dt + C
+    \end{equation*}
+    Con $C$ costante arbitraria.
+    Ora si può effettuare il cambio di variabile dove $y'(t)dt = dy$:
+    \begin{equation*}
+        \int \frac{dy}{b(y)} = \int a(t) \; dt + C
+    \end{equation*}
+    Quindi questo è l'integrale generale dell'equazione (1.2.4). Se $B(y)$ è una primitiva di $\frac{1}{b(y)}$ e $A(t)$ è una primitiva di $a(t)$, allora l'integrale generale della ED è assegnato dall'equazione (in forma implicita):
+    \begin{equation*}
+        B(y) = A(t) + C \; \; \; \text{ con $C$ costante arbitraria}
+    \end{equation*}
+\end{itemize}
+Osserviamo che non è detto che si riesca a ricavare $y$ esplicitamente o a
+ridurre la precedente equazione in forma normale.
+In generale, per le equazioni a variabili separabili, vale il seguente:
+\thm{}{
+Si consideri il seguente problema di Cauchy:
+\begin{equation*}
+    \begin{cases}
+        y' = a(t)b(y)\\
+        y(t_0) = y_0
+    \end{cases}
+\end{equation*}
+con $a$ continua in un intorno $I$ di $t_0$ e $b$ continua in un intorno $J$ di $y_0$.
+Allora esiste un intorno di $t_0$ che denoteremo con $I' \subset I$ e una funzione continua $y$ definita su $I'$ con derivata 
+anch'essa continua su $I'$ tale che $y$ sia soluzione del problema di Cauchy.
+Inoltre se anche $b'$ è continua su $J$ (o $b$ ha un rapporto incrementale limitato in $J$ anche se non è derivabile) allora tale soluzione è anche unica.
+}
+\ex{}{
+Consideriamo il problema di Cauchy:
+\begin{equation*}
+    \begin{cases}
+        y' = ty^3\\
+        y(0) = 1
+    \end{cases}
+\end{equation*}
+Prima di tutto si osserva che $y = 0$ è integrale singolare per l'equazione data. Quindi se $y \neq 0$, separando le variabili e integrando si ottiene: 
+\begin{align*}
+\int \frac{dy}{y^3} &= \int t dt + C\\
+- \frac{1}{2y^2} &= \frac{t^2}{2} + C\\
+y &= \pm \frac{1}{\sqrt{C - t^2}}
+\end{align*}
+Imponendo il dato di Cauchy si osserva che l'unica soluzione è quella che si ottiene per $k = 1$
+e considerando il segno positivo davanti alla radice, cioè
+\begin{equation*}
+    y = \frac{1}{\sqrt{1 - t^2}}
+\end{equation*}
+}
+
+
+
+
 \end{document}
