@@ -267,6 +267,38 @@ e considerando il segno positivo davanti alla radice, cioè
     y = \frac{1}{\sqrt{1 - t^2}}
 \end{equation*}
 }
+\ex{}{
+Risolvere il problema di Cauchy:
+\begin{equation*}
+    \begin{cases}
+        yy' = 2\\
+        y(0) = 1
+    \end{cases}
+\end{equation*}
+Integrando ambo i membri della ED proposta si ottiene:
+\begin{equation*}
+    \int y \; dy = \int 2 \; dt \Longrightarrow \frac{y^2}{2} = 2t + C \Longrightarrow y = \pm \sqrt{4t + 2C}
+\end{equation*}
+quindi per ogni $C \in \mathbb{R}$ esistono due soluzioni (corrispondenti ai due segni davanti alla radice)
+definite solo per $t \ge -\frac{C}{2}$. Imponendo il dato di Cauchy si ottiene $y(0) = \pm
+\sqrt{2C = 1}$,
+quindi per compatibilità occorre scegliere il segno positivo davanti alla radice. La soluzione del
+problema proposto è dunque $y = 4t + 1$, definita solo per $t \ge -\frac{1}{4}.$
+Andiamo a controllare se sono soddisfatte le condizioni del teorema: $a(t) = 2$ che è dunque una
+funzione continua e derivabile ovunque; $b(t) = 1/y$ che è continua e derivabile se $y \neq 0$. Quindi
+il problema di Cauchy per questa equazione ha una e una sola soluzione purché la condizione
+iniziale non sia del tipo $y(t_0) = 0$. Infatti l'equazione non è soddisfatta in questo punto perché
+si otterrebbe $0 = 2$. Quindi il problema di Cauchy:
+\begin{equation*}
+    \begin{cases}
+        yy' = 2\\
+        y(0) = 1
+    \end{cases}
+\end{equation*}
+\textit{non ha soluzione}. Quindi abbiamo trovato un esempio di problema di Cauchy in cui viene a mancare l'esistenza
+di soluzioni. In altre situazioni potrebbe venire a mancare l'unicità delle soluzioni, come
+mostra l'esempio successivo.
+}
 
 
 
