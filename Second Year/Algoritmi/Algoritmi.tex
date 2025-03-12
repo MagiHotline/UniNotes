@@ -3045,6 +3045,8 @@ spesso in natura, ad esempio nelle conchiglie, nelle piante, nell'arte, nell'arc
 
 \section{Grafi}
 
+\subsection{Definizioni generali}
+
 I grafi sono indubbiamente lo strumento più usato per astrarre problemi concreti e metterli mettere su "carta". 
 Un grafo, in maniera molto semplice, non è nient'altro che un insieme di nodi uniti da archi.
 
@@ -3118,7 +3120,133 @@ In questo caso il percorso $[3,1,2]$ o $[3,5,2]$ hanno il percorso minore.
 Quindi il caso migliore mi consente di attraversare solo tre nodi. 
 Ma il caso peggiore? All'apparenza il percorso più lungo è di quattro nodi.
 Ma in realtà potrei continuare a girare in cerchio e non arrivare mai alla fine.
-Un'arco unisce due nodi. Quando due nodi sono uniti da un arco si dice che i due nodi sono
-\textbf{adiacenti}. Un cammino è una sequenza di nodi che sono uniti da archi. 
+
+\begin{itemize}
+  \item Un'arco unisce due nodi. Quando due nodi sono uniti da un arco si dice che i due nodi sono
+  \textbf{adiacenti}.
+  \item  Un \textbf{cammino} è una sequenza di nodi che sono uniti da archi.
+  \item  La \textbf{lunghezza} invece è il numero di archi attraversati oppure la lunghezza della sequenza
+  meno uno. 
+  \item \textbf{Cammino semplice} è un cammino che parte da un nodo di inizio e arriva a destinazione passando per ogni nodo solo una volta.
+  \item \textbf{Un ciclo hamiltoniano} è un ciclo che passa per ogni nodo una sola volta.
+\end{itemize}
+Tuttavia potrei avere un grafo con degli \textbf{archi pesati} e la definizione del cammino potrebbe cambiare in base alla necessità che ho.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[-latex ,auto ,node distance =4 cm and 5cm ,on grid ,
+  semithick ,
+  state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (C) {$1$};
+  \node[state] (A) [above left=of C] {$0$};
+  \node[state] (B) [above right =of C] {$2$};
+  \path (A) edge [loop left] node[left] {$24$} (A);
+  \path (C) edge [bend left =25] node[below =0.15 cm] {$3$} (A);
+  \path (A) edge [bend right = -15] node[below =0.15 cm] {$1/2$} (C);
+  \path (A) edge [bend left =25] node[above] {$3$} (B);
+  \path (B) edge [bend left =15] node[below =0.15 cm] {$6$} (A);
+  \path (C) edge [bend left =15] node[below =0.15 cm] {$10$} (B);
+  \path (B) edge [bend right = -25] node[below =0.15 cm] {$32$} (C);
+  \end{tikzpicture}
+  \caption{Esempio di grafo con archi pesati}
+\end{figure}
+\noindent
+Nel grafo sopra, si può notare come negli archi ho un verso. Questo significa che se io vado da $A$ a $B$ non posso tornare indietro da $B$ ad $A$.
+Questo tipo di grafo è chiamato \textbf{grafo orientato}. Se invece non ci fosse un verso, il grafo sarebbe chiamato \textbf{grafo non orientato}.
+Un grafo non orientato è \textbf{connesso} se esiste un cammino tra ogni coppia di nodi.
+
+\thm{}{
+  Un grafo orientato è aciclico, se e solo se non contiene cammini infiniti.
+}
+
+\begin{proof}
+  Sia $G$ un grafo aciclico. Supponiamo per assurdo che contenga un cammino infinito.
+  \[v_1, v_2, v_3, ..., v_n, v_{n+1} ...\]
+  Se $n$ è il numero di nodi nel grafo, allora devono esistere nodi ripetuti.
+\end{proof}
+
+\thm{}{
+  Un grafo orientato è ciclico, se e solo se contiene cammini infiniti.
+}
+
+\begin{proof}
+  \[\neg B \implies \neg A\]
+\end{proof}
+Possiamo definire il \textbf{grado} di un nodo come la somma tra gli archi uscenti ed entranti.
+\thm{}{
+  In un grafo aciclico esistono nodi con grado entrante pari a zero.
+ }
+ \begin{proof}
+  Supponiamo per assurdo che dato
+  un grafo aciclico non esista un nodo con grado entrante pari a zero. Allora:
+  \[v_{n+1} \rightarrow v_n \rightarrow v_{n-1} ... v_3 \rightarrow v_2 \rightarrow v_1\]
+  possiamo "andare indietro" fin quanto vogliamo quindi posso costruire sequenze di lunghezza arbitraria.
+  Ma di conseguenza vuol dire che esistono nodi ripetuti. Ma ripetuto vuol dire ciclo. E per definizione questo
+  non può essere.
+ \end{proof} 
+Cerchiamo ora di definire il concetto di \textbf{grafo} in maniera formale.
+\dfn{Grafo}{
+  Un \textbf{grafo} è una coppia $(V,E)$ dove $V$ è un insieme di nodi e $E \subset V \times V$ è un insieme di archi.
+}
+\noindent
+Esiste un arco da $A$ a $B$ se $(A, B) \in E$. Solitamente si rappresenta un arco con la coppia $(x, y)$ oppure con $x \rightarrow y$.
+\begin{lemma}
+  Se $|V|$ è la cardinalità dei nodi e $|E|$ è la cardinalità degli archi, sicuramente $|E| \leq |V|^2$.
+\end{lemma}
+\dfn{Cammino}{
+  Un \textbf{cammino} è una sequenza di nodi $v_1, v_2, ..., v_l$ tale che $\forall i \in \{1, \dots, l - 1\} (v_i, v_{i+1}) \in E$.
+}
+\dfn{Cammino semplice}
+{
+  Un cammino è \textbf{semplice} se ogni nodo di $V$ appare al più di una volta.
+}
+\dfn{Grado entrante}
+{
+  Il \textbf{grado entrante} di un nodo $v$ è definito come
+  \[d_{in}(v) \stackrel{\Delta}{=} |\{(u, v) \in E\}| = |(V \times \{v\})\cap E|\]
+}
+\dfn{Grado uscente}
+{
+  Il \textbf{grado uscente} di un nodo $v$ è definito come
+  \[d_{out}(v) \stackrel{\Delta}{=} |(\{v\} \times V) \cap E|\]
+}
+\dfn{Grado}
+{
+  \begin{center}
+      Grado($v$) $\stackrel{\Delta}{=} |E \cap (V \times \{v\} \cup \{v\} \times V)|$
+  \end{center}
+}
+
+\subsection{Rappresentanza di un grafo}
+
+Un grafo può essere rappresentato in diversi modi:
+\begin{itemize}
+  \item Liste di adiacenza
+  \item Matrice di adiacenza
+\end{itemize}
+Creo una lista di nodi dove a loro a volta inserisco una lista di nodi adiacenti.
+Mentre con una matrice di adiacenza, posso inserire $1$ nel punto $(i,j)$ se questo arco è contenuto in $E$, $0$ altrimenti.
+I vantaggi della lista di adiacenza sono che occupa meno spazio, mentre la matrice di adiacenza è più veloce per trovare se due nodi sono adiacenti, ma occupa più spazio perché contiene esattamente $|V|^2$ elementi.
+\ex{}{
+  Supponiamo di voler rappresentare con un grafo la rete stradale italiana dove gli archi rappresentano il numero di incidenti.
+  Si andrebbe a creare una matrice con molte celle vuote e poche celle piene. 
+  Questo tipo di matrici sono dette \textbf{sparse}.
+}
+\noindent
+Quindi solitamente si usa liste di adiacenza per grafi sparsi e matrici di adiacenza per grafi densi.
+\\
+Se volessi calcolare il grado uscente di un nodo in una lista di adiacenza, dovrei scorrere tutta la lista per contare quanti elementi ci sono.
+Di conseguenza, un algoritmo che calcola il grado di un nodo in una lista di adiacenza ha complessità $O(out_deg(v))$ dove $out_deg(v)$ è il numero di nodi adiacenti.
+Mentre per una matrice di adiacenza, il grado uscente di un nodo si calcolerebbe con complessità $O(V)$ dove passare per ogni possibile nodo.
+\begin{lstlisting}[language=Scala]
+all_out_deg(G)
+  for i <- 1 to |V|
+    out_deg(i) <- 0
+    for j <- 1 to Adj[V]
+      out_deg(i)++
+  return out_deg
+\end{lstlisting}
+L'algoritmo ha complessità pari al numero di archi più il numero di nodi $E + V$.
+
 
 \end{document}
