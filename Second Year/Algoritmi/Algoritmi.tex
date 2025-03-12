@@ -3225,8 +3225,72 @@ Un grafo può essere rappresentato in diversi modi:
   \item Matrice di adiacenza
 \end{itemize}
 Creo una lista di nodi dove a loro a volta inserisco una lista di nodi adiacenti.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    node distance=0cm and 0.5cm
+    ]
+    \node[draw,rectangle,minimum width=1cm,minimum height=0.5cm] (1) at (0,0) {1};
+    \node[draw,rectangle,minimum width=1cm,minimum height=0.5cm] (2) [below=of 1] {2};
+    \node[draw,rectangle,minimum width=1cm,minimum height=0.5cm] (3) [below=of 2] {3};
+    \node[draw,rectangle,minimum width=1cm,minimum height=0.5cm] (4) [below=of 3] {4};
+
+    \node[draw,rectangle,minimum size=0.5cm] (1-1-1) [right=of 1] {3};
+    \node[draw,rectangle,minimum size=0.5cm] (1-1-2) [right=0cm of 1-1-1] {p};
+    \node[draw,rectangle,minimum size=0.5cm] (1-1-3) [right=0cm of 1-1-2] {};
+    \draw[->] (1) -- (1-1-1);
+    \node[draw,rectangle,minimum size=0.5cm] (1-2-1) [right=of 1-1-3] {1};
+    \node[draw,rectangle,minimum size=0.5cm] (1-2-2) [right=0cm of 1-2-1] {p};
+    \node[draw,rectangle,minimum size=0.5cm] (1-2-3) [right=0cm of 1-2-2] {};
+    \draw[->] (1-1-3.center) -- (1-2-1);
+    \node[draw,rectangle,minimum size=0.5cm] (1-3-1) [right=of 1-2-3] {4};
+    \node[draw,rectangle,minimum size=0.5cm] (1-3-2) [right=0cm of 1-3-1] {p};
+    \node[draw,rectangle,minimum size=0.5cm] (1-3-3) [right=0cm of 1-3-2] {};
+    \draw[->] (1-2-3.center) -- (1-3-1);
+    \node[draw,rectangle,minimum size=0.5cm] (1-4-1) [right=of 1-3-3] {2};
+    \node[draw,rectangle,minimum size=0.5cm] (1-4-2) [right=0cm of 1-4-1] {p};
+    \node[draw,rectangle,minimum size=0.5cm] (1-4-3) [right=0cm of 1-4-2] {\footnotesize/};
+    \draw[->] (1-3-3.center) -- (1-4-1);
+
+
+    \node[draw,rectangle,minimum size=0.5cm] (2-1-1) [right=of 2] {4};
+    \node[draw,rectangle,minimum size=0.5cm] (2-1-2) [right=0cm of 2-1-1] {p};
+    \node[draw,rectangle,minimum size=0.5cm] (2-1-3) [right=0cm of 2-1-2] {\footnotesize/};
+    \draw[->] (2) -- (2-1-1);
+
+
+    \node[draw,rectangle,minimum size=0.5cm] (3-1-1) [right=of 3] {1};
+    \node[draw,rectangle,minimum size=0.5cm] (3-1-2) [right=0cm of 3-1-1] {p};
+    \node[draw,rectangle,minimum size=0.5cm] (3-1-3) [right=0cm of 3-1-2] {\footnotesize/};
+    \draw[->] (3) -- (3-1-1);
+
+
+    \node[draw,rectangle,minimum size=0.5cm] (4-1-1) [right=of 4] {1};
+    \node[draw,rectangle,minimum size=0.5cm] (4-1-2) [right=0cm of 4-1-1] {p};
+    \node[draw,rectangle,minimum size=0.5cm] (4-1-3) [right=0cm of 4-1-2] {};
+    \draw[->] (4) -- (4-1-1);
+    \node[draw,rectangle,minimum size=0.5cm] (4-2-1) [right=of 4-1-3] {2};
+    \node[draw,rectangle,minimum size=0.5cm] (4-2-2) [right=0cm of 4-2-1] {p};
+    \node[draw,rectangle,minimum size=0.5cm] (4-2-3) [right=0cm of 4-2-2] {\footnotesize/};
+    \draw[->] (4-1-3.center) -- (4-2-1);
+  \end{tikzpicture}
+  \caption{Rappresentazione per liste di adiacenza}
+\end{figure}
+\noindent
 Mentre con una matrice di adiacenza, posso inserire $1$ nel punto $(i,j)$ se questo arco è contenuto in $E$, $0$ altrimenti.
 I vantaggi della lista di adiacenza sono che occupa meno spazio, mentre la matrice di adiacenza è più veloce per trovare se due nodi sono adiacenti, ma occupa più spazio perché contiene esattamente $|V|^2$ elementi.
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|cccc}
+    / & 1 & 2 & 3 & 4 \\
+    \hline
+    1 & 1 & 1 & 1 & 1 \\
+    2 & 0 & 0 & 0 & 1 \\
+    3 & 1 & 0 & 0 & 0 \\
+    4 & 1 & 1 & 0 & 0 \\
+  \end{tabular}
+  \caption{Rappresentazione per matrice di adiacenza}
+\end{table}
 \ex{}{
   Supponiamo di voler rappresentare con un grafo la rete stradale italiana dove gli archi rappresentano il numero di incidenti.
   Si andrebbe a creare una matrice con molte celle vuote e poche celle piene. 
@@ -3246,7 +3310,7 @@ all_out_deg(G)
       out_deg(i)++
   return out_deg
 \end{lstlisting}
-L'algoritmo ha complessità pari al numero di archi più il numero di nodi $E + V$.
-
+L'algoritmo ha complessità pari al numero di archi più il numero di nodi $\Theta(E + V)$.
+Mentre per la matrice ha comèlessità $\Theta(V^2)$.
 
 \end{document}
