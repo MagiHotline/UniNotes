@@ -299,9 +299,160 @@ di soluzioni. In altre situazioni potrebbe venire a mancare l'unicità delle sol
 mostra l'esempio successivo.
 }
 
+\subsection{Equazioni lineari del primo ordine}
 
+In questa sezione andremo a trattare un caso particolare di ED ordinarie del primo ordine,
+il caso in cui $F$ sia una funzione lineare rispetto a $y$ e $y'$.
+In questo caso tali equazioni si possono scrivere nella forma:
+\begin{equation*}
+    a_1(t)y'(t) + a_0(t)y(t) = g(t)
+\end{equation*}
+con $a_1, a_0, g$ funzioni continue su un intervallo $I \subset \mathbb{R}$.
+Se il coefficiente $a_1(t)$ non si annulla, allora l'ED lineare si può scrivere nella forma:
+\begin{equation}
+    y'(t) + a(t)y(t) = f(t)
+\end{equation}
+Anche in questo caso supporremo $a$ e $f$ sia funzioni continue su un intervallo $I \subset \mathbb{R}$.
+Se $f$ non è identicamente nulla, la (1.3.1) è detta \textbf{equazione completa}. Se $f \equiv 0$ invece, 
+l'equazione si dice \textbf{omogenea} e di solito, vista l'importanza che riveste tale equazione nella
+struttura dell'integrale generale, si è soliti indicare con una lettera usualmente la $z$, la soluzione di tale equazione, che diventa perciò:
+\begin{equation}
+    z'(t) + a(t)z(t) = 0
+\end{equation}
+Vale il seguente teorema:
+\thm{}{
+    L'integrale generale dell'equazione completa si ottiene aggiungendo all'integrale generale dell'equazione omogenea una particolare soluzione dell'equazione completa.
+}
+\noindent
+Dal teorema $1.3.1$ sappiamo dunque che dobbiamo occuparci prima dello studio dell'equazione omogenea e poi alla ricerca di una soluzione particolare
+dell'equazione completa.
+\\
 
+\vspace{1em}
+\noindent
+\textbf{Ricerca dell'integrale generale dell'equazione omeogenea:} 
+Sia $A(t)$ una primitiva di $a(t)$ (tale per cui si abbia $A'(t) = a(t)$). Moltiplichiamo entrambi i membri di (1.3.2) per $e^{A(t)}$; si ottiene:
+\begin{equation*}
+    e^{A(t)}z'(t) + a(t)e^{A(t)}z(t) = 0
+\end{equation*}
+da cui:
+\[\frac{d}{dt}[z(t)e^{A(t)}] = 0\]
+e cioè se $z(t)e^{A(t)} =  C$ che si riscrive come:
+\begin{equation}
+    z(t) = Ce^{-\int a(t) \; dt}
+\end{equation} 
+\textbf{Ricerca di una soluzione particolare dell'equazione completa:} 
+Si utilizza il metodo delle variazioni delle costanti.
+L'idea è di ricercare una soluzione simile alla (1.3.3); stavolta però 
+$C$ non è più una costante, ma una funzione $C(t)$ da determinare. Cerchiamo
+dunque una soluzione della forma:
+\[\overline{y}(t) = C(t)e^{-A(t)}\]
+La $C(t)$ deve essere determinata in modo tale che $\overline{y}$ così strutturata sia la soluzione
+dell'equazione completa (1.3.1). Quindi osserviamo che:
+\[\overline{y}'(t) = C'(t)e^{-A(t)} - C(t)a(t)e^{-A(t)}\]
+si deduce inserendo le corrispondenti informazioni all'interno dell'equazione completa (1.3.1)
+\[e^{-A(t)}[C'(t) - C(t)a(t)] + a(t)C(t)e^{-A(t)} = f(t)\]
+cioè
+\[e^{-A(t)}C'(t) = f(t)\]
+da cui $C'(t) = e^{-A(t)}f(t)$ e dunque:
+\[C(t) = \int e^{A(s)}f(s) \; ds\]
+Quindi la soluzione particolare dell'equazione completa (1.3.1) è:
+\[\overline{y}(t) = e^{-A(t)} \int f(s)e^{A(s)} \; ds\]
+Quindi riassumendo l'integrale generale dell'equazione completa (1.3.1) ha la forma:
+\begin{equation}
+    y(t) = ce^{-A(t)} + e^{-A(t)} \int f(s)e^{A(s)} \; ds 
+\end{equation}
+\textbf{Risoluzione del problema di Cauchy:} la costante arbitraria nella (1.3.4) 
+è determinata dalla condizione iniziale $y(t_0) = y_0$. Scegliendo una primitiva
+tale per cui $A(t_0) = 0$ (cioè $A(t) = \int_{t_0}^{t_1} a(s) \; ds$) l'integrale
+generale che soddisfa il dato di Cauchy è:
+\begin{equation}
+    y(t) = e^{-A(t)} \left[ y_0 + \int_{t_0}^t f(s)e^{A(s)} \; ds \right]
+\end{equation}
+Vale il seguente teorema:
+\thm{\textbf{Problema di Cauchy per un'equazione differenziale lineare del primo ordine}}{
+    Siano $a, f$ funzioni continue su un intervallo $I \ni t_0$ e sia $y_0 \in \mathbb{R}$. Il problema di Cauchy:
+    \begin{equation*}
+        \begin{cases}
+            y'(t) + a(t)y(t) = f(t)\\
+            y(t_0) = y_0
+        \end{cases}
+    \end{equation*}
+    ha una e una sola soluzione $y \in C^1(I)$ (dove $C^k(I)$ è l'insieme delle funzioni continue derivabili fino all'ordine $k$ e con tutte le derivate fino all'ordine $k$ continue); tale soluzione
+    è assegnata alla (1.3.5).
+}
 
+\subsection{Equazioni differenziali del secondo ordine}
 
+\subsubsection{Generalità}
 
+\dfn{}{
+Un'equazione differenziale ordinaria del secondo ordine è un'equazione \textit{lineare} se è del tipo:
+\begin{equation}
+    y''(t) + a(t)y'(t) + b(t)y(t) = g(t)
+\end{equation}
+}
+\noindent
+dove i coefficienti $a_i$ e il termine noto $g$ sono funzioni definite in un certo intervallo $I$ 
+e continue nello stesso intervallo. L'equazione si dice omogenea se $g$ è identicamente nullo; in caso 
+contrario si dice completa.
+L'equazione si dice \textbf{a coefficienti costanti} se i coefficienti $a_i$ sono costanti (per inciso, il termine noto può invece dipendere da t); in caso
+contrario si dice \textbf{a coefficienti variabili}. Infine se $a_1$ non si annulla mai, l'equazione si può riscrivere in forma nornmale come:
+\begin{equation}
+    y''(t) + a(t)y(t) + b(t)y = f(t)
+\end{equation}
+\textbf{Osservazione:} consideriamo il seguente operatore
+\[L: C^2(I) \rightarrow C^0(I)\]
+\[L: y \mapsto Ly\]
+dove gli spazi $C^k(I)$, sono gli spazi delle funzioni continue derivabili fino all'ordine $k$ e con tutte
+le derivate fino all'ordine $k$ continue e dove abbiamo indicato con $Ly$ il primo membro dell'equazione (1.4.1).
+Prima di tutto l'operatore è ben definito, perché se $y \in C^2$ si ha che $Ly \in C^0(I)$ e questo grazie alla continuità 
+dei coefficienti $a_i$. Inoltre è facile dimostrare che $L$ è un operatore lineare, nel senso che per ogni $\lambda_1, \lambda_2 \in \mathbb{R}$, per ogni $y_1, y_2 \in C^2(I)$ si ha:
+\[L(\lambda_1y_1 + \lambda_2y_2) = \lambda_1Ly_1 + \lambda_2Ly_2\]
+Questa proprietà dell'operatore $L$ giustifica il motivo per cui l'equazione (1.4.1) è detta lineare.
+\ex{}{
+    Il più semplice esempio di equazione differenziale del secondo ordine:
+    \[y''(t) = 0\]
+    Essa naturalmente equivale a dire $y'(t) = C_1$ e da cui $Y(t) = C_1t + C_2$, con $C_1, C_2$ costanti arbitrarie.
+    Quindi le soluzioni di questa equazione sono tutte e soli polinomi di primo grado.
+}
+\ex{\textbf{Oscillatore armonico}}{
+    Consideriamo un punto materiale di massa $n$ che rimane libero di muoversi in linea orizzontale,
+    attaccato a una molla che esercita una forza di richiamo di tipo elastico. Denotiamo con $y(t)$ la posizione
+    del punto sulla retta (rispetto alla configurazione di riposo). Allora si può dimostrare che $y$ soddisfa l'equazione:
+    \[my'' = -ky\]
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}[scale=1]
+            % Disegno della parete
+            \fill[gray!50] (0,0) rectangle (0.5,3);
+            \node[below] at (0.25,0) {Parete};
+        
+            % Disegno della molla
+            \draw[line width=1pt] (0.5,1.5) -- (1,1.5);
+            \draw[line width=1pt] (1,1.5) 
+                .. controls (1.2,1.8) and (1.4,1.2) .. (1.6,1.5)
+                .. controls (1.8,1.8) and (2.0,1.2) .. (2.2,1.5);
+            \draw[line width=1pt] (2.2,1.5) -- (2.7,1.5);
+            \node[above] at (1.4,1.8) {Molla};
+        
+            % Disegno della massa
+            \filldraw[fill=blue!30, draw=blue!70, line width=1pt] (2.7,0.5) rectangle (4.2,2.5);
+            \node at (3.45,0.3) {Massa};
+        \end{tikzpicture}
+    \end{figure}
+    dove $k > 0$ denota la costante elastica del sistema. Siccome ovviamente $m \neq 0$, allora si può riscrivere
+    l'equazione in forma normale come:
+    \begin{equation}
+        y'' + \omega^2y = 0
+    \end{equation}
+    dove $\omega^2 = \frac{k}{m} > 0$. L'equazione prende il nome dell'oscillatore armonico.
+    L'equazione (1.4.3) è un'equazione differenziale lineare del secondo ordine omogenea e a coefficienti costanti. Se sul
+    punto agisce una forza esterna (dipendente solo dal tempo $t$) l'equazione si riscrive come:
+    \[y'' + \omega^2y = f(t)\]
+    nel caso venga presa in considerazione lo smorzamento dovuto all'attrito, l'equazione si trasforma in
+    \[y'' + hy' + \omega^2y = 0\]
+    con $h > 0$. 
+
+}
 \end{document}

@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+ch}{\PYGZsh{}!/bin/bash}
+\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Enter your name:\PYGZdq{}}
+\PYG{n+nb}{read}\PYG{+w}{ }name
+\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Enter your student ID:\PYGZdq{}}
+\PYG{n+nb}{read}\PYG{+w}{ }id
+\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}name}\PYG{+w}{ }\PYGZgt{}\PYGZgt{}\PYG{+w}{ }student.txt
+\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}id}\PYG{+w}{ }\PYGZgt{}\PYGZgt{}\PYG{+w}{ }student.txt
+\end{Verbatim}

@@ -351,11 +351,11 @@ write-host "You entered: $value"
     that it’ll only accept integers (such as 67). (b) Once you’re found the answer, find out
     what happens if you type a real number (such as 67.4 or 67.8)}
 \begin{itemize}
-    \item[a)] To only accept integers, you can use [Int] instead of [Double]:
+    \item[a.] To only accept integers, you can use [Int] instead of [Double]:
      \begin{minted}{bash}
      $value = $inputString -as [Int]
     \end{minted}
-    \item[b)] If you type a real number, PowerShell will round the number down to the nearest integer.
+    \item[b.] If you type a real number, PowerShell will round the number down to the nearest integer.
 \end{itemize}
 \begin{minted}{bash}
 do
@@ -387,6 +387,7 @@ until ( $ok )
 
 write-host "You entered: $value"
 \end{minted}
+
 \begin{minted}{bash}
 ---------------------------------------------------------
 $i = 1
@@ -514,7 +515,7 @@ while($i -lt $howLong)
 }
 \end{minted}
 \small
-\begin{table}[h]
+\begin{figure}[H]
  \hspace{-2cm}
 \renewcommand{\arraystretch}{1.2} % Spaziatura compatta
 \begin{tabular}{|p{3cm}|p{4cm}|p{4cm}|p{3cm}|}
@@ -537,7 +538,7 @@ while($i -lt $howLong)
     \hline
 \end{tabular}
 \caption{Syntax between PowerShell, Java e Bash}
-\end{table}
+\end{figure}
 \begin{table}[h]
 \hspace{-1.5cm}
 \renewcommand{\arraystretch}{1.2}
@@ -561,9 +562,56 @@ while($i -lt $howLong)
 \caption{Comparison between the execution in PowerShell e Unix/Linux}
 \end{table}
 
+\section{Practical 4 -  Unix}
 
+\textcolor{green!50!black}{
+    As the first part of this exercise, create and run the above scripts shell scripts. Record your output using
+    a screenshot. 
+    As an extension to the script above use the shell script in conjuction with the file redirection operator to redirect
+    the output to a file called howmany; record your results using a screenshot.
+}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{pract4ex12.png}
+\end{figure}
+\noindent
+\textcolor{green!50!black}{
+   Write and execute the above shell script and record your result using screenshots. Also note what's the significance of the
+   echo statement on a line without any succeding text?
+}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{pract4ex3.png}
+\end{figure}
+\noindent
+The echo with no succeding text is used to print a blank line. It's often used for formatting output or creating space between sections of a script.
+\textcolor{green!50!black}{
+    Put the above script into a file called InputOutput.sh and run it. Record your results using screenshots.
+}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{pract4ex4.png}
+\end{figure}
 
+\textcolor{green!50!black}{
+    Write a shell script (student.sh) to ask the user to enter two fields. Their name and student ID. The script should
+    append the data to a text file called student.txt.
+}
 
+\begin{minted}{bash}
+#!/bin/bash
+echo "Enter your name:"
+read name
+echo "Enter your student ID:"
+read id
+echo $name >> student.txt
+echo $id >> student.txt
+\end{minted}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{pract4ex5.png}
+\end{figure}
 \end{document}
