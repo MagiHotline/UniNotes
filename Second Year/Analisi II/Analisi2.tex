@@ -42,7 +42,8 @@
 
 \subsection{Modelli differenziali}
 
-La fisica, per descrivere dei fenomeni fisici usano la matematica e in particolare le equazioni differenziali. Infatti, si denota $x(t)$ lo spostamento nel tempo.
+I fisici, per descrivere dei fenomeni, usano la matematica come strumento per formalizzare dei modelli naturali e in particolare vorrei concentrarmi sull'uso delle equazioni differenziali. 
+Per esempio, si denota $x(t)$ lo spostamento nel tempo.
 Con la derivata prima $x'(t)$ si denota la velocità della particella in quell'istante e con la derivata seconda $x''(t)$ l'accelerazione.
 Quindi quando andiamo a tradurre
 matematicamente le leggi che governano modelli naturali può essere naturale dover lavorare
@@ -453,6 +454,214 @@ Questa proprietà dell'operatore $L$ giustifica il motivo per cui l'equazione (1
     nel caso venga presa in considerazione lo smorzamento dovuto all'attrito, l'equazione si trasforma in
     \[y'' + hy' + \omega^2y = 0\]
     con $h > 0$. 
-
+    Sarà chiaro in seguito che l'integrale generale di una qualunque equazione lineare del secondo ordine dipende da due parametri
+    arbitrarie. Quindi per determinare una soluzione specifica è necessario conoscere due condizioni iniziali.
 }
+\dfn{}{
+    Si dice \textbf{problema di Cauchy} per un'equazione differenziale lineare del secondo ordine (per semplicità la consideriamo espressa in forma normale), il problema
+    \begin{equation}
+        \begin{cases}
+            y''(t) + a(t)y'(t) + b(t)y(t) = g(t)\\
+            y(t_0) = y_0\\
+            y'(t_0) = y'_0
+        \end{cases}
+    \end{equation}
+}
+\thm{Esistenza e unicità per il problema di Cauchy (1.4.4)}{
+    Siano $a, b, f$ funzioni continue in un intervallo $I \ni t_0$. Allora per ogni
+    $y_0, y_1 \in \mathbb{R}$ il problema di Cauchy (1.4.4) ha una e una sola soluzione $y \in C^2(I)$. 
+}
+\noindent
+Questo risultato è analogo al corrispondente enunciato per le equazioni differnziali lineari del primo ordine.
+Anche in questo caso, la soluzione sarà ottenuta imponendo le condizioni iniziali nell'espressione che individua l'integrale generale dell'equazione (1.4.1).
+Quindi il problema si riduce a comprendere come si possa determinare l'integrale generale dell'equazione differenziale lineare del secondo ordine (1.4.1).
+
+\subsubsection{La struttura dell'integrale generale}
+
+L'equazione $Lz = 0$ si dice \textit{equazione omogenea} associata all'
+equazione completa $Ly = f$. Il seguente teorema permette di determinare facilmente
+la struttura dell'integrale generale dell'equazione (1.4.1). Questo risultato 
+non usa il fatto che $Ly = f$ sia un'equazione differenziale e non dipende dall'ordine 
+dell'equazione, sfrutta solamente il fatto che $L$ sia un operatore lineare.
+
+\thm{\textbf{Struttura dell'integrale generale dell'equazione linaere completa}}{
+    Si può dimostrare che:
+    \begin{enumerate}
+        \item L'insieme delle soluzioni all'equazione omogenea $Lz = 0$ in un dato intervallo $I$ è uno spazio vettoriale di dimensione 2 (sottospazio di $C^2(I)$).
+        \item L'integrale generale dell'equazione completa si ottiene sommando l'integrale generale dell'equazione omeogene
+        e una soluzione particolare dell'equazione completa.
+    \end{enumerate}
+}
+\ex{}{
+    Si consideri l'equazione $t^2z'' - 3tz' + 3z = 0$. Sia $z_1 = t$. Allora
+    $z_1'(t) = 1, z_2''(t) = 0$ da cui $t^20- 3t \, 1 + 3t = -3t + 3t = 0$; quindi $z_1$ è una soluzione dellì'equazione data.
+    Sia ora $z_2 = t^3$. Allora $z_2'(t) = 3t^2, z_2''(t) = 6t$ da cui inserendo le informazioni nell'equazione si ottiene 
+    $t^26t-3t3t^2 + 3t^3 = 6t^3 - 9t^3 + 3t^3 = 0$; quindi $z_2$ è una soluzione dell'equazione data.
+    Le due soluzioni sono linearmente indipendenti, quindi l'integrale generale dell'equazione data è:
+    \[z(t) = C_1t + C_2t^3\]
+    al variare di $C_1, C_2 \in \mathbb{R}$. 
+}
+\noindent
+Nel caso precendente è particolarmente facile vedere che le due soluzioni proposte sono linearmente indipendenti; 
+In generale può non essere così immediato. Il seguente critico generale permette di decidere qualora due soluzioni
+proposte siano o meno linearmente indipendenti.
+\thm{\textbf{Determinante wroskiano e indipendenza}}{
+    Siano $z_1, z_2$ due funzioni $C^2(I)$ soluzioni dell'equazione lineare omogenea:
+    \[Lz \equiv z'' + a(t)z' + b(t) = 0\]
+    nell'intervallo $I$. Allora esse sono linearmente indipendenti in $C^2(I)$ se e soltanto se la seguente matrice:
+    \[W(t) = \begin{pmatrix}
+        z_1(t) & z_2(t)\\
+        z_1'(t) & z_2'(t)
+    \end{pmatrix}\]
+    detta \textbf{matrice Wronskiana} ha \textit{determinante} diverso da zero per ogni $t \in I$ (dalla regolarità delle soluzioni, 
+    è sufficiente che il determinante di tale matrice sia diverso da zero in un punto $t_0 \in I$). 
+}
+\noindent
+\textbf{Quindi} per determinare l'integrale generale dell'equazione lineare completa occorre:
+\begin{enumerate}
+    \item Determinare l'integrale generale dell'equazione omogenea, quindi serve determinare due soluzioni $z_1(t), z_2(t)$ dell'equazione omogenea linearmente indipendenti;
+    \item Determinare una soluzione particolare dell'equazione completa. A questo punto l'integrale generale dell'equazione completa è dato da:
+    \[\overline{y}(t) + C_1z_1(t) + C_2z_2(t)\]
+    al variare di $C_1, C_2 \in \mathbb{R}$. 
+\end{enumerate}
+
+\subsubsection{Equazioni differenziali del secondo ordine omogenee a coefficienti costanti}
+
+Consideriamo l'equazione differenziale lineare omogenea del secondo ordine a coefficienti costanti:
+\[z''(t) + az'(t) + bz(t) = 0 \; \; \text{ con $a, b$ costanti}\]
+In analogia con il caso delle equazioni differenziali del primo ordine, che ammette gli esponenziali come soluzioni, si cerca
+anche qui una soluzione del tipo $t \mapsto e^{rt}$ con $r \in \mathbb{C}$. Sostituendo tale soluzione nell'equazione omogenea si ottiene:
+\[z'(t) = re^{rt} \; \; \; \; \; \; \; \; z''(t) = r^2e^{rt}\]
+\[e^{rt}(r^2 + ar + b) = 0\]
+Siccome l'esponenziale è sempre positiva, affinché l'equazione precedente abbia soluzione
+è necessario che la costante $r$ sia una radice dell'equazione di secondo grado:
+\[r^2 + ar + b = 0\]
+che viene detta equazioen caratteristica dell'equazione differenziale. Si possono avere tre casi in base al segno del discriminante:
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+    \hline
+    Discriminante & Soluzione 1 & Soluzione 2\\
+    \hline
+    $\Delta > 0$ & $e^{r_1t}$ & $e^{r_2t}$\\
+    $\Delta = 0$ & $e^{rt}$ & $te^{rt}$\\
+    $\Delta < 0$ & $e^{\alpha t}\cos{\beta t}$ & $e^{\alpha t}\sin{\beta t}$ \\
+    \hline
+\end{tabular}
+\end{figure}
+
+\ex{}{
+    \textit{Risolvere il seguente problema di Cauchy:}
+    \begin{equation*}
+        \begin{cases}
+            z'' - 2z' - 3z = 0\\
+            z(0) = 1\\
+            z'(0) = 2
+        \end{cases}
+    \end{equation*}
+    L'equazione proposta è differenziale ordinaria del secondo ordine lineare, a coefficienti
+    costanti e omogenea. La sua equazione caratteristica è:
+    \[r^2 - 2r - 3 = 0\]
+    che ha soluzioni $r_1 = 3, r_2 = -1$. Quindi l'integrale generale dell'equazione omogenea è:
+    \[z(t) = C_1e^{3t} + C_2e^{-t}\]
+    al variare di $C_1, C_2 \in \mathbb{R}$. Imponendo le condizioni iniziali si ottiene:
+    \[z(0) = C_1 + C_2 = 1\]
+    \[z'(0) = 3C_1 - C_2 = 2\]
+    da cui 
+    \[
+    \begin{cases}
+        C_1 + C_2 = 1\\
+        -C_1 + 3C_2 = 2
+    \end{cases} \Longrightarrow 
+    \begin{cases}
+        C_1 = \frac{1}{4}\\
+        C_2 = \frac{3}{4}
+    \end{cases}
+    \]
+    Quindi la soluzione del problema di Cauchy proposto è:
+    \[z(t) = \frac{1}{4}e^{3t} + \frac{3}{4}e^{-t}\]
+}
+
+\subsubsection{Equazioni lineari del secondo ordine non omogenee: Metodo di somiglianza}
+
+Consideriamo l'equazione differenziale lineare del secondo ordine a coefficienti costanti:
+\[y''(t) + ay'(t) + by(t) = f(t) \; \; \text{ con $a, b$ costanti}\]
+nel caso in cui il termine noto $f$ abbia una forma particolare. 
+Un metodo più generale si basa sul metodo di variazione delle costanti, che permette di determinare una soluzione particolare dell'equazione completa.
+Quando $f$ è semplice si cerca una soluzione che \textit{assomiglia} nel senso che andremo a specificare:
+\begin{itemize}
+    \item Se $f(t) = p_r(t)$ è un polinomio di grado $r$, si cerca una soluzione che sia anch'essa un polinomio, con le seguenti caratteristiche:
+    \begin{figure}[H]
+        \centering
+        \begin{tabular}{|c|c|}
+            \hline
+            $\overline{y}(t) = q_r(t)$ & se $b \neq 0$\\
+            $\overline{y}(t) = tq_r(t)$ & se $b = 0$ e $a \neq 0$\\
+            $\overline{y}(t) = t^2q_r(t)$ & se $b = 0$ e $a = 0$\\
+            \hline
+            
+        \end{tabular}
+    
+    \end{figure}
+    \item Se $f(t) = Ae^{\lambda t}$ con $\lambda \in \mathbb{C}$. In tal caso, si cerca una soluzione del tipo:
+    $y(t) = e^{\lambda t}\gamma(t)$ con $\gamma(t)$ polinomio di grado opportuno.
+    \item Se infiine $\lambda^2 + a\lambda + b = 0$ e $2\lambda + a = 0$ allora si ha $\gamma(t) = A$ da cui:
+    \[\gamma(t) = \frac{A}{2}t^2 \; \; \; \; \; \;  \overline{y}(t) = \frac{A}{2}t^2e^{\lambda t}\] 
+    Quindi si ha una soluzione particolare:
+    \[\overline{y}(t) = Ct^2e^{\lambda t}\]
+    con $C \in \mathbb{R}$. 
+    Osserviamo che in questa classe particolare di termini noti del tipo $Ae^{\lambda t}$ con $\lambda \in \mathbb{C}$ rientrano anche in casi:
+    \[\cos{\omega t},\sin{\omega t}, e^{\mu t}\cos{\omega t}, e^{\mu t}\sin{\omega t} \; \; \; \text{con $\omega \in \mathbb{R}$ }\]
+
+\end{itemize}
+
+\ex{}{
+Si trovi una soluzione particolare dell'equazione differenziale:
+\[y'' + 3y = t + 2\cos{t}\]
+Per trovare una soluzione particolare dell'equazione non omogenea dobbiamo cercare una funzione $f(t)$ tale che:
+\[f(t) = t + 2\cos{t}\]
+Questo termine è la somma di due funzioni:
+\begin{itemize}
+    \item $t$, un polinomio di primo grado
+    \item $2\cos{t}$, una funzione trigonometrica
+\end{itemize}
+Per questo motivo cerchiamo una soluzione particolare come la somma di due soluzioni, ciascuna
+ciascuna associata a uno dei due termini:
+\[y_p = y_{p1} + y_{p2}\]
+Quindi andiamo per step e cerchiamo di trovare una soluzione per il termine $t$ e un'altra per il termine $2\cos{t}$.
+\begin{itemize}
+    \item Per il termine $t$ che è un polinomio di primo grado, si cerca una funzione del tipo:
+    \[y_{A_1}(t) = C_1t + C_0\]
+    dove $A, B$ sono coefficienti da determinare.
+    Calcoliamo le derivate:
+    \[y_{A1}'(t) = C_1\]
+    \[y_{A1}''(t) = 0\]
+    Ora sostituiamo le derivate nell'equazione differenziale:
+    \begin{align*}
+        y'' + 3y &= t\\
+        0 + 3(C_1t + C_0) &= t\\
+        3C_1 + 3C_0 &= t
+    \end{align*}
+    Quindi $C_1 = 1/3$ e $C_0 = 0$. Quindi la soluzione per il termine $t$ è:
+    \[y_{p1}(t) = \frac{1}{3}t\]
+    \item Procediamo ora per $2\cos{t}$ che è una funzione trigonometrica. Si cerca una soluzione del tipo:
+    \[y_{A2}(t) = A\gamma(t)e^{\lambda t}\]
+    dove $\gamma(t)$ è ancora sconosciuta, $\lambda = i$ e $A = 2$.
+    Quindi:
+    \[y_{A2}(t) = 2\gamma(t)e^{it}\]
+    Troviamo $\gamma(t)$, dato $a = 0$ e $b = 3$, si ha:
+    \begin{align*}
+        \gamma'' + (2\lambda + a)\gamma' + (\lambda^2 + \lambda a + b)\gamma &= A\\
+        \cancel{\gamma''} + \cancel{2i\gamma'} + 2\gamma &= 2\\
+        2\gamma &= 2 \Longrightarrow \gamma = 1
+    \end{align*}
+    Quindi la soluzione per il termine $2\cos{t}$ è:
+    \[y_{p2}(t) = 2e^{it}\]
+    Di conseguenza sommando le due soluzioni particolari si ottiene la soluzione particolare dell'equazione non omogenea:
+    \[y_p(t) = \frac{1}{3}t + 2e^{it}\]
+\end{itemize}
+}
+
+
 \end{document}
