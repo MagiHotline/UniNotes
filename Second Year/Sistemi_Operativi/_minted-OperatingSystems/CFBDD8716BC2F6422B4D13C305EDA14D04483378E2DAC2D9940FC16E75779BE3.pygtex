@@ -1,0 +1,28 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nv}{a}\PYG{o}{=}\PYG{l+m}{10}
+\PYG{n+nv}{b}\PYG{o}{=}\PYG{l+m}{20}
+\PYG{k}{if}\PYG{+w}{ }\PYG{o}{[}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}a}\PYG{+w}{ }!\PYG{o}{=}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}b}\PYG{+w}{ }\PYG{o}{]}
+\PYG{k}{then}
+\PYG{+w}{ }\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{n+nv}{\PYGZdl{}a}\PYG{l+s+s2}{ != }\PYG{n+nv}{\PYGZdl{}b}\PYG{l+s+s2}{ : a is not equal to b\PYGZdq{}}
+\PYG{k}{else}
+\PYG{+w}{ }\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{n+nv}{\PYGZdl{}a}\PYG{l+s+s2}{ != }\PYG{n+nv}{\PYGZdl{}b}\PYG{l+s+s2}{: a is equal to b\PYGZdq{}}
+\PYG{k}{fi}
+\PYG{k}{if}\PYG{+w}{ }\PYG{o}{[}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}a}\PYG{+w}{ }\PYGZhy{}lt\PYG{+w}{ }\PYG{l+m}{100}\PYG{+w}{ }\PYGZhy{}a\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}b}\PYG{+w}{ }\PYGZhy{}gt\PYG{+w}{ }\PYG{l+m}{15}\PYG{+w}{ }\PYG{o}{]}
+\PYG{k}{then}
+\PYG{+w}{ }\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{n+nv}{\PYGZdl{}a}\PYG{l+s+s2}{ \PYGZhy{}lt 100 \PYGZhy{}a }\PYG{n+nv}{\PYGZdl{}b}\PYG{l+s+s2}{ \PYGZhy{}gt 15 : returns true\PYGZdq{}}
+\PYG{k}{else}
+\PYG{+w}{ }\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{n+nv}{\PYGZdl{}a}\PYG{l+s+s2}{ \PYGZhy{}lt 100 \PYGZhy{}a }\PYG{n+nv}{\PYGZdl{}b}\PYG{l+s+s2}{ \PYGZhy{}gt 15 : returns false\PYGZdq{}}
+\PYG{k}{fi}
+\PYG{k}{if}\PYG{+w}{ }\PYG{o}{[}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}a}\PYG{+w}{ }\PYGZhy{}lt\PYG{+w}{ }\PYG{l+m}{100}\PYG{+w}{ }\PYGZhy{}o\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}b}\PYG{+w}{ }\PYGZhy{}gt\PYG{+w}{ }\PYG{l+m}{100}\PYG{+w}{ }\PYG{o}{]}
+\PYG{k}{then}
+\PYG{+w}{ }\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{n+nv}{\PYGZdl{}a}\PYG{l+s+s2}{ \PYGZhy{}lt 100 \PYGZhy{}o }\PYG{n+nv}{\PYGZdl{}b}\PYG{l+s+s2}{ \PYGZhy{}gt 100 : returns true\PYGZdq{}}
+\PYG{k}{else}
+\PYG{+w}{ }\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{n+nv}{\PYGZdl{}a}\PYG{l+s+s2}{ \PYGZhy{}lt 100 \PYGZhy{}o }\PYG{n+nv}{\PYGZdl{}b}\PYG{l+s+s2}{ \PYGZhy{}gt 100 : returns false\PYGZdq{}}
+\PYG{k}{fi}
+\PYG{k}{if}\PYG{+w}{ }\PYG{o}{[}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}a}\PYG{+w}{ }\PYGZhy{}lt\PYG{+w}{ }\PYG{l+m}{5}\PYG{+w}{ }\PYGZhy{}o\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}b}\PYG{+w}{ }\PYGZhy{}gt\PYG{+w}{ }\PYG{l+m}{100}\PYG{+w}{ }\PYG{o}{]}
+\PYG{k}{then}
+\PYG{+w}{ }\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{n+nv}{\PYGZdl{}a}\PYG{l+s+s2}{ \PYGZhy{}lt 100 \PYGZhy{}o }\PYG{n+nv}{\PYGZdl{}b}\PYG{l+s+s2}{ \PYGZhy{}gt 100 : returns true\PYGZdq{}}
+\PYG{k}{else}
+\PYG{+w}{ }\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}}\PYG{n+nv}{\PYGZdl{}a}\PYG{l+s+s2}{ \PYGZhy{}lt 100 \PYGZhy{}o }\PYG{n+nv}{\PYGZdl{}b}\PYG{l+s+s2}{ \PYGZhy{}gt 100 : returns false\PYGZdq{}}
+\PYG{k}{fi}
+\end{Verbatim}

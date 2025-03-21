@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} This script removes all files in the working directory}
+\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}This will remove all files in the current working}
+\PYG{l+s+s2}{directory!\PYGZdq{}}
+\PYG{n+nb}{echo}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}Are you sure (y/n)?\PYGZdq{}}
+\PYG{n+nb}{read}\PYG{+w}{ }response
+\PYG{k}{if}
+\PYG{+w}{    }\PYG{o}{[}\PYG{+w}{ }\PYG{n+nv}{\PYGZdl{}response}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}y\PYGZdq{}}\PYG{+w}{ }\PYG{o}{]}
+\PYG{k}{then}
+\PYG{+w}{    }rm\PYG{+w}{ }*
+\PYG{+w}{    }\PYG{n+nb}{echo}\PYG{+w}{ }files\PYG{+w}{ }removed
+\PYG{k}{else}
+\PYG{+w}{    }\PYG{n+nb}{echo}\PYG{+w}{ }not\PYG{+w}{ }removed
+\PYG{k}{if}
+\end{Verbatim}

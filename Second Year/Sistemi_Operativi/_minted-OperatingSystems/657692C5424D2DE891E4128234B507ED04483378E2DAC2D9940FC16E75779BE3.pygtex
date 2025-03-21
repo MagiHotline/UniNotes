@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{while}
+\PYG{+w}{    }\PYG{o}{[}\PYG{+w}{ }condition\PYG{+w}{ }\PYG{o}{]}\PYG{+w}{ }space\PYG{+w}{ }after\PYG{+w}{ }\PYG{o}{[}\PYG{+w}{ }and\PYG{+w}{ }space\PYG{+w}{ }before\PYG{+w}{ }\PYG{o}{]}
+\PYG{k}{do}
+\PYG{+w}{    }commands
+\PYG{k}{done}
+\end{Verbatim}

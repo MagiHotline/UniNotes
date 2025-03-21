@@ -63,3 +63,9 @@ mymap f (x:xs) = f x : map f xs
 
 mymap2 :: (a -> b) -> [a] -> [b]
 mymap2 f xs = [f x | x <- xs]
+
+mydropWhile :: (a -> Bool) -> [a] -> [a]
+mydropWhile p [] = []
+mydropWhile p (x:xs)
+    | p x       = mydropWhile p xs
+    | otherwise = x:xs
