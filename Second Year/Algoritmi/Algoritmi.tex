@@ -3313,4 +3313,208 @@ all_out_deg(G)
 L'algoritmo ha complessità pari al numero di archi più il numero di nodi $\Theta(E + V)$.
 Mentre per la matrice ha comèlessità $\Theta(V^2)$.
 
+\subsection{Visita di un grafo}
+
+\subsubsection{Visita in ampiezza}
+
+La visita in ampiezza è un algoritmo che permette di visitare tutti i nodi di un grafo a partire da un nodo di partenza.
+Anche chiamata \textbf{BFS} (Breadth First Search), l'algoritmo visita tutti i nodi adiacenti al nodo di partenza, poi tutti i nodi adiacenti a questi nodi e così via.
+Ovviamente l'algoritmo non visita mai due volte lo stesso nodo.
+
+\begin{figure}[H]
+  \centering
+
+  \begin{forest}
+for tree={
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=0.5cm % Spaziatura verticale tra i livelli
+}
+[0
+    [1
+      [2
+        [3]
+        [3]
+        [3]
+      ]
+      [2
+        [3]
+        [3]
+        [3]
+      ]
+    ]
+    [1
+      [2
+        [3]
+        [3]
+        [3]
+      ]
+      [2
+        [3]
+        [3]
+        [3]
+      ]
+    ]
+    [1
+      [2
+        [3]
+        [3]
+        [3]
+      ]
+      [2
+        [3]
+        [3]
+        [3]
+      ]
+    ]
+]
+\end{forest}
+\end{figure}
+\noindent
+\begin{lstlisting}[language=Scala]
+BFS(G, S)
+# WHITE se non ho ancora visitato il nodo
+# GRAY se ho visitato il nodo ma non ho ancora visitato i suoi vicini
+# BLACK se ho visitato il nodo e i suoi vicini
+$\forall u \in V[G]$
+  color[u] <- WHITE
+  d[u] <- $\infty$
+  $\pi[u] <- NIL$
+color[S] <- GRAY 
+d[S] <- 0 # Distanza dal nodo di partenza a se stesso (quindi 0)
+Q <- {S} # Inizializzo una coda FIFO che contiene i nodi che 
+# ho gia visto ma non ho ancora visitato i vicini
+while Q $\neq \emptyset$
+  u <- Q.dequeue()
+  $\forall v \in Adj[u]$ # Scorro tutti i nodi adiacenti a u
+    if color[v] == WHITE
+      color[v] <- GRAY
+      d[v] <- d[u] + 1
+      $\pi[v] <- u
+      Q.enqueue(v)
+  Q.dequeue()
+  color[u] <- BLACK
+\end{lstlisting}
+Il primo ciclo ha come complessità $\Theta(V)$ poiché bisogna inizializzare tutti i nodi del grafo.
+, mentre il secondo ciclo ha complessità $\Theta(E)$ perché dobbiamo attraversare tutti gli archi che sono presenti nel grafo per visitarlo completamente.
+Quindi la complessità totale dell'algoritmo è $\Theta(V + E)$. Ora che abbiamo
+delle informazioni sui nodi, possiamo calcolare la distanza tra due nodi.
+\begin{lstlisting}[language=Scala]
+path(u)
+  if u != s
+    path($\pi[u]$)
+  print(u)
+\end{lstlisting}
+La BFS non solo permette di visitare tutti i nodi di un grafo, ma permette anche di calcolare la distanza tra il nodo S e qualsiasi altro nodo del grafo.
+Non solo, ma permette anche di calcolare il cammino più \textit{corto} tra due nodi.
+Vogliamo dimostrare che la BFS calcola un albero dei cammini minimi da un nodo di partenza $s$ dove si minimizza la lunghezza (numeri archi).
+Abbiamo bisogno dei lemmi che ci torneranno utili per la dimostrazione.
+\begin{lemma}
+$\forall (u,v) \in E, \delta(s,v) \le \delta(s,u) + 1$ 
+\end{lemma}
+Questo lemma ci dice che la distanza tra due nodi è minore o uguale alla distanza tra un nodo e un suo vicino più uno. In poche parole, se troviamo un cammino più corto, allora il cammino più lungo non è sicuramente migliore di quello che ho trovato.
+\begin{lemma}
+Dopo BFS, $d[v] \ge \delta(s,v) \; \; \forall v \in E$
+\end{lemma}
+Quando eseguo $d[v] = d[u] + 1$ sto analizzando un arco $(u,v)$. Noi sappiamo che $d[v] = d[u] + 1$, ma sappiamo anche che $d[u] \ge \delta(s,u)$. Di conseguenza $d[u] + 1 \ge \delta(u,v) \ge \delta(s,v)$.
+\begin{lemma}
+In $Q$ ci sono sempre al più due valori di $d$ e $Q$ è ordinata per $d$.
+Se 
+\[Q = v_1, \dots, v_r \; \; \; d[v_1] \le d[v_2] \le \dots \le d[v_r] \le d[v_1] + 1\]
+\end{lemma}
+Nel senso che nella coda, i nodi sono ordinati per distanza. Se io prendo un nodo $v$ e lo metto in coda, la sua distanza sarà sempre maggiore o uguale alla distanza del nodo precedente più uno.
+\thm{}{
+  Per ogni nodo $v \in V$, esiste un momento in cui:
+  \begin{itemize}
+    \item $v$ è grigio
+    \item $\delta(s,v)$ assegnato a $d[v]$
+    \item $v \neq s$, $\pi[v] = v$ con $\delta(s,u) = \delta(s,v)-1$
+    \item $v$ inserito in coda
+  \end{itemize}
+}
+\begin{proof}
+$\forall k$, sia $V_k$ l'insieme dei nodi $v$ con $\delta(s,v) = k$. Per induzione su $k$:
+\begin{itemize}
+  \item Per $V_0$ c'è solo $s$ che viene inizializzato.
+  \item Supponiamo che sia vero per $V_0 ... V_k$ e dimostriamolo per $V_{k+1}$.
+  Sia $v \in V_{k+1}$ 
+  \begin{itemize}
+    \item Quando avremo inserito in coda tutti i nodi di $V_k$ il nodo $v$ non sarà ancora stato visto altrimenti $d[v] \le k+1$ che va contro il lemma (8.3) che avevamo enunciato.
+    \item La coda $Q$ è ordinata, quindi analizzeremo la lista di adiacenza di ogni nodo $V_k$ prima di qualsiasi nodo con distanza superiore a $k$.
+    \item Tra i nodi di $V_k$ ne esiste uno $v \in V_k$ t.c $(u,v) \in E$.
+    \item Quando analizziamo $u$ troviamo $v \in Adj[u]$ ed in quel momento:
+    \begin{itemize}
+      \item $v$ è grigio
+      \item assegniamo $d[v] = d[u] + 1 = k + 1$
+      \item $\pi[v]$ prende $v \in V_k$ 
+      \item $v$ inserito in coda
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\end{proof}
+
+\begin{lstlisting}[language=Scala]
+BFS(G)
+  for u in V[G]
+    color[u] <- WHITE
+    d[u] <- $\infty$
+    $\pi[u] <- NIL$
+  count = 0
+  for u in V[g]
+    if color[u] == WHITE
+      BFS(G, u, count)
+
+
+BFS(G, S, count)
+  color[s] <- GRAY
+  d[s] <- 0
+  $\pi[s] <- NIL$
+  while $Q \neq \emptyset$
+    u <- Q.dequeue()
+    for v in Adj[u]
+      if color[v] == WHITE
+        color[v] <- GRAY
+        counter[v] <- count
+        d[v] <- d[u] + 1
+        $\pi[v] <- u
+        Q.enqueue(v)
+    color[u] <- BLACK
+\end{lstlisting}
+Decorando l'algoritmo con un contatore, posso \textbf{calcolare il numero di componenti connesse} di un grafo.
+
+
+
+
+\subsubsection{Visita in profondità}
+
+La visità in profondità, a differenza della visita in ampiezza, visita un nodo e poi si sposta in profondità, visitando tutti i nodi adiacenti a questo nodo per poi tornare indietro.
+Anche chiamata \textbf{DFS} (Depth First Search).
+
+
+\begin{figure}[H]
+  \centering
+
+  \begin{forest}
+for tree={
+  inner sep=1pt, % Spaziatura interna dei nodi
+  s sep=0.5cm % Spaziatura verticale tra i livelli
+}
+[0
+    [1
+      [2
+        [3
+          [5
+            [8]
+          ]
+          [6]
+          [7]
+        ]
+        [4]
+      ]
+    ]
+]
+\end{forest}
+\end{figure}
+
+
 \end{document}
