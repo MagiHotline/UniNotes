@@ -757,6 +757,175 @@ Quindi se $r(t) = (r_1(t), r_2(t), \dots, r_m(t))$ con $r_i(t)$ funzioni a valor
 \begin{equation}
     \lim_{t\rightarrow t_0} r(t) = l \Longleftrightarrow \lim_{t\rightarrow t_0} r_i(t) = l_i \; \; \; \; \; i = 1, \dots, m  
 \end{equation}
+\ex{}
+{
+    Sia $r: I \mapsto \mathbb{R}^3$ definita da $r(t) = (\cos{t} + \pi, e^t - 1, \sin{t^2})$. 
+    Calcoliamo $\lim_{t \rightarrow 0} r(t)$. 
+    Dalla (2.3.2) si ha che:
+    \[\lim_{t \rightarrow 0} r(t) = \lim_{t \rightarrow 0} (r_1(t), r_2(t), r_3(t)) = \left(\lim_{t \rightarrow 0}(\cos{t} + \pi), \lim_{t \rightarrow 0} (e^{t} - 1), \lim_{t \rightarrow 0} (\sin{t^2})\right) = (1+\pi, 0, 0)\]
+}
+
+\dfn{}
+{
+    Sia $r: I \mapsto \mathbb{R}^m$ e sia $t_0 \in I$. Si dice che $r$ è derivabile in $t_0$ se esiste finito:
+    \begin{align*}
+        r'(t) &= \lim_{t \rightarrow t_0} \frac{r(t_0 + h) - r(t_0)}{h}\\
+        &= \left(\lim_{h \rightarrow 0} \frac{r_1(t_0 + h) - r_1(t)}{h}, \dots, \lim_{h \rightarrow 0} \frac{r_m(t_0 + h) - r_m(t)}{h}\right)\\
+        &\stackrel{(2.3.2)}{=} (r'_1(t_0), \dots, r'_m(t_0))
+    \end{align*}
+}
+\noindent
+I limiti di funzioni a valori vettoriali si fanno componente per componente. Quindi
+anche la derivata di una funzione a valori vettoriali si calcola si fa componente per componente: il vettore derivata è il vettore delle derivate delle componenti.
+\dfn{}
+{
+    Se $r$ è derivabile in tutto $I$ e inoltre la funzione $r'$ è continua in $I$, si dice
+    che $r$ è di classe $C^1(I)$ e si scrive $r \in C^1(I)$. Analogamente si definiscono le derivate di ordine successivo e le funzioni di classe $C^k(I)$ per $k>1$. 
+}
+
+\thm{\textbf{Teorema fondamentale del calcolo integrale}}
+{
+    Se $r : [a,b] \mapsto \mathbb{R}^m$ è di classe $C^1([a,b])$ allora: 
+    \[\int^{a}_b r'(t)dt = r(b) - r(a)\]
+}
+\noindent
+Un altro risultato importante è il seguente:
+\[\left|\int_a^b r(t)dt\right| \le \int_a^b |r(t)|dt\]
+Osserviamo che il primo membro è l'integrale di una funzione a valori vettoriali, mentre il secondo è l'integrale di una funzione a valori scalari, cioè $|r(t)|$. 
+In entrambi i casi, i moduli che compaiono nella formula sono moduli di vettori e non valori assoluti.
+
+\subsection{Curve regolari}
+
+Consideriamo un punto materiale che si muove nello spazio 
+tridimensionale lungo una certa traiettoria; le sue coordinate sono funzioni
+del tempo, quindi la sua posizione all'istante $t$ può essere descritta come 
+da una funzione di questo tipo: 
+\[r: [t_1, t_2] \mapsto \mathbb{R}^3\]
+dove $r = (x,y,z)$ e 
+\[
+\begin{cases}
+    x=x(t)\\
+    y=y(t)\\
+    z=z(t)
+\end{cases}
+\] 
+con $t \in [t_1, t_2]$. Quindi si può riscrivere:
+\[r(t) = x(t)i + y(t)j + z(t)k\]
+usando la notazione vettoriale che abbiamo usato in precedenza:
+\[r(t) = (x(t), y(t), z(t))\]
+\dfn{
+}
+{
+    Sia $I \subset \mathbb{R}$ un intervallo. Si dice \textbf{arco di curva continua} o \textbf{cammino} in
+    $\mathbb{R}^m$ una funzione $r: I \rightarrow \mathbb{R}^m$ che sia continua, nel senso che le sue componenti sono funzioni continue.
+}
+\noindent
+Se si pensa alla variabile $t$ come al tempo, allora $r(t)$ è la posizione del punto materiale al tempo $t$.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+    \begin{axis}[
+        domain=-3:3,
+        samples=50,
+        xlabel={$x$},
+        ylabel={$f(x)$},
+        grid=both,
+        width=10cm,
+        height=7cm,
+      ]
+      \addplot[blue, thick] {x^3 - 3*x};
+    \end{axis}
+  \end{tikzpicture}
+\end{figure}
+\dfn{}
+{
+    Un arco di curva continua si dice \textbf{chiusa} se $r(a) = r(b)$ con $I = [a,b]$ (cioè punto iniziale e punto finale coincidono).
+    Si dice \textbf{semplice} se non ripassa mai dallo stesso punto. Si dice \textbf{piana} se esiste un piano che contiene il suo sostegno.\\
+    Si dice \textbf{regolare} se l'arco di una curva $r: I \mapsto \mathbb{R}^m$ tale che $r \in C^1(I)$ e $r'(t) \neq 0$ per ogni $t \in I$. 
+}
+Quindi il vettore derivato esiste in ogni punto, varia con continuità e non è mai nullo.
+Di conseguenza, per le curve regolari è ben definito il \textbf{versore tangente}:
+\[T(t) = \frac{r'(t)}{|r'(t)|}\]
+che inoltre dipende con continuità da $t$.
+
+\subsection{Lunghezza di un arco di curva}
+
+Sia $r: [a,b] \mapsto \mathbb{R}^m$ la parametrizzazione di un arco di curva $\gamma$ continuo e consideriamo una \textit{partizione}:
+\[\mathcal{P} = \{a = t_0,t_1,t_2,\dots,t_{n_1},t_n = b\}\]
+dell'intervallo $[a,b]$ con $t_0 < t_1 < \dots < t_n$ non necessariamente equispaziati.
+Alla partizione $\mathcal{P}$ risulta associata la poligonale inscritta in $\gamma$ costituita da $n$ segmenti di estremi $R(t_{i-1})$ e $R(t_i)$.
+Sia $\mathcal{L}(P)$ la lunghezza di tale poligonale, da cui si ha:
+\[\mathcal{L}(P) = \sum_{i=1}^n |r(t_i) - r(t_{i-1})|\]
+Siccome intuitivamente il segmento è la linea più breve che congiunge due punti, l'idea è che $\mathcal{L}(\mathcal{P})$ approssimi la lunghezza di $\gamma$;
+per cui facendo variare in tutti i modi possibili la partizione $\mathcal{P}$ e prendendo l'estremo superiore
+delle $\mathcal{L}(\mathcal{P})$ si ottenga la lunghezza dell'arco di curva $\gamma$. Si ha perciò la seguente definizione:
+\dfn{}
+{
+    Si dice che $\gamma$ è \textbf{rettificabile} se
+    \[sup \; \mathcal{L}(\mathcal{P}) = \mathcal{L}(\gamma) < \infty\]
+    dove il $\sup$ è preso su tutte le partizioni $\mathcal{P}$ dell'intervallo $[a,b]$. In tal caso si dice \textbf{lunghezza} di $\gamma$.
+}
+\thm{}
+{
+    Sia $r: [a,b] \mapsto \mathbb{R}^m$ la parametrizzazione di un arco di curva $\gamma$ regolare. Allora $\gamma$ è rettificabile e:
+    \[\mathcal{L}(\gamma) = \int_{a}^{b} |r'(t)|dt\]
+}
+\noindent
+Una classe particolare di curve piane è data dalle curve che si ottengono come grafici di funzioni di una variabile, ossia $y = f(x)$ per $x \in [a,b]$. 
+In tal caso la curva può essere scritta in forma parametrica ponendo:
+\[
+\begin{cases}
+    x = t\\
+    y = f(t)
+\end{cases}
+\]
+per $t \in [a,b]$. Una curva espressa come grafico di una funzione $f$ ha le seguenti proprietà:
+\begin{enumerate}
+    \item è continua se e solo se $f$ è continua in $[a,b]$;
+    \item è regolare se e solo se $f$ è derivabile in $[a,b]$.
+    \item è regolare a tratti se e solo se $f$ è a tratti derivabile in $[a,b]$.
+    \item non è mai chiusa
+    \item è sempre semplice
+\end{enumerate}
+Nel caso di una curva espressa come grafico di una funzione, per calcolare la lunghezza della curva si usa la formula:
+\[\mathcal{L}(\gamma) = \int_{a}^{b} \sqrt{1 + f'(t)^2}dt = \int_{a}^{b} ||(1, f'(t))||dt\]
+\textbf{Curve piane in forma polare}: una forma alternativa per descrivere una curva piana è data dalle curve in forma polare.
+Una curva in forma polare è data da un'equazione del tipo:
+\[\rho = f(\theta),\; \; \; \; \; \; \theta \in [\theta_1, \theta_2]\]
+\[\begin{cases}
+    x = \rho\cos{\theta}\\
+    y = \rho\sin{\theta}
+\end{cases}\]
+da cui possiamo osservare che:
+\[r'(\theta) = (f'(\theta)\cos{\theta} - f(\theta)\sin{\theta}, f'(\theta)\sin{\theta} - f(\theta)\cos{\theta})\]
+da cui 
+\[|r'(\theta)| = \sqrt{f'(\theta)^2 + f(\theta)^2}\]
+
+
+\subsection{Il parametro arco}
+
+ Si osserva che la lunghezza di un arco di una curva $r(\tau)$ per $\tau \in [t_0, t]$ è una funzione di $t$ e si ha 
+\[s(t) = \int_{a}^{t} |r'(\tau)|d\tau\]
+se si è in grado di calcolare esplicitamente tale funzione e poi invertirla, esprimendo $t$ in funzione di $s$, allora è possibile riparametrizzare la curva in funzione del parametro $s$ detto
+\textbf{parametro arco} o \textbf{ascissa curvilinea}. Il vantaggio è che $s$ è esattamente lo spazio percorso dal punto mobile quando il parametro passa da 0 a $s$. 
+
+\subsection{Integrali di linea}
+
+\dfn{Integrale di linea}
+{
+    Sia $r : [a,b] \mapsto \mathbb{R}^m$ un arco di curva regolare di sostegno $\gamma$ e sia $f$ una funzione a valori reali, definita su un sottoinsieme $A \subset \mathbb{R}^m$ contenente
+    $\gamma$, cioè $f: \mathbb{R}^m \mapsto \mathbb{R}$ con $\gamma \subset A$. Allora si dice integrale di linea (di prima specie) di $f$ lungo $\gamma$:
+    \[\int_{\gamma} f \; ds = \int_{a}^{b} f(r(t))|r'(t)|dt\]
+}
+\noindent
+\textbf{Significato geometrico dell'integrale di linea di prima specie: } se $m = 2$, $f$ è positiva e continua e $\gamma$ è parametrizzata con il parametro arco, il precedente integrale ha un'interessante interpretazione geometrica. 
+Infatti sia $S$ la superficie in $\mathbb{R}^3$ formata dai segmenti che congiungono i punti di $\gamma$ con il grafico di $f$.
+Visto che $\gamma$ è parametrizzata con il parametro arco, se pensiamo di sviluppare in un piano $(x,y)$ la superficie $S$ in modo da far coincidere
+$\gamma$ con l'asse delle $x$ allora il parametro arco coincide con l'ascissa $x$ e l'integrale $\int_{\gamma} f ds$ rappresenta l'area della superficie sviluppata e quindi l'area della superificie originale.
+\\
+\textit{L'integrale di $f$ di prima specie lungo $\gamma$ è invariante per parametrizzazioni equivalenti ed anche per cambiamento di orientazione su $\gamma$}.
+
 
 
 \end{document}
