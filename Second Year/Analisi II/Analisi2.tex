@@ -4,7 +4,7 @@
 % Set custom margins
 \onehalfspacing
 
-\geometry{a4paper, margin=1in}
+\geometry{a4paper, margin=1in, includehead, nomarginpar}
 \geometry{letterpaper, left=1.5in, right=1in, top=1in, bottom=1in}
 
 \title{Analisi II}
@@ -23,12 +23,26 @@
 
 \numberwithin{equation}{subsection}
 
+\usepackage{fancyhdr}
+
+
+
 \begin{document}
+
+\pagestyle{fancy}
+
+%... then configure it.
+\fancyhead{} % clear all header fields
+\fancyhead[RO,LE]{\textbf{Appunti di Analisi 2}}
+\fancyfoot{} % clear all footer fields
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[LO,CE]{by Imbriani Paolo}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.3\textwidth]{../UniversityofVerona.png}
 \end{figure}
+
 
 \maketitle 
 
@@ -37,6 +51,8 @@
 \tableofcontents
 
 \pagebreak
+
+\fancyhead[RO,LE]{\textbf{Equazioni differenziali}}
 
 \section{Equazioni differenziali}
 
@@ -662,6 +678,85 @@ Quindi andiamo per step e cerchiamo di trovare una soluzione per il termine $t$ 
 \end{itemize}
 }
 
+\pagebreak
+
+\fancyhead[RO,LE]{\textbf{Calcolo infinitesimale per le curve}}
+
+\section{Calcolo infinitesimale per le curve}
+
+\subsection{Richiami di calcolo vettoriale}
+
+Per lo studio del calcolo infinitesimale in più variabili occorre un certo uso del calcolo vettoriale.
+In questo paragrafo andiamo a richiamare le nozioni di base che verranno incontrate nel seguito.
+Ambientiamo tutto in $\mathbb{R}^n$; gli elementi di $\mathbb{R}^n$ li chiamano vettori e vengono
+indicati con $x = (x_1, x_2, \dots, x_n)$. Gli $x_i$, $i = 1, \dots n$ si dicono componenti del vettore. 
+Il modulo di un vettore è definito come:
+\[|x| = \sqrt{\sum_{i = 1}^{n}x_i^2}\]
+mentre si dice un versore un vettore di modulo unitario e si indica con:
+\[vers(x) = \frac{x}{|x|}\]
+$\mathbb{R}^n$ è dotato della base canonica:
+\[e_0 = \begin{pmatrix}
+    1\\
+    0\\
+    \vdots\\
+    0
+\end{pmatrix}, e_1 = \begin{pmatrix}
+    0\\
+    1\\
+    \vdots\\
+    0
+\end{pmatrix}, \dots, e_n = \begin{pmatrix}
+    0\\
+    0\\
+    \vdots\\
+    1
+\end{pmatrix}\] 
+e ogni vettore $x \in \mathbb{R}^n$ si può scrivere come combinazione lineare della base canonica:
+\[x = x_1e_1 + x_2e_2 + \dots + x_ne_n = \sum_{i=1}^{n} x_je_j\]
+I versori della base canonica sono soliti indicati con $i, j, k$ (in $\mathbb{R})$. 
+Per due vettori $x, y \in \mathbb{R}^n$ si definisce il prodotto scalare:
+\[x \cdot y = \sum_{i=1}^{n}x_iy_i\]
+Il risultato di un prodotto scalare è uno scalare. 
+Se $x \cdot y = 0$ allora i due vettori si dicono ortogonali. 
+Si usa la notazione $x \cdot y = |x||y|\cos{\theta}$, dove $\theta$ è l'angolo tra i due vettori.
+\[\cos{\theta} = \frac{u \cdot v}{|u||v|}\]
+Infinite introduciamo anche un'altra operazione che agisce tra due vettori di $\mathbb{R}^3$ e che da come risultato
+un vettore. Questa operazione è il prodotto vettoriale. Si indica con $u \times v$.
+
+\subsection{Funzioni a valore vettoriale, alcune definizioni}
+
+\dfn{}
+{   
+    Sia $f : A \subset \mathbb{R} \mapsto \mathbb{R}$ con $A$ \textit{dominio} e $f$ la \textit{legge} che ad ogni elemento di $A$
+    associa un solo elemento di $f(A)$ (chiamata immagine di $A$ tramite $f$) anch'esso reale.\\
+    Si dice \textbf{\textit{funzione ad una variabile}} una funzione definita su $A \in \mathbb{R}$. \\
+    Si dice \textbf{\textit{funzioni di più variabili}} una funzione definita su $A \subset \mathbb{R}^n$ con $n > 1$.\\
+    Si dice \textbf{\textit{funzioni a valori reali}} una funzione che ha immagine $f(A) \subseteq \mathbb{R}$.\\
+    Si dice \textbf{\textit{funzioni a valori vettoriali}} una funzione che ha immagine $f(A) \subseteq \mathbb{R}^n$.
+}
+
+\subsection{Calcolo differenziale e integrale per funzioni a valori vettoriali}
+
+Concentriamoci ora su elementi del tipo $f : A \subset \mathbb{R} \mapsto \mathbb{R}^m, m > 1$. 
+Questo è il caso più semplice di funzioni a valori vettoriali. Nel caso $m = 2,3$ 
+vedremo che le funzioni hanno il significato geometrico di curve nel piano o nello spazio. 
+Sia dunque $r:  I \mapsto \mathbb{R}^m$ con $I \subset \mathbb{R}$ un intervallo. Sia $t_0 \in I$ e sia $I \in \mathbb{R}^m$.
+\dfn{}
+{
+    Si dice che:
+    \[\lim_{t\rightarrow t_0} r(t) = l\]
+    se
+    \begin{equation}
+        \lim_{t\rightarrow t_0} |r(t) - l| = 0
+    \end{equation}
+}
+\noindent
+Geometricamente la (2.3.1) significa che la distanza tra $r(t)$ e $l$ tende a zero per $t$ che tende a $t_0$ e questo
+è possibile solo se le distanze tra le componenti di $r(t)$ e $l$ tendono a zero rispettivamente.
+Quindi se $r(t) = (r_1(t), r_2(t), \dots, r_m(t))$ con $r_i(t)$ funzioni a valori reali, si ha:
+\begin{equation}
+    \lim_{t\rightarrow t_0} r(t) = l \Longleftrightarrow \lim_{t\rightarrow t_0} r_i(t) = l_i \; \; \; \; \; i = 1, \dots, m  
+\end{equation}
 
 
 \end{document}
