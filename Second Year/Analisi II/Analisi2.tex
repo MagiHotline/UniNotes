@@ -926,6 +926,118 @@ $\gamma$ con l'asse delle $x$ allora il parametro arco coincide con l'ascissa $x
 \\
 \textit{L'integrale di $f$ di prima specie lungo $\gamma$ è invariante per parametrizzazioni equivalenti ed anche per cambiamento di orientazione su $\gamma$}.
 
+\begin{figure}[H]
+    \centering
+\begin{tikzpicture}[scale=2]
+  % Draw coordinate axes
+  \draw[->] (-1.5,0) -- (1.5,0) node[right] {$x$};
+  \draw[->] (0,-1.5) -- (0,1.5) node[above] {$y$};
+
+  % Draw closed curve C (a circle of radius 1, starting at (1,0))
+  \draw[thick, red, ->] (1,0) arc (0:360:1);
+  
+  % Mark an element on the curve with a blue arrow indicating d\vec{r}
+  \draw[blue, ->] (0.7,0.7) -- +(0.2,0.1) node[above] {$d\vec{r}$};
+
+  % Draw a sample vector from the field (green arrow) on the curve
+  \draw[green!70!black, ->] (0.7,0.7) -- +(0.3,0) node[right] {$\vec{F}$};
+
+  % Add a label for the curve
+  \node at (1.2,-0.8) {$C$};
+
+  % Write the line integral expression below the diagram
+  \node at (0,-1.8) {$\displaystyle \int_C \vec{F}\cdot d\vec{r}$};
+\end{tikzpicture}
+\end{figure}
+
+\ex{}
+{
+    Nel piano $\mathbb{R}^2$ consideriamo la funzione a due variabili $f(x,y) = x^2 + y^2$ e vogliamo determinare l'integrale di linea di $f$ lungo l'arco di curva $\gamma$ di equazioni parametriche:
+    \[\begin{cases}
+        x = t\\
+        y = t 
+    \end{cases}
+    \]
+    con $t \in [0,1]$. La curva $\gamma$ è un segmento di retta che congiunge i punti $(0,0)$ e $(1,1)$.
+    La parametrizzazione di $\gamma$ è data da $r(t) = (t,t)$ con $t \in [0,1]$. Calcoliamo l'integrale di linea di $f$ lungo $\gamma$:
+    \begin{align*}
+        \int_{\gamma} f(x,y) ds &= \int_{a}^{b} f(x(t), y(t)) \sqrt{(x')^2 + (y')^2} dt\\
+        &= \int_{0}^{1} (t^2 + t^2)\sqrt{1^2 + 1^2} dt\\
+        &= \int_{0}^{1} 2t^2\sqrt{2} dt\\
+        &= \frac{2\sqrt{2}}{3} [t^3]^1_0 = \frac{2\sqrt{2}}{3}\\
+    \end{align*}
+    \noindent
+    Il significato geometrico dell'integrale di linea di $f$ lungo $\gamma$ è l'area della superficie formata dai segmenti che congiungono i punti di $\gamma$ con il grafico di $f$.
+
+
+    \begin{figure}[H]
+        \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+          view={60}{30},
+          xlabel={$x$},
+          ylabel={$y$},
+          zlabel={$f(x,y)$},
+          domain=0:1,
+          samples=20,
+          zmin=0, zmax=2.5,
+          colormap/viridis,
+          ]
+          % Superficie: f(x,y)=x^2+y^2 per (x,y) in [0,1]x[0,1]
+          \addplot3[
+            surf,
+            domain=0:1,
+            y domain=0:1,
+            opacity=0.6,
+          ]
+          {x^2 + y^2};
+      
+          % Curva gamma: x=t, y=t, z = 2t^2, t in [0,1]
+          \addplot3[
+            thick,
+            red,
+            samples=50,
+            domain=0:1,
+          ]
+          ({x}, {x}, {2*x^2});
+          % Etichetta per la curva
+          \node[red] at (axis cs:0.5,0.5,1) {$\gamma$};
+        \end{axis}
+      \end{tikzpicture}
+    \end{figure}
+    \textbf{Osservazione}: Se ruotassimo la curva $\gamma$ attorno all'asse $z$ di $-\frac{\pi}{4}$, otterremo un normalissimo integrale con una funzione ad una variabile. 
+    L'integrale equivalente sarebbe:
+    \[\int_0^{\sqrt{2}} x^2 dx \]
+    \begin{figure}[H]
+    \centering 
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={$x$},
+            ylabel={$y$},
+            axis lines=middle,
+            domain=0:2,
+            samples=100,
+            xtick={0,1.414},
+            xticklabels={$0$, $\sqrt{2}$},
+            ytick=\empty,
+            width=8cm,
+            height=6cm,
+          ]
+          % Tracciamo la curva y = x^2
+          \addplot [name path=curve, blue, very thick] {x^2};
+          
+          % Definiamo l'asse y=0 (il bordo inferiore per il riempimento)
+          \addplot [name path=axis, draw=none] {0};
+          
+          % Riempimento dell'area sottesa alla curva tra x=0 e x=sqrt(2)
+          \addplot [blue!30, opacity=0.5] fill between[
+              of=curve and axis,
+              soft clip={domain=0:1.414}
+          ];
+        \end{axis}
+      \end{tikzpicture}
+    \end{figure}
+}
 
 
 \end{document}
