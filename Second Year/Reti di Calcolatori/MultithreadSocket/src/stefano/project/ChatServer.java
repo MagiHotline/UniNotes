@@ -74,7 +74,7 @@ public class ChatServer {
                 // Aggiungere il flusso di output all'insieme
                 clientWriters.add(out);
 
-                // Ask for the client's name
+                // Chiediamo all'utente il nome
                 out.println("Enter your name: ");
                 String name = in.readLine();
                 if (name != null && !name.trim().isEmpty()) {
@@ -96,7 +96,7 @@ public class ChatServer {
             } finally {
                 try {
                     broadcast(clientName + " has left the chat.");
-                    clientWriters.removeIf(writer -> writer.checkError());
+                    clientWriters.removeIf(PrintWriter::checkError);
                     clientNames.remove(socket);
                     socket.close();
                 } catch (IOException e) {
