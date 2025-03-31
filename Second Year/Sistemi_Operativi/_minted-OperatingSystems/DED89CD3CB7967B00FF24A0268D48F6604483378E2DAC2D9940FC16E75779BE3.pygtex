@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZhy{}\PYGZgt{}\PYG{+w}{  }Desktop\PYG{+w}{ }chmod\PYG{+w}{ }\PYGZhy{}R\PYG{+w}{ }\PYG{l+m}{757}\PYG{+w}{ }testmod
+\PYGZhy{}\PYGZgt{}\PYG{+w}{  }Desktop\PYG{+w}{ }\PYG{n+nb}{cd}\PYG{+w}{ }testmod
+\PYGZhy{}\PYGZgt{}\PYG{+w}{  }testmod\PYG{+w}{ }ls\PYG{+w}{ }\PYGZhy{}l
+total\PYG{+w}{ }\PYG{l+m}{0}
+\PYGZhy{}rwxr\PYGZhy{}xrwx@\PYG{+w}{ }\PYG{l+m}{1}\PYG{+w}{ }paoloimbriani\PYG{+w}{  }staff\PYG{+w}{    }\PYG{l+m}{0}\PYG{+w}{ }\PYG{l+m}{31}\PYG{+w}{ }Mar\PYG{+w}{ }\PYG{l+m}{10}:10\PYG{+w}{ }apple
+\PYGZhy{}rwxr\PYGZhy{}xrwx@\PYG{+w}{ }\PYG{l+m}{1}\PYG{+w}{ }paoloimbriani\PYG{+w}{  }staff\PYG{+w}{    }\PYG{l+m}{0}\PYG{+w}{ }\PYG{l+m}{31}\PYG{+w}{ }Mar\PYG{+w}{ }\PYG{l+m}{10}:10\PYG{+w}{ }banana
+\PYGZhy{}rwxr\PYGZhy{}xrwx@\PYG{+w}{ }\PYG{l+m}{1}\PYG{+w}{ }paoloimbriani\PYG{+w}{  }staff\PYG{+w}{    }\PYG{l+m}{0}\PYG{+w}{ }\PYG{l+m}{31}\PYG{+w}{ }Mar\PYG{+w}{ }\PYG{l+m}{10}:10\PYG{+w}{ }grape
+\PYGZhy{}rwxr\PYGZhy{}xrwx@\PYG{+w}{ }\PYG{l+m}{1}\PYG{+w}{ }paoloimbriani\PYG{+w}{  }staff\PYG{+w}{    }\PYG{l+m}{0}\PYG{+w}{ }\PYG{l+m}{31}\PYG{+w}{ }Mar\PYG{+w}{ }\PYG{l+m}{10}:10\PYG{+w}{ }orange
+drwxr\PYGZhy{}xrwx@\PYG{+w}{ }\PYG{l+m}{4}\PYG{+w}{ }paoloimbriani\PYG{+w}{  }staff\PYG{+w}{  }\PYG{l+m}{128}\PYG{+w}{ }\PYG{l+m}{31}\PYG{+w}{ }Mar\PYG{+w}{ }\PYG{l+m}{10}:54\PYG{+w}{ }testmodsub
+\PYGZhy{}\PYGZgt{}\PYG{+w}{  }testmod\PYG{+w}{ }\PYG{n+nb}{cd}\PYG{+w}{ }testmodsub
+\PYGZhy{}\PYGZgt{}\PYG{+w}{  }testmodsub\PYG{+w}{ }ls\PYG{+w}{ }\PYGZhy{}l\PYG{+w}{ }testmodsub
+ls:\PYG{+w}{ }testmodsub:\PYG{+w}{ }No\PYG{+w}{ }such\PYG{+w}{ }file\PYG{+w}{ }or\PYG{+w}{ }directory
+\PYGZhy{}\PYGZgt{}\PYG{+w}{  }testmodsub\PYG{+w}{ }ls\PYG{+w}{ }\PYGZhy{}kl
+total\PYG{+w}{ }\PYG{l+m}{0}
+\PYGZhy{}rwxr\PYGZhy{}xrwx@\PYG{+w}{ }\PYG{l+m}{1}\PYG{+w}{ }paoloimbriani\PYG{+w}{  }staff\PYG{+w}{  }\PYG{l+m}{0}\PYG{+w}{ }\PYG{l+m}{31}\PYG{+w}{ }Mar\PYG{+w}{ }\PYG{l+m}{10}:54\PYG{+w}{ }blue
+\PYGZhy{}rwxr\PYGZhy{}xrwx@\PYG{+w}{ }\PYG{l+m}{1}\PYG{+w}{ }paoloimbriani\PYG{+w}{  }staff\PYG{+w}{  }\PYG{l+m}{0}\PYG{+w}{ }\PYG{l+m}{31}\PYG{+w}{ }Mar\PYG{+w}{ }\PYG{l+m}{10}:54\PYG{+w}{ }red
+\end{Verbatim}

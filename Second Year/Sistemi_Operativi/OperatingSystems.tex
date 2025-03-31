@@ -877,7 +877,70 @@ done
 echo "Out of chances. The number was $number."
 \end{minted}
 
+\section{Practical 6 -  Unix Part 3}
+
+\textcolor{green!50!black}
+{
+Create, using touch, four files called apple, orange, banana and grape.\\
+(a) Determine the initial permission values for these newly created files.\\
+(b) State what the read, write and execute permission will become for the following
+chmod commands:\\
+chmod 642 apple\\
+chmod 777 orange\\
+chmod 547 banana\\
+chmod 444 grape\\
+Now try it out on your computer, and, by using ls –l, check your work.
+2. Continue now, by issuing the following command: chmod u+x grape.\\
+What do you predict will be be the read, write, execute permissions now? Check your
+answer by using ls -l\\
+3. Make the file called orange have the same permissions as the file called apple.\\
+4. Put all the files, apple, orange, banana and grape, into a directory called testmod.
+In testmod create a directory called testmodsub and using touch create two files called
+red and blue. You now have a small directory tree.\\
+Now go back to the directory containing testmod and change the permissions of all the
+files recursively in the directory tree starting at testmod, such that each file will now
+have the permission 757.
+}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{pract6ex1.png}
+\end{figure}
+\noindent
+After doing the \texttt{chmod u+x} command on the \texttt{grape} file, the permissions will be \texttt{-r-xr--r--} for the user.\\
+
+\begin{minted}{bash}
+-> Desktop ls -l orange apple
+-rwxrwxrwx@ 1 paoloimbriani  staff  0 31 Mar 10:10 apple
+-rwxrwxrwx@ 1 paoloimbriani  staff  0 31 Mar 10:10 orange
+\end{minted}
+\noindent
+Now I'll change it recursively to 757:
+
+\begin{minted}{bash}
+->  Desktop chmod -R 757 testmod
+->  Desktop cd testmod
+->  testmod ls -l
+total 0
+-rwxr-xrwx@ 1 paoloimbriani  staff    0 31 Mar 10:10 apple
+-rwxr-xrwx@ 1 paoloimbriani  staff    0 31 Mar 10:10 banana
+-rwxr-xrwx@ 1 paoloimbriani  staff    0 31 Mar 10:10 grape
+-rwxr-xrwx@ 1 paoloimbriani  staff    0 31 Mar 10:10 orange
+drwxr-xrwx@ 4 paoloimbriani  staff  128 31 Mar 10:54 testmodsub
+->  testmod cd testmodsub 
+->  testmodsub ls -l testmodsub
+ls: testmodsub: No such file or directory
+->  testmodsub ls -kl
+total 0
+-rwxr-xrwx@ 1 paoloimbriani  staff  0 31 Mar 10:54 blue
+-rwxr-xrwx@ 1 paoloimbriani  staff  0 31 Mar 10:54 red
+\end{minted}
+
+
+
+
 
 
 
 \end{document}
+
