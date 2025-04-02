@@ -3705,7 +3705,144 @@ Se fossimo partiti dal nodo $T$ nell'esempio precedente avremmo ottenuto un sing
 }
 {
   In una foresta DFS di un grafo $G$, un nodo $v$ discende da $u$ se e solo se al tempo
-  $d[u]$ v è raggiungibile da $u$ con un cammino di solo nodi bianchi.  
+  $d[u]$, $v$ è raggiungibile da $u$ con un cammino di solo nodi bianchi.  
+}
+
+\begin{proof}
+  \\
+  $\Longrightarrow$ Supponiamo che $v$ discenda da $u$ e sia $w$ un nodo nel cammino da $u$ a $v$ nella foresta DFS.
+  Se $w$ discende da $u$ allora per il teorema 8.3.2 $d[u] < d[w] < f[w] < f[u]$.\\
+  $\Longleftarrow$ Supponiamo che al tempo $d[u]$ esiste un cammino da $u$ a $v$ fatto di soli nodi bianchi.
+  Supponiamo per assurdo che $v$ non discenda da $u$. 
+  Sia $w$ il predecessore di $v$ e assumiamo che $w$ discenda da $u$. Allora \[d[u] < d[w] < d[v] < f[v] < f[w] < f[u]\]
+\end{proof}
+Ci sono alcuni archi nel grafo che possiedono nomenclature diverse in base ai movimenti che fanno. Per esempio, nel grafo di esempio precedente, l'arco $(V, S)$ è un arco di ritorno che noi chiamaremo "backward", mentre l'arco $(S, W)$ è un arco di attraversamento che chiameremo "forward".
+Ci sono alcuni archi invece che vanno da un ramo all'altro si chiamano crossing. 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+    state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+    
+    \node[state] (W) [color=black] {W, $7/8$};
+    \node[state] (Z) [above=of W, color=black] {Z, $2/9$};
+    \node[state] (Y) [above left=of W, color=black] {Y, $3/6$};
+    \node[state] (S) [above right=of W, color=black] {S, $1/10$};
+    \node[state] (X) [below=of Y, color=black] {X, $4/5$};
+    \node[state] (V) [right=of W, color=black] {V, $12/13$};    
+    \node[state] (U) [right of=V, color=black] {U, $14/15$};
+    \node[state] (T) [above=of U, color=black] {T, $11/16$};
+
+
+    \draw (Y) -- (X);  
+    \draw (X) -- node[midway, below] {B} (Z);  
+    \draw (Z) -- (Y);  
+    \draw (Z) -- (W);  
+    \draw (W) -- (X);  
+    \draw (S) -- node[midway, right] {F} (W);  
+    \draw (S) -- node[midway, above] {T} (Z);  
+    \draw (V) -- node[midway, below] {C} (W);  
+    \draw (T) -- (V);  
+    \draw (V) -- node[midway, right] {C} (S);  
+    \draw (T) -- (U);  
+    \draw (U) -- node[midway, right] {B} (T);  
+    
+  \end{tikzpicture}
+\end{figure}
+\noindent
+Perché ci servono queste classificazioni?
+Gli diamo dei nomi perché ci permettono di capire meglio la struttura del grafo.
+\thm{}
+{
+  Un grafo è aciclico se e solo se la DFS non trova archi all'indietro.
+}
+\begin{proof}
+ Supponiamo che DFS trova un arco $(u, v)$ all'indietro. 
+ \begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+    state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+    
+
+    \node[state] (V) {V};
+    \node[state] (U) [below of=V] {U};
+    
+    \draw (U) -- (V);    
+  \end{tikzpicture}
+\end{figure}
+\noindent
+Se è un arco all'indietro vuol dire che $v$ sarà di colore grigio. Ciò vuol dire che $u$ è un discendente di $v$. 
+\[d[v] < d[u] < f[u] < f[v]\]
+Tuttavia essere grigio nella foresta DFS ed essere discendente di un grigio vuol dire che esiste un cammino che va da $v$ a $u$. 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+    state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+    
+
+    \node[state] (V) {V};
+    \node[state] (U) [below of=V] {U};
+    
+    \draw (U) -- (V);    
+    \path (V) edge [bend left = -15] (U);
+  \end{tikzpicture}
+\end{figure}
+\noindent
+Questo arco completa il ciclo, di conseguenza, $G$ è ciclico. \\
+Supponiamo che $G$ sia ciclico. Prendiamo un ciclo qualsiasi nel nostro grafo. Sia $u$ il primo nodo del ciclo visitato da DFS. 
+Sia $v$ il predecessore di $u$ nel ciclo. Al tempo $d[u]$ tutti i nodi del ciclo tranne $u$ sono bianchi. 
+Quindi al tempo $d[u]$ il nodo $v$ è raggiungibile da $u$ con un cammino di soli nodi bianchi. Ma se così è, per il teorema 8.3.3 
+$v$ discende da $u$. $v$ sarà visitato quando $u$ è ancora grigio. Ma durante la visita di $v$ si analizzerà l'arco $(v,u)$ e di conseguenza si troverà un arco all'indietro. $\square$
+\end{proof}
+Qual è la complessità del problema di verificare se un grafo è aciclico? 
+Sicuramente non peggio della complessità della DFS. 
+Ma quanto è la complessità della DFS?
+\begin{itemize}
+  \item Inizializzazione: $\Theta(V)$
+  \item DFS-Visit: $\Theta(E)$
+\end{itemize}
+Quindi la complessità totale è $\Theta(V + E)$. Di conseguenza la complessità del problema di verificare se un grafo è aciclico è $O(V + E)$.
+
+\ex{}
+{
+  \textbf{Esempio da tema d'esame:}
+  Burocraziland è un paese che possiede una burocrazia molto complessa. Sei stato assunto come nuovo presidente per risanare le falle
+  del governo e devi fare in modo che all'interno dei documenti di questo paese non ci siano circoli di approvazione. 
+  Immaginiamo di avere un grafo in cui i nodi sono i documenti e gli archi sono le approvazioni.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+      state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+      
+  
+      \node[state] (A) {A};
+      \node[state] (B) [right of=A] {B};
+      
+      \path (A) edge [bend right = -15] (B);
+    \end{tikzpicture}
+  \end{figure}
+  In questo caso posso decidere se dire che per avere il documento $A$ mi serve il documento $B$ o viceversa.
+  Facciamo che in questo caso, per avere il documento $A$ mi serve il documento $B$.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+      state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+      
+      \node[state] (A) {A};
+      \node[state] (B) [above right of=A] {B};
+      \node[state] (C) [below right of=B] {C};
+      \node[state] (D) [below left of=C] {D};
+      
+      \path (A) edge [bend right = -15] (B);
+      \path (B) edge [bend right = -15] (C);
+      \path (C) edge [bend right = -15] (D);
+      \path (D) edge [bend right = -15] (A);
+    \end{tikzpicture}
+  \end{figure}
+  Se io volessi sapere tutti i documenti che non si possono ottenere a causa di un circolo di approvazione, come potrei fare?
+  La soluzione è quella di fare una DFS e vedere se trovo un arco all'indietro. Se trovo un arco all'indietro, allora ho trovato un circolo di approvazione.
+  Tuttavia, questa operazione la dovrei fare per ogni singolo nodo nel grafo, quindi la complessità sarebbe $O(V(V + E))$.
+  Ma c'è un modo più efficiente per farlo. Osservando che se trovo un arco all'indietro, allora ho trovato un circolo di approvazione, posso fare in modo che se trovo un arco all'indietro, allora \textbf{tutti i nodi che sono raggiungibili da quel nodo} sono parte di un circolo di approvazione.
+
 }
 
 
