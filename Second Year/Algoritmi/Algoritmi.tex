@@ -3516,5 +3516,197 @@ for tree={
 \end{forest}
 \end{figure}
 
+\begin{lstlisting}[language=Scala]
+DFS(G)
+  // per ogni nodo del grafo
+  for u in V[G]
+    color[u] <- WHITE
+    $\pi[u] <- NIL$
+  time <- 0
+  for u in V[G]
+    if color[u] == WHITE
+      DFS-Visit(G, u)
+
+
+DFS-Visit(G, u)
+  color[u] <- GRAY
+  time <- time + 1
+  d[u] <- time
+  for v in Adj[u]
+    if color[v] == WHITE
+      $\pi[v] <- u
+      DFS-Visit(G, v)
+  color[u] <- BLACK
+  time <- time + 1
+  f[u] <- time
+\end{lstlisting}
+\noindent
+In questo algoritmo può sembrare che non ci sia l'utilizzo di una coda, come invece è esplicito nella BFS, ma
+in questo caso la coda è implicita all'interno di DFS-Visit definita ricorsivamente. 
+
+\ex{}
+{
+ 
+Consideriamo un grafo $G$ di nodi $V$ e archi $E$ di questo tipo: tutti i nodi sono bianchi, tranne il nodo $s$ che è grigio perché sarà il nostro punto di partenza e il suo tempo sarà 1.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+    state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+    
+    \node[state] (W) {W};
+    \node[state] (Z) [above=of W] {Z};
+    \node[state] (Y) [above left=of W] {Y};
+    \node[state] (S) [above right=of W] {S, $1$};
+    \node[state] (X) [below=of Y] {X};
+    \node[state] (V) [right=of W] {V};    
+    \node[state] (U) [right of=V] {U};
+    \node[state] (T) [above=of U] {T};
+
+
+    \draw (Y) -- (X);
+    \draw (X) -- (Z);
+    \draw (Z) -- (Y);
+    \draw (Z) -- (W);
+    \draw (W) -- (X);
+    \draw (S) -- (W);
+    \draw (S) -- (Z);
+    \draw (V) -- (W);
+    \draw (T) -- (V);
+    \draw (V) -- (S);
+    \draw (T) -- (U);
+    \draw (U) -- (T);
+
+
+  \end{tikzpicture}
+\end{figure}
+\noindent
+Una volta aver visitato il primo nodo $s$, dobbiamo entrare dentro la funzione DFS-Visit che ci fa visitare tutti i suoi nodi adiacenti.
+Nella lista di adiacenza di $s$ abbiamo $W$ e $Z$. Visitando per primo $Z$ cadiamo ricorsivamente dentro la funzione DFS-Visit che ci porta a visitare tutti i nodi adiacenti a $Z$.
+Una volta che arriviamo ad un nodo a cui viene completata la lista di adiacenza di nodi non ancora visitati, dobbiamo incrementare $f[u]$ di uno.
+Quindi in questo nostro primo caso passeremo per $Z$ che poi entra in $Y$ che a sua volta entra in $X$ che una volta arrivato lì, l'unico suo nodo adiacente è $Z$ che però è già stato visitato.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+    state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+    
+    \node[state] (W) {W};
+    \node[state] (Z) [above=of W, color=gray] {Z, $2$};
+    \node[state] (Y) [above left=of W, color=black] {Y, $3/6$};
+    \node[state] (S) [above right=of W, color=gray] {S, $1$};
+    \node[state] (X) [below=of Y, color=black] {X, $4/5$};
+    \node[state] (V) [right=of W] {V};    
+    \node[state] (U) [right of=V] {U};
+    \node[state] (T) [above=of U] {T};
+
+
+    \draw (Y) -- (X);
+    \draw (X) -- (Z);
+    \draw (Z) -- (Y);
+    \draw (Z) -- (W);
+    \draw (W) -- (X);
+    \draw (S) -- (W);
+    \draw (S) -- (Z);
+    \draw (V) -- (W);
+    \draw (T) -- (V);
+    \draw (V) -- (S);
+    \draw (T) -- (U);
+    \draw (U) -- (T);
+  \end{tikzpicture}
+\end{figure}
+\noindent
+Tornando a $Z$ dobbiamo ancora visitare le sue liste di adiacenza tra cui $W$. Quindi a tempo $7$ arriviamo in $W$ e a tempo $8$ completiamo la lista di adiacenza di $W$.
+Continuiamo finché non torniamo ad $s$ dove anche lui finisce la sua lista di adiacenza e incrementa il tempo di uno.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+    state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+    
+    \node[state] (W) [color=black] {W, $7/8$};
+    \node[state] (Z) [above=of W, color=black] {Z, $2/9$};
+    \node[state] (Y) [above left=of W, color=black] {Y, $3/6$};
+    \node[state] (S) [above right=of W, color=black] {S, $1/10$};
+    \node[state] (X) [below=of Y, color=black] {X, $4/5$};
+    \node[state] (V) [right=of W] {V};    
+    \node[state] (U) [right of=V] {U};
+    \node[state] (T) [above=of U] {T};
+
+
+    \draw (Y) -- (X);
+    \draw (X) -- (Z);
+    \draw (Z) -- (Y);
+    \draw (Z) -- (W);
+    \draw (W) -- (X);
+    \draw (S) -- (W);
+    \draw (S) -- (Z);
+    \draw (V) -- (W);
+    \draw (T) -- (V);
+    \draw (V) -- (S);
+    \draw (T) -- (U);
+    \draw (U) -- (T);
+  \end{tikzpicture}
+\end{figure}
+Ora che abbiamo finito con questa prima iterazione, dobbiamo andare avanti con i nodi bianchi rimasti, supponiamo di trovare $T$ come prossimo nodo.
+Facciamo lo stesso procedimento per quest'ultima iterazione e otterremo un grafo del genere:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+    state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+    
+    \node[state] (W) [color=black] {W, $7/8$};
+    \node[state] (Z) [above=of W, color=black] {Z, $2/9$};
+    \node[state] (Y) [above left=of W, color=black] {Y, $3/6$};
+    \node[state] (S) [above right=of W, color=black] {S, $1/10$};
+    \node[state] (X) [below=of Y, color=black] {X, $4/5$};
+    \node[state] (V) [right=of W, color=black] {V, $12/13$};    
+    \node[state] (U) [right of=V, color=black] {U, $14/15$};
+    \node[state] (T) [above=of U, color=black] {T, $11/16$};
+
+
+    \draw (Y) -- (X);
+    \draw (X) -- (Z);
+    \draw (Z) -- (Y);
+    \draw (Z) -- (W);
+    \draw (W) -- (X);
+    \draw (S) -- (W);
+    \draw (S) -- (Z);
+    \draw (V) -- (W);
+    \draw (T) -- (V);
+    \draw (V) -- (S);
+    \draw (T) -- (U);
+    \draw (U) -- (T);
+  \end{tikzpicture}
+\end{figure}
+In questa maniera abbiamo ottenuto due alberi, uno per ogni componente connessa.
+}
+\noindent
+Tuttavia, c'era un modo migliore per scegliere un nodo iniziale da cui partire e ottenere un albero singolo?
+Se fossimo partiti dal nodo $T$ nell'esempio precedente avremmo ottenuto un singolo albero.
+\thm{}
+{
+  $\forall$ coppia di nodi $u,v$ gli intevalli sono disgiunti oppure sono uno sottointervallo dell'altro.
+}
+
+\begin{proof}
+  Prendendo $u,v$ ci sono due casi. 
+  \begin{itemize}
+    \item d[u] $<$ d[v]
+    \item d[v] $<$ d[u]
+  \end{itemize}
+  Ipotizziamo che d[u] $<$ d[v] senza perdità di generalità (questo perché dimostrare un caso o un altro è equivalente). 
+  Questo vuol dire che $u$ è stato visitato prima di $v$. 
+  Distinguiamo due casi:
+  \begin{itemize}
+    \item Caso $a$: f[u] $<$ d[v], tuttavia se è così, vuol dire che sono disgiunti. [d[u], f[u]] [d[v]]
+    \item Caso $b$: d[v] $<$ f[u], se invece è così, vuol dire che $v$ è stato visitato prima di $u$ e quindi $[d[v], f[v]] \subseteq [d[u], f[u]]$ e di conseguenza sono sottointervalli.
+  \end{itemize}
+\end{proof}
+
+\thm{
+}
+{
+  In una foresta DFS di un grafo $G$, un nodo $v$ discende da $u$ se e solo se al tempo
+  $d[u]$ v è raggiungibile da $u$ con un cammino di solo nodi bianchi.  
+}
+
 
 \end{document}
