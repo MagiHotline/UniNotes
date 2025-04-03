@@ -85,7 +85,7 @@ public class ChatServer {
                 broadcast(clientName + " has joined the chat!");
 
                 String message;
-                // Legge i messaggi dal client e falli appariresu schermo
+                // Legge i messaggi dal client e falli apparire schermo
                 while ((message = in.readLine()) != null) {
                     broadcast(clientName + ": " + message);
                 }

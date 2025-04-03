@@ -340,11 +340,207 @@ The objectives of this experiment are:
 
 \begin{enumerate}
     \item To display a sinusoidal electrical signal on an oscilloscope and measure its amplitude and frequence
-    \item TO set up a halw-wave rectifier circuit and investigate its operation using the oscilloscope
+    \item To set up a halw-wave rectifier circuit and investigate its operation using the oscilloscope
     \item To set up a full-wave rectifier circuit and investigate its operation using the oscilloscope
 \end{enumerate}
 
+An AC signal when passed through a half wave rectifier will yield the following action:
 
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            domain=0:4*pi,
+            samples=100,
+            xlabel={$t$},
+            ylabel={$V(t)$},
+            axis lines=middle,
+            legend pos=south east,
+            legend style={font=\large},
+            width=10cm,
+            height=6cm,
+            xtick={0,pi,2*pi},
+            xticklabels={$0$,$\pi$,$2\pi$},
+            ytick={-1,0,1},
+            yticklabels={$-1$,$0$,$1$},
+            title={AC Signal and Its Half-Wave Rectification}
+          ]
+          % Plot of the original AC signal: V_in(t) = sin(t)
+          \addplot[blue, thick] {sin(deg(x))};
+          % Plot of the half-wave rectified signal: V_out(t) = sin(t) for sin(t)>=0, 0 otherwise.
+          \addplot[red, thick, domain=0:4*pi] { (sin(deg(x))>0) ? sin(deg(x)) : 0 };
+        \end{axis}
+      \end{tikzpicture}
+\end{figure}
+and so the function displays as follows:
+\[V_{out}(t)=\begin{cases}\sin(t)&\text{if }\sin(t)\ge0\\0&\text{if }\sin(t)<0\end{cases}\]
+
+
+Whereas, a full-wave rectifier would yield the following action:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            domain=0:2*pi,
+            samples=100,
+            xlabel={$t$},
+            ylabel={$V(t)$},
+            axis lines=middle,
+            legend pos=south east,
+            width=10cm, height=6cm,
+            xtick={0,pi,2*pi},
+            xticklabels={$0$,$\pi$,$2\pi$},
+            ytick={-1, 0, 1},
+            yticklabels={$-1$,$0$,$1$},
+            title={AC Signal and Its Full-Wave Rectification}
+          ]
+          % Plot of the original AC signal: V_in(t) = sin(t)
+          \addplot[blue, thick] {sin(deg(x))};
+          \addlegendentry{$V_{in}(t) = \sin(t)$};
+          
+          % Plot of the rectified signal: V_out(t) = |sin(t)|
+          \addplot[red, thick] {abs(sin(deg(x)))};
+          \addlegendentry{$V_{out}(t) = |\sin(t)|$};
+        \end{axis}
+      \end{tikzpicture}
+
+\end{figure}
+\noindent
+This signal may also be further smoothed using a capacitor on the output.
+
+
+\subsection{Procedure}
+
+As in lab manual.
+
+\subsection{Tools}
+
+\begin{itemize}
+    \item Oscilloscope
+    \item Breadboard
+    \item Resistor (1 k$\Omega$)
+    \item Diode 
+    \item AC Power Supply
+\end{itemize}
+
+\subsection{Determing the frequency of the AC Power Supply}
+
+\begin{itemize}
+    \item Set the AC Power supply to output an AC Voltage of 5 volts.
+    \item Connect an appropriate lead to CH-1 of the oscilloscope.
+    \item Connect the croc-clip of the coaxial cable across the resistor in the circuit.
+    \item We measured: 24 volts for \textbf{peak-to-peak voltage} and 50 Hz for \textbf{frequency}. The peak amplitude was 12 volts.
+    \[Volts/Div = 5v \; \; \; \; \; Time/Div = 10ms\]
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            domain=0:20, % Time in milliseconds
+            samples=200,
+            xlabel={$t$ (ms)},
+            ylabel={$V(t)$ (V)},
+            axis lines=middle,
+            legend pos=north east,
+            legend style={font=\large},
+            width=12cm,
+            height=6cm,
+            xtick={0,5,10,15,20},
+            xticklabels={$0$,$5$,$10$,$15$,$20$},
+            ytick={-12, 0, 12},
+            yticklabels={$-12$,$0$,$12$},
+            title={Sine Wave: 50 Hz, 12V Amplitude}
+          ]
+          % Plot of the sine wave: V(t) = 12 sin(2π(50)t)
+          \addplot[blue, thick] {12 * sin(deg(2 * pi * 50 * x / 1000))};
+          \addlegendentry{$V(t) = 12 \sin(2\pi \cdot 50 \cdot t)$};
+        \end{axis}
+      \end{tikzpicture}
+\end{figure}
+
+\subsection{Half-wave rectifier}
+
+\begin{itemize}
+    \item Modify the circuit to include a half-wave rectifier.
+    \item Set the AC Power supply to output an AC Voltage of 5 volts.
+    \item Connect an appropriate lead to CH-1 of the oscilloscope.
+    \item Connect the croc-clip of the coaxial cable across the resistor in the circuit.
+    \item We measured: 6.40 volts for \textbf{peak voltage} and 49.80 Hz for \textbf{frequency}.
+    \[Volts/Div = 2v \; \; \; \; \; Time/Div = 10ms\]
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            domain=0:40, % Time in milliseconds
+            samples=300,
+            xlabel={$t$ (ms)},
+            ylabel={$V(t)$ (V)},
+            axis lines=middle,
+            legend pos=north east,
+            legend style={font=\large},
+            width=12cm,
+            height=6cm,
+            xtick={0,5,10,15,20},
+            xticklabels={$0$,$5$,$10$,$15$,$20$},
+            ytick={-12, 0, 12},
+            yticklabels={$-12$,$0$,$12$},
+            title={Sine Wave: 50 Hz, 12V Amplitude}
+          ]
+          % Plot of the sine wave: V(t) = 12 sin(2π(50)t)
+          \addplot[red, thick] { 6.40 * sin(deg(2 * pi * 49.90 * x / 1000))>0 ? 6.40 * sin(deg(2 * pi * 49.90 * x / 1000)) : 0 };
+        \end{axis}
+      \end{tikzpicture}
+\end{figure}
+
+\subsection{Full-wave rectifier}
+
+\begin{itemize}
+    \item Modify the circuits to include a full-wave rectifier.
+    \item Set the AC Power supply to output an AC Voltage of 5 volts.
+    \item Connect an appropriate lead to CH-1 of the oscilloscope.
+    \item Connect the croc-clip of the coaxial cable across the resistor in the circuit.
+    \item We measured: 2.56 volts for \textbf{peak voltage} and 100 Hz for \textbf{frequency}. 
+    \[Volts/Div = 2v \; \; \; \; \; Time/Div = 10ms\]
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            domain=0:4*pi,
+            samples=100,
+            xlabel={$t$},
+            ylabel={$V(t)$},
+            axis lines=middle,
+            legend pos=south east,
+            width=10cm, height=6cm,
+            xtick={0,pi,2*pi},
+            xticklabels={$0$,$\pi$,$2\pi$},
+            ytick={-1, 0, 1},
+            yticklabels={$-1$,$0$,$1$},
+            title={AC Signal and Its Full-Wave Rectification}
+          ]
+          
+          % Plot of the rectified signal: V_out(t) = |sin(t)|
+          \addplot[red, thick] {abs(2.56 * sin(deg(2 * pi * 100 * x / 1000)))};
+        \end{axis}
+      \end{tikzpicture}
+
+\end{figure}
+
+\subsection{Questions}
+
+\begin{enumerate}
+    \item \textbf{What are the main sources of error in this experiment?} The main sources of error in this experiment could be due to the accuracy of the oscilloscope measurements, the precision of the resistor values, and any noise or interference in the AC power supply.
+    \item \textbf{What features of the oscilloscope make it an extremely useful form of voltmeter?} The oscilloscope is extremely useful because it can display the waveform of the voltage signal in real-time, allowing for the measurement of both the amplitude and frequency of the signal. 
+    \item \textbf{Explain how you would determine the rms value of an ac signal using the oscilloscope.} To determine the rms value of an AC signal using the oscilloscope, you would measure the peak voltage (Vp) and then calculate the rms value using the formula:
+    \[V_{rms} = \frac{V_{pp}}{\sqrt{2}}\]
+    Sometimes the oscilloscope has a built-in function to directly measure the rms value of the AC signal.
+\end{enumerate}
 
 
 \end{document}
