@@ -9,8 +9,11 @@ public class ChatClient {
 
         try (
                 Socket socket = new Socket(serverAddress, port);
+                // Legge dal sever
                 BufferedReader serverIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                // Scrive sul server
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                // Legge da tastiera
                 BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in))
         ) {
             // Thread che legge constantemente dal server

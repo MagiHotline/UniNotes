@@ -1039,5 +1039,225 @@ $\gamma$ con l'asse delle $x$ allora il parametro arco coincide con l'ascissa $x
     \end{figure}
 }
 
+\pagebreak
+
+\section{Calcolo infinitesimale per funzioni reali a più variabili}
+
+\subsection{Grafico, linee di livello e domini}
+
+\dfn{}
+{
+    Sia $f: A \subset \mathbb{R}^n \mapsto \mathbb{R}$ una funzione a due variabili. Si dice \textbf{grafico} di $f$ l'insieme:
+    \[G_f = \{(x,f(x)) : x \in A\} \subseteq \mathbb{R}^{n+1}\]
+}
+Un altro modo per rappresentare graficamente una funzione reale a più variabili reali è tramite gli insiemi di livello.
+\dfn{}
+{
+    Sia $f: A \subset \mathbb{R}^n \mapsto \mathbb{R}$ una funzione a più variabili. Allora gli insiemi di livello (o ipersuperfici di livello)
+    per una funzione reale di più variabili sono gli insiemi
+    \[x \in \mathbb{R}^n : f(x) = c\]
+    al variare di $c \in \mathbb{R}$.
+}
+Se $n = 2$ si parla di linee di livello alla superficie di equazione $z = f(x,y)$, 
+\[\{(x,y) \in \mathbb{R}^2 : (x,y) \in A\}\]
+mentre se $n = 3$ si parla di superfici di livello alla funzione di tre variabili $f(x,y,z)$.
+\[\{(x,y,z) \in \mathbb{R}^3 : (x,y,z) \in A\}\]
+Le curve di livello rappresentano il luogo dei punti dove $f$ ha valore costante, 
+quindi danno informazioni sulla funzione implicitamente. Ad esempio sono linee che vengono tracciate
+sulle carte topografiche ad indicare luoghi che hanno la stessa altitudine oppure nelle carte delle previsioni del tempo
+ad indicare le isobare, cioè i luoghi che hanno la stessa pressione atmosferica.
+
+\ex{}
+{
+    Sia $f(x,y) = x^2 + y^2$. Questa superficie prende il nome di \textbf{paraboloide}. È una funzione definita su tutto $\mathbb{R}^2$ ed è sempre
+    positiva o nulla. Il paraboloide ha simmetria radiale. 
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                view={10}{10},
+                axis equal,
+                xlabel={$x$},
+                ylabel={$y$},
+                zlabel={$z$},
+                colormap/cool,
+                domain=-2:2,
+                y domain=-2:2,
+                samples=30,
+                samples y=30,
+                mesh/ordering=x varies,
+                z buffer=sort
+              ]
+              \addplot3[
+                surf,
+              ]
+              {x^2 + y^2};
+            \end{axis}
+        \end{tikzpicture}
+    \end{figure}
+}
+\noindent
+Se pensiamo di andare a selezionare la precedente superficie con il piano $y = 0$ otteniamo 
+una parabola di equazione $z = x^2$.
+Naturalmente anche le funzioni a più variabili sono definite all'interno di un dominio naturale che è 
+il pià grande sottoinsieme di $\mathbb{R}^n$ dove ha senso scrivere la $f$. 
+\ex{}
+{
+    Trovare il dominio della seguente funzione: 
+    \[f(x,y) = \sqrt{\tan{xy}}\sin{e^{\sqrt{xy}}}\]
+    Si osserva che la radice quadrata è ben definita se il suo argomento è definito o nullo. 
+    L'esponenziale è ben definito ovunque così come la funzione seno; la funzione tangente invece è ben 
+    definita se il suo argomento è diverso da $\frac{\pi}{2} + k\pi$ con $k \in \mathbb{Z}$. Dunque le condizioni
+    da porre sono:
+    \[
+    \begin{cases}
+        \tan{xy} \ge 0\\
+        xy \neq \frac{\pi}{2} + k\pi, k \in \mathbb{Z}\\
+        xy \ge 0 
+    \end{cases} \Longrightarrow
+    \begin{cases}
+        k\pi \le xy < \frac{\pi}{2} + k\pi, k \in \mathbb{Z}\\
+        xy \neq \frac{\pi}{2} + k\pi, k \in \mathbb{Z}\\
+        xy \ge 0
+    \end{cases}
+    \]
+    Quindi la condizione da porre è:
+    \[k\pi \le xy < \frac{\pi}{2} + k\pi, k \in \mathbb{N}\]
+
+}
+
+\subsection{Limiti e continuità}
+
+\dfn{}
+{
+    Data ua successione $\{x_k\}_{k=1}^{\infty}$ di punti in $\mathbb{R}^n$ e un punto $x_0 \in \mathbb{R}^n$ si dice che:
+    \begin{center}
+        $x_k \rightarrow x_0$ per $k \rightarrow \infty$ se $|x_k - x_0| \rightarrow 0$ per $k \rightarrow \infty$ 
+    \end{center}
+    Si dice \textbf{intorno sferico di centro} $x_0 \in \mathbb{R}^n$ e raggio $r > 0$ l'insieme:
+    \[U_r(x_0) = \{x \in \mathbb{R}^n : |x - x_0| < r\}\]
+    $r$ si dice raggio dell'intorno; $x_0$ si dice centro dell'intorno.
+}
+\dfn{Definizione successionale di limite o limiti per successioni}
+{
+    Sia $f : \mathbb{R}^n \mapsto \mathbb{R}$ definita almeno in un intorno sferico di $x_0 \in \mathbb{R}^n$
+    escluso al più il punto $x_0$ stesso. Sia $L \in \mathbb{R}^*$ dove $\mathbb{R}^* = \mathbb{R} \cup {\pm \infty}$. Allora diremo che:
+    \[\lim_{x \rightarrow x_0} f(x) = L\]
+    \begin{center}
+        $\Updownarrow$\\
+        $\forall \{{x_k}\}_{k=1}^{\infty}$ di punti tale che $x_k \rightarrow x_0$ per $k \rightarrow \infty$ (con $x_k \neq x_0$ per ogni $k$) si ha che $\lim_{k \rightarrow \infty}f(x_k) = L$ 
+    \end{center}
+}
+Più in generale si ha la seguente:
+\dfn{Definizione topologica di limite}
+{
+    Sia $f : \mathbb{R}^n \mapsto \mathbb{R}$ definita almeno in un intorno sferico di $x_0 \in \mathbb{R}^n$ (escluso al più $x_0$ stesso e sia $L \in \mathbb{R}$). Si dice che:
+    \[\lim_{x \rightarrow x_0} f(x) = L\]
+    \begin{center}
+        $\Updownarrow$\\
+        $\forall \varepsilon > 0$, $\exists \delta > 0$ tale che se $0 < |x - x_0| < \delta$ allora $|f(x) - L| < \varepsilon$. 
+    \end{center}
+    Si dice che
+    \[\lim_{x \rightarrow x_0} f(x) = +\infty (- \infty)\]
+    \[\Updownarrow\]
+    \[\forall M > 0, \exists \delta > 0 \text{ tale che se } 0 < |x - x_0| < \delta \text{ allora } f(x) > M \; (f(x) < -M)\]
+}
+\dfn{Continuità}
+{
+    Si dice che $f : \mathbb{R}^n \mapsto \mathbb{R}$ è continua in $x_0$ se 
+    \[\lim_{x \rightarrow x_0} f(x) = f(x_0)\]
+}
+\noindent
+Come conseguenza del teorema sui limiti valgono i teoremi della continuità della somma, del prodotto, del quoziente di funzioni continue (quando hanno senso e il denominatore non si annulla)
+e della composizione di funzioni continue.
+
+\subsection{Analisi delle forme di indeterminazione}
+
+Se $\lim_{x \rightarrow x_0} f(x) = L$ allora significa che $f$ si avvicina a $L$ indefinitamente quando la distanza
+tra $x$ e $x_0$ si avvicina a zero \textit{indipendentemente} da come si avvicina $x$ a $x_0$. Quindi in generale si distinguono due casi:
+
+\begin{itemize}
+    \item Il limite esiste.
+    \item Il limite non esiste.
+\end{itemize}
+\noindent
+Se il limite esiste allora l'esistenza del limite va dimostrata; in particolare, può essere utile passare a coordinate polari.
+Infatti in questo caso, per esempio $n = 2$ si riesce a mettere in evidenza la dipendenza di $f(x,y)$ dalla distanza tra $(x,y)$ e $(0,0)$ attraverso 
+$\rho = \sqrt{x^2 + y^2}$. A questo punto è indispensabile che una volta operata la trasformazione, la $f(\rho, \theta)$ non dipenda più da $\theta$.
+Vale il seguente criterio generale per funzione di due variabili:
+\dfn{Criterio generale}
+{
+    Per dimostrare $f(x,y) \rightarrow L$ se $(x,y) \rightarrow (0,0)$ è sufficiente riuscire a scrivere una maggiorazione del tipo:
+    \[|f(\rho, \theta) - L| \le g(\rho) \; \; \; g(\rho) \rightarrow 0\]
+    L'essenziale è dunque che $g$ non dipenda da $\theta$.
+} 
+\noindent
+Se $(x,y) \rightarrow (x_0, y_0) \neq (0,0)$ il criterio si può ancora applicare con $\rho = \sqrt{(x-x_0)^2  + (y - y_0)^2}$ cioò si pone:
+\[x = x_0 + \rho \cos{\theta}\]
+\[y = y_0 + \rho \sin{\theta}\]
+Naturalmente, non riuscire a dimostrare questa maggioranza \textbf{non significa} che il limite NON esiste.
+Il criterio può essere generalizzato al caso $n$ variabili. 
+\ex{}
+{
+    Si calcoli:
+    \[\lim_{(x,y) \rightarrow (1,0)} \frac{y^2\log{x}}{(x-1)^2 + y^2}\]
+    \begin{itemize}
+        \item Soluzione 1: Ricordiamo che
+        \[f \rightarrow 0 \Longleftrightarrow |f| \rightarrow 0\]
+        A questo punto dunque osservando che $\frac{y^2}{z^2 + y^2} \le 1$ per ogni $(y,z) \in \mathbb{R}^2$:
+        \begin{align*}
+            0 &\le \lim_{(x,y) \rightarrow (1,0)} \frac{y^2|\log{x}|}{(x-1)^2 + y^2}\\
+            &= \lim_{(z,y) \rightarrow (0,0)} \frac{y^2|\log{(z+1)}|}{z^2 + y^2}\\
+            &\le \lim_{(z,y) \rightarrow (0,0)} |\log{(z+1)}| = 0
+        \end{align*}
+        \item Soluzione 2: Si può anche passare a coordinate polari ponendo $x= 1 + \rho \cos{\theta}, y = \rho \sin{\theta}$. Si ottiene 
+        \[\lim_{\rho \rightarrow 0} \frac{\rho^2 \sin^2{\theta} \log{1 + \rho \cos{\theta}}}{\rho^2} = \lim_{\rho \rightarrow 0} \rho \sin^2{\theta}\cos{\theta} = 0\]
+        Poiché $\sin^2{\theta}\cos{\theta}$ è una quantità limitata in modulo da 1.  
+    \end{itemize}
+}
+I limiti possono essere usati anche nello studio della continuità delle funzioni a più variabili.
+\ex{}
+{
+    Data la funzione:
+    \[f(x,y) = \begin{cases}
+        \frac{y^2}{x}\; \; \; \; x \neq 0\\
+        0 \; \; \; \; x = 0
+    \end{cases}\]
+    \begin{enumerate}
+        \item Si stabilisca se $f$ è continua $(0,0)$.
+        \item Si stabilisca se è continua in $D := \{(x,y) \in \mathbb{R}^2 : |y| \le x \le 1\}$
+    \end{enumerate}
+    $(1)$ Per $x \neq 0$ la funzione è continua. Per concludere occorre analizzare la continuità della funzione
+    data lungo la retta $x = 0$. Per fare questo bisogna calcolare il limite per $x \rightarrow 0$ con $y$ qualunque
+    di $f(x,y)$ e verificare se esso è uguale a 0 che è il valore assunto lungo l'asse delle $y$. Questo è falso dato che consideriamo la curva
+    $y = \sqrt{x}$ allora $f(x,y)$ vale constantemente 1 e dunque non può tendere a $0$ al tendere di $x \rightarrow 0$. Dunque la funzione data non è continua in $(0,0)$. \\
+    $(2)$ Usando la condizione imposta dal dominio $D$ si ottiene:
+    \[0 \le \lim_{x \rightarrow 0} \frac{y^2}{x} \le \lim_{x \rightarrow 0} x = 0\]
+    Non dobbiamo considerare i valori assoluti, perché dato il dominio sappiamo sicuramente che $x \ge 0$. 
+    A questo punto il teorema del confronto permette di concludere che il limite considerato esiste e fa $0$, dunque la funzione è continua in $D$.
+    Notiamo tramite questo esempio che una funzione può essere discontinua in un punto mentre una sua restrizione ad un sottoinsieme del dominio,
+    si può escludere un insieme rilevante di curve lungo le quali calcolare i limiti. 
+}
+\noindent
+Per mostrare invece il limite \textbf{non esiste} per $x \rightarrow x_0$ invece, è sufficiente determinare due curve passanti
+per $x_0$ lungo le quali la funzione tende a due limiti diversi. 
+\ex{}
+{
+    Determinare il dominio di definizione della funzione:
+    \[f(x,y) = x^{-1}[\sin^2{x} + y^2]\tan{(e^{x+y})}\]
+    e studiarne il comportamento per $x \rightarrow 0$ e $y \rightarrow 0$.\\
+    Innanzitutto la funzione $\tan{(e^{x+y})}$ è definita per $e^{x+y} \neq \frac{\pi}{2} + k\pi$ con $k \in \mathbb{Z}$. Se $k \in \mathbb{Z}^-$ questo è sicuramente verificato quindi basterà imporre:
+    \[e^{x+y} \neq \frac{\pi}{2} + k\pi \; \; \; \; k \in \mathbb{Z}^+ \cup \{0\}\] 
+    Inoltre il denominatore non deve essere nullo, quindi:
+    \[D := \{(x,y) \in \mathbb{R}^2\; | \; x + y \neq \log{\left(\frac{\pi}{2} + k\pi\right)} \; k \in \mathbb{Z}^+ \cup \{0\} \; \wedge \; x \neq 0\}\]
+    Per quanto riguarda il comportamento per $(x,y) \rightarrow (0,0)$, dimostriamo che il limite:
+    \[\lim_{(x,y) \rightarrow (0,0)} \frac{(sin^2{x} + y^2)\tan{(e^{x+y})}}{x}\]
+    non esiste. A tale scopo basta trovare due curve passanti per l'origine lungo le quali il limite tende a due valori diversi.\\
+    Si ha ad esempio, sulla curva $y = \sqrt{x}$:
+    \[\lim_{x \rightarrow 0} f(x, \sqrt{x}) = \frac{(\sin^2{x} + x)\tan{(e^{x+\sqrt{x}})}}{x} = \tan{1} \]
+    D'altra parte restringiamo sulla curva $y = x$ e calcoliamo il limite:
+    \[\lim_{x \rightarrow 0} f(x,x) = \frac{(\sin^2{x} + x^2)\tan{(e^{2x})}}{x} = \sin{x} + x\]
+    Questo basta per concludere che il limite non esiste.
+}
 
 \end{document}
