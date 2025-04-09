@@ -60,3 +60,5 @@ ex04 = Employee <$> m_name2 <*> m_phone2
 -- ex02 is going to produce the record Nothing
 -- ex03 -> Nothing
 -- ex04 > Just (Simon 087999)
+
+-------------------------------------------------------
