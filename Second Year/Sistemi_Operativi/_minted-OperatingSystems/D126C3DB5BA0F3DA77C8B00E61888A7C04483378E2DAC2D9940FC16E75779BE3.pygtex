@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+cat\PYG{+w}{ }*.txt\PYG{+w}{ }\PYG{p}{|}\PYG{+w}{ }grep\PYG{+w}{ }\PYGZhy{}E\PYG{+w}{ }user1\PYG{+w}{ }\PYG{p}{|}\PYG{+w}{ }user2\PYG{+w}{ }\PYG{p}{|}\PYG{+w}{ }user3\PYG{+w}{ }\PYG{p}{|}\PYG{+w}{ }sort
+\end{Verbatim}

@@ -936,11 +936,204 @@ total 0
 -rwxr-xrwx@ 1 paoloimbriani  staff  0 31 Mar 10:54 red
 \end{minted}
 
+\section{Practical 7 - Unix Part 4}
 
+\begin{itemize}
+    \item Ex1: \texttt{ls $\sim$} allows you to list the contents of your home directory.
+    \item Ex2: \texttt{ls $\sim$/..} allows you to list the contents of the parent directory of your home directory.
+    \item Ex3: \texttt{cd $\sim$/} allows you to change the current directory to your home directory.
+\end{itemize}
+\textcolor{green!50!black}{
+    Ex4: Using the above method create another file called list 2 containing the following fruit:
+orange, plum, mango, grapefruit. List the contents of list 2.
+}
+\begin{minted}{bash}
+-> Desktop cat > list2.txt
+orange
+plum
+grapefruit
+-> Desktop cat list2.txt
+orange
+plum
+grapefruit
+\end{minted}
+\noindent
+Ex5: if you do \texttt{cat >> file} and the file doesn't exist it will be created at command time.\\
+Ex6: If you do \texttt{cat >> file} and then type some text, it will append the text in the file.
+Ex7:
+Using pipes, display all lines of list1 and list2 containing the letter ‘p’ and sort the
+result.
+\begin{minted}{bash}
+cat list1.txt list2.txt | grep p | sort
+\end{minted}
+\noindent
+Ex8: 
+Using pipes and filters search all files ending in *.txt in your linuxstuff directory that
+contain the names of ALL other users in your class currently logged in. Output the
+results in ascending order to Standard Output.
+\begin{minted}{bash}
+cat *.txt | grep -E user1 | user2 | user3 | sort
+\end{minted}
+\noindent
+Exercises:
 
+\begin{enumerate}
+\item \texttt{ls linuxstuff/backups}\\
+  Lists the contents of the \texttt{backups} directory inside the \texttt{linuxstuff} directory.
 
+\item \texttt{ls \~{}/linuxstuff}\\
+  Lists the contents of the \texttt{linuxstuff} directory inside the current user's home directory.
 
+\item \texttt{ls $\sim${}}\\
+  Lists the contents of the current user's home directory.
 
+\item \texttt{ls $\sim$/..}\\
+  Lists the contents of the parent directory of the user's home directory.
+
+\item \texttt{cat > list1 \dots \^{}D}\\
+  Creates a new file named \texttt{list1} and allows the user to type input into it. Pressing \texttt{Ctrl+D} (\^{}D) ends input.
+
+\item \texttt{cat >> list1 \dots \^{}D}\\
+  Appends typed input to the existing file \texttt{list1}. Again, \texttt{Ctrl+D} is used to end input.
+
+\item \texttt{cat list1}\\
+  Displays the contents of the file \texttt{list1}.
+
+\item \texttt{cat list1 list2 > biglist}\\
+  Concatenates the contents of \texttt{list1} and \texttt{list2} and stores the result in a new file called \texttt{biglist}.
+
+\item \texttt{sort \dots \^{}D}\\
+  Sorts lines of text typed by the user. Input ends with \texttt{Ctrl+D}.
+
+\item \texttt{sort < biglist}\\
+  Sorts the contents of \texttt{biglist} and outputs the result to the screen.
+
+\item \texttt{sort < biglist > slist}\\
+  Sorts the contents of \texttt{biglist} and saves the sorted output to \texttt{slist}.
+
+\item \texttt{ls list*}\\
+  Lists all files beginning with \texttt{list}.
+
+\item \texttt{ls *list}\\
+  Lists all files ending with \texttt{list}.
+
+\item \texttt{ls ?list}\\
+  Lists all files with a single character before \texttt{list} (e.g., \texttt{alist}, \texttt{blist}).
+
+\item \texttt{who}\\
+  Shows a list of users currently logged into the system.
+
+\item \texttt{who > names.txt}\\
+  Saves the output of the \texttt{who} command into \texttt{names.txt}.
+
+\item \texttt{sort < names.txt}\\
+  Sorts the contents of \texttt{names.txt}.
+
+\item \texttt{who | sort}\\
+  Pipes the output of \texttt{who} into \texttt{sort}, displaying a sorted list of logged-in users.
+
+\item \texttt{who | wc -l}\\
+  Counts the number of users currently logged in (outputs only the number).
+
+\item \texttt{grep 'orange' list2}\\
+  Searches for the string \texttt{orange} in \texttt{list2} and displays matching lines.
+
+\item \texttt{grep '\^{}grape' list2}\\
+  Finds lines that start with \texttt{grape} in \texttt{list2}.
+
+\item \texttt{grep 'grape\$' list2}\\
+  Finds lines that end with \texttt{grape} in \texttt{list2}.
+\end{enumerate}
+\noindent
+\textbf{Note on \texttt{$\sim$} and \texttt{/} in Directory Paths}
+\begin{itemize}
+\item \texttt{\~{}} (tilde) is a shortcut for the current user's home directory. For example, \texttt{\~{}/documents} refers to \texttt{/home/username/documents}.
+\item \texttt{/} is the root directory in the Linux file system. All directories and files are organized under this top-level directory. For example, \texttt{/etc} is an absolute path starting from the root.
+\end{itemize}
+
+\section{Practical 9 - Java Threads}
+
+\textcolor{green!50!black}{
+\begin{enumerate}
+    \item Create an Eclipse Java Project to use this program and run the software 10 times, each time copying and pasting your results into a word processor file.   Label this set of 10 results clearly with the heading Threading Program 1.1.
+    Do you see much variation on your results from one run to the next?  Explain what conclusions you come to.  
+    \item If possible, repeat the exercise above with computers that are single core, dual
+     core and quad core. Is there a difference in how these machines perform?
+    \item Replace the lines with thread.start() with threads.run(). 
+Does your software still run?
+If it does, what difference do you see?
+\end{enumerate}
+}
+\begin{itemize}
+    \item The more I execute the program, the more I see that the results are not consistent. The time to execute and the results varies from run to run.
+    \item If I substitute \texttt{thread.start()} with \texttt{thread.run()}, the program will not run as a separate thread. Instead, it will execute the \texttt{run()} method in the main thread, leading to sequential execution (with so having predictable executions) rather than concurrent execution.
+\end{itemize}
+
+\textcolor{green!50!black}{
+1.2 Alternative code for the run method of the PrintNum class:
+}
+\begin{minted}
+{java}
+ @Override /** Tell the thread how to run */
+  public void run() {
+	Thread thread4 = new Thread(
+			new PrintChar('c', 40));
+	thread4.start();
+	
+	try{
+		for (int i = 1; i <= lastNum; i++) {
+			System.out.print(" " + i);
+			if (i == 50)
+				thread4.join();
+		}
+	}
+	catch(InterruptedException ex){
+	}
+  }
+\end{minted}
+\noindent
+With this version, the results are consistent. The \texttt{PrintNum} thread will print numbers from 1 to 50, and the \texttt{PrintChar} thread will print 'c' 40 times. The \texttt{thread4.join()} method ensures that the main thread waits for the \texttt{PrintChar} thread to finish before continuing.\\
+\textcolor{green!50!black}{
+1.3 Alternative code for the run method of the PrintNum class:
+}
+\begin{minted}{java}
+@Override /** Tell the thread how to run */
+public void run() {
+    for (int i = 1; i <= lastNum; i++) {
+        System.out.print(" " + i);
+        Thread.yield();
+    }
+}    
+\end{minted}
+\noindent   
+This time with the yield method, it doesn't vary anymore and the results are consistent. The \texttt{Thread.yield()} method suggests to the thread scheduler that the current thread is willing to yield its current use of the CPU. 
+Now we try yet another alternative code for the run method of the PrintNum class:
+\begin{minted}{java}
+public void run() {	
+	try{
+		for (int i = 1; i <= lastNum; i++) {
+			System.out.print(" " + i);
+			if (i >= 50)
+				Thread.sleep(1);
+		}
+	}
+	catch(InterruptedException ex){
+	}
+  }   
+\end{minted}
+With this version, we introduce the \texttt{Thread.sleep()} method, which in the first example pauses the thread for 1 millisecond after printing numbers up to 50. The results are still consistent, but the execution time may vary slightly due to the sleep duration. In fact:
+\begin{itemize}
+    \item 1 ms sleep is not enough to see a significant difference in execution time.
+    \item trying to increase the sleep time to 10 ms or more will show a more noticeable difference in execution time. After the 50th number you can see the printing of the numbers.
+\end{itemize}
+Now trying to change the priority inserting this code:
+\begin{minted}{bash}
+thread1.start();
+thread2.start();
+thread3.setPriority(Thread.MAX_PRIORITY);
+thread3.start();    
+\end{minted}
+We can notice the change in the execution. In fact, the program will try to give more CPU time to the thread with the highest priority, which is \texttt{thread3}. This can lead to a more consistent execution time for that thread, but it may also starve other threads of CPU time, especially if they have lower priority.\\
 
 \end{document}
 

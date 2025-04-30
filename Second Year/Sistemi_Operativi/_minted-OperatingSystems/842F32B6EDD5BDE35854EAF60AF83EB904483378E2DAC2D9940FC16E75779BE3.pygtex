@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+cat\PYG{+w}{ }list1.txt\PYG{+w}{ }list2.txt\PYG{+w}{ }\PYG{p}{|}\PYG{+w}{ }grep\PYG{+w}{ }p\PYG{+w}{ }\PYG{p}{|}\PYG{+w}{ }sort
+\end{Verbatim}

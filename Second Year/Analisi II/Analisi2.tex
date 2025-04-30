@@ -26,7 +26,6 @@
 \usepackage{fancyhdr}
 
 
-
 \begin{document}
 
 \pagestyle{fancy}
@@ -1258,6 +1257,186 @@ per $x_0$ lungo le quali la funzione tende a due limiti diversi.
     D'altra parte restringiamo sulla curva $y = x$ e calcoliamo il limite:
     \[\lim_{x \rightarrow 0} f(x,x) = \frac{(\sin^2{x} + x^2)\tan{(e^{2x})}}{x} = \sin{x} + x\]
     Questo basta per concludere che il limite non esiste.
+}
+
+\section{Calcolo differenziale per funzioni reali a più variabili}
+
+\subsection{Nozioni topologiche di base}
+
+Si ricordi la definizione di intorno sferico già introdotto precedentemente (3.3).
+\dfn{}
+{
+    Sia $E \subseteq \mathbb{R}^n$. Un punto $x_0 \in E$ si dice: 
+    \begin{itemize}
+        \item \textbf{interno} ad $E$ se $\exists U_r(x_0) \subseteq E$
+        \item \textbf{esterno} ad $E$ se $\exists U_r(x_0) \subseteq \mathbb{R}^n \backslash E$
+        \item \textbf{di frontiera} per $E$ se $\forall U_r(x_0), U_r(x_0) \cap E \neq \emptyset$ e $U_r(x_0) \cap (\mathbb{R}^n \backslash E) \neq \emptyset$
+    \end{itemize} 
+}
+\dfn{}
+{
+    Un insieme $E \subseteq \mathbb{R}^n$ si dice \textbf{aperto} se ogni suo punto è interno all'insieme;
+    si dice \textbf{chiuso} se il complementare è aperto. 
+}
+\noindent
+L'unione di una famiglia qualsiasi (anche infinita) di aperti e l'intersezione di una famiglia finita di aperti sono aperti.
+L'unione finita di chiusi e l'intersezione qualsiasi (anche infinita) di chiusi è ancora un chiuso.
+Non è difficile rendersi conto che l'unione qualsiasi di due chiusi può non essere un chiuso e l'unione qualsiasi di due aperti può non essere un aperto.
+Sia $f : \mathbb{R}^n \mapsto \mathbb{R}$ una funzione definita e continua in tutto $\mathbb{R}^n$. Allora gli insiemi:
+\[\{x \in \mathbb{R}^n : f(x) > 0\}\]
+\[\{x \in \mathbb{R}^n : f(x) < 0\}\]
+\[\{x \in \mathbb{R}^n : f(x) \neq 0\}\]
+sono insieme aperti; invece:
+\[\{x \in \mathbb{R}^n : f(x) \ge 0\}\]
+\[\{x \in \mathbb{R}^n : f(x) \le 0\}\]
+\[\{x \in \mathbb{R}^n : f(x) = 0\}\]
+sono chiusi.
+\ex{}
+{
+    Gli insiemi di livello di una funzione $f(x,y)$ sono insiemi del tipo $f(x,y) = C$ e quindi sono chiusi se $f$ è continua!
+}
+
+\subsection{Derivate parziali, derivabilità e piano tangente}
+
+Come abbiamo imparato da Analisi 1, la derivata di una funzione in un punto ha un interessante significato geometrico: essa rappresenta la pendenza della retta tangente al grafico della funzione in quel punto.
+inoltre la funzione è derivabile se e soltanto se è ben definita la retta tangente in quel punto.
+Cercheremo ora di estendere questo concetto a funzioni a più variabili.
+Innanzitutto la definizione di derivata per una funzione a più variabili vista come limite del rapporto incrementale non è più applicabile, 
+intanto non è ovvio che cosa sia un incremento in più dimensioni e secondariamente anche se si arrivasse ad una definzione accettabile, non si sa cosa voglia dire dividere per un vettore (la controparte di $h$ nella definizone scalare di derivata).
+La presenza di più variabili richiede di considerare le derivate parziali, che sono le derivate rispetto ad una variabile tenendo fisse le altre.
+\dfn{}
+{
+    Sia $f : A \subseteq \mathbb{R}^2 \mapsto \mathbb{R}^n$ una funzione di due variabili. La quantità (se esiste):
+    \[\frac{\partial f}{\partial x}(x_0, y_0) \lim_{h \rightarrow 0} \frac{f(x_0 + h, y_0) + f(x_0, y_0)}{h}\]
+    si chiama derivata parziale rispetto ad $x$. calcolata nel punto $(x_0, y_0)$. Analogamente sarà lo stesso per $y$.  
+}
+\dfn{}
+{
+    Il vettore che ha come componenti le derivate parziali di $f$ rispetto a $x$ e $y$ si chiama \textbf{gradiente} di $f$ e si indica con:
+    \[\nabla f(x,y) = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}\right)\]
+}
+\dfn{}
+{
+    Una funzione $f : A \subseteq \mathbb{R}^2 \mapsto \mathbb{R}$ si dice \textbf{derivabile} in un punto $(x_0, y_0) \in A$ se esiste in quel punto esistono tutte le derivate parziali; $f$ si dice derivaibile in tutto $A$ 
+    se è derivabile in ogni punto di $A$.
+}
+\noindent
+In alcuni casi, quando si applicano le derivate parziali ci si può ricondurre alle regole di derivazione che si possono usare per funzioni a singola variabili trattendo le altre variabili come costanti.
+Ma in alcuni casi non è possibile e bisogna ricondurci alla definizione di rapporto incrementale.
+\ex{}
+{
+    Sia $f(x,y) = y\sqrt{x}$. Calcolare se esiste la derivata parziale rispetto a $x$ in $(0,0)$.
+    Si avrebbe:
+    \[\frac{\partial f}{\partial x} (x,y) = \frac{y}{2\sqrt{x}} = \frac{0}{0}\]
+    ci troviamo davanti ad una forma di indecisione che potrebbe farci pensare che la derivata non esista. L'unica via percorribile è quella di calcolare il limite:
+    \[\frac{\partial f}{\partial x}(0,0) = \lim_{h \rightarrow 0} \frac{f(h,0) - f(0,0)}{h} = \lim_{h \rightarrow 0} \frac{0 - 0}{h} = 0\]
+    Osserviamo come il limite esista e sia uguale a $0$. Contrariamente da quello che si possa pensare $0/h$ non è una forma di indecisione perché al numeratore si ha uno zero "secco" mentre al denominatore troviamo $h$
+    che è una quantità che almeno prima del processo del limite è \textit{diverso da zero}. Detto ciò la quantità $\frac{0}{h}$ è sempre 0 e quindi dopo il passaggio al limite non si ha nessun problema.
+}
+\ex{}
+{
+    Sia $f$: 
+    \[f(x,y) = \begin{cases}
+        x^2 + y^2 \; \; \; \; (x,y) \neq (0,0)\\
+        1 \; \; \; \; \; \; \;  \; \; \; \; \; \;  \; (x,y) = (0,0)
+    \end{cases}\]
+    Calcolare (se esiste) $f_x(0,0)$.\\
+    Un errore grave e molto comune è dire: $f$ in $(0,0)$ vale $1$ e quindi la derivata parziale rispetto a $x$ vale $0$.
+    Questo ragionamento è errato perché non si può calcolare la derivata parziale in un punto se non si conosce il comportamento della funzione in un intorno di quel punto.
+    Dunque calcoliamo il limite:
+    \[\frac{\partial f}{\partial x}(0,0) = \lim_{h \rightarrow 0} \frac{f(h,0) - f(0,0)}{h} = \lim_{h \rightarrow 0} \frac{h^2 + 0^2 - 1}{h} = \lim_{h \rightarrow 0} \frac{h^2 - 1}{h}\]
+    E quest'ultimo limite non esiste perché se si fa il passaggio al limite si ottiene $-\infty$ se $h \rightarrow 0^+$ e $+\infty$ se $h \rightarrow 0^-$. Dunque 
+    la derivata parziale di $f$ in $(0,0)$ non esiste e dunque $f$ non è derivabile nella direzione dell'asse delle $x$.
+}
+\noindent
+Intuitivamente si poteva ragionare anche in questo modo: la funzione dell'esempio precedente non è continua quindi ci si aspetta che non sia derivabile.
+Tuttavia non è sempre così, ci sono funzioni che sono continue ma non derivabili in un punto. Quindi il comportamento di funzioni a due variabili assume situazioni che non hanno una controparte in una dimensione.
+\ex{}
+{
+    Sia $f$ la funzione di due variabili definita da: 
+    \[f(x,y) = \begin{cases}
+        \frac{xy}{x^2 + y^2} \; \; \; \; (x,y) \neq (0,0)\\
+        0 \; \; \; \; \; \; \;  \; \; \; \; \; (x,y) = (0,0)
+    \end{cases}\]
+    Calcolare le derivate parziali in $(0,0)$. Per lo stesso motivo dell'esempio precedente, utilizziamo la definizione di derivata parziale in un altro punto. Si ha:
+    \[\frac{\partial f}{\partial x} (0,0) = \lim_{h \rightarrow 0} \frac{f(0 + h, 0) + f(0,0)}{h} = 0\]
+    \[\frac{\partial f}{\partial y} (0,0) = \lim_{h \rightarrow 0} \frac{f(0, 0 + h) + f(0,0)}{h} = 0\]
+    Quindi le derivate parziali in $(0,0)$ esistono e sono uguali a $0$.\\
+    D'altra parte è facile notare che la funzione non è continua in $(0,0)$ perché basta prendere la retta $y = x$ lungo la quale $f$ vale $1/2$ e quindi abbiamo trovato un esempio di funzione
+    che \textit{è derivabile ma non continua} in un punto.
+}
+
+\subsection{Piano tangente}
+
+In una dimensione sappiamo che la derivabilità è equivalente all'esistenza della retta tangente a una superficie. 
+Ci poniamo il problema di estendere questo concetto a più variabili, quindi di vedere se esiste il piano tangente. È intuitivo pensare che se tale piano esiste,
+deve essere "tangente" alla funzione in quel punto e quindi "approssimare" almeno localmente la funzione a cui è tangente (per esempio $y = \sin{x}$ per $x$ vicino a 0 è approssimata dalla sua retta tangente $y=x$ e infatti si ha che $\sin{x} \sim x$ se $x \rightarrow 0$).
+Facciamo il seguente ragionamento: supponiamo di avere la nostra superficie $z = f(x,y)$ e consideriamo il piano verticale $y = y_0$; sezioniamo la superficie con il piano: troveremo la curva data da $z = f(x,y_0)$ (con $y = y_0$ perché una curva in $\mathbb{R}^3$ è sempre individuata da due equazioni). 
+È facile immaginare che la retta tangente a tale curva, chiamiamola $r_1$, apparterrà al piano tangente che stiamo considerando. Analogamente,
+se sezioniamo la superficie con il piano verticale $x = x_0$ troveremo una curva individuata dalle equazioni $x = x_0$ e $z = f(x_0,y)$; la retta tangente a questa curva, chiamiamola $r_2$, apparterrà al piano tangente che stiamo considerando.
+Quindi quali sono le equazioni di $r_1$ e $r_2$? Tenendo conto che le curve sono funzioni di una sola variabile e che la derivata (parziale) nel punto coincide 
+con il coefficiente angolare della retta tangente si avrà:
+\[
+r_1 \begin{cases}
+    z = f(x_0,y_0) + \frac{\partial f}{\partial x}(x_0,y_0)(x - x_0)\\
+    y = y_0
+\end{cases}
+\]
+\[
+r_2 \begin{cases}
+    z = f(x_0,y_0) + \frac{\partial f}{\partial y}(x_0,y_0)(y - y_0)\\
+    x = x_0
+    \end{cases}
+\]
+quindi il piano che coincide entrambe le rette sarà:
+\begin{equation}
+    z = f(x_0,y_0) + \frac{\partial f}{\partial x}(x_0,y_0)(x - x_0) + \frac{\partial f}{\partial y}(x_0,y_0)(y - y_0)
+\end{equation}
+La domanda che ci facciamo è la seguente: siamo sicuri che questo piano così come l'abbiamo costruito partendo da un ragionamento intuitivo 
+sia effettivamente tangente alla nostra superficie nel senso di approssimarla localmente? La risposta purtroppo è negativa come mostra il prossimo esempio:
+\ex{}
+{
+    Sia $f$ la funzione di due variabili definita da: 
+    \[f(x,y) = \begin{cases}
+        \frac{xy}{x^2 + y^2} \; \; \; \; (x,y) \neq (0,0)\\
+        0 \; \; \; \; \; \; \;  \; \; \; \; \; (x,y) = (0,0)
+    \end{cases}\]
+    Abbiamo visto prima come calcolare le derivate parziali in $(0,0)$ e che esse sono uguali a $0$, dunque il presunto 
+    piano tangente coincide con il piano $z = 0$ cioè il piano orizzontale $xy$. Ma come abbiamo già rimarcato la funzione
+    non è continua nell'origine, addirittura lungo la bisettrice $y = x$ la funzione vale $1/2$ e quindi non è possibile
+    che il piano $z = 0$ non sia tangente alla funzione data nel senso che non approssima la funzione localmente. 
+    Quindi la derivabilità non è sufficiente per garantire l'esistenza del piano tangente nè la continuità.
+}
+
+\subsection{Differenziabilità}
+
+Se una funzione $f$ è differenziabile accadrà che \textit{l'incremento di $f$ sarà uguale all'incremento calcolato 
+lungo il piano tangente più un infinitesimo di ordine superiore rispetto alla lunghezza dell'incremento (h,k)} della variabili indipendentemente.
+In simboli:
+\begin{equation}
+    \underbrace{f(x_0 + h, y_0 + k) - f(x_0,y_0)}_{\text{incremento di $f$}} = \underbrace{\frac{\partial f}{\partial x} (x_0,y_0) \overbrace{h}^{(x-x_0)} + \frac{\partial f}{\partial x}(x_0, y_0) \overbrace{k}^{(y-y_0)}}_{\text{incremento calcolato lungo il piano tangente}} + \underbrace{o(\sqrt{h^2 + k^2})}_{\text{infinitesimo di ordine superiore}}
+\end{equation}
+\noindent
+dove per definizione $o(\sqrt{h^2 + k^2})$ è tale che:
+\[\lim_{(h,k) \rightarrow (0,0)} \frac{o(\sqrt{h^2 + k^2})}{\sqrt{h^2 + k^2}} = 0\]
+
+\dfn{}
+{
+    Se vale (4.4.1) allora diremo che $f$ è \textbf{differenziabile} in $(x_0,y_0)$.
+}
+\noindent
+Se $f$ è \textbf{differenziabile} in $(x_0,y_0)$ allora è $f$ è derivabile in $(x_0,y_0)$ e continua in $(x_0,y_0)$.
+Ricordiamo ancora che se $f$ è continua non implica che $f$ differenziabile. 
+\dfn{}
+{
+    Se $f$ è differenziabile in $(x_0,y_0)$, si dice \textbf{differenziale} di $f$ in $(x_0,y_0)$ l'applicazione lineare di $df(x_0,y_0) : \mathbb{R}^2 \mapsto \mathbb{R}$ definita da $df(x_0,y_0) : (h,k) \mapsto \nabla f(x_0,y_0) \cdot (h,k)$
+}
+La quantità $\nabla f(x_0,y_0) \cdot (h,k)$ rappresenta l'incremento della funzione nel passare da $(x_0,y_0)$ a $(x_0 + h, y_0 + k)$ lungo il piano tangente di $f$ in $(x_0,y_0)$.
+\thm{}
+{
+    Siano $f : A \subseteq \mathbb{R}^2 \mapsto \mathbb{R}$ con $A$ aperto e $(x_0,y_0) \in A$. Supponiamo che le derivate parziali esistano in un intorno di $(x_0,y_0)$ e siano continue in $(x_0,y_0)$. Allora $f$ è differenziabile in $(x_0,y_0)$ e in particolare,
+    se le derivate parziali di $f$ esistono e sono continue in $A$ allora $f$ è differenziabile in ogni punto di $A$. Quindi vale l'implicazione:
+    \[f \in \mathcal{C}^1 \Longrightarrow f \text{ differenziabile in } A\]
 }
 
 \end{document}

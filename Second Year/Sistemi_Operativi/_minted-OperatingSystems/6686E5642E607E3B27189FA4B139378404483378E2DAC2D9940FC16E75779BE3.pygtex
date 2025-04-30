@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+thread1.start\PYG{o}{()}\PYG{p}{;}
+thread2.start\PYG{o}{()}\PYG{p}{;}
+thread3.setPriority\PYG{o}{(}Thread.MAX\PYGZus{}PRIORITY\PYG{o}{)}\PYG{p}{;}
+thread3.start\PYG{o}{()}\PYG{p}{;}
+\end{Verbatim}

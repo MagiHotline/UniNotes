@@ -1,0 +1,3 @@
+[submodule "Second Year/Quantum/BB84Protocol"]
+	path = Second Year/Quantum/BB84Protocol
+	url = https://github.com/MagiHotline/BB84Protocol.git
