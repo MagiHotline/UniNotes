@@ -41,7 +41,7 @@ inc xs = [x+1 | x <- xs]
 
 
 squares :: Num a => [a] -> [a]
-squares xs = [x | x <- xs]
+squares xs = [x*x | x <- xs]
 
 evens :: [Int] -> [Int]
 evens xs = [x | x <- xs, even x]
@@ -58,7 +58,7 @@ qsort [] = []
 -- qsort (n:ns) = qsort (smaller n ns) ++ [n] ++ qsort (larger n ns)
 
 data Result a = Succeed a | Fail deriving (Eq, Show)
-{-
+
 instance Functor Result where
 fmap f (Succeed x) = Succeed (f x)
 fmap _ _ = Fail
@@ -72,7 +72,7 @@ instance Monad where
 return = Succeed
 Succeed x >>= f = f x
 Fail >>= _ = Fail
--}
+
 
 divides :: Int -> Int -> Bool
 divides n m = n `mod` m == 0
