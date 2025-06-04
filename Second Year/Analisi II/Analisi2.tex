@@ -1439,4 +1439,105 @@ La quantità $\nabla f(x_0,y_0) \cdot (h,k)$ rappresenta l'incremento della funz
     \[f \in \mathcal{C}^1 \Longrightarrow f \text{ differenziabile in } A\]
 }
 
+\section{Recupera sezione}
+
+\pagebreak
+
+\section{Calcolo differenziale per funzioni di più variabili a valori vettoriali}
+
+Abbiamo visto che un modo per rappresentare una curva nel piano o nello spazio è darla in forma parametrica,
+ovvero dare una funzione $f : I \subseteq{\mathbb{R} \rightarrow \mathbb{R}^2}$ oppure $f \subseteq \mathbb{R} \rightarrow \mathbb{R}^3$
+tale che il sostegno della curva sia rappresentato dai punti $(x(t), y(t))$ o $(x(t), y(t), z(t))$, dipendenti
+da un parametro $t$. \\
+Cosa accade per le superfici? Per le superfici abbiamo le seguenti modalità di rappresentazione: 
+\begin{itemize}
+    \item rappresentazione in forma \textit{implicita} $f(x,y,z) = 0$;
+    \item rappresentazione in forma \textit{esplicita} o in forma di grafico $z = g(x,y)$;
+    \item rappresentazione in forma parametrica $(u,v) \mapsto (x(u,v), y(u,v), z(u,v))$.
+\end{itemize}
+Quindi riguardo alla rappresentazione parametrica di superfici, le tre coordinate di un punto mobile
+sulla superficie dipenderanno stavolta da due parametri, coerentemente col fatto che un punto vincolato
+a muoversi su una superficie ha due gradi di libertà. Quindi:
+\dfn{}{
+    Una superficie in forma parametrica è una funzioen $r: A \subset \mathbb{R}^2 \rightarrow \mathbb{R}^3$ definita da
+    \[(u,v) \mapsto (x(u,v), y(u,v), z(u,v))\]
+}
+\ex{}
+{
+    La sfera di raggio $\mathbb{R}$ e centra l'origine ha rappresentazione parametrica:
+    \[\begin{cases}
+        x = R\sin{\phi}\cos{\theta}\\
+        y = R\sin{\phi}\sin{\theta} \; \; \; \; \; \; \phi \in [0, \pi], \theta \in [0, 2\pi]\\
+        z = R\cos{\phi}
+    \end{cases}\]
+}
+
+\subsection{Limiti, continuità e differenziabilità per funzioni di più variabili a valori vettoriali}
+
+\dfn{}
+{
+    Sia $f : A \subseteq \mathbb{R}^n \rightarrow \mathbb{R}^m$ definita in un intorno del punto $x_0 \in \mathbb{R}^n$
+    salvo al più il punto $x_0$ stesso e sia $L \in \mathbb{R}^m$. Allora si dice: 
+    \[\lim_{x \rightarrow x_0} f(x) = L\]
+    Se accade che 
+    \[\lim_{x \rightarrow x_0} |f(x) - L| = 0\]
+    Se $f : A \subseteq \mathbb{R}^n \rightarrow \mathbb{R}^m$, possiamo scrivere
+    \[f(x) = (f_1(x), \dots, f_m(x)) \; \; con f_i : A \subseteq{R}^n \rightarrow \mathbb{R}, per i = 1,2,...m\]
+    Le funzioni $f_i$ si dicono \textbf{componenti di f}.
+}
+In maniera naturale si introduce il concetto di \textit{funzione continua} e si dimostra che una funzione $f$ è continua 
+solo se e solo se tutte le sue componenti sono continue.
+\dfn{}
+{
+    Diremo che $f$ è differenziabile in $x_0$ se lo è in tutte le sue componenti.
+    Esplicitamente questo signififca che $i = 1,2,..,m$ valgono le relazioni: 
+    \[f_i(x_0 + h) - f_i(x_0) = \sum_{j = i}^{m} \frac{\partial f_i}{\partial x_j}(x_0) + o(|h|) \; \; per h \rightarrow 0 \] 
+}
+\noindent
+Queste $m$ relazioni si possono anche scrivere in maniera compatta in forma matriciale. Infatti
+rappresentando f e i punti di $\mathbb{R}^n$ come vettori colonna delle loro componenti si ha 
+\[f = \begin{pmatrix}
+    f_1\\f_2\\\vdots\\f_m
+\end{pmatrix}, x_0 = \begin{pmatrix}
+    x_1\\x_2\\\vdots\\x_n
+\end{pmatrix}, h = \begin{pmatrix}
+    h_1\\h_2\\\vdots\\h_n
+\end{pmatrix}\]
+A questa possiamo introdurre la matrice \textbf{Jacobiana} di $f$ che ha per righe i gradienti
+delle componenti di $f$ calcolate nel punto $x_0$  (che si indica con $Jf(x_0)$ oppure anche con $DF(x_0)$).
+\[Jf(x_0) = \begin{pmatrix}
+    \frac{\partial f_1}{\partial x_1} & \frac{\partial f_1}{\partial x_2} & \dots & \frac{\partial f_1}{\partial x_n}\\
+    \frac{\partial f_2}{\partial x_1} & \frac{\partial f_2}{\partial x_2} & \dots & \frac{\partial f_1}{\partial x_n}\\
+    \dots &\dots & \dots & \dots\\
+    \frac{\partial f_n}{\partial x_1} & \frac{\partial f_n}{\partial x_2} & \dots & \frac{\partial f_n}{\partial x_n}
+\end{pmatrix}\]
+\[Jf(x_0)h = \begin{pmatrix}
+    \left< \nabla f_1, h\right>\\
+    \left< \nabla f_2, h\right>\\
+   \vdots\\
+   \left< \nabla f_n, h\right>\\
+    
+\end{pmatrix}\]
+La differenziabilità si può riscrivere tramite la seguente relazione:
+\[f(x_0 + h) - f(x_0) = Jf(x_0)h + o(h) \; \; \; \text{ per } h \rightarrow 0\]
+In questo caso la quantità $Jf(x_0)h$ indica il prodotto matriciale (quindi righe e colonne) tra la matrice jocobiana
+di $f$ calcolata in $x_0 $e l'incremento h (che è un vettore).
+\thm{}
+{
+    Condizione sufficiente affinché $f : A \subset \mathbb{R}^n \rightarrow \mathbb{R}^m$ con $A$ aperto sia differenziabile in 
+    $A$ è che tutti gli elementi della matrice jacobiana siano funzioni continue in $A$
+}
+\thm{}
+{
+    Siano $f : A \subseteq \mathbb{R}^n \rightarrow \mathbb{R}^m$, $g : B \subseteq \mathbb{R}^m \rightarrow \mathbb{R}^k$ e 
+    supponiamo che la funzione composta $g \circ f$ sia ben definita in un intorno $C$ di $x_0 \in A$, cioè si 
+    abbia $g \circ f : C \subseteq \mathbb{R}^n \rightarrow \mathbb{R}^k$. Supponiamo che $f$ sia differenziabile
+    in $x_0$ e $g$ è differenziabile in $y_0 = f(x_0)$. Allora la composta $g \circ f$ risulta differenziabile in $x_0$ 
+    e la sua matrice Jacobiana si ottiene come prodotto matriciale delle matrici Jacobiane di $f$ e $g$, calcolate 
+    nei punti $x_0$ e $f(x_0)$ rispettivamente, cioè
+    \[J(g \circ f) = Jg(f(x_0))Jf(x_0)\]
+}
+
+
+
 \end{document}

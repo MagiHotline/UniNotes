@@ -3842,8 +3842,678 @@ Quindi la complessità totale è $\Theta(V + E)$. Di conseguenza la complessità
   La soluzione è quella di fare una DFS e vedere se trovo un arco all'indietro. Se trovo un arco all'indietro, allora ho trovato un circolo di approvazione.
   Tuttavia, questa operazione la dovrei fare per ogni singolo nodo nel grafo, quindi la complessità sarebbe $O(V(V + E))$.
   Ma c'è un modo più efficiente per farlo. Osservando che se trovo un arco all'indietro, allora ho trovato un circolo di approvazione, posso fare in modo che se trovo un arco all'indietro, allora \textbf{tutti i nodi che sono raggiungibili da quel nodo} sono parte di un circolo di approvazione.
-
 }
+
+\subsection{Ordinamento topologico}
+
+Ci sono casi in cui abbiamo bisogno di ordinare i nodi di un grafo in modo tale che 
+il grafo venga visitato in un certo ordine. 
+\ex{}
+{
+  Immaginiamo di avere un roboto che deve andare a vestire per andare a lavoro.
+  Il robot ha bisogno di indossare prima i pantaloni e poi la maglietta, ma non può indossare le scarpe prima di aver indossato i pantaloni.
+  In questo momento stiamo ponendo delle restrizioni su come il robot può vestirsi.
+  Questo tipo di restrizioni possono essere rappresentate da un grafo orientato in cui i nodi sono gli oggetti da indossare e gli archi sono le restrizioni.
+  Quindi per esempio se abbiamo i nodi $P$ (pantaloni), $S$ (scarpe) e $M$ (maglietta), avremo gli archi $(P, S)$ e $(P, M)$.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+      state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+      
+      \node[state] (P) {P};
+      \node[state] (S) [right of=P] {S};
+      \node[state] (M) [below right of=S] {M};
+      
+      \draw (P) -- (S);
+      \draw (P) -- (M);
+    \end{tikzpicture}
+  \end{figure}
+}
+\noindent
+Il problema non sta nella costruzione del grafo, poiché quello che ci viene dato, 
+ma nel trovare un modo per visitare i nodi in modo tale che le restrizioni siano rispettate e 
+che il robot possa vestirsi correttamente. In maniera formale: 
+
+\dfn{Ordinamento topologico}
+{
+  Ordinare i nodi del grafo in modo tale che $\forall (u,v) \in E$ t.c. $u < v$ si chiama
+  \textbf{ordinamento topologico} di un grafo orientato.
+}
+\noindent
+Un termine comodo seppur non preciso, può essere "linearizzare" il grafo, poiché quello che andremo a 
+sarà quello di disporre il grafo con tutti archi che vanno da sinistra a destra su una linea di nodi.
+\begin{lstlisting}[language=Scala]
+topological_sort(G)
+    usa DFS per calcolare f
+    se ciclico set false
+    restituisci nodi per f decrescente
+\end{lstlisting}
+Utilizzare la DFS e le sue proprietà ci aiuta a risolvere il problema di ordinamento topologico.
+\thm{}
+{
+  $\forall (u,v) \in E$, $f[v] < f[u]$ ogni volta che $f$ è il tempo di fine visita
+  di una DFS su grafo aciclcico. \textcolor{white}{I pantalonzi vanno prima dei calzonzi.}
+}
+\begin{proof}
+  Sia $(u,v) \in E$ e quando $(u,v)$ viene visitato distinguiamo 3 casi:
+  \begin{itemize}
+    \item v bianco, v discenda da u, quindi $d[u] < d[v] < f[v] < f[u]$.
+    \item v grigio, impossibile perché $G$ è aciclico.
+    \item v nero, abbiamo già terminato la visita di $v$ ma non quella di $u$ e quindi $f[v] < f[u]$
+  \end{itemize}
+\end{proof}
+
+\subsection{Componenti connesse}
+
+Come calcolare le componenti connesse di un grafo data una qualsiasi visita?
+Ricordiamo le funzioni che abbiamo imparato negli scorsi capitoli:
+\begin{itemize}
+  \item MakeSet(x): Crea un insieme contenente l’oggetto x.
+  \item Union(x, y): Unisce gli insiemi contenenti x e y.
+\end{itemize}
+
+\begin{lstlisting}[language=Scala]
+CC(G)
+  per ogni V in V[G]
+    make_set(v)
+  per ogni V E[G]
+    union(u,v)
+\end{lstlisting}
+\noindent
+Si può facilmente vedere come alla fine dell'algoritmo si ottengono le connessioni tra i nodi del grafo.
+Alla fine dell'algoritmo, ogni nodo sarà parte di un insieme che rappresenta una componente connessa del grafo.
+La complessità di questo algoritmo è $O(V + E)$, poiché dobbiamo visitare tutti i nodi e tutti gli archi del grafo.
+
+\subsection{Componenti fortemente connesse}
+
+Le componenti fortemente connesse sono un concetto che si applica ai grafi orientati.
+\dfn{Componente fortemente connessa (SCC)}
+{
+  Una componente fortemente connessa è un sottoinsieme di nodi $C \subseteq V$ tale che $\forall (u,v) \in C$ esiste un cammino da $u$ a $v$ e viceversa.
+}
+
+\begin{lstlisting}[language=Scala]
+SCC(G)
+  Usa DFS per calcolare f (V+E)
+  Calcola G^t  (grafo trasposto, il senso degli archi e' invertito) (V+E)
+  Usa DFS su G^t esplorando i nodi per f decrescente (V+E)
+  Gli alberi della foresta DFS risultante sono le SCC 
+\end{lstlisting}
+\noindent
+Quindi la complessità di questo algoritmo è $O(V + E)$, poiché dobbiamo visitare tutti i nodi e tutti gli archi del grafo.
+
+\begin{lemma}
+  Alla fine della DFS, ogni SCC (Strongly Connected Component) è interamente contenuta in un albero.
+\end{lemma}
+
+\begin{proof}
+  Prendiamo una SCC, ci sarà un nodo $u$ che sarà il primo nodo visitato della SCC.
+  Tutti gli altri nodi sono raggiungibili da un cammino di soli nodi bianchi, quindi per il teorema 8.3.3, sono tutti
+  discendenti di $u$ e quindi appartengono allo stesso albero.
+\end{proof}
+\noindent
+Ricordiamoci burocraziland (Esempio 8.3) e proviamo a risolvere il problema.
+Se abbiamo un nodo $A$ connesso ad un nodo con il verso orientato su $B$ vuol dire che per avere certificato $B$ bisogna
+prima avere $A$. Le \textit{conditio sine qua non}, per cui non si può ottenere un documento $x$ sono:
+\begin{itemize}
+  \item sicuramente se $x$ appartiene un ciclo. 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[-latex, auto, node distance=3cm and 3cm, on grid,
+    state/.style={circle, top color=white, bottom color=processblue!20, draw, processblue, text=blue, minimum width=1cm}]
+    
+    \node[state] (A) {X};
+    \node[state] (B) [above right of=A] {B};
+    \node[state] (C) [below right of=B] {C};
+    \node[state] (D) [below left of=C] {D};
+    
+    \path (A) edge [bend right = -15] (B);
+    \path (B) edge [bend right = -15] (C);
+    \path (C) edge [bend right = -15] (D);
+    \path (D) edge [bend right = -15] (A);
+  \end{tikzpicture}
+\end{figure}
+\item Anche se $x$ è raggiungibile da un ciclo, allora $x$ non può essere ottenuto.
+\end{itemize}
+I problemi sono i seguenti:
+\begin{itemize}
+  \item Stabilire se esistono documenti che non si possono ottenere $\rightarrow$ basta verificare se il grafo è ciclico.
+  \item Trovare un esempio di documento non ottenibile $\rightarrow$ quando trovo un arco $(u,v)$ all'indietro restituisco $v$.
+  \item Dato $x$ stabilire se è ottenibile $\rightarrow$ lancia DFS Visit da $x$ sul grafo trasposto, restituisci true se trovi un ciclo.
+  \item Trovare tutti i documenti NON ottenibili $\rightarrow$ 
+  \begin{enumerate}
+    \item Lancia DFS e marca tutti i nodi raggiunti da archi all'indietro. (per ogni ciclo nel grafo, ci sta almeno un nodo che viene marcato)
+    \item Lancia nuovamente DFS,ma come nodi di partenza, usa quelli marcati. Ora \textit{marca} tutti nodi che raggiungi. Tutti i nodi marcati,
+    appartenti ad un ciclo vengono raggiunti e dunque marcati. \textit{Tuttavia vengono marcati tutti e soli i nodi raggiungibili da un ciclo.}
+  \end{enumerate}
+\end{itemize}
+\noindent
+\ex{}
+{
+Vediamo il seguente problema: 
+dati $(G,S,F),\; F \subseteq V[G], S \in V[G]$ stabilire se da $S$ esiste un cammino infinito che passa infinite volte
+da stati (nodi) di $F$.
+Una soluzione potrebbe esseere: guardiamo le SCC del grafo $G$ e costruiamo un nuovo grafo $G'$ i cui nodi sono le
+SCC di $G$ arco $(u,v)$ di $G$ con $u \in A$ e $v \in B$.
+
+\noindent
+Questo grafo rispetta le seguenti proprietà:
+\begin{itemize}
+  \item $G$ è aciclico. Questo perché se $G$ fosse ciclico, allora vorrebbe dire che le due SCC collasserebbero in un unico nodo, ma questo non è possibile perché
+  ogni SCC è un sottoinsieme di nodi che sono raggiungibili tra loro, quindi se ci fosse un ciclo, allora tutti i nodi sarebbero raggiungibili tra loro.
+  \item Ogni cammino infinito resterà definitivamente all'interno di una singola SCC
+  \item Affinché il cammino infinito possa contenere infinite istanze di stati di $F$ la SCC in cui si resterà definitviamnte 
+  deve contenere almeno uno stato di $F$
+\end{itemize}
+\noindent
+Quindi devo trovvare una SCC raggiungibile da S che 
+\begin{itemize}
+  \item contiene cammini infiniti 
+  \item contiene almeno uno stato di $F$
+\end{itemize}
+}
+
+\subsection{Alberi di copertura di costo minimo}
+
+\subsubsection{Minimum Spanning Tree (MST)}
+
+Venezia. Un evento atmosferico distrugge tutti i suoi ponti. Tutti i ponti da riparare per ogni ponte c'è un costo specifico di riparazione.
+Dobbiamo garantire la raggiungibilità via terra di ciò che era raggiungibile prima. Dobbiamo spendere il meno possibile.
+Proporre un algoritmo per segliere i ponti da riparare. 
+Per risolvere questo problema potrei mappare il problema in un grafo in cui i nodi sono le isole e gli archi sono i ponti.
+Quando vado a vedere la mappa generale dei ponti potrei andare ad eliminare tutti i ponti che non sono necessari per garantire la raggiungibilità tra le isole, come per esempio quegli archi che sono in un ciclo.
+Finché il grafo ha cicli, posso eliminare gli archi che sono in un ciclo e il grafo rimarrà connesso. Quindi il grafo che otterremo sarà un grafo aciclico.
+Questo oggetto che otteniamo è in realtà \textbf{un albero} di copertura, dove copertura si intende che tutti i nodi del grafo sono raggiungibili da un nodo qualsiasi dell'albero.
+\dfn{Taglio di ung grafo}
+{
+  Il taglio di un grafo $G = (V,E)$ è una \textbf{bipartizione $(S,T)$ di $V$}. Quando parliamo di taglio vuol dire che stiamo 
+  dividendo il grafo in deu parti, $S$ e $T$ e a questo punto possiamo distinguere gli archi 
+  che vanno da $S$ a $T$ e quelli che vanno da $T$ a $S$ (archi del taglio).
+}
+\noindent
+L'arco del taglio è detto \textbf{sicuro} se tra gli archi del taglio ha un costo minimo.
+
+\begin{lemma}
+  Dato un arco sicuro $(u,v)$ per un taglio $(S,T)$  esiste un MST di $G$ che contiene $(u,v)$.
+\end{lemma}
+\begin{proof}
+  Prendi un taglio $(S,T)$ supponiamo che $(u,v)$ sia un arco sicuro per questo taglio e sia $A$ una soluzione.
+  Distinguiamo due casi:
+  \begin{itemize}
+    \item $(u,v) \in A$, allora $A$ è una soluzione valida.
+    \item $(u,v) \notin A$, allora esiste un cammino da $u$ a $v$ che non passa per $(u,v)$, quindi possiamo sostituire l'arco $(u,v)$ con questo cammino e ottenere una soluzione valida.
+  \end{itemize}
+  $(A - \{(s,t)\})) \cup \{(u,v)\}$ è pure un albero di copertura.
+\end{proof}
+\begin{lstlisting}[language=Scala]
+MST(G)
+  A <- 0
+  finche A non e un albero di copertura 
+    sia (S,T) un taglio che non contiene archi di A
+    sia (u,v) un arco sicuro per (S,T)
+    A <- A + (u,v)
+\end{lstlisting}
+
+\subsubsection{Algoritmo di Kruskal}
+
+L'algoritmo di Kruskal è un algoritmo che permette di trovare un albero di copertura di costo minimo in un grafo pesato.
+
+\begin{lstlisting}[language=Scala]
+// G e il grafo e w e la matrice dei pesi 
+Kruskal(G, w)
+  A <- 0
+  per ogni v in V[G] make_set(v)
+  ordina E[G] per peso non decrescente
+  per ogni (u,v) in E[G] preso in ordine
+    if find_set(u) != find_set(v) then
+      A <- A + (u,v)
+      union(u,v)
+\end{lstlisting}
+\ex{}
+{
+  Immaginiamo di avere un grafo pesato $G$ con la seguente struttura:
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+    semithick ,
+    state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+    draw,processblue , text=blue , minimum width =1 cm}]
+    \node[state] (F) {F};
+    \node[state] (C) [below left=of F] {C};
+    \node[state] (B) [above left =of F] {B};
+    \node[state] (D) [above right=of F] {D};
+    \node[state] (E) [below right=of F] {E};
+    \node[state] (A) [above left=of C] {A};
+
+    \draw (C) -- node[above] {$7$} (F);
+    \draw (C) -- node[above] {$1$} (E);
+    \draw (C) -- node[below] {$8$} (A);
+    \draw (C) -- node[left] {$11$} (B);
+    \draw (F) -- node[above] {$5$} (E);
+    \draw (F) -- node[above] {$2$} (D);
+    \draw (F) -- node[above] {$9$} (B);
+    \draw (B) -- node[above] {$8$} (D);
+    \draw (E) -- node[right] {$6$} (D);
+    \draw (A) -- node[above] {$4$} (B);
+  \end{tikzpicture} 
+  \end{figure}
+  \noindent
+  Per prima cosa, nell'algoritmo di Kruskal, ogni nodo diventa un insieme singoletto. 
+  Subito dopo, ordiniamo gli archi per peso non decrescente, il primo arco che andremo a prendere (ovvero l'arco con il peso minore)
+  sarà (C,E) con peso 1. Quando ci chiediamo se \texttt{if find set(u) != find set(v)} 
+  ci stiamo chiedendo se C ed E appartengono allo stesso insieme. Essendo singoletti, per forza di cose non lo sono,
+  quindi andiamo aggiungere questo arco all'insieme $A$ e unire i due insiemi. 
+  Basta prendere un taglio che abbia il nodo $C$ da una parte e il nodo $E$ dall'altra e noi scopriamo che tutti gli archi
+  che appartengono a questo taglio, non fanno parte della soluzione perché sono tutti archi che pesano di più o uguali dell'arco $(C,E)$ di peso 1.
+  Inoltre, è un arco sicuro e quindi può far parte della soluzione. 
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+    semithick ,
+    state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+    draw,processblue , text=blue , minimum width =1 cm}]
+    \node[state] (F) {F};
+    \node[state] (C) [below left=of F] {C};
+    \node[state] (B) [above left =of F] {B};
+    \node[state] (D) [above right=of F] {D};
+    \node[state] (E) [below right=of F] {E};
+    \node[state] (A) [above left=of C] {A};
+
+    \draw (C) -- node[above] {$7$} (F);
+    \draw[red] (C) -- node[above] {$1$} (E);
+    \draw (C) -- node[below] {$8$} (A);
+    \draw (C) -- node[left] {$11$} (B);
+    \draw (F) -- node[above] {$5$} (E);
+    \draw (F) -- node[above] {$2$} (D);
+    \draw (F) -- node[above] {$9$} (B);
+    \draw (B) -- node[above] {$8$} (D);
+    \draw (E) -- node[right] {$6$} (D);
+    \draw (A) -- node[above] {$4$} (B);
+
+    \draw[dashed, thick, green!40!black] (4.3,1) -- (-2,-2.5);
+
+  \end{tikzpicture} 
+  \end{figure}
+  \noindent
+  Ora bisogna considerare il secondo arco con peso minore, che è $(F,D)$ con peso 2.
+  Anche in questo caso, facciamo un taglio che ha $F$ da una parte e $D$ dall'altra.
+  Non fanno parte dello stesso insieme, quindi possiamo aggiungere l'arco $(F,D)$ all'insieme $A$ e unire i due insiemi.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+    semithick ,
+    state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+    draw,processblue , text=blue , minimum width =1 cm}]
+    \node[state] (F) {F};
+    \node[state] (C) [below left=of F] {C};
+    \node[state] (B) [above left =of F] {B};
+    \node[state] (D) [above right=of F] {D};
+    \node[state] (E) [below right=of F] {E};
+    \node[state] (A) [above left=of C] {A};
+
+    \draw (C) -- node[above] {$7$} (F);
+    \draw[red] (C) -- node[above] {$1$} (E);
+    \draw (C) -- node[below] {$8$} (A);
+    \draw (C) -- node[left] {$11$} (B);
+    \draw (F) -- node[above] {$5$} (E);
+    \draw[red] (F) -- node[above] {$2$} (D);
+    \draw (F) -- node[above] {$9$} (B);
+    \draw (B) -- node[above] {$8$} (D);
+    \draw (E) -- node[right] {$6$} (D);
+    \draw (A) -- node[above] {$4$} (B);
+
+    \draw[dashed, thick, green!40!black] (4.3,1) -- (-1,-2.5);
+    \draw[dashed, thick, green!40!black] (-0.5, 3) -- (4.3, -1);
+
+  \end{tikzpicture} 
+  \end{figure}
+  \noindent
+  Il prossimo arco è $(A,B)$ con peso 4. Facciamo un taglio che ha $A$ da una parte e $B$ dall'altra.
+  Di questo taglio, l'arco $(A,B)$ è sicuro, perché tutti gli archi che attraversano il taglio non sono ancora stati considerati,
+  gli archi vengono presi in ordine non decrescente di peso, quindi tutti gli archi che attraversano il taglio hanno un peso maggiore o uguale a 4.
+  Uniamo i due insiemi e aggiungiamo l'arco $(A,B)$ all'insieme $A$.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+    semithick ,
+    state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+    draw,processblue , text=blue , minimum width =1 cm}]
+    \node[state] (F) {F};
+    \node[state] (C) [below left=of F] {C};
+    \node[state] (B) [above left =of F] {B};
+    \node[state] (D) [above right=of F] {D};
+    \node[state] (E) [below right=of F] {E};
+    \node[state] (A) [above left=of C] {A};
+
+    \draw (C) -- node[above] {$7$} (F);
+    \draw[red] (C) -- node[above] {$1$} (E);
+    \draw (C) -- node[below] {$8$} (A);
+    \draw (C) -- node[left] {$11$} (B);
+    \draw (F) -- node[above] {$5$} (E);
+    \draw[red] (F) -- node[above] {$2$} (D);
+    \draw (F) -- node[above] {$9$} (B);
+    \draw (B) -- node[above] {$8$} (D);
+    \draw (E) -- node[right] {$6$} (D);
+    \draw[red] (A) -- node[above] {$4$} (B);
+
+    \draw[dashed, thick, green!40!black] (4.3,1) -- (-1,-2.5);
+    \draw[dashed, thick, green!40!black] (-0.5, 3) -- (4.3, -1);
+    \draw[dashed, thick, green!40!black] (-4, 3) -- (-4, -3);
+  \end{tikzpicture} 
+  \end{figure}
+  \noindent
+  Il prossimo arco è $(F,E)$ con peso 5. Facciamo un taglio che ha $F$ da una parte e $E$ dall'altra.
+  Non sono nello stesso insieme quindi possiamo aggiungere l'arco $(F,E)$ all'insieme $A$ e unire i due insiemi.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+    semithick ,
+    state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+    draw,processblue , text=blue , minimum width =1 cm}]
+    \node[state] (F) {F};
+    \node[state] (C) [below left=of F] {C};
+    \node[state] (B) [above left =of F] {B};
+    \node[state] (D) [above right=of F] {D};
+    \node[state] (E) [below right=of F] {E};
+    \node[state] (A) [above left=of C] {A};
+
+    \draw (C) -- node[above] {$7$} (F);
+    \draw[red] (C) -- node[above] {$1$} (E);
+    \draw (C) -- node[below] {$8$} (A);
+    \draw (C) -- node[left] {$11$} (B);
+    \draw[red] (F) -- node[above] {$5$} (E);
+    \draw[red] (F) -- node[above] {$2$} (D);
+    \draw (F) -- node[above] {$9$} (B);
+    \draw (B) -- node[above] {$8$} (D);
+    \draw (E) -- node[right] {$6$} (D);
+    \draw[red] (A) -- node[above] {$4$} (B);
+
+    \draw[dashed, thick, green!40!black] (4.3,1) -- (-1,-2.5);
+    \draw[dashed, thick, green!40!black] (-0.5, 3) -- (4.3, -1);
+    \draw[dashed, thick, green!40!black] (-4, 3) -- (-4, -3);
+    \draw[dashed, thick, green!40!black] (-6, -1) -- (4, -1);
+  \end{tikzpicture} 
+  \end{figure}
+  \noindent
+  Il prossimo arco è $(D,E)$ con peso 6. Tuttavia $D$ e $E$ \textbf{NON} sono nello stesso insieme, 
+  quindi non possiamo aggiungere l'arco $(D,E)$ all'insieme $A$. Andiamo al prossimo: anche $(C,F)$ con peso 7 
+  non può essere aggiunto all'insieme $A$ perché $C$ e $F$ sono nello stesso insieme.
+  Subito dopo abbiamo due archi che pesano 8, ovvero $(B,D)$ e $(C,A)$. Facciamo finta che l'algoritmo di ordinamento
+  abbia ordinato prima $(C,A)$ e poi $(B,D)$, quindi prendiamo l'arco $(C,A)$.
+  Esiste un taglio che sapara $C$ da $A$ e che non separa elementi che stanno nello stesso insieme e quindi 
+  possiamo aggiungere l'arco $(C,A)$ all'insieme $A$ e unire i due insiemi.
+  Anche l'arco $(B,D)$ poteva andare bene, perché
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+    semithick ,
+    state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+    draw,processblue , text=blue , minimum width =1 cm}]
+    \node[state] (F) {F};
+    \node[state] (C) [below left=of F] {C};
+    \node[state] (B) [above left =of F] {B};
+    \node[state] (D) [above right=of F] {D};
+    \node[state] (E) [below right=of F] {E};
+    \node[state] (A) [above left=of C] {A};
+
+    \draw (C) -- node[above] {$7$} (F);
+    \draw[red] (C) -- node[above] {$1$} (E);
+    \draw[red] (C) -- node[below] {$8$} (A);
+    \draw (C) -- node[left] {$11$} (B);
+    \draw[red] (F) -- node[above] {$5$} (E);
+    \draw[red] (F) -- node[above] {$2$} (D);
+    \draw (F) -- node[above] {$9$} (B);
+    \draw (B) -- node[above] {$8$} (D);
+    \draw (E) -- node[right] {$6$} (D);
+    \draw[red] (A) -- node[above] {$4$} (B);
+
+    \draw[dashed, thick, green!40!black] (4.3,1) -- (-1,-2.5);
+    \draw[dashed, thick, green!40!black] (-0.5, 3) -- (4.3, -1);
+    \draw[dashed, thick, green!40!black] (-4, 3) -- (-4, -3);
+    \draw[dashed, thick, green!40!black] (-6, -1) -- (4, -1);
+    \draw[dashed, thick, green!40!black] (1, 3) -- (-6.5, -2.5);
+  \end{tikzpicture} 
+  \end{figure}
+  \noindent
+  Ora abbiamo un albero di copertura di costo minimo, che è l'insieme $A$.
+  Nonostante parliamo di tagli in questo esempio, a livello di codice
+  sappiamo già di averli in mano. 
+}
+Quanto è complesso l'algoritmo di Kruskal?
+Ordinare gli archi richiede $O(E \log E)$, mentre l'operazione di unione e find\_set richiede $O(E)$.
+Salta fuori che la complessità dell'algoritmo di Kruskal è $O(V + E \log E)$, quindi
+l'algoritmo di ordinamento è il collo di bottiglia dell'algoritmo.
+Nonostante ciò è comunque un algoritmo molto efficiente e utilizzato in molti contesti essendo 
+un algoritmo di tipo greedy, ovvero che prende la soluzione migliore in ogni passo.
+
+\subsubsection{Algoritmo di Prim}
+\begin{lstlisting}[language=Scala]
+// G grafo
+// w matrice dei pesi
+// r nodo da cui partiamo
+Prim(G, w, r)
+  Q <- V[g] // coda di priorita
+  per ogni u in V[g]
+    key[u] <- inf 
+  key[r] <- 0
+  pi[r] <- nil
+  while Q non e vuota
+    u <- extract_min(Q)
+    per ogni v in Adj[v]
+      if v in Q and w(u,v) < key[v] then
+        pi[v] <- u
+        key[v] <- w(u,v)
+\end{lstlisting}
+
+\ex{}
+{
+  Proviamo ad eseguire questo algoritmo su questo grafo. Settiamo tutti i nodi con chiave infinita, tranne il nodo $A$ che ha chiave 0.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+    semithick ,
+    state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+    draw,processblue , text=blue , minimum width =1 cm}]
+    \node[state] (F) {F};
+    \node[state] (C) [below left=of F] {C};
+    \node[state] (B) [above left =of F] {B};
+    \node[state] (D) [above right=of F] {D};
+    \node[state] (E) [below right=of F] {E};
+    \node[state] (A) [above left=of C] {A};
+
+    \draw (C) node[left, xshift=-11pt, blue] {$\infty$} -- node[above] {$7$} (F) node[right, xshift=11pt, blue] {$\infty$};
+    \draw (C) -- node[above] {$1$} (E) node[right, xshift=11pt, blue] {$\infty$};
+    \draw (C) -- node[below] {$8$} (A);
+    \draw (C) -- node[left] {$11$} (B) node[above, yshift=11pt, blue] {$\infty$};
+    \draw (F) -- node[above] {$5$} (E);
+    \draw (F) -- node[above] {$2$} (D);
+    \draw (F) -- node[above] {$9$} (B);
+    \draw (B) -- node[above] {$8$} (D);
+    \draw (E) -- node[right] {$6$} (D) node[right, xshift=11pt, blue] {$\infty$};
+    \draw (A) node[right, xshift=11pt, blue] {$0$} -- node[above] {$4$} (B);
+  \end{tikzpicture} 
+  \end{figure}
+  Facciamo l'extract min, che ci restituisce il nodo $A$ e andiamo ad aggiornare
+tutti i nodi nella lista di adiacenza di $A$. In questo esempio segnerò con le frecce blu i tagli sicuri che costruiranno la soluzione e con le frecce rosse i parent. Andiamo a prendere l'arco $(A,B)$ con peso 4, che è minore di $\infty$ 
+e quindi andiamo ad aggiornare la chiave di $B$ a 4 e il suo predecessore a $A$.
+Stessa cosa per l'arco $(A,C)$ con peso 8, che è minore di $\infty$ e quindi andiamo ad aggiornare la chiave di $C$ a 8 e il suo predecessore a $A$.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (F) {F};
+  \node[state] (C) [below left=of F] {C};
+  \node[state] (B) [above left =of F] {B};
+  \node[state] (D) [above right=of F] {D};
+  \node[state] (E) [below right=of F] {E};
+  \node[state] (A) [above left=of C] {A};
+
+  \draw (C) node[left, xshift=-11pt, blue] {$8$} -- node[above] {$7$} (F) node[right, xshift=11pt, blue] {$\infty$};
+  \draw (C) -- node[above] {$1$} (E) node[right, xshift=11pt, blue] {$\infty$};
+  \draw (C) -- node[below] {$8$} (A);
+  \draw (C) -- node[left] {$11$} (B) node[above, yshift=12pt, blue] {$4$};
+  \draw (F) -- node[above] {$5$} (E);
+  \draw (F) -- node[above] {$2$} (D);
+  \draw (F) -- node[above] {$9$} (B);
+  \draw (B) -- node[above] {$8$} (D);
+  \draw (E) -- node[right] {$6$} (D) node[right, xshift=11pt, blue] {$\infty$};
+  \draw (A) node[right, xshift=11pt, blue] {$0$} -- node[above] {$4$} (B);
+
+  \draw[blue, yshift=5pt, -latex] (B) -- (A);
+  \draw[red, -latex] (C) -- (A);
+\end{tikzpicture} 
+\end{figure}
+Una volta aver visitato le liste di adiacenza di $A$, andiamo a fare l'extract min, che ci restituisce il nodo $B$.
+Abbiamo già visto $A$ e quindi non lo consideriamo, mentre andiamo a considerare $D$ che ha chiave 8,
+che è minore di $\infty$ e quindi andiamo ad aggiornare la chiave di $D$ a 8 e il suo predecessore a $B$.
+Stessa cosa per l'arco $(B,F)$ con peso 9, che è minore di $\infty$ e quindi andiamo ad aggiornare la chiave di $F$ a 9 e il suo predecessore a $B$.
+Tuttavia il nodo $C$ ha chiave 8 che è minore di 11 (l'arco $(B,C)$) e quindi non lo consideriamo.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (F) {F};
+  \node[state] (C) [below left=of F] {C};
+  \node[state] (B) [above left =of F] {B};
+  \node[state] (D) [above right=of F] {D};
+  \node[state] (E) [below right=of F] {E};
+  \node[state] (A) [above left=of C] {A};
+
+  \draw (C) node[left, xshift=-11pt, blue] {$8$} -- node[above] {$7$} (F) node[right, xshift=11pt, blue] {$9$};
+  \draw (C) -- node[above] {$1$} (E) node[right, xshift=11pt, blue] {$\infty$};
+  \draw (C) -- node[below] {$8$} (A);
+  \draw (C) -- node[left] {$11$} (B) node[above, yshift=12pt, blue] {$4$};
+  \draw (F) -- node[above] {$5$} (E);
+  \draw (F) -- node[above] {$2$} (D);
+  \draw (F) -- node[above] {$9$} (B);
+  \draw (B) -- node[above] {$8$} (D);
+  \draw (E) -- node[right] {$6$} (D) node[right, xshift=11pt, blue] {$8$};
+  \draw (A) node[right, xshift=11pt, blue] {$0$} -- node[above] {$4$} (B);
+
+  \draw[blue, yshift=5pt, -latex] (B) -- (A);
+  \draw[red, -latex] (C) -- (A);
+  \draw[blue, -latex] (D) -- (B);
+  \draw[red, -latex] (F) -- (B);
+\end{tikzpicture} 
+\end{figure}
+\noindent
+Nel prossimo extract min, possiamo decidere se prendere $C$ o $D$ essendo che pesano uguali. Prendiamo $D$.
+Guardando i vicini di D, arriviamo ad $F$ dove 2 è minore di 9 e quindi andiamo ad aggiornare la chiave di $F$ a 2 e il suo predecessore a $D$. Inoltre, la freccia 
+che prima collegava F e B viene eliminata perché ora sappiamo che l'arco $(D,F)$ è più conveniente.
+Stessa cosa per l'arco $(D,E)$ con peso 6, che è minore di $\infty$ e quindi andiamo ad aggiornare la chiave di $E$ a 6 e il suo predecessore a $D$.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (F) {F};
+  \node[state] (C) [below left=of F] {C};
+  \node[state] (B) [above left =of F] {B};
+  \node[state] (D) [above right=of F] {D};
+  \node[state] (E) [below right=of F] {E};
+  \node[state] (A) [above left=of C] {A};
+
+  \draw (C) node[left, xshift=-11pt, blue] {$8$} -- node[above] {$7$} (F) node[right, xshift=11pt, blue] {$2$};
+  \draw (C) -- node[above] {$1$} (E) node[right, xshift=11pt, blue] {$6$};
+  \draw (C) -- node[below] {$8$} (A);
+  \draw (C) -- node[left] {$11$} (B) node[above, yshift=12pt, blue] {$4$};
+  \draw (F) -- node[above] {$5$} (E);
+  \draw (F) -- node[above] {$2$} (D);
+  \draw (F) -- node[above] {$9$} (B);
+  \draw (B) -- node[above] {$8$} (D);
+  \draw (E) -- node[right] {$6$} (D) node[right, xshift=11pt, blue] {$8$};
+  \draw (A) node[right, xshift=11pt, blue] {$0$} -- node[above] {$4$} (B);
+
+  \draw[blue, yshift=5pt, -latex] (B) -- (A);
+  \draw[red, -latex] (C) -- (A);
+  \draw[blue, -latex] (D) -- (B);
+  \draw[red, -latex] (F) -- (D);
+  \draw[red, -latex] (E) -- (D);
+\end{tikzpicture} 
+\end{figure}
+\noindent
+Successivamente facciamo l'extract min e prendiamo $F$ che ha due ed è il nodo più piccolo.
+Prendiamo $C,F$ e notiamo come $7 < 8$ di consegueza aggiorniamo il suo parent e la sua chiave.
+Stessa cosa per $F,E$. 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (F) {F};
+  \node[state] (C) [below left=of F] {C};
+  \node[state] (B) [above left =of F] {B};
+  \node[state] (D) [above right=of F] {D};
+  \node[state] (E) [below right=of F] {E};
+  \node[state] (A) [above left=of C] {A};
+
+  \draw (C) node[left, xshift=-11pt, blue] {$7$} -- node[above] {$7$} (F) node[right, xshift=11pt, blue] {$2$};
+  \draw (C) -- node[above] {$1$} (E) node[right, xshift=11pt, blue] {$5$};
+  \draw (C) -- node[below] {$8$} (A);
+  \draw (C) -- node[left] {$11$} (B) node[above, yshift=12pt, blue] {$4$};
+  \draw (F) -- node[above] {$5$} (E);
+  \draw (F) -- node[above] {$2$} (D);
+  \draw (F) -- node[above] {$9$} (B);
+  \draw (B) -- node[above] {$8$} (D);
+  \draw (E) -- node[right] {$6$} (D) node[right, xshift=11pt, blue] {$8$};
+  \draw (A) node[right, xshift=11pt, blue] {$0$} -- node[above] {$4$} (B);
+
+  \draw[blue, yshift=5pt, -latex] (B) -- (A);
+  \draw[red, -latex] (C) -- (F);
+  \draw[blue, -latex] (D) -- (B);
+  \draw[blue, -latex] (F) -- (D);
+  \draw[red, -latex] (E) -- (F);
+\end{tikzpicture} 
+\end{figure}
+\noindent
+Ora facciamo l'extract min e prendiamo $E$ che ha chiave 5.
+Vediamo come l'arco $(E,C)$ con peso 1 è minore di 7 e quindi andiamo ad aggiornare la chiave di $C$ a 1 e il suo predecessore a $E$.
+Il prossimo extract min è $C$ che è l'unico rimasto, sappiamo che $1$ è un taglio sicuro e quindi viene connesso ad $E$.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={ circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (F) {F};
+  \node[state] (C) [below left=of F] {C};
+  \node[state] (B) [above left =of F] {B};
+  \node[state] (D) [above right=of F] {D};
+  \node[state] (E) [below right=of F] {E};
+  \node[state] (A) [above left=of C] {A};
+
+  \draw (C) node[left, xshift=-11pt, blue] {$1$} -- node[above] {$7$} (F) node[right, xshift=11pt, blue] {$2$};
+  \draw (C) -- node[above] {$1$} (E) node[right, xshift=11pt, blue] {$5$};
+  \draw (C) -- node[below] {$8$} (A);
+  \draw (C) -- node[left] {$11$} (B) node[above, yshift=12pt, blue] {$4$};
+  \draw (F) -- node[above] {$5$} (E);
+  \draw (F) -- node[above] {$2$} (D);
+  \draw (F) -- node[above] {$9$} (B);
+  \draw (B) -- node[above] {$8$} (D);
+  \draw (E) -- node[right] {$6$} (D) node[right, xshift=11pt, blue] {$8$};
+  \draw (A) node[right, xshift=11pt, blue] {$0$} -- node[above] {$4$} (B);
+
+  \draw[blue, yshift=5pt, -latex] (B) -- (A);
+  \draw[blue, -latex] (D) -- (B);
+  \draw[blue, -latex] (F) -- (D);
+  \draw[blue, -latex] (E) -- (F);
+  \draw[blue, -latex] (C) -- (E);
+
+\end{tikzpicture} 
+\end{figure}
+\noindent
+Abbiamo trovato un albero di copertura di costo minimo, che è l'insieme degli archi con le frecce blu.
+}
+\noindent
+Settare il primo nodo a $0$ va bene solo se sappiamo che il grafo ha solo pesi positivi o comunque sia il primo ad essere
+estratto. Ecco perché una chiave come $-\infty$ sarebbe stata più corretta. 
+Settare tutti gli altri nodi a $\infty$ ha complessità $O(V)$ e poi $V$ volte l'extract min richiede $O(V \log V)$.
 
 
 \end{document}
