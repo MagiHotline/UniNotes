@@ -1538,6 +1538,354 @@ di $f$ calcolata in $x_0 $e l'incremento h (che è un vettore).
     \[J(g \circ f) = Jg(f(x_0))Jf(x_0)\]
 }
 
+\subsection{Ottimizzazione vincolata}
 
+\subsubsection{Caso n = 2}
+
+Formalizziamo prima di tutto il problema di estremo vincolato nel caso in cui la fiunzione obiettivo
+da ottimizzare dipende da due variabili legate da un'equazione di vincolo.
+Per semplicità lavoriamo con funzione definite su tutto il piano. 
+Il problema dunque che ci poniamo è quello di minimizzare o massimizzare una funzione $f(x,y)$ 
+di classe $C^1(\mathbb{R}^2)$ sotto la condizione di vincolo $g(x,y) = b$.
+Nello spazio $f(x,y)$ rappresenta il grafico di una superficie, il vincolo rappresenta in generale una curva.
+È chiaro che un punto di massimo o minimo per $f$ soggetta al vingolo $g$ non necessariamente è punto di massimo o minimo (nemmeno locale)
+per la funzione $f$ in generale. Quindi non sitratta di andare a calcolare gli estremi liberi di $f$ e vedere
+se qualcuno di questi cade nel vincolo imposto ma proprio di ottimizzare (e quindi massimizzare o minimizzare) la restrizione di $f$
+al vincolo $g$ che in generale è appunto una funzione diversa da $f$.
+La situazione più favorevole la si ha quando il vincolo definisce esplicitamente una funzione $y = y(x)$ o $x = x(y)$ oppure quando la curva 
+si esprime in forma parametrica $t \mapsto (x(t), y(t))$.
+Allora in tal caso il problema è ricondotto a cercare gli estremi della funzione $h(x) = f(x,y(x))$ oppure $h(y) = f(x(y),y)$ oppure $h(t) = f(x(t),y(t))$.
+\ex{}
+{
+    $MAX \; \; f(x,y) = x^2 + 9y - 9y^2 \; \;  s.t. \; \; x^2 = y \; \; \Longleftrightarrow MAX \; \; f(x,x^2) = x^2 + 9x^2 - 9x^3 \; \;  s.t. \; \; x \in \mathbb{R} \; \;$
+}
+\ex{}
+{
+    \begin{center}
+       $ MAX \; \; f(x,y) = x^2 + 9y - 9y^4 \; \;  s.t. \; \; x^2  + y^2 = 4  \; \;$\\
+       Proviamo a trasformare in coordinate polari:\\
+       $ MAX \; \; f(\rho,\theta) = \rho^2\cos^2{\theta} + \rho\sin{\theta} - 9\rho^4\sin^4{\theta} \; \;  s.t.\; \;  \rho^2 = 4 \rightarrow \rho = 2$\\
+       Quindi la funzione che massimizziamo diventa:
+    $MAX \; \; f(2,\theta)$
+    \end{center}
+}
+
+\subsubsection{Caso n = 2: metodo dei moltiplicatori di Lagrange}
+Il metodo dei moltiplicatori di Lagrange funziona quando il vincolo è rappresentato da una curva regolare assegnata
+in qualsiasi forma: parametrica o cartesiana (implicita o esplicita). 
+Cerchiamo di illustrare il metodo cercando di stabilire, in anologia con il caso di estremi liberi,
+una condizione necessaria del primo ordine. Nel caso degli estremi liberi, il teorema di Fermat indica che
+se un punto è di estremo, il suo gradiente si deve annullare e questo è abbastanza ragionevole 
+perché il punto non ha vincoli e potendosi muovere in tutte le direzioni, il teorema di Fermat
+ci dice che tutte le derivate lungo ogni direzione ammissibile si devono annullare. 
+Nel caso di un vincolo, ovviamente non sarà più così e ci saranno delle direzioni ammissibili e le derivata
+direzionale lungo queste direzioni ammissibili si devono annullare.
+Per capire quali siano queste direzioni ammissibili, supponiamo che un vincolo descriva
+un arco di curva regolare con retta tengente nella direzione del versore $v$. 
+In tal caso la derivata parziare di $f$ nella direzione di $v$ si deve annullare, cioè $(x^\ast ,y^\ast)$ è un punto di estremo vincolato si dovrà avere:
+\[\left< \nabla f(x^\ast,y^\ast), v \right> = 0\]
+che esprime l'ortogonalità tra il gradiente di $f$ e il versore $v$. 
+Ma ricordando che il gradiente di una funzione in ogni punto è ortogonale alla direzione della direzione della retta
+tangente alle sue curve di livello, se anche il vincolo è sufficientemente regolare anche
+\[\left< \nabla g(x^\ast,y^\ast), v \right> = 0\]
+Ma questo significa che il gradiente di $f$ e il gradiente di $g$ sono paralleli, cioè esiste un numero reale $\lambda$ tale che:
+\[\nabla f(x^\ast,y^\ast) = \lambda \nabla g(x^\ast,y^\ast)\]
+Formalmente si ha dunque: 
+\thm{Moltiplicatori di Lagrange}
+{
+Siano $f,g \in \mathcal{C}^1(\mathbb{R}^2)$ e $(x^\ast, y^\ast)$ punto di estremo vincolato 
+per $f$ sotto il vincolo $g(x,y) = b$. Allora se $(x^\ast, y^\ast)$ è regolare
+per il vincolo, cioè $\nabla g(x^\ast,y^\ast) \neq 0$, allora esiste un numero reale $\lambda \in \mathbb{R}$ 
+(detto \textit{moltiplicatore di Lagrange}) tale che:
+\[\nabla f(x^\ast,y^\ast) = \lambda \nabla g(x^\ast,y^\ast)\]
+}
+\noindent
+ribadiamo dunque che la relazione di parallelismo tra i gradienti di $f$ e $g$ esprime
+il fatto che se $(x^\ast, y^\ast)$ verifica le ipotesi del teorema, allora la derivata di $f$ lungo la tangente
+del vincolo si deve annullare, e in tal caso diremo che $(x^\ast, y^\ast)$ è un \textbf{punto critico vincolato}.
+Questa è la corretta generalizzazione del teorema di Fermat nel caso degli estremi vincolati.
+Introducendo la funzione $\mathcal{L} = \mathcal{L}(x,y,\lambda)$ detta \textbf{Lagrangiana} definita da:
+\[\mathcal{L}(x,y,\lambda) = f(x,y) - \lambda(g(x,y)-b)\]
+vuol dire che:
+\[\nabla \mathcal{L}(x,y,\lambda) = \begin{pmatrix}
+    f_x - \lambda g_x\\
+    f_y - \lambda g_y\\
+    -g(x,y) + b
+\end{pmatrix} = \begin{pmatrix}
+    \nabla f(x,y) - \lambda \nabla g(x,y)\\
+    - g(x,y) + b
+\end{pmatrix} = \begin{pmatrix}
+    0\\
+    0\\
+    0
+\end{pmatrix}\]
+\ex{}
+{
+    MIN/MAX $f(x,y) = xy \; \; s.t. \; \; \overbrace{x^2 + 4y^2}^{g(x)} = \overbrace{1}^{b}$\\
+    Si ha dunque:
+    \[\mathcal{L}(x,y,\lambda) = xy - \lambda(x^2 + 4y^2 - 1)\]
+    Allora calcoliamo il gradiente:
+    \[\nabla \mathcal{L}(x,y,\lambda) = \begin{pmatrix}
+        y - 2\lambda x\\
+        x - 8\lambda y\\
+        -x^2 - 4y^2 + 1
+    \end{pmatrix} = \begin{pmatrix}
+        0\\
+        0\\
+        0
+    \end{pmatrix}\]
+    Dunque si ha il sistema:
+    \begin{equation*}
+        \begin{cases}
+            y - 2\lambda x = 0\\
+            x - 8\lambda y = 0\\
+            -x^2 - 4y^2 + 1 = 0
+    \end{cases}
+    \end{equation*}
+    Se provassimo a ricavare $\lambda$ dalla prima equazione, si avrebbe:
+    \[\lambda = \frac{y}{2x}\]
+    \[\lambda = \frac{x}{8y}\]
+    Proviamo a mettere a sistema le due equazioni:
+    \[\frac{x}{8y} = \frac{y}{2x} \Rightarrow 8y^2 = 2x^2 \Rightarrow x = \pm2y\]
+    Sostituendo $x = 2y$ nella terza equazione si ha:
+    \[-(2y)^2 - 4y^2 + 1 = 0 \Rightarrow -4y^2 - 4y^2 + 1 = 0 \Rightarrow y^2 = \frac{1}{8} \Rightarrow y = \pm\frac{\sqrt{2}}{4}\]
+    Otteniamo quindi due casi:
+    \[x = 2y \Rightarrow x = \pm 2\frac{\sqrt{2}}{4} = \pm \frac{\sqrt{2}}{2}\]
+    I due punti quindi sono $(x,y) = \left(\frac{\sqrt{2}}{2}, \frac{\sqrt{2}}{4}\right)$ e $(x,y) = \left(-\frac{\sqrt{2}}{2}, -\frac{\sqrt{2}}{4}\right)$.
+    Nel caso in cui $x = -2y$ si ha:
+    \[x = -2y \Rightarrow x = \pm 2\left(-\frac{\sqrt{2}}{4}\right) = \mp \frac{\sqrt{2}}{2}\]
+    I due punti quindi sono $(x,y) = \left(-\frac{\sqrt{2}}{2}, \frac{\sqrt{2}}{4}\right)$ e $(x,y) = \left(\frac{\sqrt{2}}{2}, -\frac{\sqrt{2}}{4}\right)$.
+    Per tanto abbiamo quattro punti critici vincolati:
+    \[P_1 = \left(\frac{\sqrt{2}}{2}, \frac{\sqrt{2}}{4}\right), P_2 = \left(-\frac{\sqrt{2}}{2}, -\frac{\sqrt{2}}{4}\right)\]
+    \[P_3 = \left(-\frac{\sqrt{2}}{2}, \frac{\sqrt{2}}{4}\right), P_4 = \left(\frac{\sqrt{2}}{2}, -\frac{\sqrt{2}}{4}\right)\]
+    Ora calcolo il valore della funzione obiettivo nei punti critici:
+    \[f(P_1) = \frac{\sqrt{2}}{2} \cdot \frac{\sqrt{2}}{4} = \frac{1}{4}\]
+    \[f(P_2) = -\frac{\sqrt{2}}{2} \cdot -\frac{\sqrt{2}}{4} = \frac{1}{4}\]
+    \[f(P_3) = -\frac{\sqrt{2}}{2} \cdot \frac{\sqrt{2}}{4} = -\frac{1}{4}\]
+    \[f(P_4) = \frac{\sqrt{2}}{2} \cdot -\frac{\sqrt{2}}{4} = -\frac{1}{4}\]
+    Valore massimo di $f(x,y) = xy$ sul vincolo $x^2 + 4y^2 = 1$ è: $f(P_1) = f(P_2) = \frac{1}{4}$ in $P_1$ e $P_2$; valore minimo: $f(P_3) = f(P_4) = -\frac{1}{4}$ in $P_3$ e $P_4$.
+}
+
+\section{Calcolo integrale per funzioni di più variabili}
+
+\subsection{Integrali doppi}
+
+Sia $f : [a,b] \rightarrow \mathbb{R}$ una funzione a più variabili continua. 
+In Analisi 1 abbiamo introdotto l'integrale definito come il limite di somme di Riemann, 
+\[\int_{a}^{b} f(x)dx = \lim_{n \rightarrow \infty} s_n = \lim_{n \rightarrow \infty} \sum_{k = 1}^{\infty} \frac{b - a}{n}f(\xi)\]
+dove l'intervallo $[a,b]$ è stato diviso in $n$ intervallini della stessa ampiezza $\frac{b - a}{n}$ attraverso una partizione
+equispaziata e $xi_k$ è qualunque punto appartenente al $k-esimo$ intervallino; il limite viene fatto all'infiittirsi della partizione (per $n \rightarrow \infty$).
+La definizione di integrale attraverso le somme di Riemann si può dare anche a funzioni limitate.
+Se tale limite esiste finito e non dipende dalla partizione e dai punti $\xi_k$ scelti allora si dice che $f$ è integrabile su $[a,b]$.
+L'idea di integrale doppio nasce come la naturale estensione di tali concetti. 
+Sia $f : [a,b] \times [c,d] \rightarrow \mathbb{R}$ una funzione limitata definita su un rettangolo.
+Prendiamo una partizione equispaziata dall'intervallo $[a,b]$ in $n$ intervalli di ampiezza $\frac{b-a}{n}$ cioè sia:
+\[x_h = a + h\frac{b-a}{n} \; \; \; \; \; h = 0,1,2,3, \dots, n\]
+tale che
+\[x_0 = a < x_1 < x_2 < \dots < x_n = b\]
+e allo stesso modo prendiamo una partizione equispaziata dell'intervallo $[c,d]$ in $m$ intervalli di ampiezza $\frac{d-c}{m}$, cioè:
+\[y_k = c + k \frac{d - c}{n} \; \; \; \; k = 0,1,2,3,\dots,n\]
+tale che
+\[y_0 = c < y_1 < y_2 < \dots < y_m = d\]
+queste due partizioni induconon una partizione del rettangolo $[a,b] \times [c,d]$ in $n^2$ rettangolini che denomineremo
+\[I_{hk} = [x_h, x_{h+1}] \times [y_k, y_{k+1}] \; \; \; \; h,k = 1,2,3,\dots,n\]
+ciascuno di un'area pari a:
+\[| I_{hk} | = \frac{b-a}{n} \cdot \frac{d-c}{n} = \frac{(b-a)(d-c)}{n^2}\]
+Sia $p_{hk} (x_{hk}, y_{hk})$  un generico punto appartenente al generico $I_{hk}$, allora la somma di Riemann
+\begin{equation}
+    s_n = \sum_{h,k=1}^{n} |I_{hk}|f(p_{hk}) 
+\end{equation}
+La somma di Riemann quindi rappresenta il volume di una certa regione tridimensionale
+che sta tra il grafico $f$ e il piano $xy$ e che è delimitata dalla superficie.
+\dfn{}
+{
+    Si dice che la funziene $f : [a,b] \times [c,d] \rightarrow \mathbb{R}$ è integrabile nel rettangolo $R = [a,b] \times [c,d]$ se esiste il limite finito
+    $lim_{n \rightarrow \infty} s_n$ data da (7.1.1) e inoltre tale limite non dipende dalla scelta dei punti $p_{hk}$.
+    In tal caso tale limite si dice \textbf{integrale doppio} di $f$ su $R$ e si indica con:
+    \[\iint_{R} f(x,y) dxdy = \lim_{n \rightarrow \infty} \sum_{h,k=1}^{\infty} |I_{hk}| f(p_{hk}) \]
+}
+\noindent
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+  \begin{axis}[
+    % PROSPETTIVA 3D
+    view={60}{30},                  % angolazione (in gradi) del punto di vista: {azimuth}{elevation}
+    axis lines=center,              % assi x,y,z tutti e tre mostrati
+    xlabel={$x$}, ylabel={$y$}, zlabel={$z$},
+    xmin=0, xmax=1.2,               % estendere leggermente oltre 1 per spazi vuoti
+    ymin=0, ymax=1.2,
+    zmin=0, zmax=1,                 % qui z max sarà xy al massimo uguale a 1
+    % griglia leggera (opzionale)
+    grid=both,
+    grid style={gray!30, line width=0.3pt},
+    % colormap per la superficie
+    colormap/cool,
+  ]
+    %% 1) Superficie z = x*y
+    \addplot3[
+      surf,
+      opacity=0.7,
+      shader=interp,
+      domain=0:1, y domain=0:1,
+      samples=21, samples y=21,      % campionatura più fitta per avere mesh regolare
+    ]
+    {x*y};
+
+    %% 2) Base del dominio R nel piano z=0
+    \addplot3[
+      draw=none,
+      fill=blue!20,
+      opacity=0.4,
+      domain=0:1, y domain=0:1,
+      samples=2, samples y=2,        % basta il rettangolo alle 4 estremità
+    ]
+    ({x}, {y}, {0});
+
+    %% 3) Alcuni segmenti verticali (i "prismi") per illustrare il valore f(x,y)
+    %    Scegliamo 4 punti campione nel reticolo: (0.25,0.25), (0.75,0.25), (0.25,0.75), (0.75,0.75)
+    \addplot3[line width=0.5pt] coordinates { (0.25,0.25,0) (0.25,0.25,0.25*0.25) };
+    \addplot3[line width=0.5pt] coordinates { (0.75,0.25,0) (0.75,0.25,0.75*0.25) };
+    \addplot3[line width=0.5pt] coordinates { (0.25,0.75,0) (0.25,0.75,0.25*0.75) };
+    \addplot3[line width=0.5pt] coordinates { (0.75,0.75,0) (0.75,0.75,0.75*0.75) };
+
+    %% 4) Contorno della superficie in trasparenza per maggior chiarezza opzionale
+    \addplot3[
+      surf,
+      opacity=0,               % solo il contorno mesh senza riempimento
+      shader=flat,
+      draw=black!40,           % colore del contorno
+      domain=0:1, y domain=0:1,
+      samples=21, samples y=21
+    ]
+    {x*y};
+
+  \end{axis}
+\end{tikzpicture}    
+\caption{$\iint f(x,y)dA$ su $R = [0,1] \times [0,1]$ con $f(x,y) = xy$}
+\end{figure}
+\ex{}
+{
+Cosideriamo la funzione $f : [0,1] \times [0,1] \rightarrow \mathbb{R}$ definita da:
+ \[f(x,y) = \begin{cases}
+    1 & \text{se } x \in \mathbb{Q}\\
+    0 & \text{se } x \in \mathbb{R} \backslash \mathbb{Q}
+ \end{cases}\]
+ se i punti $p_{hk}$ sono scelti con prima coordinata tra i razionali allora presa una partizione 
+ equispaziata del rettangolo $R := [0,1] \times [0,1]$ con rettanoglini $\frac{1}{n^2}$ si ha
+ \[s_n = \sum_{h,k = 1}^{n} |I_{hk}|f(p_[hk]) = \sum_{h,k=1}^{n}\frac{1}{n^2}= \frac{1}{n^2}\sum_{h,k=1}^{n}1 = \frac{1}{n^2}n^2 = 1\] 
+mentre se i punti $p_{hk}$ sono scelti con prima coordinata tra i numeri irrazionali allora si ha che $s_n = 0$.
+Quindi il limite non esiste e la funzione $f$ non è integrabile su $R$.
+}
+Vale il seguente teorema:
+\thm{}
+{
+    Se $f : [a,b] \times [c,d] \rightarrow \mathbb{R}$ è continua su $[a,b] \times [c,d]$ allora è integrabile.
+}
+\thm{Di riduzione dell'integrale doppio su un rettangolo a integrali iterati}
+{
+ Sia $f: [a,b] \times [c,d] \rightarrow \mathbb{R}$ continua, allora il suo integrale doppio su $R: [a,b] \times [c,d]$ si può calcolare come integrale iterato
+ nel modo seguente.
+ \[\iint_{R} f(x,y)dxdxy = \int_{a}^{b} \left(\int_{c}^{d} f(x,y)dy\right)dx = \int_{c}^d\left(\int_a^b f(x,y)dx\right)dy\]
+}
+il significato dell'ultimo teorema è che di fatto si può ridurre il calcolo di un integrale doppio su un rettangolo a due integrali semplici di una variabile in sequenza.
+Mentre si fa il primo integrale naturalmente la variabile rispetto alla quale non si sta integrando va trattata come una costante. 
+\ex{}
+{
+    Si calcoli 
+    \[\iint_{[0,1] \times [0,2]} ye^{xy}dxdy\]
+    Calcoliamo usando il metodo appena scoperto:
+    \[\]
+    Calcoliamo l'integrale interno:
+    \[\begin{aligned}
+        \iint_{[0,1] \times [0,2]} ye^{xy}dxdy &= \int_{0}^{2}\left(\int_{0}^{1} ye^{xy}dx\right)dy\\
+        &= \int_0^2 \left([e^{xy}]_0^1\right)dy\\
+        &= \int_0^2 (e^y - y)dy\\
+        &= \left[e^y - y\right]_0^2\\
+        &= e^2 - 3
+    \end{aligned}\]
+}
+\thm{Funzioni a variabili separate}
+{
+    Quando si integra su un rettangolo una funzione prodotto di due funzioni ciascuna in una sola delle due variabili,
+    per esempio $f(x)g(y)$ allora è facile vedere che l'integrale doppio si calcola come il prodotto di due integrali semplici:
+    \[
+    \begin{aligned}
+        \iint_{[a,b] \times [c,d]} \overbrace{f(x)g(y)}^{h(x,y)} dxdy &= \int_{a}^{b} \left(\int_{c}^{d} f(x)g(y)dy\right)dx = \int_{c}^{d} \left(\int_{a}^{b} f(x)g(y)dx\right)dy\\
+        &= \left(\int_c^d g(y)dy\right)\left(int_a^b f(x)dx\right)
+    \end{aligned} \]
+    e analogamente per l'altra integrazione.
+}
+
+\subsection{Funzioni integrabili su domini non rettangolari}
+
+Sia $f : R \subseteq \mathbb{R}^2 \rightarrow \mathbb{R}$ una funzione continua su un dominio $R$ che non è necessariamente un rettangolo.
+Si potrebbe di considerare un rettangolo $\Omega \subseteq R$ e calcolare
+\[\iint_R \tilde{f} dxdy\]
+dove $\tilde{f}$ è una funzione continua che coincide con $f$ su $\Omega$ e che si annulla fuori da $\Omega$.
+Tuttavia in generale, senza nessuna ipotesi di continuità su $\Omega$, $f$ non risulterà integrabile,
+nemmeno se continua e limitata, come mostra il prossimo esempio.
+\ex{}
+{
+    Sia
+    \[\Omega := \{(x,y) \in [0,1] \times [0,1]: x \in \mathbb{Q}\}\]
+    e si consideri
+    \[\iint_{\Omega} 1dxdy\]
+    Allora estendendo la funzione integranda (che è constantemente uguale a 1) a zero fuori dalla $\Omega$
+    otteniamo la stessa funzione del primo esempio del capitolo, che sappiamo già non essere integrabile.
+}
+Sulla base di questo esempio (si noti che la funzione costante $1$ è continua e limitata) ci si convince
+che occorre individuare condizioni sul dominio $\Omega$ che garantiscano l'integrabilità (almeno)
+di una funzione continua e limitata. 
+\dfn{}
+{
+    Un insieme $E \subseteq \mathbb{R}^2$ si dice \textbf{$y$-semplice} se è del tipo
+    \[E := \{(x,y) \in \mathbb{R}^2 : x \in [a,b], g_1(x) \le y \le g_2(x)\}\]
+    con $g_1, g_2 : [a,b] \rightarrow \mathbb{R}$ due funzioni continue.
+}
+\noindent
+Geometricamente un insieme $y$-semplice è tale che se si taglia $E$ con una retta del tipo $x = c$ 
+con $c \in [a,b]$, si ottiene un segmento verticale che varia con continuità al variare della retta.
+\dfn{}
+{
+    Un insieme $E \subseteq \mathbb{R}^2$ si dice \textbf{$x$-semplice} se è del tipo
+    \[E := \{(x,y) \in \mathbb{R}^2 : y \in [c,d], h_1(y) \le x \le h_2(y)\}\]
+    con $h_1, h_2 : [c,d] \rightarrow \mathbb{R}$ due funzioni continue.
+}
+Geometricamente un insieme $x$-semplice è tale che se si taglia $E$ con una retta del tipo $y = c$
+con $c \in [c,d]$, si ottiene un segmento orizzontale che varia con continuità al variare della retta.
+\dfn{}
+{
+    Un insieme $E \subseteq \mathbb{R}^2$ si dice \textbf{semplice} se è sia $x$-semplice che $y$-semplice.
+    Si dice \textbf{regolare} se è unione di un numero finito di insiemi semplici.
+}
+\ex{}
+{
+    I rettangoli e i quadrati sono domini semplici. I triangoli sono domini semplici.
+    L'insieme
+    \[E := \{(x,y) \in \mathbb{R}^2 : 0 \le x \le 1, \sqrt{x} \le y \le 1\}\]
+    è sia $x$-semplice che $y$-semplice, quindi è un dominio semplice.
+    L'insieme
+    \[E := \{(x,y) \in \mathbb{R}^2 : 1 \le x^2 + y^2 \le 4, |x| \le y\}\]
+    non è un dominio semplice perché non è né $x$-semplice né $y$-semplice, ma può essere ottenuto come unione di due insiemi semplici:
+    quindi è un dominio regolare.
+}
+\noindent
+Un insieme semplice è per definizione anche chiuso e limitato, quindi lo stesso vale per un insieme regolare.
+In particolare una funzione definita su insieme regolare, dal teorema di Weirstrass, ha sempre massimo e minimo, dunque è limitata.
+\thm{}
+{
+    Sia $\Omega \subseteq \mathbb{R}^2$ un dominio regolare e $f : \Omega \rightarrow \mathbb{R}$ continua.
+    Allora $f$ è integrabile in $\Omega$.
+}
+\dfn{Insieme misurabile}
+{
+    Un insieme limitato $\Omega \subseteq \mathbb{R}^2$ si dice \textbf{misurabile} (secondo Peano-Jordan) 
+    se la funzione costante $1$ è integrabile su $\Omega$.
+    In tal caso chiameremo \textbf{misura} o \textbf{area} di $\Omega$ il numero:
+    \[|\Omega| = \iint_\Omega 1 dxdy\]
+}
+
+\subsubsection{Proprietà dell'integrale doppio}
 
 \end{document}
