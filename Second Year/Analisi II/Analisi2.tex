@@ -1888,4 +1888,50 @@ In particolare una funzione definita su insieme regolare, dal teorema di Weirstr
 
 \subsubsection{Proprietà dell'integrale doppio}
 
+Siano $\Omega \subseteq \mathbb{R}^2$ un insieme limitato e misurabile. Siano $f$ e $g$ integrabili su $\Omega$ e sia $c \in \mathbb{R}$ una costante.
+Allora valgono le seguenti proprietà:
+
+\begin{itemize}
+    \item \textbf{Linearità}:
+    \[\iint_\Omega (f(x,y) + g(x,y)) dxdy = \iint_\Omega f(x,y) dxdy + \iint_\Omega g(x,y) dxdy\]
+    \[\iint_\Omega (cf(x,y)) dxdy = c\iint_\Omega f(x,y) dxdy\]
+    \item \textbf{Positività e monotonia}:
+    \[f \ge 0 \; \; \text{ in } \; \Omega \Longrightarrow \iint_\Omega f(x,y)dxdy \ge 0\]
+    \[f \ge g \; \; \text{ in } \; \Omega \Longrightarrow \iint f(x,y)dxdy \ge \iint g(x,y) dxdy\]
+    \[|f(x,y)| \le c \Longrightarrow \left|\iint_{\Omega} f(x,y)dxdy\right| \le \iint |f(x,y)|dxdy \le c|\Omega|\]
+\end{itemize}
+\noindent
+Valgono altre proprietà di additività e monotonia sull'integrale rispetto al dominio di integrazione.
+
+\subsubsection{Integrali doppi: riduzione per domini semplici}
+
+\thm{}
+{
+    Sia $f: \Omega \subseteq \mathbb{R}$ una funzione continua e sia $\Omega$ un dominio $x$-semplice, cioè
+    \[\Omega := \{(x,y) \in \mathbb{R}^2 : y \in [c,d], h_1(y) \le x \le h_2(y)\}\]
+    con $h_1, h_2 : [c,d] \rightarrow \mathbb{R}$ funzioni continue. Allora l'integrale doppio
+    \[\iint_\Omega f(x,y)dxdy = \int_c^d \left( \int_{h_1(y)}^{h_2(y)} f(x,y)dx\right)dy\] 
+    Analogamente se $\Omega$ è un dominio $y$-semplice, cioè
+    \[\Omega := \{(x,y) \in \mathbb{R}^2 : x \in [a,b], g_1(x) \le y \le g_2(x)\}\]
+    con $g_1, g_2 : [a,b] \rightarrow \mathbb{R}$ funzioni continue. Allora l'integrale doppio
+    \[\iint_\Omega f(x,y)dxdy = \int_a^b \left( \int_{g_1(x)}^{g_2(x)} f(x,y)dy\right)dx\]
+    Se $\Omega$ è sia $x$-semplice che $y$-semplice, valgono entrambe le formule.
+}
+\ex{}
+{
+    Si calcoli 
+    \[\iint_A 2xdxdy\]
+    con
+    \[A = \{(x,y) \in \mathbb{R}^2 : x \ge 0, y \ge \frac{\sqrt{3}}{2}, \frac{x^2}{4} + y^2 \le 1\}\]
+    Il dominio di $A$ è $y$-semplice, allora possiamo riscrivere il dominio come:
+    \[A = \left\{(x,y) \in \mathbb{R}^2 : 0 \le x \le 1, \frac{\sqrt{3}}{2} \le y \le \sqrt{1 - \frac{x^2}{4}}\right\}\]
+    da cui 
+    \[
+    \begin{aligned}
+        \iint_A 2xdxdy &= \int_0^1 2xdx \left(\int_{\frac{\sqrt{3}}{2}}^{\sqrt{1 - \frac{x^2}{4}}}dy\right) = \int_0^1 2x\left(\sqrt{1 - \frac{x^2}{4} - \frac{\sqrt{3}}{2}}\right)\\
+        &= \int_0^1 2x\sqrt{1 - \frac{x^2}{4}}dx - \sqrt{3}\int_{0}^{1} x dx = - \left(1 - \frac{x^2}{4}\right)^{\frac{3}{2}} \frac{2}{3}4\Bigg|_0^1  - \frac{\sqrt{3}}{2}x^2\Bigg|_0^1\\
+        &= -\frac{3}{2}\sqrt{3} + \frac{8}{3}
+    \end{aligned}
+    \]
+}
 \end{document}

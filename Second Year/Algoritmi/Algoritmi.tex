@@ -727,7 +727,7 @@ si posson rappresentare i numeri in base $n$ e quindi ottenere un algoritmo line
 
 \subsubsection{Bucket Sort}
 
-Il Bucket Sort è un algoritmo di ordinamento che funziona bene quando i dati sono distribuiti uniformemente. Quindi
+Il Bucket Sort è un algoritmo di ordinamento applicabile quando la distribuzione dei dati è nota. Quindi
 su un array di $n$ elementi \textbf{distribuiti uniformemente} su $[0, 1)$, si può dividere l'intervallo in $n$ sottointervalli
 con probabilità $\frac{1}{n}$ e poi ordinare i singoli sottointervalli chiamate anche \textit{"Bucket"}.
 Infatti se i dati sono distribuiti uniformemente allora la complessità dell'algoritmo è lineare: \[\Theta(n)\]Questo
@@ -4514,6 +4514,290 @@ Abbiamo trovato un albero di copertura di costo minimo, che è l'insieme degli a
 Settare il primo nodo a $0$ va bene solo se sappiamo che il grafo ha solo pesi positivi o comunque sia il primo ad essere
 estratto. Ecco perché una chiave come $-\infty$ sarebbe stata più corretta. 
 Settare tutti gli altri nodi a $\infty$ ha complessità $O(V)$ e poi $V$ volte l'extract min richiede $O(V \log V)$.
+
+
+\subsection{Cammini minimi}
+
+In questo caso, non voglio più un albero di copertura che colleghi tutti i nodi, ma voglio trovare il cammino minimo da un nodo di partenza ad un nodo di arrivo.
+Un algoritmo per il cammino minimo avrà come input un grafo $G = (V, E)$ (con la sua $w$ che è la matrice dei pesi) e un nodo di partenza $s \in V$ e come output un cammino di costo minimo.
+Di cammini minimi ne potrebbero esistere molti, come zero.
+Non abbiamo la garanzia che esista un cammino minimo anche se il grafo è connesso, perché ci potrebbero essere dei cicli negativi e questo la rende la soluzione impossibile.
+
+\begin{lemma}
+  Sia $P$ un cammino minimo da $s$ a $v$ e sia $u$ il predecessore di $v$ in $p$. 
+  \[P: S \rightarrow  u \rightarrow v\]
+  Allora il prefisso di $P$ da $S$ a $V$ è un cammino minimo da $S$ a $u$.
+\end{lemma}
+\noindent
+Conseguenza di questo lemma: possiamo rappresentare alcuni insieme di cammini minimi con un albero radicato in $S$ (albero dei cammini minimi).
+Quindi possiamo ricollegarci ad un problema di cammini minimi.\\
+Partiamo ad una stima iniziale:
+\begin{itemize}
+  \item Un cammino di costo minimo da $s$ a $_1$ se esiste, ha costo $0$.
+  \item Tutti gli altri nodi sono raggiungibili con costo infinito.
+\end{itemize}
+\begin{lstlisting}[language=Scala]
+init(G,s) 
+  forall u in V[G]
+    d[u] <- inf
+    pi[u] <- nil
+  d[s] <- 0
+\end{lstlisting}
+\noindent
+Cerchiamo di migliorare questa stima iniziale, tramite il rilassamento degli archi.
+\begin{lstlisting}[language=Scala]
+relax(u,v,w)
+  if d[v] > d[u] + w(u,v) then
+    d[v] <- d[u] + w(u,v)
+    pi[v] <- u
+\end{lstlisting}
+\begin{figure}[H]
+  \centering
+
+
+  \begin{tikzpicture}[>=Stealth, node distance=2.8cm, on grid, auto]
+
+    % Nodes
+    \node[circle, draw, thick, minimum size=1.2cm] (s) {$S$};
+    \node[circle, draw, thick, minimum size=1.2cm, right=of s] (u) {$u$};
+    \node[circle, draw, thick, minimum size=1.2cm, right=of u] (v) {$v$};
+  
+    % Arrows
+    \draw[->, thick] (s) -- node[midway, above] {$d[u]$} (u);
+    \draw[->, thick] (u) -- node[midway, above] {$w(u,v)$} (v);
+    \draw[->, thick, bend left=40] (s) to node[midway, above] {$d[v]$} (v);
+  \end{tikzpicture} 
+\end{figure}
+In poche parole se il percorso alternativo è migliore di quello attuale, allora aggiorniamo il cammino minimo. Aggiorno anche il predecessore di $v$ a $u$.
+Se ho un albero dei cammini minimi, allora nessun arco è rilassabile.
+\[\forall (u,v \in E[G] \; \; \; d[v] \le d[v] + w(u,v))\]
+Se questa condizione è vera (Disequazione di Bellman) allora abbiamo trovato un albero dei cammini minimi.
+Come potremmo rilassare gli archi di un grafo in modo da arrivare ad un albero dei cammini minimi?
+Proponiamo l'algorimo di Dijkstra, che funziona solo se non esistono archi negativi.
+\begin{lstlisting}[language=Scala]
+Dijkstra(G,w,s)
+  Init(G,w)
+  Q <- V[G] // coda di priorita ordinata su d
+  while Q non e vuota
+    u <- extract_min(Q) // nodo con d[u] minimo
+    per ogni v in Adj[u]
+      relax(u,v,w)
+\end{lstlisting}  
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={-latex, circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (S) {S};
+  \node[state] (C) [below right=of S] {C};
+  \node[state] (A) [above right =of S] {A};
+  \node[state] (B) [right=of A] {B};
+  \node[state] (D) [right=of C] {D};
+ 
+  \draw[->] (S) -- node[above]{$3$} (A) node[above, yshift=12pt, blue] {$\infty$};
+  \draw[->] (S) -- node[below]{$5$} (C) node[below, yshift=-12pt, blue] {$\infty$}; 
+  \path[->] (C) edge [bend left =25] node[right =0.1 cm] {$1$} (A);
+  \path[->] (A) edge [bend left =25] node[left =0.1 cm] {$1$} (C);
+  \draw[->] (C) -- node[below]{$6$} (D) node[above, yshift=-22pt, blue] {$\infty$};
+  \draw[->] (C) -- node[above]{$4$} (B) node[above, yshift=12pt, blue] {$\infty$};
+  \draw[->] (A) -- node[above]{$6$} (B);
+  \path[->] (D) edge [bend left =25] node[right =0.1 cm] {$17$} (B);
+  \path[->] (B) edge [bend left =25] node[left =0.1 cm] {$2$} (D);
+\end{tikzpicture} 
+\end{figure}
+\noindent
+Iniziamo a rilassare gli archi partendo da $S$.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={-latex, circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (S) {S};
+  \node[state] (C) [below right=of S] {C};
+  \node[state] (A) [above right =of S] {A};
+  \node[state] (B) [right=of A] {B};
+  \node[state] (D) [right=of C] {D};
+ 
+  \draw[->] (S) -- node[above]{$3$} (A) node[above, yshift=12pt, blue] {$3$};
+  \draw[->] (S) -- node[below]{$5$} (C) node[below, yshift=-12pt, blue] {$5$}; 
+  \path[->] (C) edge [bend left =25] node[right =0.1 cm] {$1$} (A);
+  \path[->] (A) edge [bend left =25] node[left =0.1 cm] {$1$} (C);
+  \draw[->] (C) -- node[below]{$6$} (D) node[above, yshift=-22pt, blue] {$\infty$};
+  \draw[->] (C) -- node[above]{$4$} (B) node[above, yshift=12pt, blue] {$\infty$};
+  \draw[->] (A) -- node[above]{$6$} (B);
+  \path[->] (D) edge [bend left =25] node[right =0.1 cm] {$17$} (B);
+  \path[->] (B) edge [bend left =25] node[left =0.1 cm] {$2$} (D);
+
+  \draw[red, ->, dashed] (A) -- (S);
+  \draw[red, ->, dashed] (C) -- (S);
+\end{tikzpicture}
+\end{figure}
+\noindent
+Ogni volta che rilassiamo un arco con Dijkstra, lo stiamo rilassando da un nodo che ha già un cammino minimo.
+Procediamo rilassando gli archi di $A$.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={-latex, circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (S) {S};
+  \node[state] (C) [below right=of S] {C};
+  \node[state] (A) [above right =of S] {A};
+  \node[state] (B) [right=of A] {B};
+  \node[state] (D) [right=of C] {D};
+ 
+  \draw[->] (S) -- node[above]{$3$} (A) node[above, yshift=12pt, blue] {$3$};
+  \draw[->] (S) -- node[below]{$5$} (C) node[below, yshift=-12pt, blue] {$4$}; 
+  \path[->] (C) edge [bend left =25] node[right =0.1 cm] {$1$} (A);
+  \path[->] (A) edge [bend left =25] node[left =0.1 cm] {$1$} (C);
+  \draw[->] (C) -- node[below]{$6$} (D) node[above, yshift=-22pt, blue] {$\infty$};
+  \draw[->] (C) -- node[above]{$4$} (B) node[above, yshift=12pt, blue] {$9$};
+  \draw[->] (A) -- node[above]{$6$} (B);
+  \path[->] (D) edge [bend left =25] node[right =0.1 cm] {$17$} (B);
+  \path[->] (B) edge [bend left =25] node[left =0.1 cm] {$2$} (D);
+
+  \draw[red, ->, thick] (A) -- (S);
+  \draw[red, ->, thick] (C) -- (A);
+  \draw[red, ->] (B) -- (A);
+\end{tikzpicture}
+\end{figure}
+\noindent
+Ora rilassiamo gli archi di $C$.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={-latex, circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (S) {S};
+  \node[state] (C) [below right=of S] {C};
+  \node[state] (A) [above right =of S] {A};
+  \node[state] (B) [right=of A] {B};
+  \node[state] (D) [right=of C] {D};
+ 
+  \draw[->] (S) -- node[above]{$3$} (A) node[above, yshift=12pt, blue] {$3$};
+  \draw[->] (S) -- node[below]{$5$} (C) node[below, yshift=-12pt, blue] {$4$}; 
+  \path[->] (C) edge [bend left =25] node[right =0.1 cm] {$1$} (A);
+  \path[->] (A) edge [bend left =25] node[left =0.1 cm] {$1$} (C);
+  \draw[->] (C) -- node[below]{$6$} (D) node[above, yshift=-24pt, blue] {$10$};
+  \draw[->] (C) -- node[above]{$4$} (B) node[above, yshift=12pt, blue] {$8$};
+  \draw[->] (A) -- node[above]{$6$} (B);
+  \path[->] (D) edge [bend left =25] node[right =0.1 cm] {$17$} (B);
+  \path[->] (B) edge [bend left =25] node[left =0.1 cm] {$2$} (D);
+
+  \draw[red, ->, thick] (A) -- (S);
+  \draw[red, ->, thick] (C) -- (A);
+  \draw[red, ->, thick] (B) -- (C);
+\end{tikzpicture}
+\end{figure}
+\noindent
+Ora rilassiamo gli archi di $B$.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={-latex, circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (S) {S};
+  \node[state] (C) [below right=of S] {C};
+  \node[state] (A) [above right =of S] {A};
+  \node[state] (B) [right=of A] {B};
+  \node[state] (D) [right=of C] {D};
+ 
+  \draw[->] (S) -- node[above]{$3$} (A) node[above, yshift=12pt, blue] {$3$};
+  \draw[->] (S) -- node[below]{$5$} (C) node[below, yshift=-12pt, blue] {$4$}; 
+  \path[->] (C) edge [bend left =25] node[right =0.1 cm] {$1$} (A);
+  \path[->] (A) edge [bend left =25] node[left =0.1 cm] {$1$} (C);
+  \draw[->] (C) -- node[below]{$6$} (D) node[above, yshift=-24pt, blue] {$10$};
+  \draw[->] (C) -- node[above]{$4$} (B) node[above, yshift=12pt, blue] {$8$};
+  \draw[->] (A) -- node[above]{$6$} (B);
+  \path[->] (D) edge [bend left =25] node[right =0.1 cm] {$17$} (B);
+  \path[->] (B) edge [bend left =25] node[left =0.1 cm] {$2$} (D);
+
+  \draw[red, ->, thick] (A) -- (S);
+  \draw[red, ->, thick] (C) -- (A);
+  \draw[red, ->, thick] (B) -- (C);
+  \draw[red, ->, thick] (D) -- (C);
+  \end{tikzpicture}
+\end{figure}
+\noindent
+Rilassando gli archi di $D$ non otteniamo nessun miglioramento, perché il cammino minimo da $S$ a $D$ è 10 e non 8.
+Fatto ciò discutiamo la complessità dell'algoritmo di Dijkstra.
+La Init richiede $O(V)$, l'extract min richiede $O(V)$ e rilassare un arco richiede una riduzione di chiave che richiede $O(E)$.
+Di base ho \[V + E + VC(ExtMin) + EC(RedKey)\]
+quindi dipende dalla struttura dati che utilizziamo per la coda di priorità e come implementata la riduzione di chiave.
+
+\begin{itemize}
+  \item Lista ordinata: $O(V^2 + E + EV) = O(V + E + EV)$
+  \item Lista non ordinata: $O(V + E + V^2 + E) = O(V^2 + E) = O(V^2)$, mi costa molto mantenerla ordinata quindi è più conveniente non tenerla ordinata.
+  \item Heap: $O(V + E + V \log V + E \log V) = O((V+E)\log V)$, questo perché l'extract min richiede $O(\log V)$ e la riduzione di chiave richiede $O(\log V)$.
+  Tuttavia, se il grafo è sparso conviene ma se fosse completo allora conviene utilizzare la lista non ordinata.
+\end{itemize}
+\begin{lstlisting}[language=Scala]
+BellMan-Ford(G,w,s)
+  Init(G,s)
+    for i <- 1 to V[G] - 1 do
+      for (u,v) in E[G] do
+        relax(u,v,w)
+\end{lstlisting}
+BellMan-Ford semplicemente rilassa tutti gli archi $V-1$ volte, perché sappiamo che un cammino minimo non può avere più di $V-1$ archi.
+\begin{lstlisting}[language=Scala]
+per ogni (u,v) in E[G]
+  if d[v] > d[u] + w(u,v) then
+    return false // questo accade se esiste un ciclo negativo
+return true // albero dei cammini minimi
+\end{lstlisting}
+\begin{lemma}
+  Dopo $i$ iterazione tutti i cammini minimi tra quelli che contengono al più $i$ archi sono stati trovati.
+\end{lemma}
+\noindent
+\begin{proof}
+  Base: $i = 0$, $S$ è l'unico nodo con un cammino minimo, quindi è vero.
+  Induzione: supponiamo sia vero per $i$, dimostriamo $i+1$. 
+  Consideriamo un cammino minimo $P$ da $S$ a $v$ con al più $i+1$ archi, quindi ha un predecessore $u$ che ha al più $i$ archi.
+  Per ipotesi induttiva, dopo $i$ iterazioni, il cammino minimo da $S$ a $u$ è stato trovato e quindi rilassando l'arco $(u,v)$ otteniamo il cammino minimo da $S$ a $v$.
+\end{proof}
+La complessità di BellMan-Ford è $O(VE)$, perché rilassiamo tutti gli archi $V-1$ volte e quindi abbiamo $O(VE)$.
+Supponiamo che esista un ciclo negativo ma che BF non se ne accorga.
+Sia $\{v_0, v_1, \dots, v_n, v_0\}$ un ciclo negativo. Supponiamo BF non restituisca $false$.
+Andiamo a controllare ogni singolo arco di questo ciclo.
+\[
+\begin{aligned}
+  d[v_1] &\le d[v_0] + w(v_0, v_1)\\
+  d[v_2] &\le d[v_1] + w(v_1, v_2)\\
+  &\vdots\\
+  d[v_n] &\le d[v_{n-1}] + w(v_{n-1}, v_n)\\
+  d[v_0] &\le d[v_{n}] + w(v_{n}, v_0)\\
+  ----&----------\\
+  \sum_{i=0}^n d[v_i] &\le \sum_{i=0}^{n} d[v_i] + \sum_{i=0}^{n} w(v_i, v_{i+1})
+\end{aligned}
+\]
+Tuttavia 
+\[  \cancel{\sum_{i=0}^n d[v_i]} \le \cancel{\sum_{i=0}^{n} d[v_i]} + \underbrace{\sum_{i=0}^{n} w(v_i, v_{i+1})}_{\text{Costo del ciclo}} \]
+Quindi rimane
+\[0 \le \sum_{i=0}^{n} w(v_i, v_{i+1})\]
+Ma questo è falso, perché abbiamo presupposto che il ciclo fosse negativo. Quindi 
+l'algoritmo di BellMan-Ford non può sbagliare se il grafo ha cicli negativi.
+Proviamo a vedere se esistono algoritmi per grafi aciclici.
+\begin{lstlisting}[language=Scala]
+DAG_SP(G,w,s)
+  Init(G,s)
+  Calcola ordinamento topologico di G
+  per ogni u in V[G] in ordine topologico
+    for ogni v in Adj[u]
+      relax(u,v,w)
+\end{lstlisting}
+\noindent
+Grazie all'ordinamento topologico possiamo direttamente sapere se il grafo è aciclico o meno, perché altrimenti non riuscirebbe a trovarne
+un ordinamento topologico. L'ordinamento topologico ha come complessità $O(V+E)$, la relax la facciamo una volta per ogni arco e quindi la complessità è $O(V+E)$.
+E se noi volessimo calcolare il cammino di costo \textbf{massimo}? In questo caso ci basterebbe invertire i segni dei pesi e applicare l'algoritmo di Dijkstra e adattare
+l'algoritmo e ricondurmi al problema del cammino minimo. 
+Se qualcuno volesse rendere massimo il prodotto? Posso utilizzare i logaritmi, perché il logaritmo di un prodotto è la somma dei logaritmi e di conseguenza 
+ricondurmi nuovamente al problema del cammino minimo.
+
 
 
 \end{document}
