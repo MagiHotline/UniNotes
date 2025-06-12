@@ -1934,4 +1934,90 @@ Valgono altre proprietà di additività e monotonia sull'integrale rispetto al d
     \end{aligned}
     \]
 }
+
+\subsection{Calcolo per integrali doppi: cambiamento di variabili}
+
+\thm{}
+{
+    Sia $D \subseteq \mathbb{R}^2$ un dominio regolare, $f : D \mapsto \mathbb{R}$ una funziona continua 
+    e $T': D' \mapsto D$ una trasformazione di coordinate, più precisamente un diffeomorfismo globale tra $D$ e $D'$
+    con $(x,y) = T(u,v)$ e:
+    \[\begin{cases}
+        x = g(u,v)\\
+        y = h(u,v)
+    \end{cases}\]
+    Allora
+    \[\iint_D f(x,y)\; dx \; dy = \iint_{D'} f(g(u,v), h(u,v))|detJT(u,v)|dudv\]
+    dove
+    \[JT(u,v) = \begin{pmatrix}
+        g_u & g_v\\
+        h_u & h_v
+    \end{pmatrix}\]
+    indica la matrice Jacobiana della trasformazione.
+}
+
+\ex{}
+{
+    Si calcoli l'integrale doppio 
+    \[\iint_D (y^2 +1) dxdy \]
+    dove $D$ è la parte dell'ellisse $\{(x,y)\in \mathbb{R}^2 : x^2 + 4y^2 \le 1\}$ contenuta nel secondo quadrante. 
+    Si può usare il cambiamento di variabili:
+    \[
+    \begin{cases}
+        x = \rho \cos{\theta}\\
+        y = \frac{\rho}{2} \sin{\theta}
+    \end{cases}
+    \]
+    con $\rho \in [0,1]$ e $\theta \in \left[\frac{\pi}{2}, \pi\right]$.
+    Calcoliamo il determinante della matrice Jacobiana:
+    \[J = \begin{pmatrix}
+       \cos{\theta} & -\rho \sin{\theta}\\
+         \frac{1}{2} \sin{\theta} & \frac{\rho}{2} \cos{\theta}
+    \end{pmatrix}\]
+    da cui
+    \[\det{J} = \frac{\rho}{2}\cos^2{\theta} + \frac{\rho}{2}\sin^2{\theta} = \frac{1}{2}\rho\]
+    Quindi l'integrale diventa:
+    \[\begin{aligned}    
+        \iint_D y^2 +  1 \; dxdy &= \int_0^1 \rho \; \; d\rho \int_{\frac{\pi}{2}}^{\pi} \frac{1}{2}\rho \left(\frac{1}{4}\rho^2 \sin^2{\theta} + 1\right) d\theta\\
+        &= \frac{1}{8}\left(\int_0^1 \rho^3 d\rho\right) \left(\int_{\frac{\pi}{2}}^{\pi} \sin^2{\theta}d\theta\right) + \frac{1}{2}\left(\int_0^1 \rho d\rho\right) \left(\int_{\frac{\pi}{2}}^{\pi} d\theta\right)\\
+        &= \frac{1}{8}\frac{\rho^4}{4}\Bigg|_0^1 \left(\frac{1}{2}\theta - \frac{1}{2}\sin{\theta}\cos{\theta} \right)\Bigg|_{\frac{\pi}{2}}^{\pi} + \frac{1}{2}\frac{\rho^2}{2}\Bigg|_0^1 \theta\Bigg|^{\pi}_{\frac{\pi}{2}}\\
+        &= \frac{\pi}{128} + \frac{\pi}{8} = \frac{17}{128}\pi
+    \end{aligned}
+    \]
+}
+
+\subsection{Integrali tripli}
+
+Tutto quanto detto fino ad ora si può generalizzare per dimensioni superiori.
+Sia
+\[\Omega = \{(x,y,z) \in \mathbb{R}^3 : g_1(x,y) \le z \le g_2(x,y),  (x,y) \in D\}\]
+con $D$ dominio regolare e $g_1, g_2: D \rightarrow \mathbb{R}$ continue. Allora se anche $f : \Omega \rightarrow \mathbb{R}$
+è una funzione continua e integrabile su $\Omega$, allora l'integrale triplo si può calcolare mediante la formula:
+\[\iiint_\Omega f(x,y,z) \; dxdydz = \iint_D \left(\int_{g_1(x,y)}^{g_2(x,y)} f(x,y,z) dz\right)dxdy\]
+
+\subsubsection{Integrazione per "strati"}
+
+Sia ora
+\[\Omega = \{(x,y,z) \in \mathbb{R}^3 : h_1 \le z \le h_2, (x,y) \in \Omega(z)\}\]
+con $z \in [h_1, h_2]$ e $\Omega(z)$ un dominio regolare nel piano. 
+Allora se $f : \Omega \mapsto \mathbb{R}$ continua e integrabile su $\Omega$ 
+allora l'integrale triplo si può calcolare tramite la formula:
+\[\iiint_\Omega f(x,y,z)dxdydz = \int_{h_1}^{h_2} \left(\iint_{\Omega(z)} f(x,y,z) dxdy\right)dz\]
+
+\subsubsection{Formula di cambiamento delle variabili}
+
+\thm{}
+{
+    Sia $D \subseteq \mathbb{R}^3$ un dominio regolare, $f : D \mapsto \mathbb{R}$ una funzione continua e 
+    $T' : D' \mapsto D$ una trasformazione di coordinate, più precisamente un diffeomorfismo globale tra $D$ e $D'$,
+    con $(x,y,z) = T(u,v,w)$ e 
+    \[\begin{cases}
+        x = x(u,v,w)\\
+        y = y(u,v,w)\\
+        z = z(u,v,w)
+    \end{cases}\] 
+    Allora
+    \[\iiint_D f(x,y,z)dxdydz = \iiint_{D'}f(x(u,v,w), y(u,v,w), z(u,v,w)\det{JT(u,v,w)} dudvdw)\]
+}
+
 \end{document}

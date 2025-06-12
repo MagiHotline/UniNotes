@@ -188,22 +188,23 @@ Quando si parla di ordine di grandezza si parla in realtà del comportamento asi
 
 
 
-\begin{examplebox}{Esempio 1}
+\ex{}{
 Questa affermazione vale?
 \[n \in O(2n)\]
 Sì, perché esiste un $c$ che soddisfa $n \le c2n$.\\\\
 Quest'altra affermazione vale?
 \[2n \in O(n)\]
 Sì perché esiste un $c$ che soddisfa $2n \le 2n$.
-\end{examplebox}
-\begin{examplebox}{Esempio 2}
+}
+\ex{}
+{
 Questa affermazione vale?
 \[f \in O(g) \Longleftrightarrow g \in \Omega(g)\]
 Proviamo a dimostrare. Sappiamo che esiste un $c$ e $\overline{n}$ tale che \(\forall n > \overline{n} \; f(n) \le cg(n)\). Isoliamo la g:
 \[g(n) \ge \frac{1}{c} f(n)\]
 Esiste quindi un c' che soddisfa la disuguaglianza.
 \[c' = \frac{1}{c}\]
-\end{examplebox}
+}
 \begin{examplebox}{Esempio 3}
 
 \[f_1 \in O(g),
@@ -4798,6 +4799,144 @@ l'algoritmo e ricondurmi al problema del cammino minimo.
 Se qualcuno volesse rendere massimo il prodotto? Posso utilizzare i logaritmi, perché il logaritmo di un prodotto è la somma dei logaritmi e di conseguenza 
 ricondurmi nuovamente al problema del cammino minimo.
 
+\subsection{Cammini minimi con sorgente multipla}
+
+Dobbiamo risolvere ora il problema di cammini minimi non con una singola sorgente ma per ogni coppia di nodi (da un nodo $A$ ad un nodo $B$).
+Si potrebbe risolvere facilmente applicando un qualsiasi algoritmo per cammini minimi per ogni nodo sorgente. La complessità di questo approccio sarebbe applicare Bellman-Ford ($O(VE)$) 
+per ogni nodo e quindi la complessità finale sarebbe $O(V^2E)$.
+Si può ottenere un algoritmo più efficiente, cercando di rappresentare il nostro problema come una matrice, dove $D_{ij}$ è il costo del camminimo minimo da $i$ a $j$ e $\pi_{ij}$ è il predecessore del nodo $j$ nel cammino da $i$ a $j$.
+\begin{lstlisting}[language=Scala]
+print_path(pi, i, j)
+  if pi[i][j] == nil then
+    print(i, j)
+  else
+    print_path(pi, i, pi[i][j])
+    print(pi[i][j], j)
+\end{lstlisting}
+\noindent
+Vediamo di visualizzare il problema con un esempio. Facciamo una init per ogni riga.
+\[
+D^0 = \begin{pmatrix}
+  0 & \infty & \dots & \dots & \infty\\
+  \infty & 0 & \infty & \dots & \vdots\\
+  \vdots & \infty & 0 & \infty & \vdots\\
+  \vdots & \infty & \infty & 0 & \vdots\\
+  \infty & \infty & \infty & \infty & 0
+\end{pmatrix} \; \; \; \; \; \; D^0 \leftarrow Init(G,w)
+\]
+\begin{lstlisting}[language=Scala]
+extend_sp(D, W)
+  n <- rows(D)
+  sia D' una matrice n x n
+  for i <- 1 to n 
+    for j <- 1 to n
+      D'[i][j] <- infinito 
+      for k <- 1 to n
+        D'[i][j] <- min(D[i][j], D[i][k] + W[k][j]) // il rilassamento
+        // non e nient altro che un minimo
+  return D'
+
+all_pairs_sp(G,w) 
+  D^0 <- Init(G,w)
+  for l <- 1 to |V[G]| - 1 do
+    D^l <- extend_sp(D^{l-1}, W)
+  D^|V(G)| <- extend_sp(D^{|V(G)|-1}, W)
+  if D^|V(G)|[i][i] != D^V(G)-1 then
+    return false // esiste un ciclo negativo
+  else
+    return D^|V(G)|
+\end{lstlisting}
+\noindent
+Come possiamo vedere la complessità è di fare un extend-sp per ogni nodo e l'extend shortest path ha come complessità $O(V^3)$
+che devo fare $V$ volte e quindi la complessità finale è $O(V^4)$.
+Siamo abituati a lavorare con somma e prodotti, ora stiamo lavorando con min e somma. Quindi quello che stiamo facendo è un \textbf{algebra di min-somma}.
+Quello che stiamo facendo in realtà non è nient'altro che moltiplicazioni di matrici ma con un'algebra diversa.
+\[D^0 \cdot W^{V-1}\]
+Possiamo notare come la matrice $D^0$ non è nient'altro che la matrice identità ma con l'algebra di min-somma.
+\[D_0 = \begin{pmatrix}
+  0 & \infty & \infty\\
+  \infty & 0 & \infty\\
+  \infty & \infty & 0
+\end{pmatrix} \rightarrow \begin{pmatrix}
+  1 & 0 & 0\\
+  0 & 1 & 0\\
+  0 & 0 & 1
+\end{pmatrix} = I_3\]
+Questo perché  1 è l'elemento neutro della somma e 0 è l'elemento neutro del min.
+Mentre per la matrice $D_0$ l'elemento neutro della somma è $\infty$ e l'elemento neutro della somma è 0.
+Stiamo anche calcolando una potenza di $W$ e per ora abbiamo visto come il prodotto di matrici ha come complessità $O(V^4)$.
+Si può fare meglio di così?
+\begin{lstlisting}[language=Scala]
+Floyd-Warshal(W)
+  D^k[i][j] costo minimo da i a j che usa solo nodi di {1 ... k} come nodi intermedi
+  n <- rows(W)
+  D^0 <- W // le distanze iniziali coincidono con i pesi degli archi
+  for k <- 1 to N
+    for i <- 1 to n
+      for j <- 1 to n
+        D^k[i][j] <- min(D^{k-1}[i][j], D^{k-1}[i][k] + D^{k-1}[k][j])
+\end{lstlisting}
+Questo è il modo in cui rappresentiamo il rilassamento:
+\[        D^k[i][j] \leftarrow min(D^{k-1}[i][j], D^{k-1}[i][k] + D^{k-1}[k][j])
+\]
+Tra $i$ e $j$ uso:
+\begin{itemize}
+  \item O lo stesso per corso percorso precedente (senza passaer per $k$)
+  \item Oppure un nuovo percorso che passa per $k$ se è migliore 
+\end{itemize}
+\begin{figure}[H]
+  \centering
+
+
+  \begin{tikzpicture}[>=Stealth, node distance=2.8cm, on grid, auto]
+
+    % Nodes
+    \node[circle, draw, thick, minimum size=1.2cm] (s) {$i$};
+    \node[circle, draw, thick, minimum size=1.2cm, right=of s] (u) {$k$};
+    \node[circle, draw, thick, minimum size=1.2cm, right=of u] (v) {$j$};
+  
+    % Arrows
+    \draw[->, thick] (s) -- node[midway, above] {$D^{k-1}[i][k]$} (u);
+    \draw[->, thick] (u) -- node[midway, above] {$D^{k-1}[k][j]$} (v);
+    \draw[->, thick, bend left=40] (s) to node[midway, above] {$D^{k-1}[i][j]$} (v);
+  \end{tikzpicture} 
+\end{figure}
+\noindent
+Questo algoritmo ha come complessità $O(V^3)$, perché abbiamo tre cicli annidati che iterano su $V$.
+Supponiamo ora che tutti pesi non negativi, possiamo usare l'algoritmo di Dijkstra per ogni nodo sorgente $(V+E)\log{V}$.
+La complessità finale è $V(V+E)\log{V} = V^2\log{V} + VE\log{V}$. 
+Se il grafo è sparso ($E = \Theta(V)$) allora la complessità è $O(V^2\log{V})$ che è meglio di Floyd-Warshall.
+Quindi un algoritmo migliore di Floyd-Warshall esiste solo se il grafo è sparso e non ci sono pesi negativi.
+E se ci fossero pesari negativi invece? Johnson, un famoso ricercatore disse: "e se trasformasimo i pesi del grafo in modo da non avere pesi negativi?".
+Una soluzione ovvia potrebbe essere di sommare una costante che potrebbe essere opposta al valore più baso nei pesi del grafo.
+Tuttavia se applicassimo questo metodo vorrebbe dire che se esistesse un ciclo negativo (che di base non ha soluzione) allora 
+sarebbe trasformato in un ciclo positivo e questo porterebbe ad una soluzione, quindi per contraddizione questo metodo non è applicabile.
+L'idea che ha avuto Johnson è quello di prendere un \textbf{super nodo} $s$ e collegarlo a tutti i nodi del grafo con archi di peso $0$.
+Usare ora $BF$ per calcolare i cammini minimi da $s$ a tutti gli altri nodi.
+Sia $d$ la funzione distinza minima. Sia $h \stackrel{\Delta}{=} d$. 
+La complessità: $VE + VE\log{V} = VE\log{V}$ per grafi sparsi, diventa $V^2\log{V}$. 
+\begin{proof}
+  Sia $h : V \rightarrow \mathbb{R}$ dove $\hat{w}(u,v) = w(u,v) + h[u] - h[v]$.
+  L'algoritmo di Johnson per funzionare deve trovare una funzione $h$ buona che soddisfi l'equazione prima citata. Utilizzeremo la funzione di distanza come funziona $h$.
+  Ricordiamo che BF si accorge se ci sono cicli negativi, quindi se ne trova uno si ferma subito e afferma che non esiste un albero dei cammini minimi.
+  Se invece non trova cicli negativi, allora trova sicuramente una soluzione. Ci basta fare l'algoritmo di BF solo una volta e poi andare di Dijkstra sapendo
+  che non ci sono cicli negativi.
+  \[
+  \begin{aligned}
+    \forall (u,v) \in E[G] \; \; d[v] &\le d[u] + w(u,v)\\
+    0 &\le d[u] + w(u,v) - d[v]\\
+    &= w(u,v) + d[u]- d[v] =  \hat{w}(u,v)
+  \end{aligned}
+  \]
+\end{proof}
+\noindent
+Se io invece volessi in qualche modo evitare i cicli negativi e comunque trovare una soluzione da un nodo $A$ e un nodo $B$ nello stesso grafo?
+Un modo potrebbe essere quello di considerare solo i nodi che sono raggiungibili da $A$ e che possono raggiungere $B$ solo questi nodi possono essere considerati per il calcolo del cammino minimo.
+Per capire quali nodi sono raggiungibili da $A$ e possono raggiungere $B$ possiamo utilizzare un DFS o BFS da entrambi i nodi.
+Prima faccio una visita dal nodo $A$ e li marco, subito dopo faccio la stessa cosa da $B$ ma questa volta in modo inverso, tramite il grafico trasposto.
+E quindi rimuovo tutti i nodi che non sono stati marcati in entrambi i casi e applico il cammino minimo su questo grafo ridotto.
+
+\subsection{Flusso massimo}
 
 
 \end{document}
