@@ -4938,5 +4938,260 @@ E quindi rimuovo tutti i nodi che non sono stati marcati in entrambi i casi e ap
 
 \subsection{Flusso massimo}
 
+I problemi di flusso massimo sono un argomento molto importante in informatica, perché sono alla base di molti algoritmi e applicazioni pratiche.
+Il problema del flusso massimo è quello di trovare il flusso massimo in un grafo diretto con capacità sugli archi. 
+La rete di flusso è un grafo diretto $G = (V, E)$ con una funzione di capacità $c : V \times V \rightarrow R^+$ e due nodi speciali: la sorgente $s$ e il pozzo $t$.
+La capacità deve essere tale che $c(u,v) \ge 0$ per ogni arco $(u,v) \in E$ e $c(u,v) = 0$ se $(u,v) \notin E$.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={-latex, circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (S) {S};
+  \node[state] (C) [below right=of S] {C};
+  \node[state] (A) [above right =of S] {A};
+  \node[state] (B) [right=of A] {B};
+  \node[state] (D) [right=of C] {D};
+  \node[state] (T) [below right=of B] {T};
+
+  \draw[->] (S) -- node[above]{$16$} (A);
+  \draw[->] (S) -- node[below]{$13$} (C);
+  \path[->] (C) edge [bend left =25] node[left =0.1 cm] {$10$} (A);
+  \path[->] (A) edge [bend left =25] node[left =0.1 cm] {$4$} (C);
+  \draw[->] (C) -- node[below]{$14$} (D);
+  \draw[->] (A) -- node[above]{$12$} (B);
+  \draw[->] (B) -- node[above]{$9$} (C);
+  \draw[->] (D) -- node[right]{$7$} (B);
+  \draw[->] (B) -- node[above]{$20$} (T);
+  \draw[->] (D) -- node[below]{$4$} (T); 
+\end{tikzpicture}
+\end{figure}
+\noindent
+Dobbiamo cercare di trovare un flusso massimo da $S$ a $T$. Non posso utilizzare un approccio greedy dove mando tutto il flusso possibile da $S$ a $T$ perché non è detto che sia ottimo.
+\noindent
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={-latex, circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (S) {S};
+  \node[state] (C) [below right=of S] {C};
+  \node[state] (A) [above right =of S] {A};
+  \node[state] (B) [right=of A] {B};
+  \node[state] (D) [right=of C] {D};
+  \node[state] (T) [below right=of B] {T};
+
+  \draw[->] (S) -- node[above]{$11/16$} (A);
+  \draw[->] (S) -- node[below]{$8/13$} (C);
+  \path[->] (C) edge [bend left =25] node[left =0.1 cm] {$0/10$} (A);
+  \path[->] (A) edge [bend left =25] node[left =0.1 cm] {$1/4$} (C);
+  \draw[->] (C) -- node[below]{$11/14$} (D);
+  \draw[->] (A) -- node[above]{$12$} (B);
+  \draw[->] (B) -- node[above]{$4/9$} (C);
+  \draw[->] (D) -- node[right]{$7$} (B);
+  \draw[->] (B) -- node[above]{$20$} (T);
+  \draw[->] (D) -- node[below]{$4$} (T); 
+\end{tikzpicture}
+\end{figure}
+\noindent
+Ora da $A$ a $B$ posso mandare un flusso di $12$.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={-latex, circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (S) {S};
+  \node[state] (C) [below right=of S] {C};
+  \node[state] (A) [above right =of S] {A};
+  \node[state] (B) [right=of A] {B};
+  \node[state] (D) [right=of C] {D};
+  \node[state] (T) [below right=of B] {T};
+
+  \draw[->] (S) -- node[above]{$11/16$} (A);
+  \draw[->] (S) -- node[below]{$8/13$} (C);
+  \path[->] (C) edge [bend left =25] node[left =0.1 cm] {$0/10$} (A);
+  \path[->] (A) edge [bend left =25] node[left =0.1 cm] {$1/4$} (C);
+  \draw[->] (C) -- node[below]{$11/14$} (D);
+  \draw[->] (A) -- node[above]{$12/12$} (B);
+  \draw[->] (B) -- node[above]{$4/9$} (C);
+  \draw[->] (D) -- node[right]{$7/7$} (B);
+  \draw[->] (B) -- node[above]{$15/20$} (T);
+  \draw[->] (D) -- node[below]{$4/4$} (T); 
+\end{tikzpicture}
+\end{figure}
+\noindent
+Cercherò di rappresentare il flusso come funzione $F : V \times V \rightarrow R^+$, dove $F(u,v)$ è il flusso che va da $u$ a $v$.
+La nostra funzione deve soddisfare le seguenti proprietà:
+\begin{itemize}
+  \item \textbf{Capacità}: $F(u,v) \le c(u,v)$ per ogni arco $(u,v) \in E$.
+  \item \textbf{Antisimmetria}: $\forall (u,v) \; f(u,v) = -f(v,u)$
+  \item \textbf{Conservazione}: $\forall v \in V \setminus \{s,t\} \; \sum_{u \in V} F(u,v) = \sum_{w \in V} F(v,w)$, ovvero la somma dei flussi entranti in un nodo deve essere uguale alla somma dei flussi uscenti.
+\end{itemize}
+Proviamo ora a spezzare il grafo in due parti $U$ e $V$ tale che $s \in U$ e $t \in V$.
+La capacità $c(u,v)$ del taglio è definita come la somma delle capacità degli archi che passano per il taglio che vanno da $U$ a $V$.
+Il flusso $f(u,v)$ attraverso il taglio è definito come la somma dei flussi degli archi che passano per il taglio che vanno da $U$ a $V$.
+In questo caso sicuramente \[f(u,v) \le c(u,v)\]
+un'altra proprietà interessante è che dato un qualsiasi taglio, se per esempio faccio uscire $19$ da $S$ allora in qualsiasi taglio il flusso sarà $19$.
+\\
+Posso ora ottenere un flusso migliore? 
+Defininiamo la \textbf{capacità residua} $c_f(u,v) = c(u,v) - f(u,v)$, ovvero la capacità residua di un arco è la capacità originale meno il flusso che passa attraverso l'arco.
+Anche questa è una rete di flusso, ma con capacità $c_f$. Questa è anche chiamata \textbf{rete residua} $G_f = (V, E_f)$, dove $E_f = \{(u,v) \in E : c_f(u,v) > 0\}$.
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[auto, node distance =2 cm and 3cm ,on grid ,
+  semithick ,
+  state/.style ={-latex, circle ,top color =white , bottom color = processblue!20 ,
+  draw,processblue , text=blue , minimum width =1 cm}]
+  \node[state] (S) {S};
+  \node[state] (C) [below right=of S] {C};
+  \node[state] (A) [above right =of S] {A};
+  \node[state] (B) [right=of A] {B};
+  \node[state] (D) [right=of C] {D};
+  \node[state] (T) [below right=of B] {T};
+
+  \draw[->] (S) -- node[above]{$11/16$} (A);
+  \draw[->] (S) -- node[below]{$8/13$} (C);
+  \path[->] (C) edge [bend left =25] node[left =0.1 cm] {$0/10$} (A);
+  \path[->] (A) edge [bend left =25] node[left =0.1 cm] {$1/4$} (C);
+  \draw[->] (C) -- node[below]{$11/14$} (D);
+  \draw[->] (A) -- node[above]{$12/12$} (B);
+  \draw[->] (B) -- node[above]{$4/9$} (C);
+  \draw[->] (D) -- node[right]{$7/7$} (B);
+  \draw[->] (B) -- node[above]{$15/20$} (T);
+  \draw[->] (D) -- node[below]{$4/4$} (T); 
+\end{tikzpicture}
+\end{figure}
+\noindent
+Un cammino aumentante è un cammino da $s$ a $t$ nella rete residua $G_f$. Lungo questo cammmino
+posso aumentare il flusso. Posso aumentare il flusso di più dell'arco con capacità residua minima lungo il cammino (quindi più del collo di bottiglia).
+Proponiamo un algoritmo per trovare un fllusso massimo.
+\begin{lstlisting}[language=Scala]
+Fold-Fulkerson: 
+  Parti dal flusso nullo
+  Finche nella rete resiuda esistono cammini aumentanti 
+    sia P un cammino aumentante
+    aumenta il flusso lungo P di una quantita pari alla capacita
+    residua dell arco critico
+\end{lstlisting}
+\noindent
+Se Fold-Fulkerson termina, siamo sicuri di avere un flusso massimo?
+\thm{}
+{
+  Sia $f$ una funzione di flusso. Sono equivalenti le seguenti proprietà:
+  \begin{enumerate}
+    \item $f$ è un flusso massimo
+    \item $G_f$ non ha cammini aumentanti
+    \item $f(u,v) = c(u,v)$ per un taglio $(u,v)$ (Esiste un taglio saturo)
+  \end{enumerate}
+}
+\noindent
+La complessità di Fold Fulkerson è $O(|F^\ast|(V+E))$ dove $|F^\ast|$ è il modulo del flusso massimo. 
+Supponiamo di usare BFS per la ricerca di un cammino aumentante. Sia $d_i$ la funzione distanza calcolata dalla BFS alla iterazione $i$. 
+\begin{lemma}
+  $\forall_{i < j}, \forall u \; \; \; \;  d_i[u] \le d_j[u]$ 
+\end{lemma}
+Quante volte è possibiile che un arco $(u,v)$ sia critico in un cammino aumentante?
+d non può eccedere $V$ quindi $(u,v)$ non può essere critico più di $\frac{V}{2}$ volte. 
+Visto che ogni cammino aumentante c'è un arco critico non possiamo trovare cammini aumentanti più di $E \cdot \frac{V}{2}$ volte.
+Quindi la complessità dell'algoritmo di Karp (che non è nient'altro che FF ma usando la BFS per trovare il cammino aumentante) è $O(EV(V+E))$.
+Quindi \[O(min(EV(V+E), |f^\ast|(V+E)))\]
+così da poter usare l'algoritmo in base a quale conviene di più.
+Trovare un flusso massimo o un taglio di costo minimo è la stessa cosa. 
+
+\ex{}
+{
+  Siamo i gestori di un agenzia matrimoniale e abbiamo $n$ uomini e $m$ donne. Dobbiamo intervistare le persone e decidere chi accoppiare con chi. 
+  Il nostro obiettivo come gestori è quello di massimizzare il profitto e quindi dobbiamo cercare che le coppie siano contente del loro \textit{match}.
+  Come possiamo rappresentare questo problema come un problema di flusso massimo? 
+}
+
+
+
+\subsection{Programmazione lineare}
+
+Proviamo a lavorare con problemi concreti che si possono risolvere con la programmazione lineare.
+Immaginiamo di essere in una fabbrica di cioccolatini dove ci sono due tipi di cioccolatini:
+\begin{itemize}
+  \item Normali che mi danno $1$ euro per scatola
+  \item Deliziosi che mi danno $6$ euro per scatola
+\end{itemize}
+Inoltre ho i seguenti limiti:
+\begin{itemize}
+  \item Max $200$ scatole di cioccolatini normali
+  \item Max $300$ scatole di cioccolatini deliziosi
+  \item Max $400$ scatole di cioccolatini in totale
+\end{itemize}
+Definiamo $x_1, x_2$ come il numero di scatole di cioccolatini normali e deliziosi rispettivamente. Devo trovare il valore di $x_1$ e $x_2$ che massimizza il profitto totale (max $x_1 + 6x_2$) rispettando i vincoli:
+\[
+\begin{cases}
+  x_1 & \le 200 \\
+  x_2 & \le 300 \\
+  x_1 + 6x_2 & \le 400
+\end{cases}
+\]
+Questo è un sistema di disequazioni lineare. 
+Questo sistema è molto semplice e si può risolvere graficamente, ma in generale non è sempre possibile farlo, perché problemi di questo genere potrebbero 
+arrivare a complessità $\mathbb{R}^n$ con $n$ molto grande. 
+Per esempio, introduciamo in questo nuovo problema un nuovo vincolo e una nuova variabile: i cioccolatini deluxe che costano $13$ euro per scatola e consumano il triplo del materiale dei deliziosi
+Se $x_3$ è il numero di scatole di deluxe:
+\[
+\begin{cases}
+  x_1 & \le 200 \\
+  x_2 & \le 300 \\
+  x_3 & \le 400 \\
+  x_1 + x_2 + x_3 & \le 400\\
+  x_2 + 3x_3 & \le 600
+\end{cases}
+\]
+Voglio rendere massimo $max x_1 + 6x_2 + 13x_3$. 
+Se scegliamo $x_1, x_2, x_3 = 0,300,100$ il profitto è $300 \cdot 6 + 100 \cdot 13 = 3100$.
+La domanda è: questa soluzione è ottima o esistono altre soluzioni che mi danno un profitto maggiore?
+Facedo una combinazione lineare ottengo la nostra equazione obiettivo:
+\[x_1 + 6x_2 + 13x_3 \le 3100\]
+che ci dimostra che abbiamo trovato l'equazione ottima.
+Tuttavia non è facile trovare questa funzione obiettivo, dobbiamo capire se si possono trovare sempre e se si possono costruire. 
+Trasformiamo un problema dove devo trovare $\alpha_1, \alpha_2, \alpha_3$ che combinando nella combinazione lineare mi possa dare l'equazione obiettivo.
+Torniamo al primo esempio. Qua tocca collegarci alle nozioni imparate da algebra lineare.
+\[(\alpha_1 + \alpha_2)x_1 + (y_2 + y_3)x_2 \le 200\alpha_1 + 300\alpha_2 + 400\alpha_3\]
+Noi abbiamo la funzione obiettivo $max x_1 + 6x_2$ quindi se 
+\[
+\begin{cases}
+  \alpha_1 + \alpha_2 \ge 1\\
+  \alpha_2 + \alpha_3 \ge 6\\
+\end{cases}
+\]
+\[
+A'\alpha \le b'
+\]
+Allora la disequazione sopra mi produce un limite superiore pari a $200\alpha_1 + 300\alpha_2 + 400\alpha_3$ al valore di $x_1 + 6x_2$.
+Voglio scegliere $\alpha_1, \alpha_2, \alpha_3$ per rednere minimo il limite superiore.
+Voglio quindi 
+\[min \; \; 200\alpha_1 + 300\alpha_2 + 400\alpha_3\]
+Riscriviamolo in forma matriciale:
+\[
+c' = \begin{pmatrix}
+  200 & 300 & 400
+\end{pmatrix}
+\] 
+\[A' = \begin{pmatrix}
+  1 & 0 & 1\\
+  0 & 1 & 1
+\end{pmatrix}\]
+\[b' = \begin{pmatrix}
+  1\\
+  6
+\end{pmatrix}\]
+\[Ax \le b \; \; \; max \; \; cx\]
+\[A'\alpha \ge b' \; \; \; min \; \; c'x\]
+\[A' = A^t \; \; b' = c^t \; \; c' = b^t\]
+I due problemi sono molto simili, scambia i vincoli con gli obiettivi e i minore uguale con i maggiore uguale.
+Quindi questo tipo di problema si chiama \textbf{problema duale}. Il problema duale serve per trovare dei limiti al \textbf{problema primale}.
+
+
+
 
 \end{document}
