@@ -5106,8 +5106,23 @@ Trovare un flusso massimo o un taglio di costo minimo è la stessa cosa.
 {
   Siamo i gestori di un agenzia matrimoniale e abbiamo $n$ uomini e $m$ donne. Dobbiamo intervistare le persone e decidere chi accoppiare con chi. 
   Il nostro obiettivo come gestori è quello di massimizzare il profitto e quindi dobbiamo cercare che le coppie siano contente del loro \textit{match}.
-  Come possiamo rappresentare questo problema come un problema di flusso massimo? 
-}
+  Come possiamo rappresentare questo problema come un problema di flusso massimo?
+  Costruiamo un grafo bipartito dove da una parte ci sono gli uomini e dall'altra ci sono le donne. 
+  Dobbiamo cercare di formare coppie tra uomini e donne, in base al più alto livello di compatibilità. Se ci sono 8 persone (4 uomini e 4 donne) allora
+  il numero massimo di coppie che posso formare è $4$. 
+  Un grafo è bipartito quando posso dividere il grafo in due insieme distinti con la garanzia che tutti gli archi collegano nodi di un insieme con nodi dell'altro insieme.
+  Voglio formare il più alto numero di coppie possibili che siano tra loro disgiunti.  Questo è anche chiamato problema del \textbf{problema del matching massimale su grafo bipartito} 
+  che può essere risolto con un algoritmo di flusso massimo.
+  \\
+  \textbf{Risoluzione: }
+  costruiamo un super nodo $s$ che collega tutti gli uomini e un super nodo $t$ che viene raggiunto da tutte le donne.
+  Dal nodo $s$ assegneremo capacità $1$ a tutti gli archi che collegano $s$ agli uomini e capacità $1$ a tutti gli archi che collegano le donne a $t$.
+  In questa maniera ci assicuriamo che un uomo sarà accoppiato con una sola donna e viceversa.
+  La capacità a $1$ verrà assegnata anche agli archi che collegano gli uomini alle donna. 
+  In questo caso \textit{rendere massimo il numero di coppie} non è nient'altro che \textit{massimizzazione} nel grafo bipartito.
+
+
+} 
 
 
 
