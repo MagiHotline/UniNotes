@@ -114,6 +114,7 @@ CMakeFiles/worker.dir/src/worker.c.o: \
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/msg.h \
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/ipc.h \
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/_types/_key_t.h \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/shm.h \
  /opt/homebrew/Cellar/openssl@3/3.5.1/include/openssl/sha.h \
  /opt/homebrew/Cellar/openssl@3/3.5.1/include/openssl/macros.h \
  /opt/homebrew/Cellar/openssl@3/3.5.1/include/openssl/opensslconf.h \

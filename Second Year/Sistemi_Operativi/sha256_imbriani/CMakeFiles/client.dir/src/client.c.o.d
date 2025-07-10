@@ -107,5 +107,11 @@ CMakeFiles/client.dir/src/client.c.o: \
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/_select.h \
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/_types/_uuid_t.h \
  /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/gethostuuid.h \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/fcntl.h \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/fcntl.h \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/_types/_o_sync.h \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/_types/_o_dsync.h \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/_types/_s_ifmt.h \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/sys/_types/_filesec_t.h \
  /Users/paoloimbriani/Desktop/UniNotes/Second\ Year/Sistemi_Operativi/sha256_imbriani/src/common.h \
  /opt/homebrew/Cellar/gcc/14.2.0_1/lib/gcc/current/gcc/aarch64-apple-darwin23/14/include/stddef.h

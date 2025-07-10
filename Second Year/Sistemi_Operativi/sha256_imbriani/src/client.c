@@ -5,72 +5,88 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include "common.h"
 
 int main(int argc, char *argv[]) {
 
-    // take the file as an argument
-    if (argc < 2) {
-        printf("Uso: %s <file>\n", argv[0]);
+    // Prendi algoritmo e file come argomento del client
+    if (argc < 3) {
+        printf("Uso: %s <algorithm> <file>\n", argv[0]);
+        printf("Algorithms: 0=FCFS, 1=Priority\n");
         return 1;
     }
 
-    // Open the file
-    FILE *fp = fopen(argv[1], "rb");
-    if (!fp) {
-        perror("fopen");
+    int scheduling_policy = atoi(argv[1]);
+    // Vedi se la scheduling_policy è valida
+    if (scheduling_policy != SCHED_FCFS && scheduling_policy != SCHED_PRIORITY) {
+        printf("Invalid scheduling policy. Use 0 for FCFS or 1 for Priority.\n");
         return 1;
+    } else {
+        printf("Scheduling policy: %s\n", scheduling_policy == SCHED_FCFS ? "FCFS" : "Priority");
     }
 
-    // Read the file into a buffer
+    char *filename = argv[2];
+    printf("Filename: %s\n", filename);
+    // Apri il file
+    int file = open(filename, O_RDONLY, 0);
+    printf("Opening file %s\n", filename);
+    if (file == -1) {
+        printf("File %s does not exist\n", filename);
+        exit(1);
+    }
+
+    // Leggi il file in un buffer
     char buffer[MAX_FILE_SIZE];
-    size_t bytes = fread(buffer, 1, MAX_FILE_SIZE, fp);
-    fclose(fp);
+    ssize_t bytes = read(file, buffer, 32);
+    close(file);
 
-    // The shmat() function attaches the shared memory segment associated with the 
-    // shared memory identifier, shmid, to the address space of the calling process.
-    int shmid = shmget(SHM_KEY, MAX_FILE_SIZE, 0666);
-    if (shmid == -1) {
-        perror("shmget");
-        return 1;
-    }
+    // Otteniamo l'ID della memoria condivisa
+    int shmid = shmget(SHM_KEY, bytes, IPC_CREAT | 0666);
+    char *shared_data = shmat(shmid, NULL, 0);
+    memcpy(shared_data, buffer, bytes); // Copia i dati dal buffer alla memoria condivisa
+    shmdt(shared_data); // "Stacca" la memoria condivisa
 
-    // Write in the shared memory
-    char *shared_data = (char *) shmat(shmid, NULL, 0);
-    if (shared_data == (char *) -1) {
-        perror("shmat");
-        return 1;
-    }
-
-    // Copy the file data to shared memory
-    memcpy(shared_data, buffer, bytes);
-    shmdt(shared_data); // Detach the shared memory segment, il contrario di shmat
-
-    // Get the message queue
-    int msqid = msgget(MSG_KEY, 0666);
-    if (msqid == -1) {
+    // Ottieni la coda dei messaggi per le richieste
+    int req_msqid = msgget(REQ_MSG_KEY, 0666);
+    if (req_msqid == -1) {
         perror("msgget");
         return 1;
     }
 
-    // Prepare the request message
+    // Prepariamo la struttura del messaggio di richiesta
     struct msg_request req;
-    req.mtype = 1; 
+    req.mtype = REQ_MTYPE;
     req.size = bytes;
+    req.pid = getpid();
+    req.scheduling_policy = scheduling_policy;
 
-    // Send the request with only the payload (file size and PID)
-    if (msgsnd(msqid, &req, sizeof(req) - sizeof(long), 0) == -1) {
+    // Invia la richiesta al server
+    printf("Sending request for file with size: %zu, PID: %d\n", req.size, req.pid);
+    if (msgsnd(req_msqid, &req, sizeof(req) - sizeof(long), 0) == -1) {
         perror("msgsnd");
+        return 1;
+    }
+    printf("[CLIENT] Successfully sent request!\n");
+
+    // Prendiamo la coda dei messaggi per le risposte
+    int resp_msqid = msgget(RESP_MSG_KEY, 0666 | IPC_CREAT); // Client creates response queue
+    if (resp_msqid == -1) {
+        perror("msgget response queue");
         return 1;
     }
 
     // Attendi risposta
+    printf("Waiting for response...\n");
+    printf("Client waiting on mtype = %d\n", getpid());
+    printf("Message queue ID: %d\n", resp_msqid);
     struct msg_response resp;
-    if (msgrcv(msqid, &resp, sizeof(resp.hash), 2, 0) == -1) {
+    if (msgrcv(resp_msqid, &resp, sizeof(resp) - sizeof(long), getpid(), 0) == -1) {
         perror("msgrcv");
         return 1;
     }
 
+    printf("[CLIENT] Received response!\n");
     printf("SHA-256: %s\n", resp.hash);
     return 0;
 }

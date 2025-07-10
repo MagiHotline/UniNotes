@@ -4,21 +4,27 @@
 #include <unistd.h>
 #include <stddef.h>
 
-#define SHM_KEY 0x1234 // key for shared memory
-#define MSG_KEY 0x5678 // key for message queue
-#define SEM_KEY 0x1111 // key for semaphore
+#define REQ_MSG_KEY 0x5678  // Per richieste client->server
+#define RESP_MSG_KEY 0x5679 // Per risposte server->client
+#define SEM_KEY 0x1111 // chiave per il semaforo
+#define SHM_KEY 0x1234 // chiave per la memoria condivisa
+#define MAX_FILE_SIZE 4096 // massima dimensione del file da processare
+#define MAX_CONCURRENT 5 // numero massimo di file concorrenti che il server può gestire
+#define CTRL_MTYPE 99 // Tipo di messaggio controllo per modificare il limite dei file concorrenti
+#define REQ_MTYPE 1 // Tipo di messaggio richiesta per client a server
+#define RESP_MTYPE 2 // Tipo di messaggio risposta per server a client
+#define MAX_FILENAME_LEN 256 // Lunghezza massima del nome del file
 
-#define MAX_FILE_SIZE 4096 // Maximum size of the file to hash
-#define MAX_CONCURRENT 5 // Maximum number of concurrent file hashes
-#define CTRL_MTYPE 99 // Control message type for changing the limit of concurrent files
-#define REQ_MTYPE 1 // Request message type for client to server communication
-#define RESP_MTYPE 2 // Response message type for server to client communication
+// Scheduling policies
+#define SCHED_FCFS 0
+#define SCHED_PRIORITY 1
 
 // Messaggio che invia il client al server
 struct msg_request {
     long mtype;
     size_t size;
     pid_t pid;
+    int scheduling_policy;
 };
 
 // Messaggio che il server invia al client
