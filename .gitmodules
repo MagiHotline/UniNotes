@@ -1,3 +1,6 @@
 [submodule "Second Year/Quantum/BB84Protocol"]
 	path = Second Year/Quantum/BB84Protocol
 	url = https://github.com/MagiHotline/BB84Protocol.git
+[submodule "Second Year/Sistemi_Operativi/sha256"]
+	path = Second Year/Sistemi_Operativi/sha256
+	url = https://github.com/MagiHotline/sha256.git
