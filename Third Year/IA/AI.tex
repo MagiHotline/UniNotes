@@ -1,0 +1,99 @@
+\documentclass[a4paper]{article}
+\usepackage{import}
+\input{../../setup.sty}
+
+\onehalfspacing
+\title{Intelligenza Artificiale}
+\author{Università di Verona\\Imbriani Paolo -VR500437\\Professor Alessandro Farinelli}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.3\textwidth]{UniversityofVerona.png}
+    \label{fig:centered-image}
+\end{figure}
+
+\maketitle
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introduzione}
+
+Alle origini dell'intelligenza artificiale vi è un bisogno diverso da quello che abbiamo oggi.
+Alan Turing, negli anni 50 si era chiesto se le macchine potessero pensare, creando un test famoso ancora ora 
+come "test di Turing" dove un interrogatore umano si deve interfacciare con un umano e una macchina 
+e doveva capire chi dei due fosse chi. 
+Nel 1956 ci fu uno studio fatto da il progetto di ricerca di Dartmouth, che aveva l'intento
+di risolvere compiti che richiedeva l'intelligenza di una persona attraverso una macchina,
+comprendendo che le \textit{anche le macchine possono imparare}.
+La definizione più "accettata" di Intelligenza Artificiale è quella dove viene vista come una 
+complessa e affascinante \textit{disciplina} che studia come simulare l'intelligeza in scenari complessi usando come
+strumenti agenti autonomi per delle task ripetitive, sporche e pericolose che sfruttano l'analisi dei dati
+(predizione e classificazione).
+
+\dfn{}
+{
+    L'intelligenza artificiale è una disciplina che studia come \textbf{simulare} l'intelligenza
+    umana in scenari complessi.
+}
+\noindent
+Bisogna distinguere machine learning e programmazione:
+\begin{itemize}
+    \item \textbf{Programmazione}: macchine programmate per ogni task che devono eseguire (il concetto chiave
+    è \textbf{il programma})
+    \item \textbf{Machine Learning}: insegnare alla macchina (attraverso esempi) come risolvere task più complesse (il concetto chiave 
+    è il \textbf{modello})
+\end{itemize}
+
+\subsection{Machine Learning}
+L'idea di far apprendere una macchina si possono dividere in tre paradigmi contraddisti:
+\begin{itemize}
+    \item Unsupervised learning
+    \item Supervised learning
+    \item Reinforcement learning
+\end{itemize}
+Esistono poi i trasformatori, che sono modelli di machine learning probabilistici che si basano sul concetto di attenzione, che sono alla base di modelli come GPT.
+Il concetto dell'attenzione è quello di dare più importanza ad alcune parole rispetto ad altre in un contesto, per esempio in una frase.
+La potenza di questi trasformatori è che riescono a fare un'analisi del contesto molto più profonda rispetto ai modelli precedenti, 
+permettendo di fare analisi di immagini come per esempio riconoscere oggetti in un'immagine o riconoscere dove è presente l'acqua
+all'interno di una foto.
+
+\subsection{Agenti intelligenti}
+
+Un agente intelligente è un'entità che percepisce il suo ambiente attraverso dei sensori e agisce su di esso attraverso degli attuatori.
+\begin{itemize}
+    \item Percepisce l'ambiente attraverso dei \textbf{sensori}
+    \item Agisce sull'ambiente attraverso degli \textbf{attuatori}
+    \item Ha un \textbf{obiettivo} da raggiungere
+\end{itemize}
+Come dovrebbe comportarsi un agente intelligente?
+\begin{itemize}
+    \item \textbf{Razionale}: agisce per massimizzare il raggiungimento dell'obiettivo
+    \item \textbf{Performance measure}: misura di quanto bene l'agente sta raggiungendo l'obiettivo
+\end{itemize}
+Quando vogliamo ragionare sul Reinforcement Learning, è utilire usare il \textit{Markov Decision Process}.
+\dfn{}
+{
+    Un \textbf{Markov Decision Process (MDP)} è una tupla $(S, A, P, R)$ dove:
+    \begin{itemize}
+        \item $S$ è un insieme di stati
+        \item $A$ è un insieme di azioni
+        \item $P(s'|s,a)$ è la probabilità di transizione dallo stato $s$ allo stato $s'$ eseguendo l'azione $a$
+        \item $R(s,a,s')$ è la ricompensa ottenuta eseguendo l'azione $a$ nello stato $s$ e transizionando nello stato $s'$
+    \end{itemize}
+}
+\noindent
+Poi si ha la \textit{policy} che è una funzione che mappa uno stato in un'azione. 
+
+
+
+
+
+
+
+\end{document}
