@@ -1,0 +1,81 @@
+\documentclass[a4paper]{article}
+\usepackage{import}
+\input{../../setup.sty}
+
+\onehalfspacing
+\title{Fondamenti di Informatica}
+\author{Università di Verona\\Imbriani Paolo - VR500437\\Professor Isabella Mastroeni}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.3\textwidth]{../UniversityofVerona.png}
+    \label{fig:centered-image}
+\end{figure}
+
+\maketitle
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{Cosa è l'informatica?}
+
+La domanda chiave di questo corso è: \textit{``Cosa è l'informatica?''}. 
+Ci sono diversi definizioni a seconda del contesto, ma in generale l'informatica è lo studio dei processi che trasformano l'informazione.
+Possiamo vedere, storicamente, diverse definizioni come quella in inglese come "Computer Science" che vede
+l'informatica come studio della calcolabilità, della computazione e dell'informazione.
+
+\subsection{Perché la calcolabilità}
+
+Si studia la calcolabilità perché ci aiuta a capire cosa possiamo fare con gli strumenti che abbiamo.
+Quando descriviamo un programma, quanto tempo ci mette e quanto spazio utilizza è una domanda importante 
+per capire se il programma è efficiente o meno. Anche in senso dei linguaggi di programmazione per capire se usiamo
+quello giusto per il problema che stiamo cercando di risolvere. Chiaramente è un qualcosa che in continuo
+sviluppo perché si evolve in base alla tecnologia che abbiamo a disposizione.
+\\
+\\
+Uno dei pionieri è stato \textbf{Hilbert} che si chiedeva se la matematica fosse formalizzabile come insieme
+finito (non contraddittorio) di assiomi? Godel dimostrò che non è possibile rappresentare la matematica 
+come un insieme finito di assiomi in maniera non contradditoria, dicendo che in ogni sistema formale
+ci sono proposizioni vere che non possono essere dimostrate all'interno del sistema.
+\\
+\\
+Nel tentativo di rispondere a queste (ed altre) domande si è costruito un modello che 
+permette di comprendere profondamente ilr agionamento computazionale,
+permettendo di applicarlo ad ogni disciplina.
+Cosa è calcolabile e cosa non lo è? 
+
+\subsubsection{Macchina di Turing} 
+
+Anche Turing si pose questa domanda e propose la \textbf{Macchina di Turing} come modello di calcolo.
+Una sola macchina (programmabile) per tutti i problemi.
+La macchina è universale (interprete):
+\[Init(P,x)\ = \begin{cases}
+    P(x) & \text{se } P \text{ è un programma che termina}\\
+    \uparrow & \text{se } P \text{ è un programma che non termina}
+\end{cases}\]
+Se un problema è intuitivamente calcolabile, allora esisterà una macchina di Turing (o un dispostivo
+equivalente, come il computer) in grado di risolverlo, cioè calcolarlo.
+I modelli equivalenti possono essere:
+\begin{itemize}
+    \item Lambda calcolo 
+    \item Funzioni ricorsive
+    \item Linguaggi di programmazione (Turing completi)
+\end{itemize}
+I problemi non calcolabili sono infinitamente più numerosi di quelli calcolabili.
+\subsubsection{Limiti dell'informatica}
+
+L'informatica ha più limiti di quanto si possa pensare, definiti dall'equivalenza di Turing
+e l'incompletezza di Godel che ci dicono che non possiamo risolvere tutti i problemi.
+Ci sono anche limiti fisici e tecnologici come:
+\begin{itemize}
+    \item Dati non osservabili (teorema di Shannon)
+    \item Dati non controllabili (velocità della luce)
+\end{itemize}
+
+
+\end{document}
