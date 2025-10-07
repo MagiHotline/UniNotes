@@ -77,5 +77,164 @@ Ci sono anche limiti fisici e tecnologici come:
     \item Dati non controllabili (velocità della luce)
 \end{itemize}
 
+\subsection{Basi di logica}
 
+Alcune nozioni di logica che ci serviranno in seguito:
+\begin{itemize}
+    \item Variabili
+    \item Constanti
+    \item $f$ simbolo di funzione m-ario, $t1,t2,..,t_m$ termini, allora $f(t1,t2,..,tm)$ è termine 
+    \item Formula atomica $P(t1,t2,..,tm)$
+    \item equivalenze famose
+    \item quantificatori $\forall, \exists$
+\end{itemize}
+
+\subsection{...TODO}
+
+
+\section{Funzioni calcolabili}
+
+Un insieme è a tutti gli effetti una proprietà che dato un oggetto
+stabilisce se esso all'interno di insieme o no.
+\[\text{Problemi} \equiv \text{Funzioni} \; \; f : \mathbb{N} \rightarrow \mathbb{N}\]
+Ci chiediamo se questa funzioni siano tutte calcolabili (intuitivamente). Da il teorema che abbiamo citato
+nei precedenti paragrafi (quello dell'incompletezza) sappiamo che non è così.
+Cerchiamo di vedere insiemisticamente perché questo è giustificato.
+
+\dfn{Intuitivamente Calcolabile}
+{
+Qualcosa che è \textbf{intuitivamente calcolabile} è qualcosa è che riusciamo a descrivere
+attraverso un algoritmo, ovvero una sequenza finita di passi discreti elementari.
+}
+La funzione di tipo:
+\[f : \mathbb{N} \rightarrow \mathbb{N}\]
+è un \textbf{insieme} di associazioni input-output. 
+\ex{}
+{
+    \[
+    \begin{aligned}
+        f = \text{quadrato} &= \{(0,0), (1,1), (2,4), (3,9), (4,16), ...\} \\
+        &= \{(x,x^2) \; | \; n \in \mathbb{N} \} \\
+    \end{aligned}   \]
+    Quindi $f$ è un insieme di coppie in $\mathbb{N} \times \mathbb{N}$.
+    Quindi $|\mathbb{N} \times \mathbb{N}| = |\mathbb{N}|$ (cardinalità di $\mathbb{N} \times \mathbb{N}$
+    Quindi
+    \[f \subseteq \mathbb{P}(\mathbb{N} \times \mathbb{N}) = \mathbb{P}(\mathbb{N})\]
+    Per esempio se:
+    \[A=\{1,2,3\} \text{ allora } \mathbb{P}(A) = \{\emptyset, \{1\}, \{2\}, \{3\}, \{1,2\}\}\]
+    dove $|\mathbb{P}(A)| = 2^{|A|}$. 
+    \[|\mathbb{N}| = \omega < |P(\mathbb{N})|) = |\mathbb{R}|\]
+    e quindi l'insieme delle funzioni \textbf{non è numerabile}.
+}
+\subsection{Quale funzioni numerabili ci sono?}
+$\Sigma = $alfabeto finito di simboli che uso per il programma/algoritmo
+\[\Sigma = {s_1, s_2, s_3, \dots}\] 
+quindi un programma non è nient'altro che un sottoinsieme finito di $\Sigma^*$ (tutte le stringhe finite che posso formare con l'alfabeto).
+\[\Sigma = {a,b,c}\]
+\[\Sigma^* = \{\emptyset, a,b,c,ab,ba,ac,cd,bc,cb,\dots\}\]
+in questo caso, la sequenza di simboli in $\Sigma^*$ è numerabile, perché
+\[|\Sigma^*| = |\mathbb{N}|\]
+\[|\text{Programmi in }\mathbb{N}| = |\Sigma^*| = |\mathbb{N}|\]
+e di conseguenza l'insieme dei programmi è numerabile.
+Una veloce constatazione che possiamo fare è vedere quindi che l'insieme delle funzioni 
+calcolabili è numerabile, perché ogni funzione calcolabile 
+è associata ad almeno un programma che la calcola.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{fcalcolabili.png}
+\end{figure}
+
+\section{Principio di induzione}
+
+Il principio di induzione ha senso solo su insieme infiniti 
+e serve per dimostrare che una proprietà vale per tutti gli elementi.
+Esistono due metodi di induzione:
+\begin{itemize}
+    \item Induzione matematica
+    \item Induzione strutturale
+\end{itemize}
+Tratteremo nello specifico caso in questo corso \textbf{l'induzione matematica.}
+Partiamo da un insieme $A$ infinito con una relazione $< \; : (A, <)$ è una relazione d'ordine
+non riflessiva perché non è minore stretto.
+Utilizziamo l'induzione matematica e quindi $A = \mathbb{N}$ e $<$ 
+è l'ordinamento stretto tra numeri. Una relazione d'ordine deve essere
+\textit{ben fondata} vuol dire che non esistono catene discendenti infinite.
+Una catena discendente è una sequenza infinita di elementi
+\[a_0 > a_1 > a_2 > a_3 > \dots\]
+In un tipo di relazione riflessiva è sicuramente non ben fondata perché posso fare 
+continuare ad inserire lo stesso numero all'infinito.
+\[m \text{ minimale in } A \; : \; b \in A \text{ è minimale se } \forall b' < b . b' \notin A\]
+\ex{}
+{
+    Se prendiamo $\{1,2,3\}$ con relazione d'ordine di contenimento
+    allora esistono più minimali come $\{1,2\}$ o $\{2,3\}$. 
+    Quindi se $A = \mathbb{N} \Longrightarrow \exists b $ minimo $\forall x \subseteq \mathbb{N}$. 
+}
+\noindent
+Quindi preso $A$ insieme ben fondato con ordinamento $<$ allora:
+$\pi$ proprietà definita sugli elementi di \[
+A: \pi \subseteq A \text{ allora } 
+\forall a \in A \, .\pi(a) \Longleftrightarrow \forall a \in A . [[\forall b < a . \pi(b)] \rightarrow \pi(a)]
+\]
+Se dimostriamo $\pi$ per ogni elemento più piccolo di $a$ allora $\pi$ vale per $a$.
+\[{Base}_A = \{a \in A | a \text{ minimale}\}\]
+Quindi
+\[\overbrace{\forall A \in {Base}_A \; . \; \pi(a)}^{\text{Base}} \; \and \; 
+\underbrace{\forall a \in A . {Base}_A}_{\text{passo induttivo}} . \overbrace{\forall b < a . \pi(b)}^{\text{ipotesi induttiva}} \rightarrow \underbrace{\pi(a)}_{\text{tesi}}
+\]
+\ex{}
+{
+    Prendiamo come esempio il seguente enunciato:
+    \[\forall n \in \mathbb{N}, \; \;  \sum_{i = 1}^{n} i = \frac{n(n+1)}{2}\]
+    \textbf{Base:} $n=1$
+    \[A = \mathbb{N} \backslash \{0\} \; \; {Base}_A = \{1\} \rightarrow \sum_{i=1}^{1} i = 1\]
+    \[
+    \begin{aligned}
+        \sum_{i=1}^{1} i &= 1\\
+        &= n(n+1)/2\\
+        &= \frac{1(1+1)}{2} = 1\\
+    \end{aligned}    
+    \]
+    Caso base dimostrato.\\
+    \textbf{Passo induttivo:} prendo $n \in \mathbb{N}$ e applico l'ipotesi induttiva: per ogni $k < n$ vale la tesi.
+    \[\text{ Tesi da dimostrare: } \sum_{i=1}^{n} i = \frac{n(n+1)}{2}\]
+    \[\sum_{i=1}^{n} i = \sum_{i=1}^{n-1}i + n\]
+    Sappiamo sicuramente che $n-1 < n$ e per ipotesi induttiva:
+    \[\sum_{i=1}^{n-1}i + n= \frac{(n-1)(n-1+1)}{2} + n = \frac{n(n-1)}{2} + n = \]
+    \[\frac{n(n-1) + 2n}{2} = \frac{n(n-1+2)}{2} = \frac{n(n+1)}{2} \quad \square\] 
+    e quindi la tesi vale perché siamo arrivati alla stessa espressione
+    che volevamo dimostrare.
+}
+\subsection{Linguaggi formali}
+\dfn{Linguaggio formale}
+{
+    Un linguaggio formale è un insieme di stringhe composte da simboli in un alfabeto finito $\Sigma$.
+}
+\noindent
+$\Sigma^*$ denota il linguaggio di tutte le stringhe dell'alfabeto $\Sigma$, se $\Sigma$ non è vuota allora $\Sigma^*$ è 
+infinito e numerabile.
+Solitamente un linguaggio formale $\mathcal{L}$ è un sottoinsieme di $\Sigma^*$ tipicamente infiniti ma non è necessario:
+\[\mathcal{L} \subseteq \Sigma^*\]
+I linguaggi finiti sono sicuramente regolari perché \textit{posso sempre costruire un automa a stati finiti} che li riconosce.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (0,0) circle(3);
+        \draw[thick] (0,1.9) circle(1);
+        \node at (4,1.9) {Linguaggi formali};
+        \draw[<-, thick] (0,1.9) -- (2.6,1.9);
+    
+        \node at (5,0) {Linguaggi regolari};
+        \draw[<-, thick] (0,0) -- (3.6,0);
+      \end{tikzpicture}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{automa.pdf}
+    \caption{Esempio di automa a stat>i finiti}
+\end{figure}
 \end{document}
