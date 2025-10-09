@@ -10,7 +10,7 @@
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.3\textwidth]{UniversityofVerona.png}
+    \includegraphics[width=0.3\textwidth]{../UniversityofVerona.png}
     \label{fig:centered-image}
 \end{figure}
 
@@ -90,10 +90,202 @@ Quando vogliamo ragionare sul Reinforcement Learning, è utilire usare il \texti
 \noindent
 Poi si ha la \textit{policy} che è una funzione che mappa uno stato in un'azione. 
 
+\section{Risolvere problemi con la ricerca}
 
+\subsection{Agents and enviroments}
 
+Gli agenti includono umani, robot, softbot, termostati, ecc. La funzione
+agente mappa la storia delle percezioni in azioni.
+\[f : \mathcal{P}^* \mapsto A\]
+Il \textit{programma dell'agente} viene eseguito su un'architettura fisica che produce
+$f$.
 
+\ex{}
+{
+    Immaginiamo di avere un agente aspirapolvere che percepisce
+    il luogo e i suoi contenuti.
+    \begin{itemize}
+        \item \textbf{Percezioni}: bump, Dirty e location (A o B)
+        \item \textbf{Azioni}: left, right, suck, noOp
+    \end{itemize}
+    un esempio di sequenza percepita potrebbe essere:
+    \[(A, Dirty), Suck, (A, Dirty), Suck, (A, Clean), Right\] \[ 
+    (B, Dirty), Suck, (B, Clean), Left, (A, Clean), NoOp\]
+    Cosa fa la funzione \textit{Right}? Può essere implementata
+    in un piccolo programma agente?
+    Se un agentes ha $|\mathcal{P}|$ possibili percezioni, quante
+    "entries" avrà la tabella della funzione agente dopo $T$ time steps?
+    \[\sum_{t=1}^{T} |P|^t\]
+    L'obiettivo dell'IA è quello di progettare \textbf{piccoli}
+    programmi agenti che permettono di rappresentare grandi funzioni agenti.
+}
+\noindent
+\begin{minted}{python}
+function Reflex-Vacuum-Agent([location,status]) returns an action
+    if status = dirty then return suck
+    else if location = A then return right
+    else if location = B then return left
+\end{minted}
+\noindent
 
+\subsubsection{Multi-robot Patrolling}
 
+\ex{}
+{
+    Considerate il seguente ambiente:
+    \begin{itemize}
+        \item Tre stanze (A,B,C) e due robot ($r_1, r_2$)
+        \item $r_1$ può pattugliare $A$ e $B$, $r_2$ può pattugliare $B$ e $C$
+        \item $r_1$ inizia da $A$ e $r_2$ inizia da $C$
+        \item Il tempo di viaggio tra le stanze è $0$
+        \item Performance Measure: minimizzare il tempo medio di inattività tra le stanze
+        \item Media di inattività: somma degli intervalli nella quale la stanza non è stata visitata 
+        da nessun robot
+        \item Quale potrebbe essere un comportamento razionale di questo ambiente?
+    \end{itemize}
+    Quello che succede in maniera ragionevole è la seguente, dove S è la tupla
+    in cui i robot sono posizionati:
+    TODO
+    \\
+    Nei diversi casi si ha che il miglior modo per fare girare i robot
+    è quello di farli muovere alternando chi entra nella stanza B 
+    minimizzando anche la varianza nelle varie stanze perché dobbiamo
+    stare attenti a non penalizzare troppo una stanza.
+}
+
+\subsection{Tipi di ambiente}
+
+Il tipo di ambiente determina la progettazione di un agente? 
+Nel mondo reale è ovviamente parzialmente visibile, stocastico, sequenziale,
+dinamico, continuo, multi-agente.
+
+\begin{itemize}
+    \item \textbf{Completamente osservabile vs parzialmente osservabile}: un agente ha accesso
+    completo allo stato dell'ambiente in ogni istante di tempo?
+    \item \textbf{Deterministico vs stocastico}: il prossimo stato dell'ambiente è completamente
+    determinato dallo stato corrente e dall'azione eseguita dall'agente?
+    \item \textbf{Episodico vs sequenziale}: l'esperienza dell'agente è divisa in episodi
+    indipendenti?
+    \item \textbf{Statico vs dinamico}: l'ambiente può cambiare mentre l'agente sta pensando?
+    \item \textbf{Discreto vs continuo}: il numero di stati, percezioni e azioni è finito o infinito?
+    \item \textbf{Singolo agente vs multi-agente}: l'agente agisce da solo o ci sono altri agenti
+    che possono influenzare l'ambiente?
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        & Crosswords & Robo-selector & Poker & Taxi \\
+        \hline
+        Osservabile & Sì  & Parziale & Parziale & Parziale \\
+        Deterministico & Sì & No & No &  No\\
+        Episodico & No & Sì & No & No\\
+        Statico & Sì & No & Sì & No \\
+        Discreto & Sì & No & Sì & No \\
+        Singolo agente & Sì & Sì & No & No\\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{itemize}
+    \item Se il problema è deterministico e completamente osservabile, è un \textbf{single-state problem}
+    \item Se il problema non è osservabile, è un \textbf{conformant problem}
+    \item Se il problema è non deterministico o parzialmente osservabile, è un \textbf{contingency problem}
+    \item Quando non conosco lo spazio degli stati è un \textbf{exploration problem}
+\end{itemize}
+
+\subsection{Problem Solving Agents}
+
+Una forma ristretta di agente generale sono i: \textbf{Goal Based Agent}
+\begin{itemize}
+    \item Formula un goal e un problema partendo dallo stato corrente
+    \item Cerco una soluzione a questo problema
+    \item Eseguo la soluzione ignorando le percezioni
+\end{itemize}
+Notiamo che questo si chiama anche offline problem; la soluzione viene eseguita ad "occhi chiusi".
+\begin{minted}{python}
+function Simple-Problem-Solving-Agent(percept) returns an action
+    static: solution, state, problem, action
+    state <- Update-State(state, percept)
+    if seq is empty then
+        goal <- Formulate-Goal(state)
+        problem <- Formulate-Problem(state, goal)
+        seq <- Search(problem)
+    action <- First(seq)
+    seq <- Rest(seq)
+    return action
+\end{minted}
+
+\ex{Vacanze in Romania}
+{
+    In viaggio in Romania, se attulamente ad Arad.
+    Il viaggio parte domani da Bucharest.
+    \begin{itemize}
+        \item \textbf{Formulate Goal:} essere a Bucharest
+        \item \textbf{Formulate Problem:} stati: varie città, azioni: guidare tra le città
+        \item \textbf{Search:} trovare una sequenza di azioni che portano da Arad a Bucharest
+        \item \textbf{Esempio di Soluzione:} Arad, Sibiu, Fagaras, Bucharest
+    \end{itemize}
+}
+
+\subsubsection{Tree Search Algorithm}
+
+Idea base: offline, esplorazione simulata di spazio di stati, generando
+successori di stati già esplorati.
+\begin{minted}{python}
+function Tree-Search(problem) returns a solution, or failure
+    initialize the frontier using the initial state of problem
+    loop do
+        if the frontier is empty then return failure
+        node <- Pop an element from the frontier
+        if problem.GOAL-TEST(node.STATE) then return SOLUTION(node)
+        expand node, adding the resulting nodes to the frontier
+    end
+\end{minted}
+
+\dfn{}
+{
+    Uno \textbf{stato} è una rappresentazione di una configurazione
+    fisica.
+}
+\dfn{}
+{
+    Un \textbf{nodo} è una struttura dati che contiene:
+    \begin{itemize}
+        \item uno stato
+        \item un puntatore al nodo genitore
+        \item l'azione che ha generato lo stato
+        \item il costo del cammino dal nodo radice a questo nodo
+    \end{itemize}
+    Gli stati non hanno parenti, azioni, figli, costi e profondità!
+}
+
+\begin{minted}{python}
+function Expand(node, problem) returns a set of nodes
+    successors <- an empty list
+    for each action in problem.ACTIONS(node.STATE) do
+        child <- CHILD-NODE(problem, node, action)
+        add child to successors
+    return successors    
+\end{minted}
+\noindent
+
+\subsection{Strategie di ricerca}
+
+Una strategia è definita dal scegliere l'ordine dei nodi di espansione.
+Strategie vengono valutate insieme alle seguenti metriche:
+\begin{itemize}
+    \item Completezza: la strategia trova una soluzione se esiste
+    \item Tempo: tempo di esecuzione della strategia
+    \item Spazio: memoria usata dalla strategia
+    \item Optimalità: la strategia trova la soluzione ottima?
+\end{itemize}
+Tempo e spazio sono misurati in termini di:
+\begin{itemize}
+    \item $b$ branching factor (numero massimo di figli per nodo)
+    \item $d$ profondità della soluzione più superficiale
+    \item $m$ profondità massima dell'albero di ricerca (potrebbe essere infinito)
+\end{itemize}
 
 \end{document}

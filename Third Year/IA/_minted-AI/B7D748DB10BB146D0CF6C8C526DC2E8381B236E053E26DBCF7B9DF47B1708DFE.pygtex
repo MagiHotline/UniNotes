@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{function} \PYG{n}{Simple}\PYG{o}{\PYGZhy{}}\PYG{n}{Problem}\PYG{o}{\PYGZhy{}}\PYG{n}{Solving}\PYG{o}{\PYGZhy{}}\PYG{n}{Agent}\PYG{p}{(}\PYG{n}{percept}\PYG{p}{)} \PYG{n}{returns} \PYG{n}{an} \PYG{n}{action}
+    \PYG{n}{static}\PYG{p}{:} \PYG{n}{solution}\PYG{p}{,} \PYG{n}{state}\PYG{p}{,} \PYG{n}{problem}\PYG{p}{,} \PYG{n}{action}
+    \PYG{n}{state} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{Update}\PYG{o}{\PYGZhy{}}\PYG{n}{State}\PYG{p}{(}\PYG{n}{state}\PYG{p}{,} \PYG{n}{percept}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{seq} \PYG{o+ow}{is} \PYG{n}{empty} \PYG{n}{then}
+        \PYG{n}{goal} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{Formulate}\PYG{o}{\PYGZhy{}}\PYG{n}{Goal}\PYG{p}{(}\PYG{n}{state}\PYG{p}{)}
+        \PYG{n}{problem} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{Formulate}\PYG{o}{\PYGZhy{}}\PYG{n}{Problem}\PYG{p}{(}\PYG{n}{state}\PYG{p}{,} \PYG{n}{goal}\PYG{p}{)}
+        \PYG{n}{seq} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{Search}\PYG{p}{(}\PYG{n}{problem}\PYG{p}{)}
+    \PYG{n}{action} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{First}\PYG{p}{(}\PYG{n}{seq}\PYG{p}{)}
+    \PYG{n}{seq} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{Rest}\PYG{p}{(}\PYG{n}{seq}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{action}
+\end{Verbatim}

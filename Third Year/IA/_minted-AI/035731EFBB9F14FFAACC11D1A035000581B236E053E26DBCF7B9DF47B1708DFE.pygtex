@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{function} \PYG{n}{Reflex}\PYG{o}{\PYGZhy{}}\PYG{n}{Vacuum}\PYG{o}{\PYGZhy{}}\PYG{n}{Agent}\PYG{p}{([}\PYG{n}{location}\PYG{p}{,}\PYG{n}{status}\PYG{p}{])} \PYG{n}{returns} \PYG{n}{an} \PYG{n}{action}
+    \PYG{k}{if} \PYG{n}{status} \PYG{o}{=} \PYG{n}{dirty} \PYG{n}{then} \PYG{k}{return} \PYG{n}{suck}
+    \PYG{k}{else} \PYG{k}{if} \PYG{n}{location} \PYG{o}{=} \PYG{n}{A} \PYG{n}{then} \PYG{k}{return} \PYG{n}{right}
+    \PYG{k}{else} \PYG{k}{if} \PYG{n}{location} \PYG{o}{=} \PYG{n}{B} \PYG{n}{then} \PYG{k}{return} \PYG{n}{left}
+\end{Verbatim}

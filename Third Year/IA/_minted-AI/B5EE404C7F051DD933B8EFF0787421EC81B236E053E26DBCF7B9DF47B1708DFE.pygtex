@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{function} \PYG{n}{Tree}\PYG{o}{\PYGZhy{}}\PYG{n}{Search}\PYG{p}{(}\PYG{n}{problem}\PYG{p}{)} \PYG{n}{returns} \PYG{n}{a} \PYG{n}{solution}\PYG{p}{,} \PYG{o+ow}{or} \PYG{n}{failure}
+    \PYG{n}{initialize} \PYG{n}{the} \PYG{n}{frontier} \PYG{n}{using} \PYG{n}{the} \PYG{n}{initial} \PYG{n}{state} \PYG{n}{of} \PYG{n}{problem}
+    \PYG{n}{loop} \PYG{n}{do}
+        \PYG{k}{if} \PYG{n}{the} \PYG{n}{frontier} \PYG{o+ow}{is} \PYG{n}{empty} \PYG{n}{then} \PYG{k}{return} \PYG{n}{failure}
+        \PYG{n}{node} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{Pop} \PYG{n}{an} \PYG{n}{element} \PYG{k+kn}{from} \PYG{n+nn}{the} \PYG{n}{frontier}
+        \PYG{k}{if} \PYG{n}{problem}\PYG{o}{.}\PYG{n}{GOAL}\PYG{o}{\PYGZhy{}}\PYG{n}{TEST}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{STATE}\PYG{p}{)} \PYG{n}{then} \PYG{k}{return} \PYG{n}{SOLUTION}\PYG{p}{(}\PYG{n}{node}\PYG{p}{)}
+        \PYG{n}{expand} \PYG{n}{node}\PYG{p}{,} \PYG{n}{adding} \PYG{n}{the} \PYG{n}{resulting} \PYG{n}{nodes} \PYG{n}{to} \PYG{n}{the} \PYG{n}{frontier}
+    \PYG{n}{end}
+\end{Verbatim}

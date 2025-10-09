@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{function} \PYG{n}{Expand}\PYG{p}{(}\PYG{n}{node}\PYG{p}{,} \PYG{n}{problem}\PYG{p}{)} \PYG{n}{returns} \PYG{n}{a} \PYG{n+nb}{set} \PYG{n}{of} \PYG{n}{nodes}
+    \PYG{n}{successors} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{an} \PYG{n}{empty} \PYG{n+nb}{list}
+    \PYG{k}{for} \PYG{n}{each} \PYG{n}{action} \PYG{o+ow}{in} \PYG{n}{problem}\PYG{o}{.}\PYG{n}{ACTIONS}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{STATE}\PYG{p}{)} \PYG{n}{do}
+        \PYG{n}{child} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{CHILD}\PYG{o}{\PYGZhy{}}\PYG{n}{NODE}\PYG{p}{(}\PYG{n}{problem}\PYG{p}{,} \PYG{n}{node}\PYG{p}{,} \PYG{n}{action}\PYG{p}{)}
+        \PYG{n}{add} \PYG{n}{child} \PYG{n}{to} \PYG{n}{successors}
+    \PYG{k}{return} \PYG{n}{successors}
+\end{Verbatim}
