@@ -305,4 +305,234 @@ I linguaggi finiti sono sicuramente regolari perché \textit{posso sempre costru
     \includegraphics[width=0.6\textwidth]{automa.pdf}
     \caption{Esempio di automa a stati finiti}
 \end{figure}
+\noindent
+Come abbiamo detto in precedenza, una funzione è \textit{calcolabile}
+se possiamo pensare ad un algoritmo per calcolarla.
+Tra le funzioni calcolabili, ci sono quelle totali, ovvero quelle che terminano per ogni input.
+\ex{}
+{
+    Pensiamo ad una funzione $f \subseteq \mathbb{N} \times \mathbb{N}$,
+    la possiamo descrivere come associazione di coppie:
+    \[f(0) = 1, f(1) = 1, f(2) = 2, f(3) = 3, f(4) = 5, f(5) = 8, \dots\]
+    Tuttavia servirebbe scrivere una quantità infinita di coppie per descrivere la funzione.
+    Quindi proviamo a farlo ma stavolta ricorsivamente.
+    \[
+    \begin{cases}
+        f(0) = 1 = f(1)\\
+        f(x+2) = f(x+1) + f(x)
+    \end{cases}
+    \]
+}
+
+\subsection{Funzioni e insiemi}
+
+In realtà ci sta un forte legame tra funzioni e insiemi perché per esempio dovessimo prendere una funzione
+$f : \mathbb{N} \rightarrow \mathbb{N}$, questa funzione può essere vista come un linguaggio $L_f = \{1^{f(x)} | x \in \mathbb{N}\}$ 
+che è l'insieme delle stringhe composte da $f(x)$ simboli 1.
+Il nostro linguaggio $\Sigma = \{1\}$ e quindi il linguaggio è un sottoinsieme di $\Sigma^*$.
+Il nostro linguaggio ci può dire se un oggetto in input fa parte o no dell'insieme.
+Parliamo di \textbf{insiemi} invece che di funzioni
+dove gli elementi dell'insieme dipendono dal calcolo della funzione.
+\ex{}
+{
+    Se io dovessi scrivere una funzione costante del tipo $f(x) = 2$.
+    In questo caso riconosciamo che il linguaggio $L_f$ è finito perché
+    \[L_f = \{1\}\]
+    L'unica combinazione possibile è una singola stringa.
+    Il linguaggio si dice finito che è sottoinsieme di linguaggi totali.
+}
+\ex{}
+{
+    In questo caso la funzione $f(x) = 2x$ è una funzione lineare.
+    Ho bisogno di una memoria finita. Mi sposto tra queste informazioni per
+    determinare se la stringa in input fa parte o no del linguaggio.
+    Questa funzione è anche detta \textbf{regolare}.
+}
+\ex{}
+{
+    $f(\sigma) = \sigma_{\text{reverse}}$ quindi per esempio:
+    \[f(abc) = cba\]
+    Tuttavia per questa funzione non mi basta più una memoria finita ma
+    illimitata essendo che non posso sapere a priori quanta memoria abbia bisogno la funzione
+    (è sufficiente uno stack).
+    Questo tipo di funzione è detta anche \textbf{context free}.
+}
+\ex{}
+{
+    Nel caso di $f(x) = x^2$ sappiamo sicuramente
+    che possiede un output preciso ma avrei bisogno di una memoria illimitata per rappresentarla.
+}
+
+\section{Linguaggi Regolari - Automa a stati finiti}
+
+Quando parliamo di memoria è facilmente codificabile 
+in termini di stati. Dal punto di vista grafico possiamo rappresentarli
+come nodi collegati da archi.
+Prendiamo per esempio il linguaggio $L_f$ di prima:
+\[L_f = \{1^{2n} \; | \; n \in \mathbb{N}\}\]
+\[\Sigma = {1}\]
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance = 3cm, on grid, auto]
+    
+      \node[state, initial, accepting] (q0) {$q_0$};
+      \node[state, right of = q0] (q1) {$q_1$};
+      \draw (q0) edge[bend left, above] node{1} (q1);
+    \draw (q1) edge[bend left, below] node{1} (q0);
+    \end{tikzpicture}
+  \end{figure}
+
+\dfn{Automa a stati finiti}
+{
+    \[M = (Q, \Sigma, \delta, q_0, F)\]
+    è un automa a stati finiti deterministico dove:
+    \begin{itemize}
+        \item $Q$ è un insieme finito di stati (ogni stato rappresenta "un informazione")
+        \item $\Sigma$ è un alfabeto finito di simboli
+        \item $\delta : Q \times \Sigma \rightarrow Q$ è la funzione di transizione (descrive come evolve il
+        calcolo a partire dallo stato raggiunto e dal simbolo letto)
+        \item $q_0 \in Q$ è lo stato iniziale
+        \item $F \subseteq Q$ è l'insieme di stati finali (o di accettazione)
+    \end{itemize}
+}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        $\Sigma \backslash Q$ & $q_0$ & $q_1$\\
+        \hline
+        1 & $q_1$ & $q_0$ \\
+        \hline
+    \end{tabular}
+\end{table}
+\noindent
+Ci sta poi la funzione $\hat{\delta} : Q \times \Sigma^* \rightarrow Q$ che estende la funzione di transizione e descrive
+lo stato che raggiungiamo leggendo una sequenza di simboli.
+\[
+\begin{cases}
+    \hat{\delta}(q, \epsilon) = q\\
+    \hat{\delta}(q, w a) = \hat{\delta}(\delta(q,w), a)
+\end{cases}
+\quad w \in \Sigma^*, a \in \Sigma
+\]
+anche chiamata chiusura transitiva di $\delta$. Quindi mi permette
+di calcolare lo stato raggiunto leggendo una stringa di simboli.
+
+\subsection{Come si dimostra che un linguaggio è regolare?}
+
+\ex{}
+{
+    Prendiamo come esempio il linguaggio:
+    \[L = \{\sigma \; | \; \text{ $\sigma$ contiene almeno due 1}\}\]
+    \[\Sigma = \{0,1\}\]
+    Per esempio:
+    \[110, 101, 111, 011, 1001 \in L\]
+    \[0, 00, 000, 01, 10, 0000 \notin L\]
+    Quindi intuitivamente come possiamo definire l'automa?
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}[->, node distance = 3cm, on grid, auto]
+        
+          \node[state, initial] (q0) {$q_0$};
+          \node[state, right of = q0] (q1) {$q_1$};
+          \node[state, accepting, right of = q1] (q2) {$q_2$};
+
+
+        \draw (q0) edge[bend left, above] node{1} (q1);
+        \draw (q0) edge[loop above] node{0} (q0);
+        \draw (q1) edge[loop above] node{0} (q1);
+        \draw (q1) edge[bend left, above] node{1} (q2);
+        \draw (q2) edge[loop above] node{0,1} (q2);
+        \end{tikzpicture}
+      \end{figure}
+    \noindent
+    Un linguaggio $L$ è riconosciuto da $M$ (Automa a stati finiti deterministico o DFA)
+    se $L = L(M)$ dove $L(M)$ è il linguaggio di $n$ definito come:
+    \[L(M) = \{\sigma \in \Sigma^* \; | \; \hat{\delta}(q_0, \sigma) \in F\}\]
+    Sono tutte le stringhe che partendo da $q_0$ (stato iniziale) raggiunge uno stato finale.
+}
+\dfn{}
+{
+    Per dimostrare che $L$ è regolare dobbiamo costruire $M$ (almeno un $M$) e dimostrare che
+    $L(M) = L$.
+}
+\[L = L(M) \equiv L \subseteq L(M) \text{ e } L(M) \subseteq L\]
+\begin{enumerate}
+    \item \[L \subseteq L(M) \equiv \sigma . \in L \rightarrow \sigma \in L(M)\]
+    \[\sigma \in L \rightarrow \hat{\delta}(q_0, \sigma) \in F\]
+    \item 
+    \[
+    \begin{aligned}
+        L(M) \subseteq L &\equiv \sigma \in L(M) \rightarrow \sigma \in L\\
+        & \hat{\delta}(q_0, \sigma) \in F \rightarrow \sigma \in L \equiv \\
+        &\sigma \notin L \rightarrow \hat{\delta}(q_0, \sigma) \notin F
+    \end{aligned}
+    \]
+\end{enumerate}
+Dimostriamo per induzione sulla lunghezza delle stringhe $\sigma \in \Sigma^*$ che
+se $\sigma \in L$ allora $\hat{\delta}(q_0, \sigma) \in F$
+e $\sigma \notin L$ allora $\hat{\delta}(q_0, \sigma) \notin F$.
+\ex{}
+{
+    \[L = \{\sigma \; | \; \text{ $\sigma$ contiene almeno due 1}\}\]
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}[->, node distance = 3cm, on grid, auto]
+        
+          \node[state, initial] (q0) {$q_0$};
+          \node[state, right of = q0] (q1) {$q_1$};
+          \node[state, accepting, right of = q1] (q2) {$q_2$};
+
+
+        \draw (q0) edge[bend left, above] node{1} (q1);
+        \draw (q0) edge[loop above] node{0} (q0);
+        \draw (q1) edge[loop above] node{0} (q1);
+        \draw (q1) edge[bend left, above] node{1} (q2);
+        \draw (q2) edge[loop above] node{0,1} (q2);
+        \end{tikzpicture}
+      \end{figure}
+    \noindent
+    Dimostriamo per l'induzione:
+    \begin{itemize}
+        \item \textbf{Base:} $|\sigma| = 0$ non è \textbf{mai} sufficiente perché è vero solo
+        per una delle due dimostrazioni $\Sigma \in L$ o $\Sigma \notin L$.
+        Dobbiamo prendere la lunghezza più piccola che permette di avere sia $\sigma \in L$ che $\sigma \notin L$.
+        Quindi la lunghezza più piccola è 2 (per ogni $\sigma$ tale che 
+        $|\sigma| \le 2, \sigma \notin L$ perché non può contenere 
+        due 1 e non è riconosciuta da $M$ dove il primo stato finale è raggiunto se
+        non vengono letti almeno due simboli).
+        Se proviamo a prendere $\sigma = 11$ e $\hat{\delta}(q_0, 11) = q_2 \in F$ e quindi $\sigma \in L$.
+        Se provassimo invece a prendere $\sigma = 00, 01, 10$ allora $\hat{\delta}(q_0, 11,10,01) = q_x \notin F$ e quindi $\sigma \notin L$.
+        Quindi abbiamo controllato ogni stringa di lunghezza minima nel linguaggio per provare il caso base.
+        \item \textbf{Passo induttivo:} L'ipotesi induttiva è la tesi con un limite fissato.
+        \[
+        \forall \sigma \in \Sigma^* \; . \; |\sigma| \le n \; . \;
+        \begin{cases}
+            \sigma \in L \rightarrow \hat{\delta}(q_0, \sigma) \in F\\
+        \sigma \notin L \rightarrow \hat{\delta}(q_0, \sigma) \notin F
+        \end{cases}
+        \]
+        Cosa dobbiamo dimostrare?
+        \[\text{se } |\sigma|= n+1 \text{ allora } \begin{cases}
+            \sigma \in L \rightarrow \hat{\delta}(q_0, \sigma) \in F\\
+        \sigma \notin L \rightarrow \hat{\delta}(q_0, \sigma) \notin F
+        \end{cases}\]
+        Facciamo l'ipotesi che $\sigma = \sigma' a$ con $a \in \Sigma$ e $|\sigma'| = n$.
+        Quindi sicuramente la stringa termina con un simbolo $a$ che può essere 0 o 1.
+        \[\begin{cases}
+            \sigma = \sigma ' 0\\
+            \sigma = \sigma ' 1
+        \end{cases}\]
+        \begin{itemize}
+            \item Caso $\sigma = \sigma ' 0 \land \sigma \in L$ per definizione
+            $\sigma'$ deve contenere almeno due 1 e quindi per ipotesi induttiva
+            \[\hat{\delta}(q_0, \sigma') \in F \rightarrow \hat{\delta}(q_0, \sigma' 0) = \hat{\delta}(\hat{\delta}(q_0, \sigma'), 0) \in F\]
+            \item Caso $\sigma = \sigma ' 1 \land \sigma \notin L$ se $\sigma'$ contiene almeno un 1 allora $\sigma$ ha un 1.
+            \item Caso $\sigma = \sigma ' 0 \land \sigma \notin L$ se $\sigma'$ contiene almeno non ha 1 allora $\sigma$ non ha 1.
+        \end{itemize}
+    \end{itemize}
+    
+}
+
 \end{document}
