@@ -1036,16 +1036,193 @@ DFA con $M$ stati con $n$ stati.
 \begin{enumerate}
   \item $L(M)$ è $\neq \varnothing$ sse accetta almeno una stringa di lunghezza $\le n$.
   \item $L(M)$ è infinito se accetta almeno una stringa lunga $l$ con $n \le l \le 2n$.
+  \item $L(M_1) = L(M_2)$ cazzo piccolissimooo... 8======D
 \end{enumerate}
 
 \subsubsection{Esistenza dell'automa minimo}
 
+Fornisce strategie per costruire un automa minimo. Sia $R$ relazione su $\Sigma: R \subseteq \Sigma \times \Sigma$.
+  $R$ è una relazione di equivalenza se:
+  \begin{itemize}
+    \item Riflessiva: $\forall a \in \Sigma . aRa$
+    \item Simmetrica: $\forall a,b \in \Sigma . aRb \Rightarrow bRa$
+    \item Transitiva: $\forall a,b,c \in \Sigma . aRb \wedge bRc \Rightarrow aRc$
+  \end{itemize}
+  Una relazione di equivalenza induce una partizione.
+  $R \subseteq S \times S$ induce una partizione di $S$ dove $S_i$ sono una partizione di $S$ se 
+  \[S = S_1 \cup S_2 \cup \dots \cup S_n\]
+  e 
+  \begin{itemize}
+    \item $\forall i,j \; S_i \cap S_j = \varnothing$
+    \item $\forall a,b \in S_i . aRb$
+    \item $\forall a \in S \, \forall b \in S_j . \neg(aRb)$
+  \end{itemize}
+  $S_i$ sono detti classi di equivalenza di $R$:
+  \[a \in R \Rightarrow [a]_R = \{b \; | \; aRb\} \text{ classe di equivalenza di a}\]
+  \[cRa \Rightarrow [a]_R \equiv [c]_R\]
+
+\noindent
+Torniamo ora ai linguaggi regolari.
+Consideriamo un linguaggio $L \subseteq \Sigma^*$.
+Possiamo definire $R_L \subseteq \Sigma^* \times \Sigma^*$ come:
+\[x,y \in \Sigma^* \quad xR_Ly \text{ sse } \forall z \in \Sigma^* . xz \text { sse } yz \in L\]
+Quello che diciamo quindi è che due stringhe sono in relazione se per ogni possibile estensione $z$
+la loro appartenenza a $L$ è la stessa.
+\dfn{Classe di equivalenza definita per gli automi}
+{
+  Consideriamo $M = (Q, \Sigma, \delta, q_0, F)$ un DFA. Possiamo definire
+  $R_M \subseteq \Sigma^* \times \Sigma^*$ come:
+  \[x,y \in \Sigma^* . xR_my \Longleftrightarrow \hat{\delta}(q_0, x) = \hat{\delta}(q_0,y)\]
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[->, node distance = 3cm, on grid, auto]
+    
+      \node[state] (q0) {$q_0$};
+      \node[state, right of = q0] (q1) {$q_1$};
+      
+    \draw (q0) edge[bend left, above] node{x} (q1);
+    \draw (q0) edge[bend right, below] node{y} (q1);
+
+    \end{tikzpicture}
+  \end{figure}
+  \noindent
+  Allora \textbf{$R_L$ e $R_M$ sono relazioni di equivalenza.}
+}
+\dfn{Relazione invariante destra}
+{
+  Una relazione di equivalenza $R$ su $\Sigma^*$ è invariante a destra se:
+  \[\forall x,y,z \in \Sigma^* \quad xRy \Rightarrow xzRyz\]
+  Quindi essere in relazione è invariante rispetto all'estensione della stringa verso destra.
+  \textbf{$R_L$ e $R_M$ sono relazioni invarianti destra.}
+}
+\dfn{Raffinamento}
+{
+  Siano $R$ e $S$ due relazioni di equivalenza su $\Sigma^*$.
+  Diciamo che $R$ raffina $S$ se:
+  \[\forall x,y \in \Sigma^* \quad xRy \Rightarrow xSy\]
+  Quindi ogni classe di equivalenza di $R$ è contenuta in una classe di equivalenza di $S$.
+  Il numero di classi di equivalenza di $R$ è maggiore del numero di classi di equivalenza di $S$.
+}
+\dfn{}
+{
+  Dato un DFA $M = (Q, \Sigma, \delta, q_0, F)$ ogni
+  stato definisce un linguaggio.
+  \[q \in Q : L_q = \{x \in \Sigma^* \; | \; \hat{\delta}(q_0, x) = q\}\]
+}
+\noindent
+$R$ si dice di indice finito se il numero di classi di equivalenza indotte è finito.
+
+\thm{Teorema di Nyhill-Nerode}
+{
+  I seguenti enunciati sono equivalenti:
+  \begin{enumerate}
+    \item $L \subseteq \Sigma^*$ è regolare ovvero esiste un DFA $M$ t.c. $L(M) = L$.
+    \item $L$ è l'unione di classi di equivalenza indotte da una relazione di equivalenza $R$ 
+    invariante destra con indice finito.
+    \item $R_L$ è di indice finito.
+  \end{enumerate}
+}
+Dimostriamo che:
+\[(1) \stackrel{R_m}{\Longrightarrow} (2) \stackrel{R \text{ raffina } R_L}{\Longrightarrow} (3) \stackrel{\text{costruisce } M}{\Longrightarrow} (1)\]
+\begin{proof}
+  $(1) \Rightarrow (2)$\\
+  Ipotesi: $L$ linguaggio riconosciuto da $M = (Q, \Sigma, \delta, q_0, F)$ DFA. 
+  \[L = L(M)\]
+  Tesi: $\exists R$ relazione di equivalenza invariante destra di indice finito t.c. $L$ è l'unione di classi di equivalenza di $R$. 
+  Prendiamo $R = R_M \quad xR_my$ sse $\hat{\delta}(q_0, x) = \hat{\delta}(q_0,y)$.
+  \begin{enumerate}
+    \item Il numero di classi di equivalenza di $R_M$ è uguale al numero di stati $|Q|$ ma 
+    per definizione $Q$ è finito quindi $R_M$ è di indice finito.
+    \item $R_M$ è invariante destra:
+    \[
+    \begin{aligned}
+      L = L(M) &= \{x \in \Sigma^* \; | \; \hat{\delta}(q_0, x) \in F\}\\
+      &= \{x \in \Sigma^* \; | \; \hat{\delta}(q_0,x) = q \wedge q \in F\}\\
+      &= \bigcup_{\substack{q \in F}} \{x \; | \; \hat{\delta}(q_0, x) = q\}\\
+      &= \bigcup_{\substack{q \in F}} L_q \text{ dove } L_q \text{ è la classe di equivalenza di } R_M
+    \end{aligned}
+    \]
+    Quindi $L$ è l'unione di classi di equivalenza di $R_M$.
+  \end{enumerate}
+\end{proof}
+\begin{proof}
+ $(2) \Rightarrow (3)$\\
+ Ipotesi: $L$ è l'unione di classi di equivalenza indotte da una relazione di equivalenza $R$ di indice finito.\\
+ Tesi: $R_L$ è di indice finito.
+ Possiamo dimostrare che $R$ raffina $R_L$. Perché se fosse così allora il numero di classi di $R$ 
+sarebbe maggiore del numero di classi di $R_L$. Quindi se il numero di classi di $R$ è finito allora sicuramente
+lo sarà anche $R_L$.
+Per dimostrare $R$ raffinamento di $R_L$ dobbiamo dimostrare che $\forall x,y \in \Sigma^* \quad xRy \Rightarrow xR_Ly$.
+In maniera equivalente:
+\[y \in [x]_R \Rightarrow y \in [x]_{R_L} \equiv [x]_R \subseteq [x]_{R_L}\]
+Prendiamo $xRy$ sapendo che $R$ è invariante destra.
+\[
+\forall z \in \Sigma^* \quad xRy \Rightarrow xzRyz
+\]
+Quindi se $L$ è l'unione di classi di equivalenza di $R$:
+\[xRy \quad x \in L \text{ sse } y \in L\]
+\[[x]_R \subseteq L \text{ oppure } [x]_R \text{ fuori da } L\]
+Quindi:
+\[
+\begin{aligned}
+  xRy &\Longrightarrow x \in L \Longleftrightarrow y \in L\\
+  &\Longrightarrow \forall z \; . \; xzRyz \Longrightarrow xz \in L \Longleftrightarrow yz \in L\\
+  &\stackrel{\text{def } R_L}{\Longrightarrow} xR_Ly
+\end{aligned}
+\]
+Queste dimostrazioni dato $M$ generico, $R_M$ è un raffinamento
+di $R_L$.
+\end{proof}
+\begin{proof}
+  $(3) \Rightarrow (1)$\\
+  Ipotesi: $R_L$ è di indice finito.\\
+  Tesi: $L$ è riconosciuto da un DFA $M$.\\
+  Costruiamo $M$:
+  \begin{itemize}
+    \item  $Q = \{[x]_{R_L} \; | \; x \in \Sigma^*\}$ è l'insieme delle classi di equivalenza di $R_L$ (sono finite)
+    \item $\Sigma = \text{quello di } L$
+    \item $q_0 = [\varepsilon]_{R_L}$
+    \item $F = \{[x]_{R_L} \; | \; x \in L\}$
+    \item $\delta(q, a) = \delta([x]_{R_L}, a) = [xa]_{R_L}$ questo è vero perché $R_L$ è invariante destra.
+    $\delta$ è una buona definizione perché indipendente dall'elemento che rappresenta la classe.
+  \end{itemize}
+  Ora dobbiamo dimostrare che $L = L(M)$.
+  Dimostrare per induzione che $\hat{\delta}([x], y) = [xy]$:
+  \[\hat{\delta}(q_0,x) = \hat{\delta}([\varepsilon]_{R_L},x) = [x]_{R_L}\]
+  \[
+  \begin{aligned}
+    x \in L(M) &\text{ sse } \hat{\delta}(q_0,x) \in F\\
+    &\text{ sse } \hat{\delta}([\varepsilon]_{R_L},x) \in F\\
+    &\text{ sse } [x]_{R_L} \in F\\
+    &\text{ sse } x \in L \quad \square
+  \end{aligned}
+  \]
+  Quindi $L(M) = L$.
+\end{proof}
+\thm{}
+{
+  Dato $L$ esiste $M$ DFA t.c. $L(M) = L$ e $M$ ha il numero minimo di stati (quello costruito da $R_L$).
+}
+
 \subsubsection{Pumping Lemma}
+
+Questo risultato è importante perché fornisce una condizione $\pi$ necessaria alla regolarità.
+\[L \text{ regolare} \Longrightarrow \pi\]
+Questa forma si può riscrivere come:
+\[\neg \pi \Longrightarrow L \text{ non è regolare}\]
 
 \thm{Pumping Lemma}
 {
-  Condizione necessaria perché un linguaggio sia regolare:
-  \[L \text{ regolare } \rightarrow \pi \equiv \neg \pi \rightarrow L \text{ NON regolare}\]
+  Sia $L \subseteq \Sigma^*$ un linguaggio regolare.
+  Allora esiste  $k \in \mathbb{N}$ t.c. per ogni stringa $s \in L$ con $|s| \ge k$ 
+  può essere scritta come:
+  \[s = uvw\]
+  con:
+  \begin{itemize}
+    \item $|v| > 0$
+    \item $|uv| \le k$
+    \item $\forall i \in \mathbb{N} \; . \;  uv^iw \in L$
+  \end{itemize}
 }
 
 \end{document}
