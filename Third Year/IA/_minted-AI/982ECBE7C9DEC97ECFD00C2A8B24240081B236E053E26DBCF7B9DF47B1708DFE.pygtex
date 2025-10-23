@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{function} \PYG{n}{Hill}\PYG{o}{\PYGZhy{}}\PYG{n}{Climbing}\PYG{p}{(}\PYG{n}{problem}\PYG{p}{)} \PYG{n}{returns} \PYG{n}{a} \PYG{n}{state} \PYG{n}{that} \PYG{o+ow}{is} \PYG{n}{a} \PYG{n}{local} \PYG{n}{maximum}
+    \PYG{n}{inputs}\PYG{p}{:}  \PYG{n}{problem}\PYG{p}{,} \PYG{n}{a} \PYG{n}{problem}
+    \PYG{n}{local} \PYG{n}{variables}\PYG{p}{:} \PYG{n}{current}\PYG{p}{,} \PYG{n}{a} \PYG{n}{node}
+                     \PYG{n}{neighbor}\PYG{p}{,} \PYG{n}{a} \PYG{n}{node}
+    \PYG{n}{current} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{MAKE}\PYG{o}{\PYGZhy{}}\PYG{n}{NODE}\PYG{p}{(}\PYG{n}{problem}\PYG{o}{.}\PYG{n}{INITIAL}\PYG{o}{\PYGZhy{}}\PYG{n}{STATE}\PYG{p}{)}
+    \PYG{n}{loop} \PYG{n}{do}
+        \PYG{n}{neighbor} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{a} \PYG{n}{highest}\PYG{o}{\PYGZhy{}}\PYG{n}{value} \PYG{n}{neighbor} \PYG{n}{of} \PYG{n}{current}
+        \PYG{k}{if} \PYG{n}{neighbor}\PYG{o}{.}\PYG{n}{VALUE} \PYG{o}{\PYGZlt{}=} \PYG{n}{current}\PYG{o}{.}\PYG{n}{VALUE} \PYG{n}{then} \PYG{k}{return}
+          \PYG{n}{current}\PYG{o}{.}\PYG{n}{STATE}
+        \PYG{n}{current} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{neighbor}
+\end{Verbatim}

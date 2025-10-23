@@ -573,7 +573,112 @@ Questo tipo di ricerca è:
   \item \textbf{Ottimale}: Sì, se l'euristica è ammissibile e consistente
 \end{itemize}
 
+\subsection{Ricerca locale}
 
+In molte problemi di ottimizzazione il "path" è irrilevante,
+il traguardo è importante. In questi casi, allora lo spazio degli stati è 
+un insieme di configurazioni:
+\begin{itemize}
+  \item Trovare la configurazione ottimale (TSP (Travelling Salesperson Problem), etc...)
+  \item Trovdare una configurazione che soddisfi dei vincoli (n-Queens, per esempio, dove 
+  ci sono 8 regine su una scacchiera e per trovare la configurazione
+  dove nessuna delle 8 è sotto attacco, parto da una configurazione "base"
+  e sposto le regine finché non trovo la configurazione traguardo, etc...)
+\end{itemize}
+Si possono usare algoritmi di "iterative improvement": 
+\begin{itemize}
+  \item Mantenere un singolo stato corrente
+  \item Cercare di migliorarlo
+\end{itemize}
+Spazio costante, fatto apposta per online e offline search. 
+Varianti di questo approccio arrivano fino a $1\%$ di soluzione ottimali.
+
+\ex{Problema delle $n$ regine}
+{
+  \begin{itemize}
+    \item Inserire $n$ regine su una scacchiera $n \times n$ in modo che nessuna regina
+      possa attaccarne un'altra (quindi due regine non devono essere sulla stessa riga, colonna o diagonale).
+    \item Muovi una regina per volta, cercando di ridurre il numero di conflitti.
+  \end{itemize}
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{nQueens.png}
+  \end{figure}
+  \noindent
+  Quasi sempre si solve una problema di questo tipo in pochi passi, anche per $n=1$ milione.
+}
+\noindent
+Ecco ora l'algoritmo di "hill-climbing" (come scalare il monte everest in una fitta nebbia con amnesia):
+\begin{minted}{python}
+function Hill-Climbing(problem) returns a state that is a local maximum
+    inputs:  problem, a problem
+    local variables: current, a node
+                     neighbor, a node
+    current <- MAKE-NODE(problem.INITIAL-STATE)
+    loop do
+        neighbor <- a highest-value neighbor of current
+        if neighbor.VALUE <= current.VALUE then return 
+          current.STATE
+        current <- neighbor
+\end{minted}
+\noindent
+Utile per considerare lo \textit{state scape landscape}:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{hill-climbing.png}
+\end{figure}
+\noindent
+Ci sono varianti di questo algoritmo:
+\begin{itemize}
+  \item \textbf{Random-restart hill climbing} è una variante che supera il massimo locale, trivialmente completo.
+  \item \textbf{Random sideways moves} è buono perché esce dalle \textit{shoulder} ma non completamente perché può rimanere bloccato in un ciclo infinito su "flat local maxima". 
+\end{itemize}
+
+\subsubsection{Simulated annealing}
+
+Simulated annealing è un algoritmo di ottimizzazione ispirato al processo di 
+raffreddamento dei metalli. L'idea è di permettere occasionalmente mosse che peggiorano la soluzione corrente
+per evitare di rimanere bloccati in massimi locali.
+\begin{itemize}
+  \item Inizia con una temperatura alta che permette molte mosse peggiorative
+  \item La temperatura diminuisce gradualmente, riducendo la probabilità di accettare mosse peggiorative
+  \item Alla fine, la temperatura raggiunge zero e l'algoritmo si comporta come hill-climbing
+  \item La scelta della schedule di raffreddamento è cruciale per le prestazioni dell'algoritmo
+\end{itemize}
+\begin{lstlisting}[language=Python]
+function Simulated-Annealing(problem, schedule) returns a solution state
+    inputs: problem, a problem
+    schedule, a mapping from time to "temperature"
+    local variables: current, a node
+                     next, a node
+                     T, a "temperature" controlling prob. of downward steps
+    current <- Make-Node(problem.Initial-State)
+    for t <- 1 to infinity do
+      T <- schedule(t)
+      if T = 0 then return current
+      next <- a randomly selected successor of current
+      deltaE <- next.Value - current.Value
+      if deltaE > 0 then current <- next
+      else current <- next only with probability e^{delta E/T} 
+\end{lstlisting}
+A temperatura fissata $T$, la probabilità di accettare una mossa che peggiora la soluzione di $\Delta E$ è $e^{\Delta E / T}$.
+\[p(x) = \alpha e^{\frac{E(x)}{kT}}\]
+Decrescendo $T$ abbastanza, si può garantire la convergenza alla soluzione ottimale.
+Perché
+\[e^{\frac{E(x^*)}{kT}} / e^{\frac{E(x)}{kt}} = e^{\frac{E(x^*) - E(x)}{kt}} \gg 1 \quad \text{per } T \to 0\]
+
+\subsubsection{Local beam search}
+
+Local Beam Search è un algoritmo di ricerca locale che mantiene $k$ stati invece di uno solo. Inizia con $k$ stati casuali
+e ad ogni iterazione:
+\begin{itemize}
+  \item Genera tutti i successori di tutti i $k$ stati correnti
+  \item Seleziona randomicamente i $k$ migliori successori tra tutti quelli generati
+  \item Ripete fino a quando non viene trovata una soluzione o non ci sono più miglioramenti
+  \item Se tutti i $k$ stati convergono allo stesso punto, si può introdurre
+    diversità sostituendo alcuni stati con nuovi stati casuali
+\end{itemize}
 
 
 \end{document}
