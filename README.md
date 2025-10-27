@@ -19,4 +19,4 @@ if you want to clean the directory from the binary files.
 
 ## Important contributors
 
-This notes may contain some integration made by [@fabiooo4](https://github.com/fabiooo4/Uni) who helped me through the draft of these notes.
+This notes may contain some integration made by [@fabiooo4](https://github.com/fabiooo4/Uni) who helped me through the draft of these notes!
