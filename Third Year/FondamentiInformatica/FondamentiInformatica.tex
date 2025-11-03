@@ -878,7 +878,7 @@ e $F' = \begin{cases}
   F & \text{altrimenti}
 \end{cases}$.
 
-\section{Espressioni Regolari}
+\subsection{Espressioni Regolari}
 
 Le espressioni regolari sono un modo compatto per rappresentare i linguaggi.
 Le opreazioni che si possono fare sono:
@@ -1204,7 +1204,7 @@ di $R_L$.
   Dato $L$ esiste $M$ DFA t.c. $L(M) = L$ e $M$ ha il numero minimo di stati (quello costruito da $R_L$).
 }
 
-\subsubsection{Pumping Lemma}
+\subsubsection{Pumping Lemma per linguaggi regolari}
 
 Questo risultato è importante perché fornisce una condizione $\pi$ necessaria alla regolarità.
 \[L \text{ regolare} \Longrightarrow \pi\]
@@ -1224,5 +1224,336 @@ Questa forma si può riscrivere come:
     \item $\forall i \in \mathbb{N} \; . \;  uv^iw \in L$
   \end{itemize}
 }
+
+\begin{proof}
+$L$ regolare se esiste $M$ DFA t.c $L = L(M)$ dove $ M = (Q, \Sigma, \delta, q_0, F)$.
+\[|Q| = n \in \mathbb{N}, k = n \quad z \in L \; t.c. \; |z| \ge k\]
+\[z = a_1a_2 \dots a_m \quad m \ge k\]
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[->, node distance = 2.5cm, on grid, auto]
+  
+    \node[state] (q0) {$q_0$};
+    \node[state, right of = q0] (q1) {$q_1$};
+    \node[state, right of = q1] (q2) {$q_2$};
+    \node (dots) {$\ldots$};
+    \node[state, right of = q2] (qm) {$q_{m+1}$};
+    
+  \draw (q0) edge[ above] node{$a_1$} (q1);
+  \draw (q1) edge [above] node{$a_2$} (q2);
+  \draw (q2) edge[above, dotted] node{$a_m$} (qm);
+
+  \end{tikzpicture}
+\end{figure}
+\noindent
+Per leggere $m$ simboli si attraverso $m+1$ stati. 
+Ma $m \ge n \Rightarrow$ attraverso almeno $n+1$ stati. Attraversiamo 
+più stati di quelli in $Q$ ovvero almeno uno stato è ripetuto nel riconoscimento di $z$. 
+Suppiniamo $\bar{q} \in Q$ sia il primo stato leggendo $z$ che
+viene ripetuto, in cui si torniamo per riconoscere $z$. 
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[->, node distance = 3cm, on grid, auto]
+  
+    \node[state] (q0) {$q_0$};
+    \node[state, right of = q0] (qb) {$\bar{q}$};
+    \node[state, right of = qb] (qm) {$q_{m+1}$};
+    
+  \draw (q0) edge[ above] node{$a_1$} (qb);
+  \draw (qb) edge [loop above] node{$a_i \dots a_j$} ();
+  \draw (qb) edge[above] node{$a_{j+1} \dots a_m$} (qm);
+
+  \end{tikzpicture}
+\end{figure}
+\noindent
+Non ci sono stati ripetuti perché $\bar{q}$ è il primo per costruzione.
+$u$ da $q_0$ a $\bar{q}$, $v$ da $\bar{q}$ a $\bar{q}$, $w$ da $\bar{q}$ a $q_{m}$ finale.
+Questa suddivisione è accettabile per il lemma?
+\begin{itemize}
+  \item $|uv| \le k$ 
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[->, node distance = 2.5cm, on grid, auto]
+    
+      \node[state] (q0) {$q_0$};
+      \node[state, right of = q0] (q1) {$q_1$};
+      \node[state, right of = q1] (q2) {$q_2$};
+      \node (dots) {$\ldots$};
+      \node[state, right of = q2, accepting] (qm) {$q_{m+1}$};
+      
+    \draw (q0) edge[ above] node{$a_1$} (q1);
+    \draw (q1) edge [above] node{$a_2$} (q2);
+    \draw (q2) edge[above, dotted] node{$a_2 \dots a_m$} (qm);
+    \draw (qm) edge[loop above] node{$a_{n+1} = a_m$} (qm);
+    
+  
+    \end{tikzpicture}
+  \end{figure}
+  \noindent
+  Per arrivare allo stato finale $q_m$ si attraversano $m-1$ simboli.
+  \[Q = \{q_0, q_1, \dots, q_{m-1}\} \rightarrow |Q| = m\]
+  \item $|v| > 0$ perché altrimenti non ci sarebbe stato ripetuto, sappiamo 
+  che per forza di cose almeno un arco deve uscire dallo stato e ritornare nello stesso stato.
+  \item $\forall i \in \mathbb{N} \; . \; uv^iw \in L$ 
+  
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[->, node distance = 3cm, on grid, auto]
+    
+      \node[state] (q0) {$q_0$};
+      \node[state, right of = q0] (q1) {$q_1$};
+      \node[state, right of = q1] (qb) {$\bar{q}$};
+      \node[state, right of = qb, accepting] (qm) {$q_{m+1}$};
+      
+    \draw (q0) edge[ above] node{$a_1$} (q1);
+    \draw (q1) edge [above, dotted] node{$a_2$} (qb);
+    \draw (qb) edge[loop above] node{$v^i$} ();
+    \draw (qb) edge[above, dotted] node{$w$} (qm);  
+    \end{tikzpicture}
+  \end{figure}
+  \noindent
+  perché essendo $v$ un ciclo, ripeterlo $i$ volte mi riporta sempre nello stato $\bar{q}$. $\square$
+\end{itemize}
+\end{proof}
+\noindent
+Ora proviamo a negare il pumping lemma per dimostrare che un linguaggio non è regolare.
+\begin{itemize}
+  \item $\exists k \leadsto \forall k$ quindi la dimostrazione non deve imporre vincoli
+  su $k$.
+  \item $\forall z \leadsto \exists z \in L \; . \; |z| \ge k$ quindi costruiamo noi la $z \in L$ di lunghezza $k$.
+  \item $\exists uvw = z \leadsto \forall uvw = z$ quindi dobbiamo dimostrare che per ogni possibile suddivisione ($|v| > 0, |uv| \le k$)
+  \item $\forall i \in \mathbb{N} \leadsto \exists i \in \mathbb{N}$ quindi dobbiamo trovare un $i$ che rispetti la condizione $uv^iw \notin L$.
+\end{itemize}
+\ex{}
+{
+  Consideriamo il seguente linguaggio:
+  \[L = \{0^n1^n \; | \; n \in \mathbb{N}\}\]
+  Dimostriamo che $L$ non è regolare tramite il pumping lemma.
+  \[\forall k \in \mathbb{N} \; . \; \exists z \in L \; |z| \ge k \quad \forall uvw = z \; \; |uv| \le k \; \; |v| > 0 \quad \exists i \; . \; uv^iw \notin L\]
+  Fissiamo $k \in \mathbb{N}$ ($k$ non deve avere nessun vincolo):
+  \[z = 0^k1^k \in L \quad |z| \ge k\]
+  \textbf{Condizioni di appartenenza} a $L$:
+  \[0^a1^b \in L \text{ sse } a = b\]
+  Gli 0 e gli 1 devono avere cardinalità uguale.
+  Quindi una singola suddivisione che va bene posso solo prendere 
+  $uv \in 0^k$ perché per ipotesi $|uv| \le k$.
+  Andiamo ora a definire \[z_i = uv^iw = 0^{k+(i-1)|v|}1^k\]
+  Prendiamo per esempio $i = 0$:
+  \[0^{k+(0-1)|v|}1^k = 0^{k - |v|}1^k\]
+  e quindi abbiamo effettivamente tolto l'interezza di $v$.\\
+  Per $i = 1$:
+  \[0^{k+(1-1)|v|}1^k = 0^k1^k\]
+  Per $i = 3$ (ripete tre volte $v$):
+  \[0^{k+(3-1)|v|}1^k = 0^{k + 2|v|}1^k \]
+  \[z_i = 0^{k+(i-1)|v|}1^k\]
+  In questo caso, dobbiamo rompere la condizione di appartenenza per cui $a \neq b$.
+  Basterebbe ripetere $v$ almeno una volta, quindi prendiamo $i = 2$:
+  \[z_2 = 0^{k+(2-1)|v|}1^k = 0^{k + |v|}1^k \notin L\]
+  Perché $k + |v| = k$ solo se $|v| = 0$ ma questo non è possibile 
+  perché per definizione $|v|$ deve essere maggiore di zero e quindi $z_2 \notin L$.
+}
+\noindent
+Riassumendo il metodo per dimostrare che un linguaggio è o non è regolare:
+\begin{itemize}
+  \item L Reg $\rightarrow$ Costruisci automa e si dimostra che $L = L(M)$
+  \item L non Reg $\rightarrow$ usa il Pumping Lemma
+  \begin{itemize}
+    \item Scrivere le condizioni di appartenenza
+    \item Fissa $k$ generico e si sceglie $z$ facendo attenzione ai vincoli di $k$
+    \item Cerchiamo $i \in \mathbb{N}$ t.c. $uv^iw \notin L$ (condizioni di appartenenza violate)
+  \end{itemize}
+\end{itemize}
+
+\section{Linguaggi Context Free}
+
+\subsection{Grammatiche Context Free}
+
+\dfn{}
+{
+  Una grammatica è una quadrupla $G = (V, T, R, S)$ dove:
+  \begin{itemize}
+    \item $V$ è un insieme finito di variabili (non terminali)
+    \item $T$ è un insieme finito di simboli terminali (disgiunto da $V$)
+    \item $R$ è un insieme finito di regole di produzione della forma $A \rightarrow \beta$
+    dove $A \in V$ e $\beta \in (T \cup \Sigma)^*$
+    \item $S \in V$ è il simbolo iniziale
+  \end{itemize}
+}
+\thm{}
+{
+  $L$ è un linguaggio CF se esiste una grammatica $G$ t.c. $L = L(G)$.
+}
+
+\subsection{Alberi di derivazione}
+
+Sia $G = (V, \Sigma, R, S)$ una grammatica CF.
+Un albero di derivazione (\textit{Parse Tree}) per $G$:
+\begin{itemize}
+  \item Ogni vertice ha un etichetta in $V \cup T \cup \{\varepsilon\}$
+  \item L'etichetta della radice è in $V$
+  \item Ogni vertice interno (non foglia) ha etichetta in $V$
+  \item Se un vertice $n$ etichettato con $A \in V$ e i vertici
+  $n_1, n_2, \dots, n_k$ sono i figli etichettati con $X_1, X_2, \dots, X_k \in V \cup T \cup \{\varepsilon\}$ 
+  allora $A \rightarrow X_1X_2 \dots X_k \in P$.
+  \begin{figure}[H]
+    \centering 
+    \begin{forest}
+      for tree={
+        grow=east,
+        parent anchor=east,
+        child anchor=west,
+        edge={->},
+        l sep+=10pt,
+        s sep+=10pt,
+        anchor=west,
+        calign=center,
+        tier/.wrap pgfmath arg={tier #1}{level()},
+      }
+      [S
+        [A
+          [a]
+          [B
+            [b]
+            [\(\varepsilon\)]
+          ]
+        ]
+        [C
+          [c]
+        ]
+      ]
+    \end{forest}
+    
+  \end{figure}
+  Se un vertice ha etichetta $\varepsilon$ allora è una foglia ed è l'unico figlio del padre.
+\end{itemize}
+\ex{}
+{
+  Consideriamo la grammatica: 
+  \[E \rightarrow 0|1|(\text{E or E})|(\text{E and E})|(\text{not E})\]
+  Consideriamo la seguente derivazione:
+  \[E \Rightarrow ((0 or 1) and (not 0))\]
+  che è la stringa generata dalla grammatica descritta dall'albero
+}
+\thm{}
+{
+  Sia $G = (V, T, P, S)$ CF. Allora $S {\Rightarrow}^* \alpha \in T^*$
+  sse esiste un albero di derivazione con radice etichettata con $S$ 
+  e foglie etichettate (da sx verso dx) con $\alpha$
+}
+
+\subsection{Ambiguità}
+
+Nelle grammatiche a volte, possono capitare delle ambiguità in base
+a come è scritta.
+
+\ex{}
+{
+  \[E \rightarrow E+E|E*E|0|1|2\]
+  Fingiamo di prendere la stringa:
+  \[2*0+1\]
+  Il problema della grammatica ha 
+  radici aritmiche perché non sappiamo quale operazione fare prima,
+  quindi in base a quale scegliamo, avremo due risultati diversi (1 o 2).
+}
+\noindent
+Quindi è utile evitare questa proprietà.
+Una grammatica è ambigua se esiste almeno una parola
+$\alpha$ con più di un albero di derivazione con radice $S$.
+Il linguaggio generato da una grammatica ambigua è detto
+inerentemente \textit{ambiguo}.
+
+\subsection{Forme normali e minimizzazione delle grammatiche CF}
+
+Le grammatiche le cui produzioni rispettono vincoli "di forma" specifici.
+
+\begin{itemize}
+  \item \textbf{Forma normale di Chomsky:} 
+  Tutte le produzioni hanno una forma: $A \rightarrow a$ o $A \rightarrow BC$ con $A,B,C \in V$ e $a \in T$
+  \item \textbf{Forma di Greibach}: Tutte le produzioni hanno la forma: $A \to a\alpha$ con $a \in T$ e $\alpha \in V^*$
+\end{itemize}
+Ogni grammatica può essere riscritta in modo tale che:
+\begin{enumerate}
+  \item Ogni simbolo non terminale genera simboli terminale e ogni
+  terminale è generato da almeno un terminale (eliminazione dei simboli inutili)
+  
+  \item Ogni produzione non è della forma $A \to B$ con $A, B \in V$ (eliminazione delle produzioni unitarie).
+  \item Se $\varepsilon$ non appartiene al linguaggio allora non ci devono essere $A \to \varepsilon$ con $A \in V$
+   (Se $\varepsilon \in L$ allora $S \to \varepsilon$) (eliminazione $\varepsilon$-produzioni)
+\end{enumerate}
+
+\subsubsection{Eliminazione dei simboli inutili}
+
+$X \in V \cup T$ è utile se essite una derivazione $S \rightarrow^* \alpha x \beta \rightarrow^* w \in T^*$
+    \\
+    Metodo algoritmico per eliminare i simboli che non arrivano a sequenze terminali.
+    $\forall A \in V \; . \; \exists v \in T^* \; . \; A \rightarrow^* w$
+    allora $L(G) \neq 0$ tutti i simboli sono inutili.
+    Quindi prima andremo a togliere i simboli che non portano a simboli terminali.
+    Una volta trovati quelli, andremo a togliere quelli che non sono raggiungibili da $S$.
+    Tutto il resto sono simboli inutili.\\ 
+    Eliminiamo i simboli non raggiungibili da $S$:
+    \[\Gamma(W) = \{X \in V \cup T \; | \; \exists A \in W \; . \; A \to \alpha x\beta \in P\} \cup S\]
+    \[\Gamma(\varnothing) = \{S\}\]
+    \ex{} 
+    {
+    Aggiungiamo ciò che possiamo raggiungere da $S$ in un certo numero di passi.
+    \begin{itemize}
+      \item $S \to a|bC$
+      \item $C \to d|dE$
+      \item $E \to \varepsilon$
+      \item $F \to f$
+    \end{itemize}
+    \[\Gamma(\varnothing) = \{\}\]
+    \[\Gamma(S) = \{X \in V \cup T \; | \; S \to \alpha x\beta \in P\} \cup \{S\} = \{a, b, c, S\}\]
+    \[\Gamma(a,b,c,S) = \{X \in V \cup T \; | \; C \to \alpha x\beta \in P \text{ o } S \to \alpha x\beta \in P\} = \{a,b,c,S,d,E\}\]
+    \[\Gamma(a,b,c,d,E,S) = \{a,b,c,d,E,S, \varepsilon\}\]
+    $F$ è inutile. 
+    }
+    \thm{}
+    { 
+      $\forall G = (V, T, P, S)$ CF esiste una grammatica $G' = (V', T, P', S)$ tale che 
+      \[L(G') = L(G)\] e $G'$ è senza simboli inutili.
+    }
+    \noindent
+    $G'$ si ottiene applicando in sequenza le due trasformazioni viste (nell'ordine visto).  
+  
+\subsubsection{Eliminazione delle $\varepsilon$-produzioni}
+
+L'idea è quella di sostituire la transizione con tutto quello che può generare $\varepsilon$ ad esempio:
+\ex{}
+{Consieriamo la grammatica:
+\[S \to \varepsilon|A|B\]
+\[A \to 0|0A0|B\]
+\[B \to 1|1B1|A|\varepsilon\]
+$A \to B \to \varepsilon$ tutti i simboli non terminali che in un certo nnumero di passi generano $\varepsilon$ ovvero $\{S, B, A\}$ 
+
+\[S \to \varepsilon|A|B\]
+\[A \to 0|0A0|\colorbox{yellow}{00}|B\]
+\[B \to 1|1B1|\colorbox{yellow}{11}|A\]
+Eliminando $B \to \varepsilon$, 00 e 11 non sarebbero più generabili. e quindi si aggiungono.
+Possiamo quindi eliminare tutte le $\varepsilon$-produzioni tranne $S \to \varepsilon$ se $\varepsilon \in L$.
+}
+
+
+\subsubsection{Eliminazione delle produzioni unitarie}
+
+Una produzione unitaria è una produzione della forma $A \to B$ con $A,B \in V$.
+
+\ex{}
+{
+  Consideriamo la seguente grammatica:
+\[S \to \varepsilon|A|B\]
+\[A \to 0|0A0|B|00\]
+\[B \to 1|1B1|A|11\]
+Guardo $S$ e al posto di $A$ e $B$ inserisco tutte le sue produzioni:
+\[S \to \varepsilon|0|0A0|00|1|1B1|11\]
+\[A \to 0|0A0|00|1|1B1|11\]
+\[B \to 1|1B1|11|0|0A0|00\]
+Sostituiamo in tutte le produzioni quello che è producibile dal non terminale 
+a destra della produzione unitaria.
+}
+Quando la grammatica è senza simboli inutili, senza $\varepsilon$-produzioni e senza produzioni unitarie
+possiamo trasformarla nella forma normale di Chomsky.
 
 \end{document}
