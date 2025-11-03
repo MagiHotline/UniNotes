@@ -673,12 +673,198 @@ Perché
 Local Beam Search è un algoritmo di ricerca locale che mantiene $k$ stati invece di uno solo. Inizia con $k$ stati casuali
 e ad ogni iterazione:
 \begin{itemize}
-  \item Genera tutti i successori di tutti i $k$ stati correnti
+   \item Genera tutti i successori di tutti i $k$ stati correnti
   \item Seleziona randomicamente i $k$ migliori successori tra tutti quelli generati
   \item Ripete fino a quando non viene trovata una soluzione o non ci sono più miglioramenti
   \item Se tutti i $k$ stati convergono allo stesso punto, si può introdurre
     diversità sostituendo alcuni stati con nuovi stati casuali
 \end{itemize}
+
+\subsection{Ricerca locale in spazio continuo}
+
+La ricerca locale può essere estesa a spazi di stato continui.
+Per risolvere questi problemi si possono utilizzare tecniche come:
+\begin{itemize}
+  \item \textbf{Discretizzazione:} suddividere lo spazio continuo in una griglia di punti discreti e applicare
+    algoritmi di ricerca locale su questi punti
+    \item \textbf{Randomiche Perturbazioni:} introdurre piccole perturbazioni casuali alle soluzioni correnti per esplorare
+    lo spazio delle soluzioni con metodi come il simulated annealing (il prossimo stato è scelto randomicamente)
+    \item \textbf{Gradiente}: utilizzare il gradiente della funzione obiettivo per guidare la ricerca verso
+    direzioni di miglioramento (il prossimo stato è scelto in base alla direzione del gradiente).
+    Il metodo del gradiente calcola:
+    \[\nabla f(x) = \left( \frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}, \ldots, \frac{\partial f}{\partial x_n} \right)\]
+    Per trovare la direizione di massima crescita della funzione obiettivo si pone 
+    il gradiente uguale a zero:
+    \[\nabla f(x) = 0\]
+\end{itemize}
+\noindent
+A volte però non riusciamo a risolvere $\nabla f (x) = 0$ analiticamente, 
+quindi possiamo migliorarla localmente:
+\begin{itemize}
+  \item Si performa un update nella direzione della salita per ogni coordinata
+  \item Più la funzione è ripida più si fanno passi grandi
+\end{itemize}
+Aggionrare una coordinata viene effettuato tramite una
+funzione generale $g(x_1, x_2)$
+\[
+x_1 \leftarrow x_1 + \alpha \frac{\partial g(x_1,x_2)}{\partial x_1} \quad
+x_2 \leftarrow x_2 + \alpha \frac{\partial g(x_1,x_2)}{\partial x_2}
+\]
+Oppure in forma vettoriale:
+\[
+X = \begin{bmatrix}
+x_1 \\
+x_2
+\end{bmatrix}
+\quad 
+nabla g(X) = \begin{bmatrix}
+\frac{\partial g(x_1,x_2)}{\partial x_1} \\
+\frac{\partial g(x_1,x_2)}{\partial x_2}
+\end{bmatrix}
+\]
+\[X \leftarrow X + \alpha \nabla g(X)\]
+Dove $\alpha$ è lo step size, cioè la dimensione del passo da fare:
+\begin{itemize}
+  \item Se è troppo grande si rischia di saltare soluzioni
+  \item Se è troppo piccolo la convergenza sarà molto lenta
+\end{itemize}
+
+\subsubsection{Algoritmo di Newton-Raphson}
+È una tecnica generale per trovare le radici di una funzione
+cioè risolvere un'equazione $f(x) = 0$.
+Per farlo si trova un'approsimazione iniziale $\bar{x}_0$ della soluzione
+e iterativamente si aggiorna l'approissimazione usando la formula:
+\[
+\bar{x}_{n+1} = \bar{x}_n - \frac{f(\bar{x}_n)}{f'(\bar{x}_n)}
+\]
+dove:
+\[
+g'(x) = \frac{d}{dx} g(x)
+\]
+\ex{}
+{
+  Consideriamo la funzione $f(x) = x^2 - a$.
+  \begin{itemize}
+    \item Mostrare che il metodo di Newton conduce a:
+    \[x_{n+1} = \frac{1}{2}\left(x_n + \frac{a}{x_n}\right)\]
+    \item Fissato $a = 4, x_0 = 1$ cacolare le prime tre iterazioni. ($x_i = \{1,2,3\}$)
+  \end{itemize}
+  Quindi abbiamo \[
+    f(x) = x^2 - a
+  \] 
+  \[x_{n+1} = \bar{x}_n - \frac{f(\bar{x}_n)}{f'(\bar{{x}_n})}
+  \]
+  \[x_{n+1} = \bar{x}_n - \frac{\bar{x}_n - a}{2\bar{x}_n}  \]
+}
+
+\subsection{Constrained Satisfaction Problem}
+
+Un \textbf{Constrained Satisfaction Problem (CSP)} è un problema
+definito da:
+\begin{itemize}
+  \item Un insieme di variabili \( X = \{X_1, X_2, \ldots, X_n\} \)
+  \item Un insieme di domini \( D = \{D_1, D_2, \ldots, D_n\} \) dove ogni \( D_i \)
+    è l'insieme dei valori possibili per la variabile \( X_i \)
+  \item Un insieme di vincoli \( C = \{C_1, C_2, \ldots, C_m\} \) che specificano
+    le relazioni tra le variabili
+\end{itemize}
+Assunzioni: single agent, azioni deterministiche, stato completamente osservabile
+
+\ex{Map-Coloring}
+{
+  Il Map-coloring è un problema specifico di Graph coloring.
+  Dato un insieme di regioni geografiche e un insieme di colori,
+  assegnare un colore a ogni regione in modo che regioni adiacenti
+  non abbiano lo stesso colore.
+  \begin{itemize}
+    \item Variabili: regioni geografiche (es. WA, NT, Q, NSW, V, SA, T)
+    \item Domini: colori (es. rosso, verde, blu)
+    \item Vincoli: regioni adiacenti non possono avere lo stesso colore
+  \end{itemize}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{map-coloring.png}
+  \end{figure}
+}
+\ex{N-Queens Problem}
+{
+  Il N-Queens Problem è un problema di posizionamento di N regine su una
+  scacchiera \( N \times N \) in modo che nessuna regina possa attaccarne
+  un'altra.
+  \begin{itemize}
+    \item Variabili: posizioni delle regine sulle righe della scacchiera
+    \item Domini: colonne della scacchiera (es. 1, 2, ..., N)
+    \item Vincoli: questa volta formuliamo i vincoli in maniera più complessa.
+    Un vincolo per ogni coppia di variabili specificando le posizioni "permesse" PER OGNI ogni due regine.
+  \end{itemize}
+  Questa formulazione rende alcuni vincoli impliciti, per esempio, 
+  non è possibile assegnare due regine la stessa colonna quindi
+  non ci sta bisogno di controllare.
+}
+\subsubsection{Grafo dei vincoli}
+
+Un \textbf{grafo dei vincoli} chiamato anche grafo primale
+consiste nel costruire
+un nodo per ogni variabile
+e un arco per ogni vincoli tra due variabili.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{graphcoloring.png}
+\end{figure}
+
+\subsubsection{Ipergrafi e Grafi duali}
+
+Le relazioni tra ipergrafi e grafi binari:
+\begin{itemize}
+  \item Si può sempre convertire un ipergrafo in un grafo binario
+  \item Ogni variabile ha un dominio esponenzialmente grande
+\end{itemize}
+
+\subsubsection{Problemi combinatori}
+
+Dato un insieme di possibili soluzioni bisogna trovare quella migliore 
+che soddisfa i vincoli. Alcuni esempi:
+\begin{itemize}
+  \item Decisionali: colorare un grafo con $k$ colori
+  \item Ottimizzazione: trovare la colorazione con il minor di conflitti
+  \item Ottimizzazione Multi-obiettivo: portfolio investment, minimizzare il rischio e
+  massimizzare il guadagno
+  \item Modelli grafici:
+  \begin{itemize}
+    \item Insieme di variabili, domini e funzioni locali (vincoli)
+    \item Funzioni globali è un aggregazione di funzioni locali
+    \item Soluzioni: l'assegnamento di variabili che ottimizza la funzione globale 
+  \end{itemize}
+\end{itemize}
+
+\dfn{Rete a vincoli}
+{
+  Una tupla di tre elementi CN = $(X, D, C)$ dove:
+  \begin{itemize}
+    \item $X = \{X_1, X_2, \ldots, X_n\}$ è un insieme di variabili
+    \item $D = \{D_1, D_2, \ldots, D_n\}$ è un insieme di domini associati alle variabili
+    \item $C = \{C_1, C_2, \ldots, C_m\}$ è un insieme di vincoli che specificano le relazioni tra le variabili
+    \item Ogni vincolo $C_i$ è una tupla $(S_i, R_i)$ dove:
+    \begin{itemize}
+      \item $S_i \subseteq X$ è lo scopo, l'insieme delle variabili coinvolte in $R_i$
+      \item $R_i$ sottoinsieme del prodotto cartesiano delle variabili in $S_i$
+      \item $R_i$ specifica le tuple permesse su $S_i$
+    \end{itemize}
+    \item \textbf{Soluzione:} assegnamento di tutte le variabili che soddisfano tutti i vincoli.
+    \item Obiettivo: consistency check, trovare una o tutte le soluzioni,
+    ottimizzare una funzione obiettivo.
+  \end{itemize}
+} 
+Ci si può avvicinare alla soluzione
+attraverso una soluzione parziale:
+\begin{itemize}
+  \item Soluzione parziale consistente: soluzione parziale che soddisfa
+  tutti i vincoli di cui lo scope non contiene variabili non assegnate
+  \item Una soluzione parziale consistente non è necessariamente
+  estendibile a una soluzione completa
+\end{itemize}
+
 
 
 \end{document}
