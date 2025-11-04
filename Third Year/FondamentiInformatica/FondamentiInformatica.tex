@@ -1543,17 +1543,161 @@ Una produzione unitaria è una produzione della forma $A \to B$ con $A,B \in V$.
 \ex{}
 {
   Consideriamo la seguente grammatica:
-\[S \to \varepsilon|A|B\]
-\[A \to 0|0A0|B|00\]
-\[B \to 1|1B1|A|11\]
-Guardo $S$ e al posto di $A$ e $B$ inserisco tutte le sue produzioni:
-\[S \to \varepsilon|0|0A0|00|1|1B1|11\]
-\[A \to 0|0A0|00|1|1B1|11\]
-\[B \to 1|1B1|11|0|0A0|00\]
-Sostituiamo in tutte le produzioni quello che è producibile dal non terminale 
-a destra della produzione unitaria.
+  \[S \to \varepsilon|A|B\]
+  \[A \to 0|0A0|B|00\]
+  \[B \to 1|1B1|A|11\]
+  Guardo $S$ e al posto di $A$ e $B$ inserisco tutte le sue produzioni:
+  \[S \to \varepsilon|0|0A0|00|1|1B1|11\]
+  \[A \to 0|0A0|00|1|1B1|11\]
+  \[B \to 1|1B1|11|0|0A0|00\]
+  Sostituiamo in tutte le produzioni quello che è producibile dal non terminale 
+  a destra della produzione unitaria.
 }
+\noindent
 Quando la grammatica è senza simboli inutili, senza $\varepsilon$-produzioni e senza produzioni unitarie
 possiamo trasformarla nella forma normale di Chomsky.
+
+\subsubsection{Riduzione in forma normale di Chomsky}
+
+Abbiamo già detto che 
+ogni grammatica CF può essere trasformata in una grammatica equivalente
+in forma normale di Chomsky dove
+\[A \to a \in T \quad \vee \quad A \to BC \quad \text{dove } B,C \in V \]
+Per ogni coppia di simboli non terminali creiamo un nuovo simbolo non terminale che li rappresenta.
+Per esempio:
+\ex{}
+{
+  Consideriamo la seguente grammatica:
+  \[S \to aAB|aB|b\]
+  \[A \to b|aS|aa\]
+  \[B \to a|bbA\]
+  Creiamo i nuovi simboli:
+  \[X_a \to a\]
+  \[X_b \to b\]
+  Ora riscriviamo la grammatica:
+  \[S \to X_aAB|X_aB|X_b\]
+  \[A \to X_b|X_aS|X_aX_a\]
+  \[B \to X_a|X_bX_bA\]
+  Ora dobbiamo solo risolvere le produzioni con più di due simboli a destra.
+  Per esempio in $S \to X_aAB$ creiamo un nuovo simbolo $C$:
+  \[C \to AB\]
+  Quindi riscriviamo:
+  \[S \to X_aC|X_aB|X_b\]
+  \[C \to AB\]
+  E così via per tutte le produzioni con più di due simboli a destra.
+}
+\noindent
+Esempio di forma normale di Chomsky:
+\[
+\begin{aligned}
+  S &\to \varepsilon\\
+  S &\to 0 \; | \; 1\\
+  S &\to V_1V_1\ \; | \; V_3V_1 \; | \; V_2V_2 \;|\; V_4V_2\\
+  V_1 &\to 0\\
+  V_2 &\to 1\\
+  V_3 &\to V_1S\\
+  V_4 &\to V_2S
+\end{aligned}
+\]
+
+\subsection{Pumping Lemma per linguaggi CF}
+
+Anche questa volta, la definizione di Pumping Lemma è 
+simile a quella dei linguaggi regolare
+e quindi fornisce una condizione necessaria 
+perché un linguaggio sia CF. Ovvero che 
+se $L$ è CF allora vale $\Pi$ condizione del pumping lemma. 
+
+\thm{Pumping Lemma per linguaggi CF}
+{
+  Sia $L \subseteq \Sigma^*$ un linguaggio CF.
+  Allora esiste  $k \in \mathbb{N}$ t.c. per ogni stringa $z \in L$ con $|z| \ge k$ 
+  può essere scritta come:
+  \[z = uvwxy\]
+  con:
+  \begin{itemize}
+    \item $|vwx| \le k$
+    \item $|vx| > 0$
+    \item $\forall i \in \mathbb{N} \; . \;  uv^iwx^iy \in L$
+  \end{itemize}
+}
+
+\begin{proof}
+  Sia $L \subseteq T^*$ un linguaggio CF.
+  Esiste una grammatica $G = (V, T, P, S)$ CF t.c. $L = L(G)$.
+  Senza perdita di generalità, possiamo assumere che $G$ sia in forma normale di Chomsky.
+  Quindi le produzioni saranno del tipo $A \to a \in T$ o $A \to BC$ con $B,C \in V$.
+  Sia $n = |V|$ il numero di sinmboli non terminali di $G$.
+  Questo poiché data la forma normale implica che tutti gli altri alberi di derivazione
+  in $G$ sono binari.
+  Prendiamo $k = 2^n$ dove appunto $n$ è il numero di simboli non terminali.
+  Si fa questo perché un albero binario di altezza $h$ ha al massimo $2^h - 1$ nodi interni.
+  Sia 
+  \[z \in L \text { con } |z| \ge k \]
+  Se le foglie sono $\ge 2^n$ allora l'altezza dell'albero di derivazione di $z$ è almeno $n+1$.
+  Il numero di archi (che non è nient'altro l'altezza dell'albero) che collegano simboli non terminali allora sono $n$ se tolgo l'ultimo arco.
+  Quindi il numero di nodi interni (quindi etichettati come non terminali) nel cammino sono $n+1$.
+  Questo vuol dire che almeno una etichetta non termianle è ripetuta nel cammino due volte.
+  Esistono almneo due vertici interni che hanno la stessa etichetta.\\
+  Supponiamo che un etichetta $A$ sia il primo nodo (da S) con l'etichetta che si ripete.
+  Adesso andiamo a prendere i sotto alberi radicati in $A$ e dal secondo $A$ che saranno
+  entrambi alberi binari.
+  Osserviamo che la stringa è stata divisa in cinque parti $z = uvwxy$.
+  Preso il vincolo $|vx| > 0$ quindi $A \to AS \to a\cancel{\varepsilon}$ quindi almeno un
+  simbolo deve essere generato in $v$ o in $x$ (poiché entrambi non possono essere zero).\\
+  Supponiamo ora che la ripetizione più vicina alla foglie.
+  Questo vuol dire che dalla prima $A$ alle foglie non ci sono ripetizioni
+  ma questo vuol dire che attraversiamo massimo $n = |V|$ vertici
+  perché se ne attraversassi uno in più allora almeno uno si ripeterebbe.
+  Quindi non generiamo più di $2^n$ simboli terminali.
+\end{proof}
+
+\subsubsection{Uso del lemma}
+
+Quindi $L$ CF vuol dire $\Pi$ del lemma $\equiv$ $\neq \Pi$ allora $L$ non CF.
+Dove $\Pi$ è:
+\begin{itemize}
+  \item $\exists k \in \mathbb{N}$
+  \item $\forall z \in L$ con $|z| \ge k$
+  \item $\exists uvwxy = z$ con $|vwx| \le k$ e $|vx| > 0$
+  \item $\forall i \in \mathbb{N} \; . \; uv^iwx^iy \in L$
+\end{itemize}
+$\neg \Pi$ diventa:
+\begin{itemize}
+  \item $\forall k \in \mathbb{N}$
+  \item $\exists z \in L$ con $|z| \ge k$
+  \item $\forall uvwxy = z$ con $|vwx| \le k$ e $|vx| > 0$
+  \item $\exists i \in \mathbb{N} \; . \; uv^iwx^iy \notin L$
+\end{itemize}
+\ex{}
+{
+  Consideriamo il seguente linguaggio:
+  \[L = \{a^nb^nc^n \; | \; n \in \mathbb{N}\}\]
+  Dimostriamoc che $L$ non è context free usando la negazione del pumping lemma.
+  Prendiamo $n = k$ siccome $n$ non ha alcun vincolo e scegliamo la stringa $z$:
+  \[z = a^kb^kc^k \in L\]
+  \begin{itemize}
+    \item Prendiamo $z = a^kb^kc^k$ con $v,x \in a^k$.
+    \[z_i = a^{k + (i-1)|vx|}b^kc^k\]
+    Prendiamo $i = 2$:
+    \[z_2 = a^{k + |vx|}b^kc^k \stackrel{?}{\in} L\]
+    Guardando la condizione di appartenenza a $L$:
+    \[a^ib^jc^l \in L \text{ sse } i = j = l\]
+    Quindi
+    \[z_2 \in L \text{ sse } \begin{cases}
+      k + |vx| = k & \Longleftrightarrow |vx| = 0\\
+      k = k & ovvio
+    \end{cases}\]
+    perché per costruzione $|vx| > 0$ allora $z_2 \notin L$.
+    \item $v \in a^k$ e $x \in b^k$.
+    \[z_i = a^{k + (i-1)|v|}b^{k + (i-1)|x|}c^k\]
+    Prendiamo $i = 2$:
+    \[z_2 = a^{k + |v|}b^{k + |x|}c^k \stackrel{?}{\in} L\]
+    Appartiene solo se:
+    \[k + |v| = k + |x| = k\]
+    Quindi necessariamente $|v| = 0$ e $|x| = 0$ che è una contraddizione perché allora $|vx| = 0$ e quindi 
+    $z_2 \notin L$.
+  \end{itemize}
+}
 
 \end{document}
