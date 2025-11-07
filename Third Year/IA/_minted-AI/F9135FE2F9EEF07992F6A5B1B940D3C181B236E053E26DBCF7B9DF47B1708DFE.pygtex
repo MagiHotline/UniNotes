@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{function} \PYG{n}{KB}\PYG{o}{\PYGZhy{}}\PYG{n}{Agent}\PYG{p}{(}\PYG{n}{percept}\PYG{p}{)} \PYG{n}{returns} \PYG{n}{an} \PYG{n}{action}
+    \PYG{n}{inputs}\PYG{p}{:} \PYG{n}{percept}\PYG{p}{,} \PYG{n}{a} \PYG{n}{percept}
+    \PYG{n}{static}\PYG{p}{:} \PYG{n}{KB}\PYG{p}{,} \PYG{n}{a} \PYG{n}{knowledge} \PYG{n}{base}\PYG{p}{,} \PYG{n}{initially} \PYG{n}{empty}
+            \PYG{n}{action}\PYG{p}{,} \PYG{n}{an} \PYG{n}{action}\PYG{p}{,} \PYG{n}{initially} \PYG{n}{null}
+            \PYG{n}{t}\PYG{p}{,} \PYG{n}{a} \PYG{n}{counter} \PYG{n}{initially} \PYG{l+m+mi}{0}
+    \PYG{n}{KB} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{Tell}\PYG{p}{(}\PYG{n}{KB}\PYG{p}{,} \PYG{n}{Percept}\PYG{o}{\PYGZhy{}}\PYG{n}{To}\PYG{o}{\PYGZhy{}}\PYG{n}{Sentence}\PYG{p}{(}\PYG{n}{percept}\PYG{p}{))}
+    \PYG{n}{action} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{Ask}\PYG{p}{(}\PYG{n}{KB}\PYG{p}{,} \PYG{n}{Action}\PYG{o}{\PYGZhy{}}\PYG{n}{Sentence}\PYG{p}{())}
+    \PYG{n}{KB} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{Tell}\PYG{p}{(}\PYG{n}{KB}\PYG{p}{,} \PYG{n}{Action}\PYG{o}{\PYGZhy{}}\PYG{n}{To}\PYG{o}{\PYGZhy{}}\PYG{n}{Sentence}\PYG{p}{(}\PYG{n}{action}\PYG{p}{))}
+    \PYG{n}{t} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{t} \PYG{o}{+} \PYG{l+m+mi}{1}
+    \PYG{k}{return} \PYG{n}{action}
+\end{Verbatim}

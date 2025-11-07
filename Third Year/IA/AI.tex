@@ -865,6 +865,205 @@ attraverso una soluzione parziale:
   estendibile a una soluzione completa
 \end{itemize}
 
+\subsubsection{Tree Decomposition}
 
+\dfn{Cycle Cutset}
+{
+  Dato un grafo non orientato, un sottoinsieme di nodi nel grafo è 
+  un cycle cutset se la rimozione di questi nodi rende il grafo
+  aciclico.
+}
+Il concetto è:
+\begin{itemize}
+  \item Una volta che una variabile viene assegnata può essere rimossa dal grafo 
+  \item Se rimoviamo un cycle cutset allora il grafo rimanente è un albero
+  \item Si può usare arc-consistency per risolvere l'albero rimanente
+  \item Dobbiamo controllare ogni possibile assegnazione delle variabili del cycle cutset 
+  e fare propagazione negli archi 
+  \item La complessità è comunque esponenziale ma nella dimensione del cycle cutset.
+\end{itemize}
+
+\section{Logical Agents}
+
+Perché costruire un agente basato sulla logica? 
+Solitamente hanno due componenti:
+\begin{itemize}
+  \item \textbf{Knowledge base (KB):} insieme di proposizioni che rappresentano
+    ciò che l'agente sa sul mondo
+  \item \textbf{Inference engine:} meccanismo per dedurre nuove proposizioni
+\end{itemize}
+La knowledge base è un insieme di proposizioni in un linguaggio formale.
+Un approccio dichiarativo per costruire un agente:
+\begin{itemize}
+  \item Dire cosa sa l'agente 
+  \item Poi può chiedersi da solo cosa fare e le risposte dovrebbero seguire la knowledge base.
+\end{itemize}
+Gli agenti possono essere visti al livello di conoscenza i.e cosa sanno, 
+non come sono implementati.
+O a livello di implementazione, cioè come sono costruiti.
+\begin{minted}{python}
+function KB-Agent(percept) returns an action
+    inputs: percept, a percept
+    static: KB, a knowledge base, initially empty
+            action, an action, initially null 
+            t, a counter initially 0
+    KB <- Tell(KB, Percept-To-Sentence(percept))
+    action <- Ask(KB, Action-Sentence())
+    KB <- Tell(KB, Action-To-Sentence(action))
+    t <- t + 1
+    return action
+\end{minted}
+\ex{Wumpus World PEAS}
+{
+  Un esempio famoso di agente logico è l'agente Wumpus World.
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{wumpus.png}
+  \end{figure}
+
+
+  \begin{itemize}
+    \item \textbf{Performance measure:} +1000 per uscita, -1 per ogni azione,
+      -1000 per essere mangiati dal Wumpus o cadere in un buco
+    \item \textbf{Environment:} 
+    \begin{itemize}
+      \item Celle adiacenti al wumpus sono maleodoranti
+      \item Celle adiacenti a un buco sono ventose
+      \item C'è scintillio se l'oro è nella stessa cella
+      \item Sparare uccide il wumpus se si è rivolti verso di lui
+      \item Sparare consuma la sola freccia
+      \item Prendere raccoglie l'oro se si è nella stessa cella
+      \item Rilasciare lascia cadere l'oro nella stessa cella
+    \end{itemize}
+    \item \textbf{Actuators:} muovi, gira a sinistra, gira a destra, spara,
+      prendi oro, esci
+    \item \textbf{Sensors:} brivido, puzza, scintilla, bump, urlo, sensore di
+      glitter, sensore di impatto
+  \end{itemize}
+  Questo problema è:
+  \begin{itemize}
+    \item Osservabile? No—solo percezione locale
+    \item Deterministico? Sì—i risultati sono esattamente specificati
+    \item Episodico? No—sequenziale a livello di azioni
+    \item Statico? Sì—Wumpus e buchi non si muovono
+    \item Discreto? Sì 
+    \item Single-agent? Sì—Wumpus è essenzialmente una caratteristica naturale
+  \end{itemize}
+}
+\subsection{Logica in generale}
+
+La logiche sono linguaggi formali per rappresentare informazioni
+come per trarre conclusioni.
+Come sappiamo la logica è divisa in:
+\begin{itemize}
+  \item \textbf{Sintassi:} definisce le frasi nel linguaggio
+  \item \textbf{Semantica:} definisce il "significato" delle frasi;
+    cioè definisce la verità di una frase in un mondo
+\end{itemize} 
+Un esempio è il linguaggio dell'aritmetica:
+\begin{itemize}
+  \item \( x + 2 \ge y \) è una frase; \( x2 + y > \) non è una frase
+  \item \( x + 2 \ge y \) è vera se il numero \( x + 2 \) non è minore del numero \( y \)
+  \item \( x + 2 \ge y \) è vera in un mondo dove \( x = 7, y = 1 \)
+  \item \( x + 2 \ge y \) è falsa in un mondo dove \( x = 0, y = 6 \)
+\end{itemize}
+
+\subsubsection{Entailment}
+
+L'entailment è una relazione tra frasi in un linguaggio logico e ha 
+a che fare con i modelli non con la prova formale.
+\[KB \models \alpha\]
+Knowledge base \( KB \) entaila la frase \( \alpha \) se e solo se
+$alpha$ è vera in ogni mondo dove $KB$ è vera.
+\ex{}
+{
+Per esempio se $KB$ contiene "La Juventus ha vinto" e "Roma ha vinto"
+allora $KB$ entaila "O la Juventus o Roma ha vinto".
+Oppure se $x + y = 4$ allora $4 = x + y$.
+Entailmente è una relazione tra frasi (cioè sintassi)
+basata sulla semantica.
+I computer sono molto bravi a processare regole sintattiche.
+}
+
+\subsubsection{Modelli}
+
+I logici solitamente ragionano in termini di modelli, che sono formalmente 
+strutturati in mondi rispetto alla verità che deve essere valutata. 
+Diciamo che $m$ è un modello per una frase $alpha$ se $alpha$ è vera in $m$.
+$M(\alpha)$ è l'insieme di tutti i modelli per $alpha$.
+Allora $KB \models \alpha$ se e solo se $M(KB) \subseteq M(\alpha)$.
+\ex{}
+{
+  Prendendo l'esempio di prima se $KB$ contiene "La Juventus ha vinto e la Roma ha vinto"
+  allora $\alpha$ può essere "La Juventus ha vinto".
+}
+
+\subsection{Inferenza}
+
+$KB \vdash_i \alpha$ vuol dire che $\alpha$ può essere derivata da $KB$ con una procedura $i$. 
+Le conseguenze di $KB$ sono un pagliaio; $\alpha$ è un ago.
+Entailmente = ago nel pagliaio; inferenza = trovarlo.
+\begin{itemize}
+  \item \textbf{Soundness:} $i$ è corretto (sound) se 
+  dove $KB \vdash_i \alpha$ , è anche vero che $KB \models \alpha$
+  \item \textbf{Completeness:} $i$ è completo se
+  dove $KB \models \alpha$, è anche vero che $KB \vdash_i \alpha$
+\end{itemize}
+Preview: la logica del primo ordine è abbastanza espressiva
+da poter dire quasi tutto ciò che ci interessa,
+ed esiste una procedura di inferenza corretta e completa.
+Quindi, la procedura risponderà a qualsiasi domanda la cui risposta
+segua da ciò che è noto dalla KB.
+
+\subsection{Logica proposizionale}
+
+\subsubsection{Sintassi}
+
+La logica proposizionale è il linguaggio logico più semplice. 
+I simboli $P_1, P_2$ sono proposizioni atomiche.
+\begin{itemize}
+  \item Se $S$ è una proposizione, allora $\neg S$ è una proposizione
+  \item Se $S_1$ e $S_2$ sono proposizioni, allora $S_1 \land S_2$, $S_1 \lor S_2$, 
+    $S_1 \Rightarrow S_2$, $S_1 \Leftrightarrow S_2$ sono proposizioni
+\end{itemize}
+
+\subsubsection{Semantica}
+
+Ogni modello specifica se qualcosa è vero o falso per ogni simbolo proposizionale.
+Le regole per valutare rispetto ad un modello $M$ sono:
+\begin{itemize}
+  \item $\neq S$ è vero in $M$ se e solo se $S$ è falso in $M$
+  \item $S_1 \land S_2$ è vero in $M$ se e solo se sia $S_1$ che $S_2$ sono veri in $M$
+  \item $S_1 \lor S_2$ è vero in $M$ se e solo se almeno uno tra $S_1$ e $S_2$ è vero in $M$
+  \item $S_1 \Rightarrow S_2$ è vero in $M$ se e solo se $S_1$ è falso in $M$ o $S_2$ è vero in $M$
+  \item $S_1 \Longleftrightarrow S_2$ è vero in $M$ se e solo se entrambi sono veri in $M$
+\end{itemize}
+
+\ex{Wumpus World Sentences}
+{
+  Consideriamo $P_{i,j}$ sia vero se ci sta un pozzo nella cella $(i,j)$
+  e $B_{i,j}$ sia vero se c'è del vento nella cella $(i,j)$.
+  \begin{itemize}
+    \item $R_1: \neg P_{1,1}$ (non c'è un pozzo nella cella (1,1))
+    \item $R_2: \neg B_{1,1}$
+    \item $R_3: B_{1,2}$
+  \end{itemize}
+  "Il pozzo è in una cella adiacente alla cella con vento":
+  \[
+    R_4: B_{1,1} \Leftrightarrow (P_{1,2} \lor P_{2,1})
+  \]
+  \[
+    R_5: B_{1,2} \Leftrightarrow (P_{1,1} \lor P_{1,3} \lor P_{2,2})
+  \]
+  Una cella è ventosa \textbf{se e solo se} c'è un pozzo in una cella adiacente.
+}
+\begin{minted}{python}
+function TT-Entails(KB,a) returns true or false
+  inputs: KB, the knowledge base, a sentence in prop. logic
+  a, the query, a sentence in prop. logic
+  symbols <- a list of the proposition symbols in KB and a
+  return TT-Check-All(KB,a,symbols,[])  
+\end{minted}
 
 \end{document}

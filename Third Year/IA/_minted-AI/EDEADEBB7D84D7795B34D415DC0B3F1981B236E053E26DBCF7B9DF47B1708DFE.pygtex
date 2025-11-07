@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{function} \PYG{n}{TT}\PYG{o}{\PYGZhy{}}\PYG{n}{Entails}\PYG{p}{(}\PYG{n}{KB}\PYG{p}{,}\PYG{n}{a}\PYG{p}{)} \PYG{n}{returns} \PYG{n}{true} \PYG{o+ow}{or} \PYG{n}{false}
+  \PYG{n}{inputs}\PYG{p}{:} \PYG{n}{KB}\PYG{p}{,} \PYG{n}{the} \PYG{n}{knowledge} \PYG{n}{base}\PYG{p}{,} \PYG{n}{a} \PYG{n}{sentence} \PYG{o+ow}{in} \PYG{n}{prop}\PYG{o}{.} \PYG{n}{logic}
+  \PYG{n}{a}\PYG{p}{,} \PYG{n}{the} \PYG{n}{query}\PYG{p}{,} \PYG{n}{a} \PYG{n}{sentence} \PYG{o+ow}{in} \PYG{n}{prop}\PYG{o}{.} \PYG{n}{logic}
+  \PYG{n}{symbols} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{a} \PYG{n+nb}{list} \PYG{n}{of} \PYG{n}{the} \PYG{n}{proposition} \PYG{n}{symbols} \PYG{o+ow}{in} \PYG{n}{KB} \PYG{o+ow}{and} \PYG{n}{a}
+  \PYG{k}{return} \PYG{n}{TT}\PYG{o}{\PYGZhy{}}\PYG{n}{Check}\PYG{o}{\PYGZhy{}}\PYG{n}{All}\PYG{p}{(}\PYG{n}{KB}\PYG{p}{,}\PYG{n}{a}\PYG{p}{,}\PYG{n}{symbols}\PYG{p}{,[])}
+\end{Verbatim}
