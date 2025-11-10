@@ -1700,4 +1700,238 @@ $\neg \Pi$ diventa:
   \end{itemize}
 }
 
+\subsection{Proprietà di chiusura}
+
+\thm{}
+{
+  I linguaggi CF sono chiusi rispetto a:
+  \begin{itemize}
+    \item Unione
+    \item Concatenazione
+    \item Stella di Kleene
+  \end{itemize}
+}
+
+\begin{proof}
+  Consideriamo $G_1 = (V_1, T, P_1, S_1)$ e $G_2 = (V_2, T, P_2, S_2)$
+  due grammatiche CF tali che $L(G_1)$ e $L(G_2)$ sono due linguaggi CF riconosciuti dalle grammatiche.
+  Allora $L(G_1) \cup L(G_2)$ è CF, ovvero esiste una grammatica che lo genera.
+  \begin{itemize}
+    \item Questo vuol dire che per l'unione, esiste una grammatica:
+    \[
+      G' = (V_1 \cup V_2 \cup \{S\}, T_1 \cup T_2, P_1 \cup P_2 \cup \{S \to S_1 | S_2\}, S)
+    \]
+    \item Per la concatenazione vale lo stesso ragionamento:
+    \[
+      G' = (V_1 \cup V_2 \cup \{S\}, T_1 \cup T_2, P_1 \cup P_2 \cup \{S \to S_1S_2\}, S)
+    \]
+    \item Per la stella di Kleene dove $L(G_1)^*$:
+    \[
+      G' = (V_1 \cup \{S\}, T_1, P_1 \cup \{S \to S_1S\; | \;\varepsilon\}, S)
+    \]
+  \end{itemize}
+\end{proof}
+
+\thm{}
+{
+  I linguaggi CF \textbf{non} sono chiusi per intersezione.
+  Dati $L_1, L_2$ CF, $L_1 \cap L_2$ potrebbe non essere CF.
+}
+\begin{proof}
+  Prendiamo \[L_1 = \{a^ib^ic^j \; | \; i,j \in \mathbb{N}\}\]
+  Questo linguaggio è intuitivamente CF perché non ci sta una 
+  dipendenza tra il numero di $b$ e $c$.
+  \[S \to RC\]
+  \[R \to aRb \;|\; \varepsilon\]
+  \[C \to cC \;|\; \varepsilon\]
+  Prendiamo ora:
+  \[L_2 = \{a^jb^ic^i \; | \; i,j \in \mathbb{N}\}\]
+  Anche questo è CF perché non c'è dipendenza tra $a$ e $b$.
+  \[S \to AC\]
+  \[A \to aA \;|\; \varepsilon\]
+  \[C \to bCc \;|\; \varepsilon\]
+  Si vuole dimostrare che $L_1 = L(G_1)$ e $L_2 = L(G_2)$.
+  Consideriamo ora l'intersezione:
+  \[
+  \begin{aligned}
+    L = L_1 \cap L_2 &= \{a^ib^jc^k \; | \; i=j, j=k\}\\
+    &= \{a^nb^nc^n \; | \; n \in \mathbb{N}\} \text{ che non è CF}
+  \end{aligned}
+  \]
+  L'intersezione non è CF (dimostrato tramite pumping lemma) e quindi 
+  abbiamo dimostrato che i linguaggi CF non sono chiusi per intersezione $\square$
+\end{proof}
+\noindent
+Quando si parla di unione e intersezione di linguaggi 
+si intende l'unione e l'intersezione \textbf{finita}. 
+Se $L_i$ sono infiniti linguaggi regolari o CF, allora:
+\[\bigcup_{i} L_i \text{ potrebbe non essere regolare o CF}\]
+\thm{}
+{
+  I linguaggi CF \textbf{non} sono chiusi per complemento.
+}
+\begin{proof}
+  Se dato $L \in CF$ anche $\overline{L}$ fosse CF allora 
+  osserviamo che:
+  \[L_1, L_2 \text{ CF allora } L_1 \cap L_2 = \overline{\overline{L_1} \cup \overline{L_2}} \text{ (De Morgan)}\]
+  Se questo fosse vero vorrebbe dire che:
+  \[\overline{L_1}, \overline{L_2} \text{ sarebbero CF}\]
+  \[\overline{L_1} \cup \overline{L_2} \text{ sarebbero CF}\]
+  \[\overline{\overline{L_1} \cup \overline{L_2}} \text{ sarebbe CF}\]
+  ovvero \[L_1 \cap L_2 \text{ sarebbe CF}\] 
+  che abbiamo precedentemente dimostrato non essere sempre vero.
+\end{proof}
+
+\subsection{Problemi decidibili per linguaggi CF}
+
+Per i linguaggi CF i seguenti problemi sono decidibili:
+Sia $L$ un linguaggio CF:
+\begin{enumerate}
+  \item $L = \varnothing$
+  \item $L$ è finito
+  \item $L$ è infinito 
+\end{enumerate}
+È decidibile determninare se $x \in L$.
+
+\subsection{Automi a pila}
+
+Gli automi a pila ci servono per riconoscere i linguaggi CF.
+Questo perché gli automi a stati finiti non sono sufficienti per
+riconoscere i linguaggi CF come ad esempio $L = \{a^nb^n \; | \; n \in \mathbb{N}\}$
+perché dovremmo ricordarci il numero di $a$ letti per poter confrontare
+con il numero di $b$ letti. Questo comporterebbe ad avere stati infiniti
+e di conseguenza non sarebbe più sufficiente un automa a stati finiti.
+Definiamo quindi un automa (a stati finiti) che possiede:
+\begin{itemize}
+  \item Un nastro in sola lettura in unica direzione
+  \item Memoria (LIFO)
+\end{itemize}
+L'acronimo per questo automa è APND (\textit{Automa a pila non deterministico}).
+Al NFA aggiungiamo un alfabeto per la pila e un simbolo iniziale della pila.
+\dfn{}
+{
+  Un automa a pila non deterministico è una settupla:
+  \[M = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)\]
+  dove:
+  \begin{itemize}
+    \item $Q$ è un insieme finito di stati
+    \item $\Sigma$ è un insieme finito di simboli di input (l'alfabeto)
+    \item $\Gamma$ è un insieme finito di simboli di pila (l'alfabeto della pila)
+    \item $\delta: Q \times (\Sigma \cup \{\varepsilon\}) \times \Gamma \to \mathcal{P}(Q \times \Gamma^*)$ è la funzione di transizione
+    che quindi dato uno stato in cui si trova l'automa, un eventualmente simbolo sul nastro e il simbolo in cima alla pila 
+    restituisce un insieme di coppie (stato successivo, stringa da mettere in cima alla pila)
+    \item $q_0 \in Q$ è lo stato iniziale
+    \item $Z_0 \in \Gamma$ è il simbolo iniziale della pila
+    \item $F \subseteq Q$ è l'insieme degli stati finali (accettanti)
+  \end{itemize}
+}
+\noindent
+La chiusura transitiva di $\delta$ fornisce un'esecuzione dell'automa. 
+
+\subsubsection{Linguaggio riconosciuto da un APND}
+
+Supponiamo che $M = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)$ sia un APND.
+Allora abbiamo due possibili linguaggi riconosciuti da $M$:
+\begin{itemize}
+  \item $L_p(M):$ linguaggio riconosciuto per pila vuota 
+  \item $L_f(M):$ linguaggio riconosciuto per stato finale
+\end{itemize}
+Prendiamo per esempio: 
+\[L_p(M) = \{\sigma \in \Sigma^* \;|\; (q_0, \sigma, Z_0) \to^* (q,\varepsilon,\varepsilon), q \in Q\}\]
+\[L_f(M) = \{\sigma \in \Sigma^* \;|\; (q_0, \sigma, Z_0) \to^* (q, \varepsilon, \gamma), \gamma \in R^*, q \in F\}\]
+\thm{}
+{
+  Per ogni APND $M$ esiste un APND $M'$ tale che:
+  \[L_p(M) = L_f(M')\]
+  e viceversa.
+  Questo vuol dire che la scelta di modalità di riconoscimento
+  \textbf{non} influenza la potenza espressiva dell'automa a pila.
+}
+\ex{}
+{
+  Consideriamo di avere il seguente linguaggio:
+  \[L = \{\sigma C \sigma^R \;|\; \sigma \in \{a,b\}^*\}\]
+  dove $\sigma^R$ è la stringa inversa di $\sigma$. Questo è anche l'insieme 
+  delle stringhe palindrome.
+  \[\sigma = abb \to \sigma^R = bba\]
+  La grammatica che genera questo linguaggio è:
+  \[
+  S \to aSa \;|\; bSb \;|\; c
+  \]
+  Proviamo a fare una produzione del tipo:
+  \[
+  \begin{aligned}
+    S \to aSa &\to abSba\\
+              &\to abbSbba\\
+              &\to \underbrace{abb}_{\sigma}c\underbrace{bba}_{\sigma^R}
+  \end{aligned}
+  \]
+  che si rappresenta con la segeunte tabella (una per ogni stato):
+  Definendo questo linguaggio con la settupla abbiamo:
+  \[(\{q_0, q_1\}, \{a,b,c\}, \{Z,A,B\}, q_0, Z, \varnothing, S)\]
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c}
+      $q_0$ & a & b & c\\
+      \hline
+      Z & $q_0$, zA & $q_0$, zB & $q_1$, $\varepsilon$\\
+      \hline
+      A & & &\\
+      \hline
+      B & & &\\
+    \end{tabular}
+  \end{table}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c}
+      $q_1$ & a & b & c\\
+      \hline
+      Z & $q_1$, z & $q_1$, z & \\
+      \hline
+      A & $q_1$, $\varepsilon$ & $q_1$, z & \\
+      \hline
+      B & $q_1$, z & $q_1$, $\varepsilon$ &\\
+    \end{tabular}
+  \end{table}
+}
+\ex{}
+{
+Proviamo a fare un esempio analogo ma leggermente più difficile.
+  \[
+    L = \{\sigma\sigma^R \; | \; \sigma^R \text{ reverse di } \sigma, \sigma \in {a,b}^*\}
+  \]
+  Questa volta non abbiamo il divisore $C$ che ci permette di sapere dove 
+  si trova la metà della stringa. Questo ci porta a costruire un automa non deterministico.
+  Dove 
+  \[Q = \{q_0,q_1\} \quad \Sigma = \{a,b\} \quad \Gamma = \{Z, A, B\}\]
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c}
+      $q_0$ & a & b & c\\
+      \hline
+      Z & & $q_0$, AZ & $q_0$, BZ\\
+      \hline
+      A &  & $q_0$, AA o $q_1$, $\varepsilon$ & $q_0$, BA\\
+      \hline
+      B &  & $q_0$, AB & $q_0$, BB o $q_1$, $\varepsilon$  \\
+    \end{tabular}
+  \end{table}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c}
+      $q_1$ & a & b & c\\
+      \hline
+      Z & $q_1$, $\varepsilon$ & & \\
+      \hline
+      A &  & $q_1$, $\varepsilon$ & \\
+      \hline
+      B & & & $q_1$, $\varepsilon$\\
+    \end{tabular}
+  \end{table}
+}
+\noindent
+Gli automi a pila determinsitici sono sottoinsiemi degli automi a pila non deterministici. 
+\[\underbrace{APD}_{\text{Parser}} \subseteq \underbrace{APND}_{\text{CF}}\]
+I linguaggi riconosciuti dagli APD sono i linguaggi di programmazione.
+
 \end{document}
