@@ -1931,7 +1931,185 @@ Proviamo a fare un esempio analogo ma leggermente più difficile.
 }
 \noindent
 Gli automi a pila determinsitici sono sottoinsiemi degli automi a pila non deterministici. 
-\[\underbrace{APD}_{\text{Parser}} \subseteq \underbrace{APND}_{\text{CF}}\]
+\[\underbrace{APD}_{\text{Parser}} \subset \underbrace{APND}_{\text{CF}}\]
 I linguaggi riconosciuti dagli APD sono i linguaggi di programmazione.
+
+\subsubsection{Corrispondenza tra APND e Grammatiche CF}
+
+\thm{}
+{
+  $L = L(M)$ con $M$ APND (linguaggio riconosciuto da $M$ a pila non deterministico)
+  Allora esiste $M'$ APND t.c. $L = L(M')$.
+}
+
+\begin{proof}
+  Dato un APND $M = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)$ con 
+  $|Q| \ge 1$ e con $\delta : Q \times (\Sigma \cup \{\varepsilon\}) \times \Gamma \to \mathcal{P}(Q \times \Gamma^*)$
+  L'idea è quella di prendere un nuovo simbolo per la pila ogni coppia $Q \times \Gamma$.
+  \[(q_i, z_i) \leadsto \text{ aggiungiamo } z_i'\]
+  \[\Gamma' = \Gamma \cup \{z_i'\}\]
+  Dobbiamo modificare $\delta$: 
+  \[\delta(q_i, a, z_i) = \delta'(q_0, a, z_i')\]
+\end{proof}
+\thm{}
+{
+  Se $L = L(M)$ con $M$ APND con uno stato allora $L$ è CF.
+  Questo vuol dire che $\exists$ $G$ CF t.c. $L(G) = L(M)$.
+}
+\begin{proof}
+Preso $M = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, \varnothing)$ con $Q = \{q_0\}$ e accettiamo $L$ 
+per pila vuota. Definiamo una grammatica $G = (V, T, P, S) \equiv (R, \Sigma, P, Z_0)$.
+L e produzioni $P$ sono:
+\[\colorbox{green}{z} \to \colorbox{red}{a}z_1z_2 \dots z_n \in P \text{ sse } (q_0,z_1z_2\dots z_n) \in \delta(q_0,\colorbox{red}{a},\colorbox{green}{z})\]
+\end{proof}
+\thm{}
+{
+  Se $L$ è CF allora $\exists$ $M$ APND t.c. $L = L(M)$. 
+}
+\noindent
+\textbf{Greibach:} ogni linguaggio CF è generatod da una grammatica le cui produzioni sono della forma 
+\[A \to a\alpha \quad \alpha \in V^* \quad a \in T\]
+Per trasformare in forma normale di Greibach:
+   \textbf{Unfolding:} $G = (V, T, P, S)$ CF, $A \to \alpha\beta\gamma \in P$ e $B \to B_1 \;|\;B_2\;|\;\dots\;|\;B_n \in P$
+  Alora $G' = (V, T, P', S)$ dove eliminaimo $A \to \alpha\beta\gamma$ e aggiungiamo
+  \[A \to \alpha\beta_1\gamma\;|\; \alpha\beta_2\gamma \dots \;|\; \alpha\beta_n \gamma\]
+  Quindi $L(G') = L(G)$.
+  \ex{}
+  {
+    Se per esempio avessimo la produzione:
+    \[S \to aSb \;|\; ab\]
+    \[B \to b\]
+    \[S \to aSB \;|\; aB\]
+    Quello che abbiamo fatto è stato sostituire $B$ nella produzione di $S$.
+    Prendiamo un altro esempio:
+    \[S \to aA \;|\; b \quad B \to b\]
+  }
+\thm{Eliminazione ricorsione sinistra}
+{
+  Sia $G = (V, T, P, S)$ una grammatica CF.
+  \[A \to A\alpha_1 \;|\; \dots \;|\; A\alpha_n \Leftarrow A \to Aa\]
+  \[A \to \beta_1 \;|\; \beta_2 \;|\; \dots \;|\; \beta_n \Leftarrow A \to b\]
+  Se costruiamo $G' = (V \cup \{B\}, T, P', S)$ dove
+  per $P'$ sostituiamo le produzioni di $A$ con:
+  \[A \to \beta_i \;|\; \beta_i B\]
+  Allora $L(G) = L(G')$.
+}
+\ex{}
+{
+  Prendiamo la produzione:
+  \[A \to Ab \;|\; b\]
+  prendiamo:
+  \[B \to b \;|\; bB \quad A \to b\;|\;bB\]
+}
+\thm{}
+{ 
+  Se $L$ è CF allora esiste un APND $M$ tale che $L=(M)$.
+}
+\begin{proof}
+  $L$ è CF allora esiste una grammatica $G = (V, T, P, S)$ in forma normale di Greibach tale che
+  $L = L(G)$. 
+  Costruiamo $M$: 
+  \[Q = \{q\} \quad \Sigma = T \quad R = V \quad Z_0 = S \quad F = \varnothing\]
+  \[(q,\overbrace{a}^{\in R^* = V^*}) \in \delta(q, \overbrace{a}^{T = \Sigma}, \overbrace{A}^{R = V}) \text{ sse } \overbrace{A}^{V} \to \overbrace{a}^{\Sigma}\overbrace{\alpha}^{V^*} \in P\]
+  \ex{}
+  {
+    \[A \to a\alpha \;|\; a\beta \leadsto \begin{aligned}
+      & (q, a\alpha) \in \delta(q, a, A)\\
+      & (q, a\beta) \in \delta(q, a, A)
+    \end{aligned}\]
+  }
+\end{proof}
+
+
+\subsection{Gerarchia di Chomsky}
+
+La gerarchia di Chomsky classifica i linguaggi formali in quattro tipi principali:
+
+\begin{figure}[H]
+  \centering 
+  \includegraphics[width=0.5\textwidth]{Chomsky.png}
+  \caption{Gerarchia di Chomsky}
+\end{figure}
+Proviamo a costruire una grammatica per $a^nb^nc^n$ (Grammatica di tipo 1):
+\[
+\begin{aligned}
+  S &\to aSBC \;|\; aBC\\
+  CB &\to BC\\
+  bB &\to bb \quad \text{ si vuole sostituire una B solo quando è preceduta da una b}\\
+  \cancel{B \to b} \quad bC &\to bc\\
+  cC &\to cc\\ 
+  aB &\to ab
+\end{aligned}
+\]
+\ex{}
+{
+  \[
+ \begin{aligned}
+    S \to ASBC &\to aaSBCBC\\
+    &\to aaSBBCC\\
+    &\to aaaBCBBCC\\
+    &\to aaabCBBCC\\
+    &\to aaabBCBCC\\
+    &\to a^3bBBCCC\\
+    &\to a^3bbBCCC\\
+    &\to a^3bbbCCC\\
+    &\to a^3bbbcCC\\
+    &\to a^3bbbccC\\
+    &\to a^3bbbccc\\
+    &\to a^3b^3c^3
+ \end{aligned}
+ \]
+ Questa grammatica genera il linguaggio:
+  \[L = \{a^nb^nc^n \; | \; n \in \mathbb{N}\}\]
+  che non è CF.
+}
+
+
+\section{Calcolabilità e funzioni primitive ricorsive}
+
+\subsection{Potenza espressiva}
+
+Esistono diversi modelli  di calcolo, ognuno con una diversa potenza espressiva:
+\begin{itemize}
+  \item ASD (= Automa a stati finiti deterministico) riconosce i linguaggi regolari
+  \item GCF (= APND) 
+  \item APD 
+  \item \dots 
+  \item Linguaggi di programmazione
+\end{itemize}
+E poi esistono le specifiche istanze del modello per riconoscere un linguaggio specifico come:
+\begin{itemize}
+  \item $M$ con $q_0 \in a,b$. 
+  \item $G = (V, T, P, S)$ 
+  \item $M_{pila} = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)$
+  \item \dots
+  \item Grammatica per linguaggio di programmazione
+\end{itemize}
+E questo ha una corrispondenza con le funzioni calcolabili.
+Fino ad ora era superfluo parlare di funzioni 
+poiché non andavamo nel dettaglio dell'implementazione di un linguaggio.
+Ora però diventa importante per poter ragionare su cosa sta fuori 
+dai modelli visti.
+\[L_f = \{a^{f(n)} \;|\; n \in \mathbb{N}\}\]
+in questo modo "trasformiamo" il calcolo di $f$ nel riconoscimento di $L_f$.
+Quali funzioni corrispondono a $L_f$ regolari e quali a $L_f$ CF? 
+\[f(n) = 2n \Rightarrow L_f = \{a^{2n} \;|\; n \in \mathbb{N}\} \quad \text{Reg}\]
+\[f(n) = n^2 \Rightarrow L_f = \{a^{n^2} \;|\; n \in \mathbb{N}\} \quad \text{non CF}\]
+Ora consideriamo un contesto più generale parlando di insiemi (di $\mathbb{N}$) invece 
+che di linguaggi.
+\[A_f = \{f(n) \;|\; n \in \mathbb{N}\}\]
+Così ci focalizziamo sul calcolo della funzione.
+Dividiamo ora in due la funzione calcolata e l'algoritmo come processo di calcolo.
+Quindi la funzione non è altro che l'associazione $f : \mathbb{N} \to \mathbb{N}$ dove $f \subseteq \mathbb{N} \times \mathbb{N}$.
+Sappiamo che:
+\[|f| = |\mathcal{P}(\mathbb{N} \times \mathbb{N})| = 2^{|\mathbb{N}|}\]
+Possiamo costruire delle funzioni in maniera ricorsiva come se fosse un algoritmo con una sequenza di istruzioni:
+\[\begin{cases}
+  f(0) = 1, f(1) = 1 \\
+  f(x+2) = f(x+1) + f(x)
+\end{cases}\]
+Per calcolabilità, ci domandiamo quali funzioni $f : \mathbb{N} \to \mathbb{N}$ sono calcolabili (mediante un algoritmo possiamo 
+costruire l'output a partire dall'input).
+
 
 \end{document}
