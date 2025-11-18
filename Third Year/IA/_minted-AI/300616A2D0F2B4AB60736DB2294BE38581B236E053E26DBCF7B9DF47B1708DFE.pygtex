@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\PYG{n}{function} \PYG{n}{PL}\PYG{o}{\PYGZhy{}}\PYG{n}{Resolution} \PYG{p}{(}\PYG{n}{KB}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{)} \PYG{n}{returns} \PYG{n}{true} \PYG{o+ow}{or} \PYG{n}{false}
+  \PYG{n}{inputs}\PYG{p}{:} \PYG{n}{KB}\PYG{p}{,} \PYG{n}{the} \PYG{n}{knowledge} \PYG{n}{base}\PYG{p}{,} \PYG{n}{a} \PYG{n}{sentence} \PYG{o+ow}{in} \PYG{n}{prop}\PYG{o}{.} \PYG{n}{logic}
+          \PYG{n}{alpha}\PYG{p}{,} \PYG{n}{the} \PYG{n}{query}\PYG{p}{,} \PYG{n}{a} \PYG{n}{sentence} \PYG{o+ow}{in} \PYG{n}{prop}\PYG{o}{.} \PYG{n}{logic}
+  \PYG{n}{clauses} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{CNF}\PYG{p}{(}\PYG{n}{KB} \PYG{err}{∧} \PYG{err}{¬}\PYG{n}{alpha}\PYG{p}{)}
+  \PYG{n}{new} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{p}{\PYGZob{}\PYGZcb{}}
+  \PYG{n}{repeat}
+    \PYG{k}{for} \PYG{n}{each} \PYG{n}{pair} \PYG{n}{of} \PYG{n}{clauses} \PYG{p}{(}\PYG{n}{Ci}\PYG{p}{,} \PYG{n}{Cj}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{clauses} \PYG{n}{do}
+      \PYG{n}{resolvents} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{PL}\PYG{o}{\PYGZhy{}}\PYG{n}{Resolve}\PYG{p}{(}\PYG{n}{Ci}\PYG{p}{,} \PYG{n}{Cj}\PYG{p}{)}
+      \PYG{k}{if} \PYG{n}{resolvents} \PYG{n}{contains} \PYG{n}{the} \PYG{n}{empty} \PYG{n}{clause} \PYG{n}{then}
+        \PYG{k}{return} \PYG{n}{true}
+      \PYG{n}{new} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{new} \PYG{err}{∪} \PYG{n}{resolvents}
+    \PYG{k}{if} \PYG{n}{new} \PYG{err}{⊆} \PYG{n}{clauses} \PYG{n}{then}
+      \PYG{k}{return} \PYG{n}{false}
+    \PYG{n}{clauses} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{clauses} \PYG{err}{∪} \PYG{n}{new}
+
+\end{Verbatim}

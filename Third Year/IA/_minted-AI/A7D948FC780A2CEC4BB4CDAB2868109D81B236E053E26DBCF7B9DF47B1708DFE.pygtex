@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{function} \PYG{n}{PL}\PYG{o}{\PYGZhy{}}\PYG{n}{FC}\PYG{o}{\PYGZhy{}}\PYG{n}{Entails}\PYG{p}{(}\PYG{n}{KB}\PYG{p}{,} \PYG{n}{q}\PYG{p}{)} \PYG{k}{return} \PYG{n}{true} \PYG{o+ow}{or} \PYG{n}{false}
+  \PYG{n}{inputs}\PYG{p}{:} \PYG{n}{KB}\PYG{p}{,} \PYG{n}{the} \PYG{n}{knowledge} \PYG{n}{base}\PYG{p}{,} \PYG{n}{a} \PYG{n+nb}{set} \PYG{n}{of} \PYG{n}{Horn} \PYG{n}{clauses}
+          \PYG{n}{q}\PYG{p}{,} \PYG{n}{the} \PYG{n}{query}\PYG{p}{,} \PYG{n}{a} \PYG{n}{proposition} \PYG{n}{symbol}
+  \PYG{n}{count}\PYG{p}{[}\PYG{n}{p}\PYG{p}{]} \PYG{o}{=} \PYG{n}{number} \PYG{n}{of} \PYG{n}{premises} \PYG{o+ow}{in} \PYG{n}{rules} \PYG{k}{with} \PYG{n}{conclusion} \PYG{n}{p}
+  \PYG{n}{inferred}\PYG{p}{[}\PYG{n}{p}\PYG{p}{]} \PYG{o}{=} \PYG{n}{false} \PYG{k}{for} \PYG{n}{each} \PYG{n}{proposition} \PYG{n}{symbol} \PYG{n}{p}
+  \PYG{n}{agenda} \PYG{o}{=} \PYG{n+nb}{all} \PYG{n}{proposition} \PYG{n}{symbols} \PYG{n}{known} \PYG{n}{to} \PYG{n}{be} \PYG{n}{true} \PYG{o+ow}{in} \PYG{n}{KB}
+  \PYG{k}{while} \PYG{n}{agenda} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n}{empty} \PYG{n}{do}
+    \PYG{n}{p} \PYG{o}{=} \PYG{n}{POP}\PYG{p}{(}\PYG{n}{agenda}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{p} \PYG{o}{==} \PYG{n}{q} \PYG{n}{then} \PYG{k}{return} \PYG{n}{true}
+    \PYG{k}{if} \PYG{n}{inferred}\PYG{p}{[}\PYG{n}{p}\PYG{p}{]} \PYG{o}{==} \PYG{n}{false} \PYG{n}{then}
+      \PYG{n}{inferred}\PYG{p}{[}\PYG{n}{p}\PYG{p}{]} \PYG{o}{=} \PYG{n}{true}
+      \PYG{k}{for} \PYG{n}{each} \PYG{n}{horne\PYGZus{}clause} \PYG{o+ow}{in} \PYG{n}{KB} \PYG{n}{where} \PYG{n}{p} \PYG{o+ow}{is} \PYG{n}{one} \PYG{n}{of} \PYG{n}{the} \PYG{n}{pi} \PYG{n}{do}
+        \PYG{n}{count}\PYG{p}{[}\PYG{n}{r}\PYG{p}{]} \PYG{o}{=} \PYG{n}{count}\PYG{p}{[}\PYG{n}{r}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}
+        \PYG{k}{if} \PYG{n}{count}\PYG{p}{[}\PYG{n}{r}\PYG{p}{]} \PYG{o}{==} \PYG{l+m+mi}{0} \PYG{n}{then}
+          \PYG{n}{PUSH}\PYG{p}{(}\PYG{n}{r}\PYG{p}{,} \PYG{n}{agenda}\PYG{p}{)}
+  \PYG{k}{return} \PYG{n}{false}
+\end{Verbatim}

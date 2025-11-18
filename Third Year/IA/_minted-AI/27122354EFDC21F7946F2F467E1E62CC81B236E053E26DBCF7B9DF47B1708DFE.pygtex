@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{function} \PYG{n}{TT}\PYG{o}{\PYGZhy{}}\PYG{n}{Check}\PYG{o}{\PYGZhy{}}\PYG{n}{All} \PYG{p}{(}\PYG{n}{KB}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{n}{symbols}\PYG{p}{,} \PYG{n}{model}\PYG{p}{)} \PYG{k}{return} \PYG{n}{true} \PYG{o+ow}{or} \PYG{n}{false}
+  \PYG{k}{if} \PYG{n}{symbols} \PYG{o+ow}{is} \PYG{n}{empty} \PYG{n}{then}
+    \PYG{k}{if} \PYG{n}{MODEL}\PYG{o}{\PYGZhy{}}\PYG{n}{IS}\PYG{o}{\PYGZhy{}}\PYG{n}{TRUE}\PYG{p}{(}\PYG{n}{KB}\PYG{p}{,} \PYG{n}{model}\PYG{p}{)} \PYG{n}{then}
+      \PYG{k}{return} \PYG{n}{MODEL}\PYG{o}{\PYGZhy{}}\PYG{n}{IS}\PYG{o}{\PYGZhy{}}\PYG{n}{TRUE}\PYG{p}{(}\PYG{n}{alpha}\PYG{p}{,} \PYG{n}{model}\PYG{p}{)}
+    \PYG{k}{else}
+      \PYG{k}{return} \PYG{n}{true}
+  \PYG{k}{else}
+    \PYG{n}{P} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{FIRST}\PYG{p}{(}\PYG{n}{symbols}\PYG{p}{)}
+    \PYG{n}{rest} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{n}{REST}\PYG{p}{(}\PYG{n}{symbols}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{TT}\PYG{o}{\PYGZhy{}}\PYG{n}{Check}\PYG{o}{\PYGZhy{}}\PYG{n}{All}\PYG{p}{(}\PYG{n}{KB}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{n}{rest}\PYG{p}{,}
+      \PYG{n}{EXTEND}\PYG{o}{\PYGZhy{}}\PYG{n}{MODEL}\PYG{p}{(}\PYG{n}{model}\PYG{p}{,} \PYG{n}{P}\PYG{p}{,} \PYG{n}{true}\PYG{p}{))} \PYG{o+ow}{and}
+      \PYG{n}{TT}\PYG{o}{\PYGZhy{}}\PYG{n}{Check}\PYG{o}{\PYGZhy{}}\PYG{n}{All}\PYG{p}{(}\PYG{n}{KB}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{n}{rest}\PYG{p}{,}
+      \PYG{n}{EXTEND}\PYG{o}{\PYGZhy{}}\PYG{n}{MODEL}\PYG{p}{(}\PYG{n}{model}\PYG{p}{,} \PYG{n}{P}\PYG{p}{,} \PYG{n}{false}\PYG{p}{))}
+\end{Verbatim}

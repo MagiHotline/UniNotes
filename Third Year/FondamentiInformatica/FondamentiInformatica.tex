@@ -2100,16 +2100,428 @@ che di linguaggi.
 \[A_f = \{f(n) \;|\; n \in \mathbb{N}\}\]
 Così ci focalizziamo sul calcolo della funzione.
 Dividiamo ora in due la funzione calcolata e l'algoritmo come processo di calcolo.
-Quindi la funzione non è altro che l'associazione $f : \mathbb{N} \to \mathbb{N}$ dove $f \subseteq \mathbb{N} \times \mathbb{N}$.
+Quindi \textbf{la funzione} non è altro che l'associazione $f : \mathbb{N} \to \mathbb{N}$ dove $f \subseteq \mathbb{N} \times \mathbb{N}$.
 Sappiamo che:
 \[|f| = |\mathcal{P}(\mathbb{N} \times \mathbb{N})| = 2^{|\mathbb{N}|}\]
-Possiamo costruire delle funzioni in maniera ricorsiva come se fosse un algoritmo con una sequenza di istruzioni:
+Possiamo costruire delle funzioni in maniera ricorsiva come se fosse un \textbf{algoritmo} con una sequenza di istruzioni:
 \[\begin{cases}
   f(0) = 1, f(1) = 1 \\
   f(x+2) = f(x+1) + f(x)
 \end{cases}\]
 Per calcolabilità, ci domandiamo quali funzioni $f : \mathbb{N} \to \mathbb{N}$ sono calcolabili (mediante un algoritmo possiamo 
 costruire l'output a partire dall'input).
+
+\subsection{Funzioni primitive ricorsive}
+
+Questo è un modello di calcolo che permette di descrivere 
+un processo di calcolo componendo funzioni più semplici o già definite.
+
+\dfn{Funzioni ricorsive di base}
+{
+  Le funzioni ricorsive di base sono:
+  \begin{itemize}
+    \item Funzione zero: $0 : \lambda x . 0$ 
+    \item Funzione successore: $S : \lambda x . x + 1$
+    \item Funzioni proiezione: $P_i^n : \lambda (x_1, x_2, \dots, x_n) . x_i \quad 1 \le i \le n$
+    \\
+    O anche la funzione identità dove appunto abbiamo un solo parametro di input: $Id : \lambda x . x$
+  \end{itemize}
+  Queste sono tutte funzioni totali ovvero che sono definite su tutte i numeri naturali (che sono gli input).
+}
+
+\subsubsection{Operazioni} 
+
+\begin{itemize}
+  \item \textbf{Composizione:} dati $g : \mathbb{N}^k \to \mathbb{N}$ e $h_1, h_2, \dots, h_k : \mathbb{N}^n \to \mathbb{N}$
+  definiamo la funzione $f : \mathbb{N}^n \to \mathbb{N}$ come:
+  \[f(x_1, x_2, \dots, x_n) = g(h_1(x_1, \dots, x_n), h_2(x_1, \dots, x_n), \dots, h_k(x_1, \dots, x_n))\]
+  e in lambda calcolo:
+  \[f = \lambda (x_1, x_2, \dots, x_n) . g(h_1(x_1, \dots, x_n), h_2(x_1, \dots, x_n), \dots, h_k(x_1, \dots, x_n))\]
+  La composizione di funzioni totali è totale.
+  \item \textbf{Primitiva ricorsione:} supponiamo di avere $g : \mathbb{N}^n \to \mathbb{N}$ e $h : \mathbb{N}^{n+2} \to \mathbb{N}$.
+  Definiamo la funzione $f : \mathbb{N}^{n+1} \to \mathbb{N}$ come:
+  \[\begin{cases}
+    f(0, x_1, x_2, \dots, x_n) = g(x_1, x_2, \dots, x_n)\\
+    f(y+1, x_1, x_2, \dots, x_n) = h(y, f(y, x_1, x_2, \dots, x_n), x_1, x_2, \dots, x_n)
+  \end{cases}\]
+  La primitiva ricorsione di funzioni totali è totale.
+\end{itemize}
+Quando una funzione $f(x)$ è totale la scriveremo come 
+\[f(x)\downarrow\]
+Mentre quando non è definita e quindi non termina si usa la seguente notazione:
+\[f(x)\uparrow\]
+
+\ex{Funzione somma : $+ : \mathbb{N}^2 \to \mathbb{N}$}
+{
+  Definiamo la funzione somma come:
+  \[\begin{cases}
+    +(0, y) = y\\
+    +(x+1, y) = S(+(x,y))
+  \end{cases}\]
+  Andiao a definire le funzioni di base:
+  \[f_1 = \lambda x.x\]
+  \[f_2 = \lambda x.S(x) = \lambda x.x+1\]
+  \[f_3 = \lambda x_1x_2x_3 . x_2\]
+  \[f_4 = f_2 \circ f_3\]
+  \[+ = f_5 : 
+  \begin{cases}
+    f_5(0,x) = f_1(x) = x\\
+    f_5(y+1,x) = f_4(y, f_5(y,x),x) = f_2 \circ f_3(y, f_5(y,x), x) = S(f_5(y,x))
+  \end{cases}
+  \]
+  \[+ : f_1,f_2,f_3,f_4,f_5\]
+}
+\ex{Funzione moltiplicazione : $* : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$}
+{
+  Definiamo la funzione moltiplicazione come:
+  \[\begin{cases}
+    *(0,y) = 0\\
+    *(x+1,y) = +( *(x,y), y)
+  \end{cases}\]
+  Andiamo a definire le funzioni di base:
+  \[
+  \begin{aligned}
+    f_1 &= \lambda x.0\\
+    f_2 &= \lambda x_1x_2x_3 . x_2\\
+    f_3 &= \lambda x_1x_2x_3 . x_3\\
+    f_4 &= + = \lambda x_1x_2 . +(x_1,x_2)\\
+    f_5 &= f_4 \circ (f_2, f_3)\\
+    f_6 &= 
+    \begin{cases}
+      f_6(0,x) = f_1(x) = 0\\
+      f_6(y+1,x) = f_5(y, f_6(y,x), x) = +(f_6(y,x), x)
+    \end{cases}\\
+    * &: f_1,f_2,f_3,f_4,f_5,f_6
+  \end{aligned}
+  \]
+  Quindi se riesco a definire una funzione tramite composizione e primitiva ricorsione
+  a partire dalle funzioni di base allora la funzione è sicuramente totale.
+}
+\ex{Decremento : $dec : \mathbb{N} \to \mathbb{N}$}
+{
+  Definiamo la funzione decremento come:
+  \[\begin{cases}
+    dec(0) = 0\\
+    dec(x+1) = x
+  \end{cases}\]
+  Andiamo a definire le funzioni di base:
+  \[
+  \begin{aligned}
+    f_1 &= \lambda x.0\\
+    f_2 &= \lambda x_1x_2x_3 . x_1\\
+    f_3 &=
+    \begin{cases}
+      f_3(0,x) = f_1(0) = 0\\
+      f_3(y+1,x) = f_2(y, f_3(y,x), x) = y
+    \end{cases}\\
+    dec &: f_1,f_2,f_3
+  \end{aligned}
+  \]
+}
+\ex{Differenza}
+{
+  Definiamo la funzione differenza come:
+  \[\begin{cases}
+    -(0,y) = y\\
+    -(x+1,y) = dec(-(x,y))
+  \end{cases}\]
+}
+\dfn{Primitiva Ricorsiva}
+{
+  $f \in$ PR (dove PR è la classe delle funzioni primitive ricorsive 
+  ovvero la minima classe di funzioni chiuse per composizione 
+  e primitiva ricorsione che contiene le funzioni ricorsive di base)
+  se esiste un sequenza $P_f$ di funzioni in PR tali che l'ultima 
+  funzione della sequenza è esattamente $f$.
+  \[P_f = f_1,f_2,\dots,f_n \; | \; \forall i f_i \in PR \text{ e } f_n = f\]
+}
+\begin{proof}
+Mostriamo che questo modello fallisce nel catturare il concetto di calcolabile.
+\[f: \mathbb{N} \to \mathbb{N}, f \in PR \; \; \exists P_f \text{ sequenza di } f_i \in PR \; | \; f_n = f\]
+Defininiamo $h(n) = f_n(n) + 1$:
+\[h : \mathbb{N} \to \mathbb{N}\]
+Quello che fa è prendere n, generiamo la lista di funzioni fino ad $n$ e gli sommo 1.
+Di conseguenza $h(n)$ è calcolabile e le parziali ricorsive catturano tutto ciò che è calcolabile.
+Allora $h \in PR$. Questo vuol dire che $\exists i$ indice t.c. $f_i = h$.
+Ma allora possiamo calcolare $h(i)$: 
+\[f_i(i) = h(i) = f_i(i) + 1\]
+ma questo è assurdo perchè è impossibile che un numero naturale sia uguale al suo successore.
+Questo dimostra che PR non può catturare tutte le funzioni calcolabili.
+Quindi funzioni non è vero che tutte le funzioni totali sono anche calcolabili.
+\end{proof}
+\ex{Funzione di Ackermann}
+{
+  La funzione di Ackermann è una funzione totale non primitiva ricorsiva.
+  \[
+  Ack(x,y) = 
+  \begin{cases}
+    Ack(0, y) = y+1\\
+    Ack(x+1, 0) = Ack(x, 1)\\
+    Ack(x+1, y+1) = Ack(x, Ack(x+1, y))
+  \end{cases}
+  \]
+  Questa funzione cresce molto velocemente.
+  Infatti se abbiamo $x = 4$ già per $y=2$ otteniamo un numero con più di
+  $19000$ cifre. Notiamo che la nostra $h$ in questo caso non è una funzione primitiva già precedentemente
+  calcolata ma la funzione stessa. 
+  Questo non rispetta la definizione di primitiva ricorsione ed è per questo che
+  la funzione di Ackermann non è primitiva ricorsiva.
+}
+
+\subsection{Macchine di Turing}
+
+Una macchina di Turing è un modello di calcolo basato su DFA più potente degli automi a stati finiti e degli automi a pila.
+Queste permettono di descrivere come avviene il processo di calcolo come sequenza di operazioni di scrittura 
+e lettura su una memoria.
+Sarà costituito da un \textbf{programma finito} ovvero la funzione di transizione
+(una tabella finita).
+Può essere immaginata come una testina di lettura/scrittura che si muove su un nastro infinito
+(la memoria) leggendo e scrivendo simboli.
+\dfn{Macchina di Turing}
+{
+  Una macchina di Turing è una settupla:
+  \[MdT = (Q, \Sigma, \Gamma, \delta, q_0, B, F)\]
+  dove:
+  \begin{itemize}
+    \item $Q$ è un insieme finito di stati
+    \item $\Sigma$ è un insieme finito di simboli di input (l'alfabeto), 
+    e conterrà almeno due simboli che rappresentano la cella sul nastro vuoto e almeno un simbolo significativo.
+    \item $\Gamma$ è un insieme finito di simboli del nastro (l'alfabeto del nastro) e $\Sigma \subseteq \Gamma$
+    \item $P$ è un insieme finito di istruzioni (corrisponde al $\delta$ nel DFA) 
+    $P = \{I_1, \dots, I_k\}$ dove ogni $i$ è una quintupla che possono essere di due tipi:
+    \begin{itemize}
+      \item $q$: Stato centrale 
+      \item $s$: Simbolo letto sul nastro
+      \item $q'$: Stato successivo
+      \item $s'$: Simbolo che sostituisce $s$
+      \item $R$: spostamento della testina (Right, Left, Stay)
+    \end{itemize}
+    Quindi un'istruzione sarà del tipo:
+    \[(q, s, q', s', R) \in P\]
+    $\delta: Q \times \Gamma \to Q \times \Gamma \times \{L,R\}$ è la funzione di transizione.
+    \item $q_0 \in Q$ è lo stato iniziale
+    \item $B \in \Gamma - \Sigma$ è il simbolo vuoto del nastro
+    \item $F \subseteq Q$ è l'insieme degli stati finali (accettanti)
+  \end{itemize}
+}
+
+\subsubsection{Descrizione istantanea di una MdT}
+
+Una descrizione istantanea (ID) di una MdT 
+rappresenta lo stato corrente della macchina in un dato istante.
+\[
+\ldots \$ \$ \underbrace{s_1 s_2 \ldots s_{i-1}}_{w} \; \underbrace{s_i}_{q} \; \underbrace{s_{i+1} \ldots s_n}_{v} \$ \$ 
+\]
+La composizione di una MdT è una sequenza di descrizioni istantanee.
+\[
+\delta(q,r) = (q',s',R)
+\]
+Una computazione di una MdT è una sequenza di descrizioni istantanee.
+\dfn{Computazione terminante}
+{
+Una computazione è terminante se esiste una descrizione istantanea 
+\(q,v,r,w\) tale che nessuna istruzione inizia con con $q,r$ ovvero $\delta(q,r)$ non è definita.
+}
+Esiste un equivalenza tra MdT e funzioni ricorsivi primitive.
+Possiamo infatti tradurre le funzioni come $\lambda x.0$ o $\lambda x.x+1$ in una tabella finita:
+\begin{table}[H]
+  \centering
+  \begin{tabular}{c|c|c|c}
+    Stato & Simbolo letto & Simbolo scritto & Spostamento\\
+    \hline
+    $q_0$ & $\$$ & 0 & R\\
+    \hline
+    $q_1$ & $\$$ & $\$$ & S\\
+  \end{tabular}
+  \caption{MdT per la funzione zero}
+\end{table}
+
+\thm{Funzione Turing calcolabile (DA COMPLETARE)}
+{
+Una funzione $f : \mathbb{N} \to \mathbb{N}$ è \textbf{Turing calcolabile} 
+se esiste una MdT $M$ tale che partendo dalla configurazione iniziale:
+}
+\noindent
+Le macchine di Turing riconoscono anche macchine che divergono. 
+Infatti una MdT che non termina: 
+\begin{table}[H]
+  \centering 
+  \begin{tabular}{|c|c|}
+    & \$\\
+    \hline
+    $q_0$ & $ q_0 \$ R$
+  \end{tabular}
+  \caption{$f(x) = \lambda x . \uparrow$}
+\end{table}
+\dfn{Funzioni parziali ricorsive}
+{
+  Le funzioni parziali ricorsive possono essere viste come parziali ricorsive + minimizzazione.
+  Consideriamo una funzione totale $f : \mathbb{N}^{n+1} \to \mathbb{N}$ (n+1-aria)
+  definiamo:
+  \[\phi(x_1,\dots,x_n) = \underbrace{\mu z . (f(x_1, \dots,x_n) = 0)}_{\text{Cerca il più piccolo valore z tale che $f(x_1,\dots,x_n) = 0$ Se z non esiste $\phi(x_1, \dots,x_n) \uparrow$}}\]
+  Questa operazione si chiama \textbf{minimizzazione}.
+}
+\noindent
+Scriviamo l'algoritmo per calcolare $\phi$:
+\begin{lstlisting}
+  input(x_1, ..., x_n)
+  z := 0
+  while f(x_1, ..., x_n, z) != 0 do
+      z := z + 1
+  output(z)
+\end{lstlisting}
+\ex{}
+{
+  Prendiamo la funzione $\log_{a}x$ intero inferiore del $\log_{a}x$. 
+  \[
+    f(x) = \mu z. \underbrace{le(x,a^{z+1})}_{le(x,y) = 0 \iff x \le y} = 0
+  \]  
+}
+\ex{}
+{
+  Prendiamo la funzione $\sqrt[n]{x}$ dove $x = a^n$ e $\sqrt[n]{x} = a$.
+  \[f(x) = \mu z . (le(x,(z+1)^n) = 0)\]
+}
+
+\thm{}
+{
+  Se $f : \mathbb{N} \to \mathbb{N}$ è \textbf{parziale ricorsiva}
+  se è solo se $f$ è \textbf{Turing calcolabile}.
+}
+\begin{proof}
+$\Rightarrow$\\
+Casi base sono stati già visti! 
+\begin{itemize}
+  \item \textbf{Composizione: }
+  Dato $f$ e $g$  parziali ricorsive. 
+  \[f \circ g \text{ è parziale ricorsiva } \implies \exists M_{f \circ g}\]
+  Allora esistono due MdT $M_f$ e $M_g$ che calcolano $f$ e $g$ per ipotesi induttiva.
+  Costruiamo $M_{f \circ g}$ che simula $M_g$ e poi $M_f$.
+  \[
+    M_{f \circ g} = \begin{cases}
+      input(x)\\
+      temp := M_g(x)\\
+      output(temp)
+    \end{cases}
+  \]
+  \item \textbf{Primitiva ricorsione: } Sia $g$ e $r$ primitive ricorsive allora 
+  esiste $M_g$ ed $M_h$ per ipotesi induttiva. 
+  \[
+    f(x,n) = \begin{cases}
+      g(x) & n = 0\\
+      h(x,n-1,f(x,n-1)) & \text{altrimenti}
+    \end{cases}
+  \]
+  Costruiamo allora $M_g$:
+  \[
+    M_g = \begin{cases}
+      input(x)\\
+      input(n)\\ 
+      temp = M_g(x)\\
+      \text{for } i = 1 \text{ to } n \text{ do } \{ \text{temp} = M_h(x,i,temp)\}
+    \end{cases}
+  \]
+  \item \textbf{Minimizzazione: } Sia $f$ parziale ricorsiva allora esiste $M_f$ MdT per ipotesi induttiva.
+  \[\phi(x_1, \dots,x_n) = \mu z.(f(x_1,\dots,x_n) = 0)\]
+  Costruiamo $M_{\phi}$:
+  \[
+    M_{\phi} = \begin{cases}
+      input(x_1, \dots, x_n)\\
+      i := 0\\
+      temp = M_f(x_1,\dots,x_k,i)\\
+      \text{while } (temp \neq 0) \text{ do } \{\\
+        \quad i := i + 1\\
+        \quad temp = M_f(x_1, \dots, x_k, i)\\
+      \}\\
+      output(z)
+    \end{cases}
+  \]
+\end{itemize}
+\end{proof}
+\begin{proof}
+$\Leftarrow$\\
+$f$ Turing calcolabile $\Rightarrow$ parziale ricorsiva:
+Siano:
+\[(q,n,s,m) \to (q', n', s', m') \text{ 1 passo da computare}\]
+I simboli della MdT sono $\{\$, 0, 1\}$ e $n,m$ sequenza di simboli sul nastro sono 
+numeri binari. 
+\[L \to 0 \quad R \to 1\]
+Scorporare le funzioni in $\delta : Q \times E \to Q \times \Sigma \times \{R,L\}$
+\[Q : Q \times \Sigma \to Q \text{ transizione di stato}\]
+\[\mathbb{S} : Q \times \Sigma \to \Sigma \text{ transizione di simbolo}\]
+\[
+\mathbb{X} : Q \times \Sigma \to \{R,L\} \text{ transizione di direzione}
+\]
+Distinguiamo 2 casi:
+\begin{itemize}
+  \item Se $\mathbb{X}(q,s) = L$:
+  \[
+    q' = \mathbb{Q}(q,s) \quad s' = n \text{ mod } 2 \quad m' = 2m + \mathbb{S}(q,s) \quad n' = n \text{ div } 2
+  \]
+  Essendo mod e div PR, sono tutte PR. 
+  \item Se $\mathbb{X}(q,s) = R$:
+  \[
+    q' = \mathbb{Q}(q,s) \quad s' = m \text{ mod } 2 \quad n' = 2n + \mathbb{S}(q,s) \quad m' = m \text{ div } 2
+  \]
+  Combinaimo questi due casi:
+  \[
+    q' = \mathbb{Q}(q,s) \quad s' = (n \text{ mod } 2)(1 - \mathbb{X}(q,s)) + (m \text{ mod } 2)\mathbb{X}(q,s)
+  \]
+  \[m' = (2m + \mathbb{S}(q,s))(1 - \mathbb{X}(q,s)) + (m \text{ div } 2)\mathbb{X}(q,s)\]
+  \[n' = (n \text{ div } 2)(1 - \mathbb{X}(q,s)) + (2n + \mathbb{S}(q,s))\mathbb{X}(q,s)\]
+  \[
+    f : (q,n,s,m) \to (q', n', s', m') \text{ è PR}
+  \]
+\end{itemize}
+Per primitiva ricorsione calcoliamo lo stato raggiunto dopo $t$ passi:
+\[P_q(t,q,n,s,m)\]
+dove senza fare alcun passo:  
+\[
+\begin{cases}
+  P_q(0,q,n,s,m) = q\\
+  P_q(t+1,q,n,s,m) = P_q(t,q',n',s',m') 
+\end{cases}
+\]
+dalla descrizione istantanea $(q,n,s,m)$ dopo $t$ passi e 
+otteniamo lo stato raggiunto.
+Definiamo per primitiva ricorsione il risultato (di computazione parziale) dopo $t$ passi: 
+\[ 
+\begin{cases}
+  P_o(0,q,n,s,m) = n \\
+P_o(t+1,q,n,s,m) = P_o(t,q',n',s',m')
+\end{cases}
+\]
+e restituiscce la sequenza a sinistra della testina da $t$ passi di calcolo.
+In $Q$ supponiamo di avere uno stato di terminazione $q_f$: 
+Quindi possiamo definire il calcolo di $M$ con questa funzione: 
+
+\[
+  \phi_M (x) = P_0 ( \mu t . (q_f - P_q(t, q_0, x, x \text{ mod } 2 ,0) = 0), q_0, x \text{ div } 2,x \text{ mod } 2, 0)
+\]
+
+$P_q(t, q_0, x, x \text{ mod } 2 ,0) = 0$ cerca il più piccolo $t$ tale che partendo
+da $q_0$ con input $x$ a sinistra della testina in $t$ passi arriviamo allo stato finale $q_f$. 
+Calcolo l'output dopo $t$ passi i quali passano allo stato finale.
+Quindi:
+\[\text{MdT} = \text{ Parziali Ricorsive}\]
+$\phi$ è una funzione parziale ricorsiva se $\exists M$ MdT 
+che calcola $\phi$ se e solo se $\exists$ un algoritmo che calcola $\phi$.
+Se abbiamo $M$ MdT allora la funzione calcolata è parziale ricorsiva. $\quad \square$
+\end{proof}
+
+\subsubsection{$\lambda$-calcolo}
+
+Il $\lambda$-calcolo è un linguaggio di programmazione funzionale 
+e anche questo si è dimostrato essere uguale alle macchine di Turing.
+La \textbf{Tesi di Church} (ovvero che non è un teorema 
+perché non è stata dimostrata ma è stata accettata) afferma che:
+\begin{center}
+  La classe delle funzioni "intuitivamente calcolabili" 
+  è equivalente alla classe delle funzioni di Turing calcolabili.
+\end{center}
+
+\subsection{Aritmetizzazione delle macchine di Turing}
+
 
 
 \end{document}

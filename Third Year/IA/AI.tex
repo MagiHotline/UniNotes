@@ -2,6 +2,7 @@
 \usepackage{import}
 \input{../../setup.sty}
 
+
 \onehalfspacing
 \title{Intelligenza Artificiale}
 \author{Università di Verona\\Imbriani Paolo -VR500437\\Professor Alessandro Farinelli}
@@ -1065,5 +1066,304 @@ function TT-Entails(KB,a) returns true or false
   symbols <- a list of the proposition symbols in KB and a
   return TT-Check-All(KB,a,symbols,[])  
 \end{minted}
+\noindent
+Quello che fa questa funzione è quello di fare una DFS di ogni possibile
+assegnazione, controllando se in ogni modello dove \( KB \) è vero
+anche \( \alpha \) è vero. Ritornerà vero o falso in base a 
+questo controllo. Un altro algoritmo è:
+\begin{minted}{python}
+function TT-Check-All (KB, alpha, symbols, model) return true or false
+  if symbols is empty then
+    if MODEL-IS-TRUE(KB, model) then
+      return MODEL-IS-TRUE(alpha, model)
+    else
+      return true
+  else
+    P <- FIRST(symbols)
+    rest <- REST(symbols)
+    return TT-Check-All(KB, alpha, rest,
+      EXTEND-MODEL(model, P, true)) and
+      TT-Check-All(KB, alpha, rest,
+      EXTEND-MODEL(model, P, false))
+\end{minted}
+\noindent
+Questo algoritmo ci permette di verificare se \( KB \models \alpha \)
+attraverso una ricerca in profondità di tutte le possibili assegnazioni
+delle variabili proposizionali. La complessità di questo algoritmo è
+\[O(2^n)\] dve \( n \) è il numero di simboli proposizionali ed è 
+co-NP completo.
+
+\subsection{Metodi di dimostrazioni}
+
+I metodi di dimostrazione si dividono in due categorie:
+\begin{itemize}
+  \item \textbf{Model checking:} 
+  \begin{itemize}
+    \item Enumerazione delle tabelle di verità (sempre esponenziale per $n$)
+    \item Migliora il backtracking (e.g DPLL)
+    \item Ricerca con euristiche nello spazio dei modelli (sound ma non completo) 
+  \end{itemize}
+  \item \textbf{Applicazione delle regole d'inferenza:}
+  \begin{itemize}
+    \item Legittime (sound) generazioni di nuove formule da quelle vecchie
+    \item Dimostrazione: una sequenza di applicazione di regole di inferenza (Può essere regole di inferenza come operatori).
+    \item Tipicamente richiedono traduzioni delle formule in forme normali
+  \end{itemize}
+\end{itemize}
+Due formule sono logicamente equivalenti quando sono vere negli stessi modelli.
+\[\alpha \equiv \beta \iff \alpha \vDash \beta \land \beta \vDash \alpha\]
+Ci sono diverse formule equivalenti utili:
+\begin{itemize}
+  \item \(\neg(\alpha \land \beta) \equiv \neg \alpha \lor \neg \beta\) (Legge di De Morgan 1)
+  \item \(\neg(\alpha \lor \beta) \equiv \neg \alpha \land \neg \beta\) (Legge di De Morgan 2)
+  \item \(\alpha \Rightarrow \beta \equiv \neg \alpha \lor \beta\)
+  \item \(\alpha \Leftrightarrow \beta \equiv (\alpha \Rightarrow \beta) \land (\beta \Rightarrow \alpha)\)
+  \item \(\neg(\alpha \Rightarrow \beta) \equiv \alpha \land \neg \beta\)
+  \item \(\neg(\alpha \Leftrightarrow \beta) \equiv (\alpha \land \neg \beta) \lor (\neg \alpha \land \beta)\)
+  \item \(\alpha \lor (\beta \land \gamma) \equiv (\alpha \lor \beta) \land (\alpha \lor \gamma)\) (Distributività)
+  \item \(\alpha \land (\beta \lor \gamma) \equiv (\alpha \land \beta) \lor (\alpha \land \gamma)\) (Distributività)
+\end{itemize}
+Una proposizione è valida se è vera in ogni modello.
+\[\top \quad \alpha \lor \neg \alpha \quad A \implies A \quad (A \land (A \implies B)) \implies B\]
+La validità è connessa all'inferenza attraverso il teorema della deduzione.
+\[KB \vDash \alpha \iff KB \implies \alpha \text{ è valida}\]
+Una proposizione è soddisfacibile se è vera in almeno un modello.
+\[A \lor B \quad C\]
+Una proposizione è insoddisfacibile se non è vera in nessun modello.
+\[\bot \quad A \land \neg A\]
+La soddisfacibilità è connessa all'inferenza attraverso il seguente fatto:
+\[KB \vDash \alpha \iff KB \land \neg \alpha \text{ è insoddisfacibile}\]
+i.e dimostrare $\alpha$ attraverso la Reductio ad Absurdum.
+
+\subsection{Sistema di inferenza}
+
+È un insieme di regole di inferenza:
+Le regole di inferenza sono scritte come:
+\[
+\frac{\text{premesse}}{\text{conclusione}}
+\]
+\[\frac{A_1 \dots A_k}{A}\]
+Una derivazione $A$ è derivato da un insieme di formule $\Gamma$ 
+se con il mio sistema di inferenza $R'$ esiste 
+una sequenza $A_1, \dots, A_n$ tale che:
+\begin{itemize}
+  \item A è $A_n$
+  \item $\forall i \in \{1 \dots n\}$ uno dei seguenti è vero:
+  \begin{itemize}
+    \item $A_i \in \Gamma$
+    \item $A_i$ è derivazione diretta di $A_j$ con $j < i$ usando una regola di inferenza in $R'$
+  \end{itemize}
+\end{itemize}
+La sequenza $A_1, \dots, A_n$ è chiamata dimostrazione di $A$ da $\Gamma$.
+$\Gamma$ sono le premesse di $A$. 
+
+\subsubsection{Proprietà dei sistemi di inferenza}
+
+La \textbf{correttezza} delle regole di inferenza significa che le conclusioni 
+sono conseguenze logiche delle premesse $\psi_1, \dots, \psi_n \vDash \psi$.
+La \textbf{completezza} ci dice che se $H \vDash \psi$ allora esiste una derivazione di $\psi$ da $H$.
+Si può arrivare alla completezza dicendo: esiste una derivazione della contraddizione se $H \cup \{\neg \psi\}$ non è soddisfacibile.
+L'algoritmo che andremo a vedere è basato su questo principio. \\
+Dimostrare che $\Gamma \vDash A$ per: 
+\begin{itemize}
+  \item Dimostrazione per refutazione (reductio ad absurdum): provare
+  che $\Gamma \land \neg A$ non è soddisfacibile.
+  L'algoritmo si chiama \textbf{Resolution} che ha bisogno di CNF (Conjunctive Normal Form) ed è completo.
+  \item Esiste anche il \textbf{Forward/Backward reasoning} sound, completo e anche polinomiale ma SOLO per 
+  una parte ristretta di logica proposizionale chiamata Horn clauses.
+\end{itemize}
+La forma normale congiuntiva (CNF) è una congiunzione di clausole,
+dove una clausola è una disgiunzione di letterali e.g $(A \lor \neg B \lor C) \land (\neg A \lor D)$.
+La \textbf{resoluzione} è una regola di inferenza per CNF completa per la logica proposizionale.
+\[
+\frac{l_1 \lor \dots \lor l_k \quad m_1 \lor \dots \lor m_n}
+{l_1 \lor \dots \lor l_{i-1} \lor l_{i+1} \lor \dots \lor l_k \lor m_1 \lor \dots \lor m_{j-1} \lor m_{j+1} \lor \dots \lor m_n}
+\]
+dove $l_i$ e $m_j$ sono letterali complementari. La resoluzione è corretta e completa per la logica proposizionale.
+\subsubsection{Conversione in CNF}
+Partiamo da una formula qualsiasi e la convertiamo in CNF seguendo questi passi:
+
+\[B_{1,1} \iff P_{1,2} \lor P_2,1\]
+\begin{itemize}
+  \item Elimina $\iff$, rimpiazza $alpha \iff beta$ con $(alpha \Rightarrow beta) \land (beta \Rightarrow alpha)$:
+  \[(B_{1,1} \Rightarrow P_{1,2} \lor P_{2,1}) \land (P_{1,2} \lor P_{2,1} \Rightarrow B_{1,1})\]
+  \item Elimina $\Rightarrow$, rimpiazza $alpha \Rightarrow beta$ con $\neg alpha \lor beta$:
+  \[(\neg B_{1,1} \lor P_{1,2} \lor P_{2,1}) \land (\neg (P_{1,2} \lor P_{2,1}) \lor B_{1,1})\]
+  \item Muovi $\neg$ verso le proposizioni atomiche usando le leggi di De Morgan e la doppia negazione:
+  \[(\neg B_{1,1} \lor P_{1,2} \lor P_{2,1}) \land ((\neg P_{1,2} \land \neg P_{2,1}) \lor B_{1,1})\]
+  \item Applica la distributività e appiattisci:
+  \[(\neg B_{1,1} \lor P_{1,2} \lor P_{2,1}) \land (\neg P_{1,2} \lor B_{1,1}) \land (\neg P_{2,1} \lor B_{1,1})\]
+\end{itemize}
+Come possiamo notare alla fine abbiamo ottenuto una formula in CNF, ovvero una congiunzione di disgiunzioni.
+\subsubsection{Algoritmo di Resolution}
+
+Dimostrazione per assurdo ovvero mostrare che $KB \land \neg \alpha$ è insoddisfacibile.
+\begin{minted}[fontsize=\small]{python}
+function PL-Resolution (KB, alpha) returns true or false
+  inputs: KB, the knowledge base, a sentence in prop. logic
+          alpha, the query, a sentence in prop. logic
+  clauses <- CNF(KB and not alpha)
+  new <- {}
+  repeat
+    for each pair of clauses (Ci, Cj) in clauses do
+      resolvents <- PL-Resolve(Ci, Cj)
+      if resolvents contains the empty clause then
+        return true
+      new <- new union resolvents
+    if new contains clauses then
+      return false
+    clauses <- clauses union new
+\end{minted}
+Per alcuni casi dove potremmo ottenere la clausola vuota, devo decidere quale risolvente generare:
+\[
+\frac{P \lor \neg Q \quad \quad \neg P \lor Q}{\neg Q \lor Q}
+\quad \text{oppure} \quad 
+\frac{P \lor Q \quad \quad \neg P \lor \neg Q}{P \lor \neg P}
+\]
+Questo algoritmo però se gli viene data una formula 
+che non è soddisfacibile, nel momento in cui genera tutti i possibili risolventi 
+deve poter generare una contraddizione per potersi fermare.
+\ex{Esempio di risoluzione dove la risoluzione $KB \; \cancel{\vDash} \; \alpha$}
+{
+  \[\alpha = P_{1,2} \quad KB = B_{1,1} \iff (P_{1,2} \lor P_{2,1}) \land \neg B_{1,1}\]
+  Traduciamo $KB$ in CNF:
+  \[(\neg B_{1,1} \lor P_{1,2} \lor P_{2,1}) \land (\neg P_{1,2} \lor B_{1,1}) \land (\neg P_{2,1} \lor B_{1,1}) \land \neg B_{1,1} \land P_{1,2}\]
+  A queste assunzioni aggiungiamo $\neg \alpha$ ovvero $\neg P_{1,2}$. Generiamo le seguenti clausole:
+  \begin{itemize}
+    \item $\neg B_{1,1} \lor P_{1,2} \lor B_{1,1}$
+    \item $P_{1,2} \lor \neg P_{1,2} \lor P_{2,1}$
+    \item $\neg B_{1,1} \lor P_{2,1} \lor B_{1,1}$
+    \item $\neg P_{2,1} \lor P_{2,1} \lor P_{1,2}$
+    \item $\neg P_{2,1}$
+  \end{itemize}
+  Alcune clausole vengono generate mettendo insieme le clausole originali con quelle generate.
+  \begin{itemize}
+    \item $\neg B_{1,1} \lor P_{1,2}$ 
+    \item $\neg P_{2,1} \lor P_{1,2}$
+  \end{itemize}
+  A questo punto non possiamo più generare nuove clausole e non abbiamo generato la contraddizione. 
+  L'algoritmo quindi non riesce a terminare e nota che abbiamo generato le stesse formule quindi $KB \; \cancel{\models} \; \alpha$.
+}
+
+\subsection{Forward and Backward Chaining}
+
+\subsubsection{Horn Clauses}
+
+Una \textbf{Horn clause} è:
+\begin{itemize} 
+  \item Una proposizione atomica, oppure
+  \item Una disgiunzione di letterali con al massimo un letterale positivo
+\end{itemize} 
+Per esempio: $C \land (B \implies A) \land (C \land D \implies B)$.
+Possiamo ancora fare il modus ponens, completo per Horn clauses.
+\[
+\frac{\alpha_1, \dots, \alpha_n \quad \quad \alpha_1, \dots, \alpha_n \implies B}
+{\beta}
+\]
+Può essere usato per il \textbf{forward chaining} e il \textbf{backward chaining}.
+Questi algoritmi sono molto naturali e possono essere eseguiti in tempo lineare.
+Idea: Usa qualsiasi regola di cui le premesse sono soddisfatte in $KB$ e aggiungi la sua conclusione a $KB$, fino a quando la query è trovata.
+\[
+\begin{aligned}
+P &\implies Q\\
+L \land M &\implies P\\
+B \land L &\implies M\\
+A \land P &\implies L\\
+A \land B &\implies L\\
+A\\
+B
+\end{aligned}
+\]
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\textwidth]{forwardchaining.png}
+\end{figure}
+\begin{minted}{python}
+function PL-FC-Entails(KB, q) return true or false
+  inputs: KB, the knowledge base, a set of Horn clauses
+          q, the query, a proposition symbol
+  count[p] = number of premises in rules with conclusion p
+  inferred[p] = false for each proposition symbol p
+  agenda = all proposition symbols known to be true in KB
+  while agenda is not empty do
+    p = POP(agenda)
+    if p == q then return true
+    if inferred[p] == false then
+      inferred[p] = true
+      for each horne_clause in KB where p is one of the pi do
+        count[r] = count[r] - 1
+        if count[r] == 0 then
+          PUSH(r, agenda)
+  return false
+\end{minted}
+
+\begin{enumerate}
+  \item FC arriva ad un punto fisso dove non vengono derivate nuove formule atomiche
+  \item Consideriamo lo stato finale come un modello m, assegnando vero/falso ai simboli
+  \item Ogni clausola nella KB originale è vera in m, per assurdo supponiamo che una clausola
+  \( a_1 \land \dots \land a_k \implies b \) sia falsa in m. Allora \( a_1 \land \dots \land a_k \) è vera in m e b è falsa in m.
+  Quindi l'algoritmo non ha raggiunto un punto fisso!
+  \item Quindi m è un modello di KB
+  \item Per ogni a (formula atomica), se \( KB \vDash a \), a è vera in ogni modello di KB, incluso m
+\end{enumerate}
+Idea generale: costruire un qualsiasi modello di KB attraverso inferenza corretta, controllare $\alpha$. 
+Per il back chaining: lavora al contrario dalla query $q$. 
+Per provare $q$ per BC, controlla se $q$ è noto in $KB$ o 
+prova per BC le premesse di qualche regola includendo $q$.
+Evita loop: cerca se il goal è già nella pila dei goal attivi.
+Evita lavoro ripetuto: controlla se il nuovo subgoal:
+\begin{itemize}
+  \item È stato già provato 
+  \item È già fallito
+\end{itemize}
+FC è \textit{data driven} mentre BC è \textit{goal driven}.
+
+\section{Rappresentare l'incertezza}
+\ex{}
+{
+Consideriamo un'azione $A_t$ = lasciare l'aeroporto $t$ minuti prima del volo.
+$A_t$ mi permetterà di arrivare in tempo?
+Problemi: 
+\begin{itemize}
+  \item Osservabilità parziale (non so se c'è traffico, incidenti, ecc)
+  \item Sensori rumorosi (report del traffico)
+  \item Incertezza sulle conseguenze delle azioni (tempo di viaggio variabile)
+  \item Complessità immensa per modellare e predirre il traffico 
+\end{itemize}
+Quindi un approccio puramente logico potrebbe:
+\begin{itemize}
+  \item Rischia della falsità: "$A_{25}$ mi porterà in tempo"
+  \item Porta alla conclusione dche sono troppo debole per la scelta delle decisioni
+\end{itemize}
+}
+Ci sono dei metodi per gestire l'incertezza:
+\begin{itemize}
+  \item Logica non monotonica:
+  \begin{itemize}
+    \item Assumo che la mia macchina non ha problemi alle gomme 
+    \item Assumo $A_{25}$ funziona se non ho contraddizioni nelle prove 
+    \item Problemi: Quali assunzioni sono ragionevoli? Come gestire la contraddizione?
+  \end{itemize}
+  \item Fuzzy logic: gestisce gradi di verità NON incertezza come:
+  \begin{itemize}
+    \item WETGRASS è vera al 70\%
+  \end{itemize}
+  \item Probabilità:
+  \begin{itemize}
+    \item Data una prova disponibile, $A_{25}$ arriveremo in tempo con una probabilità $0.04$.
+  \end{itemize}
+\end{itemize}
+\subsection{Probabilità}
+La probabilità misura il grado di credenza in una proposizione.
+Questa riassume effetti come:
+\begin{itemize}
+  \item Laziness: fallire ad enumerare l'eccezioni
+  \item Ignoranza: non so se c'è traffico, condizioni iniziali
+\end{itemize}
+La probabilità \textbf{Soggettiva} o \textbf{bayesiana}:
+Le probabilità mettano in relazione delle propozioni con lo stato di conoscenza di un'altra propozione. 
+
+
+
 
 \end{document}
