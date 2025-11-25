@@ -107,9 +107,9 @@ Alcune nozioni di logica che ci serviranno in seguito:
     \item \textbf{Formula:}
     \begin{itemize}
         \item Formula atomica
-        \item $\phi$ formula, allora $\neg \phi$ è una formula
-        \item $\phi$ e $\psi$ formule, allora $(\phi \land \psi)$, $(\phi \lor \psi)$, $(\phi \rightarrow \psi)$, $(\phi \leftrightarrow \psi)$ sono formule.
-        \item $\phi$ formula e $v$ variabile, alloar e $\forall v . \phi$ e $\exists v . \phi$ sono formule.
+        \item $\varphi$ formula, allora $\neg \varphi$ è una formula
+        \item $\varphi$ e $\psi$ formule, allora $(\varphi \land \psi)$, $(\varphi \lor \psi)$, $(\varphi \rightarrow \psi)$, $(\varphi \leftrightarrow \psi)$ sono formule.
+        \item $\varphi$ formula e $v$ variabile, alloar e $\forall v . \varphi$ e $\exists v . \varphi$ sono formule.
     \end{itemize}
 \end{itemize}
 
@@ -2358,11 +2358,11 @@ Infatti una MdT che non termina:
   Le funzioni parziali ricorsive possono essere viste come parziali ricorsive + minimizzazione.
   Consideriamo una funzione totale $f : \mathbb{N}^{n+1} \to \mathbb{N}$ (n+1-aria)
   definiamo:
-  \[\phi(x_1,\dots,x_n) = \underbrace{\mu z . (f(x_1, \dots,x_n) = 0)}_{\text{Cerca il più piccolo valore z tale che $f(x_1,\dots,x_n) = 0$ Se z non esiste $\phi(x_1, \dots,x_n) \uparrow$}}\]
+  \[\varphi(x_1,\dots,x_n) = \underbrace{\mu z . (f(x_1, \dots,x_n) = 0)}_{\text{Cerca il più piccolo valore z tale che $f(x_1,\dots,x_n) = 0$ Se z non esiste $\varphi(x_1, \dots,x_n) \uparrow$}}\]
   Questa operazione si chiama \textbf{minimizzazione}.
 }
 \noindent
-Scriviamo l'algoritmo per calcolare $\phi$:
+Scriviamo l'algoritmo per calcolare $\varphi$:
 \begin{lstlisting}
   input(x_1, ..., x_n)
   z := 0
@@ -2422,10 +2422,10 @@ Casi base sono stati già visti!
     \end{cases}
   \]
   \item \textbf{Minimizzazione: } Sia $f$ parziale ricorsiva allora esiste $M_f$ MdT per ipotesi induttiva.
-  \[\phi(x_1, \dots,x_n) = \mu z.(f(x_1,\dots,x_n) = 0)\]
-  Costruiamo $M_{\phi}$:
+  \[\varphi(x_1, \dots,x_n) = \mu z.(f(x_1,\dots,x_n) = 0)\]
+  Costruiamo $M_{\varphi}$:
   \[
-    M_{\phi} = \begin{cases}
+    M_{\varphi} = \begin{cases}
       input(x_1, \dots, x_n)\\
       i := 0\\
       temp = M_f(x_1,\dots,x_k,i)\\
@@ -2496,7 +2496,7 @@ In $Q$ supponiamo di avere uno stato di terminazione $q_f$:
 Quindi possiamo definire il calcolo di $M$ con questa funzione: 
 
 \[
-  \phi_M (x) = P_0 ( \mu t . (q_f - P_q(t, q_0, x, x \text{ mod } 2 ,0) = 0), q_0, x \text{ div } 2,x \text{ mod } 2, 0)
+  \varphi_M (x) = P_0 ( \mu t . (q_f - P_q(t, q_0, x, x \text{ mod } 2 ,0) = 0), q_0, x \text{ div } 2,x \text{ mod } 2, 0)
 \]
 
 $P_q(t, q_0, x, x \text{ mod } 2 ,0) = 0$ cerca il più piccolo $t$ tale che partendo
@@ -2504,8 +2504,8 @@ da $q_0$ con input $x$ a sinistra della testina in $t$ passi arriviamo allo stat
 Calcolo l'output dopo $t$ passi i quali passano allo stato finale.
 Quindi:
 \[\text{MdT} = \text{ Parziali Ricorsive}\]
-$\phi$ è una funzione parziale ricorsiva se $\exists M$ MdT 
-che calcola $\phi$ se e solo se $\exists$ un algoritmo che calcola $\phi$.
+$\varphi$ è una funzione parziale ricorsiva se $\exists M$ MdT 
+che calcola $\varphi$ se e solo se $\exists$ un algoritmo che calcola $\varphi$.
 Se abbiamo $M$ MdT allora la funzione calcolata è parziale ricorsiva. $\quad \square$
 \end{proof}
 
@@ -2522,6 +2522,203 @@ perché non è stata dimostrata ma è stata accettata) afferma che:
 
 \subsection{Aritmetizzazione delle macchine di Turing}
 
+Codifichiamo (univocamente) ogni MdT in $\mathbb{N}$:
+Se consideriamo:
+\[
+  \sigma = \{0, \$\} \quad Q = \{q_0\} 
+\] 
+Tutte le macchine di Turing possibili sono:
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    & 0 & \$ \\
+    \hline
+    \( q_0 \) & \( \bullet \)  & \( \bullet \)  \\
+    \hline
+  \end{tabular}
+\end{table}
+dove \( \bullet \) sono tutte le possibili istruzioni:
+\[
+  \begin{cases}
+    (\$, \$, \$) \\
+    (q_0, \$, R) \\
+    (q_0, \$, L) \\
+    (q_0, 0, R) \\
+    (q_0, 0, L) \\
+  \end{cases}
+\] 
+Il numero di macchine di Turing possibili da 1 stato e 2 simboli è:
+\[5 \times 5 = 25\]
+Possiamo mettere in ordine gli insiemi degli stati e dei simboli perché sono finiti:
+\[
+  Q = \{q_0, q_1, q_2, \dots, q_{m-1}\} \quad \Sigma = \{s_0, s_1, s_2, \dots, s_{n-1}\}
+\]
+Anche le triple possono essere messe in ordine lessicografico:
+\[
+  (q_i, s_j) < (q_p, s_q) \text{ se } i < p \text{ o } (i = p \text{ e } j < q)
+\]
 
+\subsubsection{Codifica di Gödel}
+
+La fattorizzazione di Gödel ci permette di codificare ogni tripla come un numero naturale:
+L'idea è di prendere un numero $x \in \mathbb{N}$ dove 
+\[
+  fact(x) = p_1^{x_1}p_2^{x_2}p_3^{x_3} \dots p_k^{x_k} \quad \text{ con } p_i \text{ primi}
+\]
+Associamo ad ogni simbolo $y$ della MdT 
+un numero dispari $> 1 \leadsto a(y)$, poi calcoliamo 
+il $gn(e)$ dove $e = (q,s,q',s', \{R,L\})$ è una istruzione della MdT.
+\[
+  gn(e) = \prod_{i=1}^{5} p_i^{a(s_i)}
+\]
+\ex{}
+{
+  Immaginiamo un istruzione del tipo:
+  \[
+   E = (q_0, \$, q_0, 0, R)
+  \]
+  Allora
+  \[
+    gn(E) = \underbrace{2^{a(q_0)} \times 3^{a(\$)} \times 5^{a(q_0)} \times 7^{a(0)} \times 11^{a(R)}}_{m}
+  \]
+  dove $m$ è il numero naturale che codifica l'istruzione $E$.
+  Nello stesso modo calcoliamo $gn(n)$ dove $n$ è l'insieme di tutte le istruzioni della MdT:
+  \[
+    n = E_1E_2 \dots E_k (\text{istruzioni})
+  \]
+  \[
+    gn(n) = \prod_{i=1}^{k} p_i^{gn(E_i)}
+  \]  
+  Per decodificare invece una MdT a partire da un numero naturale $m$, fattorizziamo $n_1\dots n_k$ dove 
+  $n_i$ è una codifica di tuple. 
+  \[
+    \underbrace{\underbrace{n_1}_{m_1^1\dots m_5^5} \quad  \underbrace{n_2}_{m_1^2\dots m_5^2} \quad \dots \quad  \underbrace{n_k}_{m_1^k\dots m_5^k}}_{\text{tabella di $m_x$}}
+  \]
+  Dove $n_1 \dots n_k$ poi costituiscono l'intera tabella delle istruzioni della MdT.
+}
+\noindent
+D'ora in poi scriveremo che $m_x$ è la MdT il cui programma è codificato in $x \in \mathbb{N}$.
+$m_x$ calcola la funzione $\varphi_x$ dove 
+\dfn{}
+{
+  $\varphi_x$ è la notazione per elencare la funzione parziale ricorsiva calcolabile dal programma codificato in $x \in \mathbb{N}$.
+  \[\varphi_x(y) = m_x(y) \text{ calcolo la MdT $m_x$ su input $y$}\]
+  $\varphi_x$ è la \textbf{semantica} (funzione calcolata) dal programma codificato da $x$.
+}
+\noindent
+Bisogna prestare attenzione perché $x_1$ programma che calcola $y + y$ e $x_2$ che calcola $2y$ calcolano con 
+istruzioni diverse ma hanno la stessa semantica e quindi $\varphi_{x_1} = \varphi_{x_2}$.
+
+\subsubsection{Macchina universale}
+
+La macchina universale (o anche interprete) non è nient'altro che il modello di una macchina programmabile.
+È un programma che prende input due valori,
+interpreta il prima come programma e il secondo come codifica.
+\[
+\begin{cases}
+  x_1 \text{ codifica di una MdT } m_{x_1}\\
+  x_2 \text{ input per la MdT } m_{x_1}
+\end{cases}
+\]
+\[\varphi_m(\underbrace{x_1}_{\text{programma}},x_2) = \underbrace{\varphi_{x_1}}_{\text{costruiamo $m_{x_1}$ che calcola $\varphi_{x_1}$}}\]
+che sottoforma di pseudocodice diventa:
+\[
+\begin{cases}
+  input(x_1)\\
+  input(x_2)\\
+  \text{decodifica } m_{x_1} \text{ da } x_1\\
+  \text{se } m_{x_1} \text{ e' valida allora calcola } m_{x_1}(x_2)\\
+  \text{altrimenti entra in un loop infinito}
+\end{cases}
+\]
+
+\section{Problemi insolubili}
+
+\subsection{Problema della terminazione}
+
+Non esiste una funzione totale ricorsiva $g$ tale che:
+\[
+\forall x . g(x) = \begin{cases}
+  1 & \text{se } \varphi_x(x) \downarrow\\
+  0 & \text{se } \varphi_x(x) \uparrow
+\end{cases}
+\]
+dove $g$ decide sempre sì (1) o no (0) se la MdT codificata in $x$ termina o meno.
+\begin{proof}
+  Dimostriamo per assurdo. 
+  Supponiamo che $g$ esista ed è totale ricorsiva $\implies$ vuol dire che esiste una MdT di codice $i_0 \in \mathbb{N}$ 
+  che la calcola. Questo vuol dire che $g = \underbrace{\varphi_{i_0}}_{\text{semantica}}$.
+  Possiamo definire 
+  \[
+    h(x) = \begin{cases}
+      0 & \text{se } g(x) = 0 = \varphi_{i_0}(x)\\
+      \uparrow & \text{se } g(x) = 1 = \varphi_{i_0}(x)
+    \end{cases}
+  \]
+  Essendo $g$ è calcolabile allora anche $h$ è calcolabile.
+  \[
+    \exists i_1 . h = \varphi_{i_1}
+  \]
+  \[
+  \begin{cases}
+    input(x)\\
+    \text{if } m_{i_0}(x) = 1 \text{ then output(0)}\\
+    \text{else loop infinito}
+  \end{cases}
+  \]
+  L'ipotesi è che $m_{i_0}(x)$ esiste e termina sempre. 
+  Se $g = \varphi_{i_0}$ e $h = \varphi_{i_1}$ allora calcoliamo $h(i_1)$:
+  \[
+    \varphi_{i_1}(i_1) \uparrow \iff h_{i_1} \uparrow \iff g(i_1) = 1 
+  \]
+  Si dovrebbero aspettare infiniti passiper decidere se $\varphi_x(x)$ termina o diverge 
+  quindi $g$ non è calcolabile. 
+  Quindi non esiste $\psi$ tale che decida sempre la terminazione 
+  di un altro programma su un suo input.
+  \[
+  \psi(xy) = \begin{cases}
+    0 & \text{se } \varphi_x(y) \uparrow\\ 
+    1 & \text{se } \varphi_x(y) \downarrow
+  \end{cases}
+  \]
+  Se esistesse, allora potrei decidere 
+  \[\psi(xx) = g(x) \text{ dimostrato sopra che non è possibile} \]
+\end{proof}
+
+\subsubsection{Altri problemi insolubili}
+
+Non esiste $f$ totale ricorsiva tale che:
+\[
+  \forall x . f(x) = \begin{cases}
+    1 & \text{se } \varphi_x \text{ è totale}\\
+    0 & \text{se } \varphi_x \text{ non è totale}
+  \end{cases}
+\]
+Totale vuol dire che 
+\[
+\forall y \in \mathbb{N} \; .\; \varphi_x(y) \downarrow \text{ mentre non totale vuol dire } \exists y \; . \; \varphi_x(y) \uparrow
+\]
+Altri problemi insolubili sono:
+\begin{itemize}
+  \item Decidere se $\phi_x$ è costante: $\exists n.\forall y.\phi_x(y) = n$
+  \item Decidere se $\phi_x$ non restituisce mai un valore fissato: $\forall y . \phi_x(y) \neq n$
+  \item Decidere se $\phi_x = \phi_y$. 
+\end{itemize}
+
+\subsection{Teorema SMN (specializzazione)}
+
+Consideriamo di avere una funzione che ha due input:
+\[
+\lambda x \lambda y  . x+y \quad \text{ programma $f(x,y)$}
+\]
+specializzare equivale a costruire un nuovo programma 
+in cui una parte dell'input è integrata nel codice. Usiamo 
+$f$ per ottenere $f'$ che somma ad un valore di input il valore fisso $5$.
+\[
+  f' = \lambda y . 5 + y
+\]
+Instanziamo $x$ a 5 dentro $f$, ovvero \textbf{specializziamo} $f$ a 5 per $x$. 
+Lo specializzatore ritorna un nuovo programma.
 
 \end{document}
