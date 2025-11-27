@@ -1363,7 +1363,214 @@ Questa riassume effetti come:
 La probabilità \textbf{Soggettiva} o \textbf{bayesiana}:
 Le probabilità mettano in relazione delle propozioni con lo stato di conoscenza di un'altra propozione. 
 
+\section{Markov Decision Process}
 
+\subsection{POMPD (Partially Observable Markov Decision Process)}
+Un POMDP è una generalizzazione di un MDP per ambienti parzialmente osservabili.
+POMPD ha un modello di ossercazione $O(s,e)$ 
+definisce la probabilità che l'agente ottenga l'evidenza $e$
+in uno stato $s$.
+Se l'agente non sa in quale stato si trova, allora non ha senso parlare di policy $\pi(s)$.
+\thm{Teorema di Astrom}
+{
+  La policy ottimale in una POMDP è una funzione $\pi(b)$ dove $b$
+  è la \textbf{belief state} dell'agente, cioè una distribuzione di probabilità.
+}
+\noindent
+Posso convertire una POMPD in un MDP con stati che sono belief states,
+dove $T(b,a,b')$ è la probabilità 
+che il nuovo belief state sia $b'$ dato il vecchio belief state $b$ e l'azione $a$. 
+
+
+\section{Machine Learning: introduzione e regressione lineare}
+
+Automaticamente costruisce modelli secondo alcuni dati ed esistono diversi tipi
+di apprendimento:
+\begin{itemize}
+  \item \textbf{Supervised learning:} ($y = f(x)$) dato (x,y) impara $f()$ (approssimazione di funzione)
+  \ex{Supervised Learning: riconoscere cifre scritte a mano}
+{
+  L'idea è di avere un training set:
+  \begin{itemize}
+    \item Immagini conosciute che rappresentono le cifre. (x)
+    \item labels che rappresento il valore della cifra. (t)
+  \end{itemize}
+  Il \textbf{training} costruisce il modello che mappa le immagini a cifre y(x).
+  Il \textbf{test set} vengono date nuove mai viste prime immagini senza etichette. 
+  E il \textbf{testing }applica il modello al testing set.
+}
+  \item \textbf{Unsupervised learning:} dato x impara $f()$ come rappresentazione compatta di $x$ (Clustering)
+  
+  \ex{Unsupervised Learning: gruppe di celle basati sull'espressione del gene}
+  {
+
+     \begin{figure}[H]
+      \centering
+      \includegraphics[width=0.5\textwidth]{unsupervised.png}
+     \end{figure}
+     \noindent
+     Il clustering è un esempio di unsupervised learning dove abbiamo una matrice dove:
+    \begin{itemize}
+      \item Righe: geni 
+      \item Colonne: celle 
+      \item Entry (gene, cella) = livello di espressione del gene nella cella
+      \item nessuna etichetta 
+      \item obiettivo: trovare gruppi di geni e celle con modelli simili
+      \begin{itemize}
+        \item Per celle (colonne) 
+        \item Per geni simili 
+        \item Per entrambi (bi-clustering)
+      \end{itemize}
+    \end{itemize}
+  }
+
+  \item \textbf{Reinforcement learning:} dato $x,z$ impara $f()$ per generare $y$ ($x$ è lo stato, $z$ è la ricompensa)
+  \ex{Pianificare traiettorie con un braccio robotico}
+  {
+    \begin{itemize}
+      \item Controllo del problema (decision making sequenziale)
+      \item Segnale di ricompensa che guida le azioni del robot (alta ricompensa quando l'obiettivo viene raggiunto)
+      \item Ha bisogno di interazione con l'ambiente 
+      \item Usa tecniche statiche orientati ai dati ma si concentra sul controllo non sull'analisi dei dati.
+    \end{itemize}
+  }
+\end{itemize}
+
+\subsection{Concetti di base e terminologie}
+
+Variabili di input:
+\begin{itemize}
+  \item Varaibili indipendenti, predictors, features
+  \item $X$ quando ho più variabili $X_1, X_2, \dots, X_n$
+\end{itemize}
+Variabili di output:
+\begin{itemize}
+  \item Risposta, variabile dipendente 
+  \item $Y$
+\end{itemize}
+Variabili quantitative: (valori numerici)
+\begin{itemize}
+  \item Temperatura, altezza, guadagno, etc. 
+\end{itemize}
+Variabili qualitativi: (categorie)
+\begin{itemize}
+  \item Genere, brand del prodotto etc.
+\end{itemize}
+\begin{center}
+  Regressione: output quantitativi\\
+  Classificazione: output qualitativi
+\end{center}
+
+\subsubsection{Perché voglio stimare f(): Predizione}
+
+Dato un set di input facili da ottenere $X = X_1, X_2, \dots, X_n$,
+predirre l'output $Y$ che è costoso da misurare $Y = f(X) + \varepsilon$
+dove $\varepsilon$ è il rumore (errore casuale indipendente da $X$) e 
+$f(\dot)$ rappresenta informazione sistematica tra $X$ e $Y$.
+\dfn{Predizione}
+{
+  La predizione costruisce un modello $\hat{f}(\dot)$ per calcolare 
+  $\hat{Y} = \hat{f}(X)$ dato $X$. 
+}
+\noindent
+L'obiettivo è minimizzare l'errore di predizione.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{prediction.png}
+\end{figure}
+
+
+L'accuratezza di una $\hat{Y}$ dipende da due quantità:
+\begin{itemize}
+  \item \textbf{Errore riducibile:} errore nella costruzione del modello 
+  \item \textbf{Errore irriducibile:} variabilità di $\varepsilon$ (errore randomico indipendente da $X$).
+\end{itemize}
+Assumere $\hat{f}(\bullet)$ e $X$ fissati:
+\[
+E[(Y - \hat{Y})^2] = E[\overbrace{f(X) + \varepsilon}^{Y} - \overbrace{\hat{f}(X)}^{\hat{Y}}]^2 = \underbrace{[f(X) - \hat{f}(X)]^2}_{\text{Errore riducibile}} + \underbrace{Var(\varepsilon)}_{\text{Errore irriducibile}}
+\]
+\begin{itemize}
+  \item $E(X)$ con $X$ come variabile aleatoria, è il valore atteso o media di $X$.
+  \item $Var(X) = E[(X - E(X))^2]$ è la varianza di $X$.
+\end{itemize}
+
+\subsubsection{Perché voglio stimare f(): Inference}
+
+Obiettivo: capire come $Y$ varia quando varia $X$ (non predirre).
+Dobbiamo conoscere la forma di $f(\bullet)$ non una \textbf{black box}.
+Possibili domande per l'inferenza:
+\begin{itemize}
+  \item Quali variabili indipendenti sono associati con la risposta? (il punto chiave è l'interpretabilità)
+  \item Quale relazione tra la risposta e ogni variabile indipendente? (effetti positivi o negativi)
+  \item Come possiamo codificare la relazione tra $X$ e $Y$ con modello lineare? (modelli lineari sono semplici e facili da usare ma hanno limitazioni sul potere rappresentativo)
+\end{itemize}
+
+\ex{Come stimare $f$?}
+{
+  Abbiamo:
+  \begin{itemize}
+    \item I dati di training: $n = 30$ data points 
+    \item numero di predittori: $p = 2$
+  \end{itemize}
+  su anni di educazione e anzianità.
+  \begin{itemize}
+    \item $x_{ij}$ è il valore della osservazione $i$ del predittore $j$ dove $i = 1, \dots, n$ e $j = 1, \dots, p$.
+    \item $y_{ij}$ è il valore della risposta per osservazione $i$.
+  \end{itemize}
+  Il training set: $(x_1,y_1), (x_2,y_2), \dots, (x_n,y_n)$
+  dove $x_i = (x_{i1}, x_{i2}, \dots, x_{ip})^T$.\\
+  \textbf{Obiettivo}: trovare la funzione $\hat{f}(\bullet)$ tale che 
+  $Y \approx \hat{f}(X)$ per ogni osservazione nel training set.
+}
+
+\subsubsection{Termini parametrici}
+
+Esiste una procedura a due passi:
+\begin{itemize}
+  \item Fare un assunzione sulla forma di $f$ (modello parametrico)
+  \begin{itemize}
+    \item esempio: assumi $f(\bullet)$ sia lineare
+    \item $f(X) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p$
+    \item Abbiamo $p + 1$ parametri $\beta_0, \beta_1, \dots, \beta_p$
+    \item Punto chiave: un modello è completamente identificato da parametri.
+  \end{itemize}
+  \item Trovare una procedura per capire quali sono i valori di $\beta$. 
+  \begin{itemize}
+    \item Trovare un modello lineare per stimare i parametri $\beta$.
+    \item Trovare i valori per cui i parametri:
+    \[Y \approx \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p\]
+    \item \textbf{Least Square} è l'approccio più comune per allenare modelli lineari.
+  \end{itemize}
+\end{itemize}
+\ex{}
+{
+  Modello \textbf{guadagno} $\approx \beta_0 + \beta_1\text{educazione} + \beta_2\text{anzianità}$.
+  I minimi quadrati stimano i parametri $\beta_0, \beta_1, \beta_2$.
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{linearegression.png}
+  \end{figure}
+}
+
+\subsubsection{Metodi non parametrici}
+
+L'idea è di non fare assunzioni su $f(\bullet)$.
+Si cerca di fittare $f(\bullet)$ il più possibile sui dati di allenamento.
+\begin{itemize}
+  \item \textbf{Pro:} posso approssimare i dati di allenamento molto bene (nessuna assunzione sul modello)
+  \item \textbf{Contro:} rischio di overfitting (non generalizza bene su dati mai visti prima)
+\end{itemize}
+
+\ex{}
+{
+  Piano "sottile" per estimare $f$ usando \textit{smooth spline} e \textit{rough spline}.
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{nonparam.png}
+  \end{figure}
+  Quella migliore è la smooth spline perché riesce a catturare il trend generale
+  senza overfittare i dati di training.
+}
 
 
 \end{document}
