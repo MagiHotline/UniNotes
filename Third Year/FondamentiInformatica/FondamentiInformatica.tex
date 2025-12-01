@@ -2721,4 +2721,336 @@ $f$ per ottenere $f'$ che somma ad un valore di input il valore fisso $5$.
 Instanziamo $x$ a 5 dentro $f$, ovvero \textbf{specializziamo} $f$ a 5 per $x$. 
 Lo specializzatore ritorna un nuovo programma.
 
+\thm{}
+{
+   $\forall n,m \ge 1$ esiste una funzione totale ricorsiva $S$ tale che $\forall x, y_1, y_2, \dots, y_m \in \mathbb{N}$:
+   \[  
+    \lambda z_1 \dots z_n \; . \; \underbrace{\varphi_x}_{\text{codice}}(\overbrace{y_1, y_2, \dots, y_m}^{\text{input che specializziamo}}, \underbrace{z_1, z_2, \dots, z_n}_{\text{input che rimane incognito}}) = \varphi_{S(x,y_1,y_2,\dots,y_m)}(z_1,z_2,\dots,z_n)
+   \]
+   Quindi abbiamo una trasformazione totale $S$ del codice $x$ e considerando gli input specializzati $y_1, \dots, y_m$.
+}
+
+\begin{proof}
+  $m = n = 1$ (caso particolare ma $m,n > 1$ è analogo)
+  \[
+    \lambda z . \varphi_x(y,z)
+  \]
+  Fissiamo $x_0$ (programma) e $y_0$ (input da specializzare).
+  \[
+    \lambda z . \varphi_{x_0}(y_0,z)
+  \]
+  dove $\varphi_{x_0}$ denota la funzione calcolata della MdT il cui codice è aritmetizzato in x. Questa funzione è intuitivamente calcolabile.
+  Di conseguenza esiste una MdT che la calcola per la tesi di Church il cui codice dipende 
+  ed è costruibile ricorsivamente a partire da $x_0$ e $y_0$.
+  Quindi esiste $S$ totale ricorisivan tale che il codice è $S(x_0,y_0)$.
+  \[
+    \varphi_{S(x_0,y_0)}(z) = \lambda z . \varphi_{x_0}(y_0,z)
+  \]
+\end{proof}
+
+\subsubsection{Prima proiezione di Futamura}
+
+La proiezione di Futamura è una tecnica per ottenere un compilatore a partire 
+da un interprete e uno specializzatore.
+Dato un programma sorgente $source \in L$ esiste una trasformazione 
+di $source$ in un programma (semanticamente) equivalente $target \in L'$.
+
+
+\begin{proof}
+  Supponiamo $Int$ sia la macchina universale.
+  \[
+    Int(p, d) = P(d)
+  \]
+  Supponaniamo $spec$ sia uno specializzatore, dove $Q$ è un programma a due input
+  \[
+    spec(Q,d) = Q_d \text{ integra nel codice l'input}
+  \]
+  \[
+    target = \underbrace{spec(Int, source)}_{\text{compilatore}}
+  \]
+\end{proof}
+
+\subsubsection{Linguaggi Turing completi}
+
+  Un linguaggio di programmazione è Turing completo se
+  permette di calcolare tutte le funzioni intuitivamente calcolabili.
+  \[
+  \begin{aligned}
+    &\exists p . \varphi_p = \lambda x . 0\\
+    &\exists p . \varphi_p = \lambda x . x + 1\\
+    &\exists p . \varphi_p = \lambda x . x\\
+    &\exists p . \varphi_p = \varphi_h \circ \varphi_q \ \text{ composizione di due programmi}\\
+    &\exists p . \varphi_p = \varphi_{\text{while B}} \{Q\} \text{ minimizzazione}\\
+    &\exists p . \varphi_p (x,y) = \phi_x (y)\\
+    &\exists spec . \varphi_{spec(xy)(z)} = \lambda z . \varphi_x (y,z) \text{ specializzazione}
+  \end{aligned}
+  \]
+  Se consideriamo la primitiva ricorsione abbiamo solo cicli $for$. Un linguaggio che non permette 
+  cicli non determinati \textbf{non} è Turing completo. 
+  \[
+    \exists \; MdT \; m \; . \; L = L(M) = \{y \; | \; \varphi_m(y) \downarrow \}
+  \]
+  Quindi in linguaggi di Turing sono linguaggi accettati da una macchina di Turing.
+  $y$ sono le stringhe su cui la MdT termina.
+  Se noi abbiamo $\varphi_x$ parziale ricorsiva ovvero 
+  calcolata da una MdT dal codice $x$ allora definiamo 
+  \[
+    Dom(\varphi_x) = \{y \; | \; \varphi_x(y) \downarrow \}
+  \]
+
+\section{Teoria della ricorsione}
+
+\subsection{Insiemi ricorsivamente enumerabili}
+
+La teoria della ricorsione parla degli insiemi (linguaggi)
+caratterizzati dalle MdT. \textbf{Ricorsivamente enumerabile} 
+è un insieme di elementi (numeri) costruibili in modo algoritmico.
+\dfn{Insieme ricorsivamente enumerabile (RE)}
+{
+  Un insieme $I \subseteq \mathbb{N}$ 
+  è recorsivamente enumerabile se è il dominio di una funzione parziale ricorsiva,
+  \[
+    \exists \varphi_x \text{ parziale ricorsiva } . \; dom(\varphi_x) = I
+  \]
+}
+\noindent
+Da qui in poi useremo la notazione dove $W_x \stackrel{def}{=} dom(\varphi_x)$.
+Se abbiamo $\varphi_x$ parziale ricorsiva allora $W_x$ è ricorsivamente enumerabile.
+Se abbiamo $I \subseteq \mathbb{N}$ e riusciamo a costruire la sua  
+funzione semicaratteristica
+\[
+  \psi_I(x) = \begin{cases}
+    1 & x \in I\\
+    \uparrow & \text{altrimenti}
+  \end{cases} \implies dom (\psi_I) = I
+\]
+Per dimostrare che un insieme è ricorsivamente enumerabile 
+dobbiamo fornire l'algoritmo della semicaratteristica
+che deve terminare se l'input appartiene all'insieme.
+
+\ex{Problema della terminazione (variante)}
+{
+  \[\{x \; | \; \exists y \; . \; \varphi_x(y)\downarrow\}\]
+  Questo programma cerca di determinare i programmi che terminan 
+  su almeno un input. Si può riscrivere con il seguente insieme:
+  \[
+    \{x \; | \; \varphi_x(y)\downarrow\}
+  \]
+  \[
+    \begin{cases}
+      input(x)\\
+      stop = 0;\\
+      build \; \varphi_x \text{ esiste algoritmo ricorsivo}\\
+      \text{while } \neg \; stop \text{ do }\\
+       \quad \text{ Execute next step } \varphi_x(0)\\
+       \quad \text{if } \varphi_x(0) \downarrow \text{ then stop = 1}\\
+      \text{return 1}
+    \end{cases}
+  \]
+  La funzione è semicaratteristica perché se $\varphi_x(0)$ restituisce 1 altrimenti diverge. 
+  \[
+  I = \{x \; | \; \exists y \; . \; \varphi_x(y) \downarrow \}
+  \]
+  \[\begin{cases}
+    input(x)\\
+    y = 0\\
+    stop = 0\\
+    \text{while } \neg \; stop \text{ do }\\
+       \quad \text{ Execute next step } \varphi_x(y)\\
+       \quad \text{if } \varphi_x(0) \downarrow \text{ then stop = 1}\\
+    \text{return 1}
+  \end{cases}\]
+  Se diverge su $0$ non potrò mai testare $y > 0$ ma $\varphi_x(1)$ potrebbe terminare.
+  Questo algoritmo diverge per $x \in I$ quindi questo algoritmo NON è la semicaratteristica. 
+  \begin{itemize}
+    \item Passo 0: Esegue un passo di $\varphi_x(0)$ se $\downarrow$ allora fine, se non termino eseguiamo il passo successivo 
+    \item Passo $n+1$:  Esegue un passo di $\varphi_x(0), \varphi_x(1), \dots, \varphi_x(n)$ (se mai sono terminate prima) esegui il primo passo per $\varphi_x(n+1)$
+  \end{itemize}
+  Questo algoritmo si chiama \textbf{Dovetail}.
+  La semicaratteristica per $I$ quindi:
+  \[
+    \begin{cases}
+      input(x)\\
+      \text{costruiamo } \varphi_x \text{ (esiste una procedura ricorsiva per costruire $\varphi_x$ da $x$)}\\
+      y = 0 \text{ (serve per identicare gli input su cui abbiamo iniziato la computazione)}\\
+      stop = 0\\
+      \text{while } \neg \; stop \text{ do }\\
+         \quad \text{for } i = 0 \text{ to } y \text{ do }\\
+         \quad \quad \text{ Execute next step } \varphi_x(i)\\
+         \quad \quad \text{ if } \varphi_x(i) \downarrow \text{ then stop = 1}\\
+         \quad y = y + 1\\
+      \text{return 1}
+    \end{cases}
+  \]
+}
+
+\subsection{Insiemi ricorsivi}
+
+Esiste un algoritmo che decide se un
+elemento (numero) appartiene o meno ad un insieme.
+Nel caso degli insiemi ricorsivi, al contrario di quelli ricorsivamente enumerabili,
+è che riesco a dire sia se un elemento appartiene che se non appartiene all'insieme.
+\dfn{Insieme ricorsivo (R)}
+{
+  Un insieme $I \subseteq \mathbb{N}$ è ricorsivo se la sua \textbf{funzione caratteristica}
+  \[
+    \chi_I(x) = \begin{cases}
+      1 & x \in I\\
+      0 & x \notin I
+    \end{cases}
+  \]
+  è totale ricorsiva.
+}
+\noindent
+Per dimostrare che un insieme è ricorsivo, gli dobbiamo fornire l'algoritmo 
+che calcola la sua funzione caratteristica.
+\ex{}
+{
+  Per esempio:
+  \[
+    \{x \; | \; x \text{ è pari}\}
+  \]
+  \[
+  \begin{cases}
+    input(x)\\
+    \text{if } x \text{ mod } 2 = 0 \text{ then output(1)}\\
+    \text{else output(0)}
+  \end{cases}
+  \]
+  Quindi $f$ è la funzione caratteristica dell'insieme dei numeri pari:
+  \[
+    f(x) = \begin{cases}
+      1 & x \text{ è pari}\\
+      0 & x \text{ è dispari}
+    \end{cases}
+  \]
+}
+\ex{}
+{
+  Prendiamo l'insieme:
+  \[
+    I  = \{x \; |\;  \exists n \; . \; x = n^2\}
+  \]
+  dove 
+  \[
+    \begin{cases}
+      input(x)\\
+      n = 0\\
+      \text{while } n^2 \neq x \text{ do } \{ n = n + 1 \}\\
+      ? \text{ return 1}
+    \end{cases}
+  \]
+  Questo programma \textbf{NON} è la caratteristica perché non può essere totale.
+  \[
+    \begin{cases}
+      input(x)\\
+      n = 0\\
+      \text{while } n^2 \le x \text{ do }\\
+        \quad \text{if } n^2 = x \text{ then output(1)}\\
+        \quad n++\\
+      output(0)
+    \end{cases}
+  \]
+  Questa funzione invece è totale e 
+  \[
+    f(x) = \begin{cases}
+      1 & \text{se } \exists n \; . \; x = n^2\\
+      0 & \text{altrimenti}
+    \end{cases}
+  \]
+}
+
+\thm{}
+{
+  $A$ ricorsiva $\implies$ $A$ ricorsivamente enumerabile e
+  \[
+    \exists f_A(x) = \begin{cases}
+      1 & x \in A\\
+      0 & x \notin A
+    \end{cases}
+  \]
+  ma allora possiamo definire:
+  \[
+    \psi_A(x) = \begin{cases}
+      1 & f_A(x) = 1\\
+      \uparrow & \text{se } f_A(x) = 0
+    \end{cases}
+  \]
+  Supponiamo che $C_a$ è l'algoritmo che calcola $f_A$ 
+  \[
+  \begin{cases}
+    input(x)\\
+    y = C_a(x)\\
+    \text{if } y = 1 \text{ then output(y)}\\
+    \text{else loop infinito}
+  \end{cases}
+  \]
+  Quindi questa è la semicaratteristica di $A$.
+}
+
+\thm{Teorema di Post} 
+{
+  Un insieme $A$ è ricorsivo sse $A$ e $\bar{A}$ sono ricorsivamente enumerabili.
+}
+\begin{proof}
+  Se $A$ è ricorsiva allora $A$ è RE. 
+  Analogamente costruiamo la semicaratteristica per $\bar{A}$:
+  \[
+    f_{\bar{A}}(x) = \begin{cases}
+      1 & \text{se } f_A(x) = 0\\
+      \uparrow & \text{altrimenti}
+    \end{cases}
+  \] 
+  Siano $A$ e $\bar{A}$ RE.
+  \[
+  \psi_A(x) = \begin{cases}
+    1 & x \in A\\
+    \uparrow & \text{altrimenti}
+  \end{cases}
+  \quad
+  \psi_{\bar{A}}(x) = \begin{cases}
+    1 & x \in \bar{A}\\
+    \uparrow & \text{altrimenti}
+  \end{cases}
+  \]
+  \[
+  \begin{cases}
+    input(x)\\
+    stop = 0\\
+    \text{while } \neg \; stop \text{ do } \{\\
+      \quad \text{Execute next step } \psi_A(x)\\
+      \quad \text{if } \psi_A(x) \downarrow \text{ then } \{output(1); stop = 1\}\\
+      \quad \text{Execute next step } \psi_{\bar{A}}(x)\\
+      \quad \text{if } \psi_{\bar{A}}(x) \downarrow \text{ then } \{output(0); stop = 1\}\\
+    \}   
+  \end{cases}
+  \]
+\end{proof}
+
+\ex{Esercizio}
+{
+  \[
+    A_m = \{x \; | \; \varphi_x(x) \downarrow \text{ in meno di $m$ passi}\}
+  \]
+  È intuitivamente ricorsivo perché è dato da un input finito ovvero $m$. 
+
+  Per dimostrare che è ricorsivo basta fornire l'algoritmo della funzione caratteristica:
+  \[
+    f_{A_m}(x) = \begin{cases}
+      1 & x \in A_m\\
+      0 & x \notin A_m
+    \end{cases}
+  \]
+  \[
+    \begin{cases}
+      input(x)\\
+      \text{costruiamo } \varphi_x\\
+      \text{for } i = 1 \text{ to } m \text{ do }\\
+        \quad \text{ Execute next step } \varphi_x(x)\\
+        \quad \text{if } \varphi_x(x) \downarrow \text{ then output(1)}\\
+      output(0)
+    \end{cases}
+  \]
+}
+
 \end{document}
