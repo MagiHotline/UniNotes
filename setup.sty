@@ -4,6 +4,8 @@
 \usepackage{listings}
 \usepackage{enumitem}
 \usepackage{textcomp}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing} % for angle arc
 \usetikzlibrary{angles, quotes, calc, positioning, trees, automata} % for drawing angles
@@ -16,9 +18,9 @@
 \usepackage{setspace}
 \usepackage{cancel}
 \usepackage{amsmath}
-\usepackage{titlesec}  
+\usepackage{titlesec}
 \usepackage{lmodern}
-\usepackage{ulem}      
+\usepackage{ulem}
 \usepackage{minted}
 \usepackage{csquotes}
 \usepackage{gensymb}
@@ -27,12 +29,12 @@
 \usepackage{forest}
 \usepackage{amsthm}
 \usepackage{amssymb}
-\usepackage{fontawesome} 
+\usepackage{fontawesome}
 \usepackage{varwidth}
 \usepackage{pgfplots}
 \usepackage{lipsum}
-\usepackage{mdframed} 
-\usepackage{color}   
+\usepackage{mdframed}
+\usepackage{color}
 \usepackage{hyperref}
 \newmdtheoremenv{theo}{Theorem}
 \usepackage{mathtools}
@@ -104,7 +106,7 @@
 \newcommand{\thmref}[1]{Theorem~\ref{#1}}
 \newcommand{\lemref}[1]{Lemma~\ref{#1}}
 \newcommand{\corref}[1]{Corollary~\ref{#1}}
-\newcommand{\propref}[1]{Property~\ref{#1}} 
+\newcommand{\propref}[1]{Property~\ref{#1}}
 
 % To customize QED symbol
 \renewcommand{\qedsymbol}{$\blacksquare$}
@@ -153,21 +155,21 @@
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
 \lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},   
+    backgroundcolor=\color{backcolour},
     commentstyle=\color{codegreen},
     keywordstyle=\color{magenta},
     numberstyle=\tiny\color{codegray},
     stringstyle=\color{codepurple},
     basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
     showstringspaces=false,
-    showtabs=false,                  
+    showtabs=false,
     tabsize=2
 }
 
@@ -246,7 +248,7 @@
         arc[start angle=0,end angle=180,radius=1mm]
         ([yshift=-1mm,xshift=1mm]frame.north east)
         arc[start angle=180,end angle=0,radius=1mm];
-        
+
         \path[left color=tcbcolback!60!black, right color=tcbcolback!60!black, middle color=tcbcolback!80!black]
         ([xshift=-2mm]frame.north west) -- ([xshift=2mm]frame.north east)
         [rounded corners=1mm]-- ([xshift=1mm,yshift=-1mm]frame.north east)

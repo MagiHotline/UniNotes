@@ -3053,5 +3053,189 @@ che calcola la sua funzione caratteristica.
   \]
 
 }
+\noindent
+Cosa abbiamo visto fino ad adesso: 
+\begin{itemize}
+  \item Per dimostrare che un insieme non è ricorsivo si usa il \textbf{Teorema di Rice}
+  \item Per dimostrare che un insieme è RE si fornisce l'algoritmo che implementa la funzione semicaratteristica
+  \item Per dimostare che un insieme non è RE si usa il \textbf{Teorema di Post}
+  \[ 
+    A \text{ è RE } \iff \bar{A} \text{ è RE}
+  \]
+\end{itemize}
+
+
+\subsection{Teorema di Rice}
+
+Prima di parlare del teorema di Rice bisogna definire cosa vuol dire proprietà.
+
+\ex{}
+{
+  Proprietà di essere pari: $x$ è pari se $x$ div $2$ $=$ resto $0$:
+  \[  
+    P = \{x \; | \; x \text{ mod }  2 = 0\}
+  \]
+  Questo è l'insieme di tutti e soli numeri pari. Rappresenta in modo 
+  estensionale la proprietà di essere pari.
+  Ogni sottoinsieme di numeri rappresenta una proprietà.
+}
+\noindent
+Grazie all'Aritmetizzazione delle MdT 
+\[
+  X \subseteq \mathbb{N} \implies \text{ proprietà di programmi (MdT)}
+\]
+dove $\mathbb{N} =$ essere un programma e $\varnothing$ = non essere un programma. 
+Quante proprietà esistono? Quante i sottoinsiemi dei numeri naturali ($|\mathcal{P}(\mathbb{N}|$))ovvero \textit{non numerabili}.
+\ex{}
+{
+  \[
+    \{P \in MdT \; | \; P \text{ ha } 50 \text{ righe di codice }\}
+  \]
+  Insieme di programmi che hanno 50 righe di codice.
+  \[
+    \{P \in MdT \; | \; \forall x \in \mathbb{N} \; . \; P(x) = 5\} 
+  \]
+  Insieme di programmi che calcolano la funzione costante 5.
+  Sono due casi diversi perché 
+  \begin{itemize}
+    \item Nel primo, posso decidere se un programma ha 50 righe di codice contando le righe.
+    \item Nel secondo, non posso decidere se un programma calcola la funzione costante 5 perché
+    dovrei testare tutti gli input possibili.
+  \end{itemize}
+}
+
+\dfn{Proprietà estensionali}
+{
+  Prendiamo $\Pi \subseteq \mathbb{N}$, $\Pi$ è detto estensionale 
+  se $\forall x.y \in \mathbb{N}$:
+
+  \[
+    \varphi_x = \varphi_y \implies (x \in \Pi \iff y \in \Pi)
+  \]
+  Dove $\varphi_x$ è la funzione calcolata dalla MdT di indice $x$ (dal programma di codice).
+}
+\noindent
+Ci sono due condizioni: 
+\begin{enumerate}
+  \item Se $x$ soddisfa la proprietà $\Pi$ ($x \in \Pi$)
+  \item Se $x$ e $y$ calcolano la stessa funzione ($\varphi_x = \varphi_y$)
+\end{enumerate}
+Allora anche $y$ soddisfa la proprietà $\Pi$ ($y \in \Pi$).
+\ex{}
+{
+  Se $P \in \Pi_1$ allora $P$ ha 50 righe di codice. 
+  \[P' = P; step\]
+  $P'$ ha 51 righe di codice. 
+  $P$ e $P'$ calcolano la stessa funzione:
+  \[P \in \Pi_1 \wedge P' \notin \Pi_1\]
+  Quindi $\Pi_1$ non è estensionale.
+}
+\ex{}
+{
+  Presi $\varnothing, \mathbb{N}$ sono estensionali banali.
+  Prendiamo allora:
+  \[
+    \{x \; | \; \forall y \; . \; \varphi_x(y) = y\}
+  \]
+  prendiamo $z \in \Pi$ per definizione di $\Pi$, $\varphi_z(y) = y, \forall y$.
+  Prendiamo $w$ tale che $\varphi_w = \varphi_z$.
+  \[
+    \forall y. \varphi_w(y) = \varphi_z(y) = y \stackrel{def}{\implies} w \in \Pi
+  \]
+}
+\ex{}
+{
+  Prendiamo: 
+  \[
+    \{x \; | \; \varphi_x \text{ definitivamente } \ge 3\}
+  \]
+  Vuol dire che da un certo punto in poi, per ogni input $y$ la funzione restituisce un valore $\ge 3$.
+  Prendiamo $z \in \Pi$ dove per definizione di $\Pi$ $\varphi_z$ è definitivamente $\ge 3$ ovvero 
+  $\exists m . \forall n \ge m. \varphi_z(n) \ge 3$.
+  Prendiamo $w$ tale che $\varphi_w = \varphi_z$.
+  \[
+    \forall n \; . \; \varphi_w(n) = \varphi_z(n) \stackrel{def}{\implies} \forall n \ge m \; . \;  \varphi_w(n) = \varphi_z(n) \ge 3 \stackrel{def}{\implies} w \in \Pi
+  \]  
+}
+
+\thm{Teorema di Rice}
+{
+  Sia $\Pi$ una proprietà estensionale. 
+  $\Pi$ è ricorsiva se e solo se non è banale.
+}
+\begin{proof}
+$(\Leftarrow$)\\
+$\Pi$ è una proprietà banale $\implies \Pi = \varnothing$ o $\Pi = \mathbb{N}$ 
+sono entrambi ricorsivi. 
+\end{proof}
+\begin{proof}
+$(\Rightarrow)$ $\Pi$ è ric. $\implies$ $\Pi$ è banale\\
+Prendiamo $\Pi$ ricorsivo. 
+Vuol dire che esiste $g$ totale ricorsiva (caratteristica)
+\[
+  g(x) = \begin{cases}
+    1 & x \in \Pi\\
+    0 & x \notin \Pi
+  \end{cases}
+\]
+Supponiamo per assurdo che $\Pi$ non sia banale (ovvero $\Pi \neq \varnothing$ e $\Pi \neq \mathbb{N}$).
+Dove:
+\begin{itemize}
+  \item $\exists a \in \mathbb{N} . a \in \Pi \equiv \Pi \neq \varnothing$
+  \item $\exists b \in \mathbb{N} . b \notin \Pi \neq \mathbb{N}$
+\end{itemize}
+Costruiamo $h: \mathbb{N} \rightarrow \mathbb{N}$ totale ricorsiva:
+\[
+  h(x) = \begin{cases}
+    a & \text{se } g(x) = 0 \; (x \notin \Pi)\\
+    b & \text{se } g(x) = 1 \; (x \in \Pi)
+  \end{cases}
+\]
+Per il teorema di ricorsione di Kleene, allora $h$ totale ricorsiva poiché $g$ è totale ricorsiva.
+Il teorema di Kleene diceva:
+\[
+  \exists n_0 . \varphi_{n_0} = h(n_0)
+\]
+Ci domandiamo dove sia $n_0$ rispetto a $\Pi$:
+Se $n_0 \in \Pi$ ($\varphi_{n_0} = \varphi_{h(n_0)}$) $\Pi$ 
+è estensionale quindi: 
+\[
+  h_{n_0} \in \Pi 
+\] 
+ma $h(n_0) = b \notin \Pi$ perché $n_0 \in \Pi$.
+Se $n_0 \implies h(n_0) \notin \Pi$ sempre per estensionalità 
+ma $h(n_0) = a \in \Pi$ perché $n_0 \notin \Pi$.
+Quindi $\Pi$ deve essere $\varnothing$ o $\mathbb{N}$. $\quad \quad \square$  
+\end{proof}
+\ex{Alcuni esempi}
+{
+  Supponiamo di prendere le seguenti proprietà: 
+  \[
+    \{x \; | \; \forall y. \varphi_x(y) \downarrow \}
+  \] 
+  è estensionale perché dipende solo dalla funzione calcolata.
+  \[ 
+    \{ P \; | \; P \text{ contine elameno un ciclo while} \}
+  \]
+  Non è estensionale perché dipende dal codice.
+  \[
+    \{x \; | \; x \text{ ha dimensione } \ge 1000\} 
+  \]
+  Non è estensionale perché dipende dal codice.
+  \[ 
+    \{ P \; | \; P \text{ soddisfa confidenzialità} \}
+  \]
+  Estensionale perché dipende solo dalla funzione calcolata.
+  \[ 
+    \{ x \; | \; \varphi_x(x) \downarrow \} = K 
+  \]
+  L'insieme $K$ non è ricorsivo.
+  Prendiamo $z \in \Pi$ tale che $\varphi_z(z) \downarrow$.
+  Allora $w . \varphi_w = \varphi_z \implies \varphi_w(z) = \varphi_z(z)\downarrow$.
+  Per poter dire che $w \in \Pi$ noi dovremmo avere $\varphi_w(w) \downarrow$.
+  Quindi $\Pi$ \textbf{NON} è estensionale.
+}
+
+
 
 \end{document}

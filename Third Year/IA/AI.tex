@@ -1572,4 +1572,174 @@ Si cerca di fittare $f(\bullet)$ il più possibile sui dati di allenamento.
   senza overfittare i dati di training.
 }
 
+\section{Machine Learning}
+
+\subsection{Transformer: neural network + attention}
+
+L'\textit{attention} è un meccanismo che permette 
+al modello di focalizzarsi su parti specifiche dell'input
+quando genera l'output.
+
+
+\subsection{Reinforcement Learning}
+
+Reinforcement learning: impara come mappare situazioni ad azioni 
+così da poter massimizzare una ricompensa numerica cumulativa.
+I concetti chiave dei RL sono: 
+\begin{itemize}
+  \item Trial and error mentre interagisce con l'ambiente
+  \item Reward "in ritardo" (le azioni hanno effetto nel futuro)
+\end{itemize}
+Essenzialmente, dobbiamo stimare il valore a lungo termine 
+di $V(s)$ e trovare $\pi(s)$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{RL.png}
+\end{figure}
+
+\subsubsection{Relazioni con gli MDP}
+
+Guidare una MDP senza sapere le dinamiche:
+\begin{itemize}
+  \item Non conosce quali sono gli stati buoni/cattivi (no $R(s,a,s')$)
+  \item Non sa a cosa portano le azioni (no $T(s,a,s')$)
+  \item Quindi dobbiamo provare azioni/stati e ottenere le ricompense
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{recyclingbot.png}
+  \caption{Esempio di un robot che impara a riciclare}
+\end{figure}
+
+\subsubsection{Come usare un modello?}
+
+Ci sono due approcci:
+\begin{itemize}
+  \item \textbf{Metodi Model-based} metodi per provare ad imparare il modello:
+  \begin{itemize}
+    \item evitare di ripetere stati e azioni "cattivi"
+    \item meno passi di esucuzione 
+    \item uso efficiente dei dati
+  \end{itemize}
+  \item \textbf{Metodi Model-free}  per impare la $Q$-funzione e la policy direttamente:
+  \begin{itemize}
+    \item Semplicità, nessun bisogno di costruire ed usare un modello 
+    \item nessun bias nella progettazione del modello
+  \end{itemize}
+\end{itemize}
+
+\ex{Età attesa, Model Based vs Model Free }
+{
+  Obiettivo: calcolare l'eta attesa per questa classe.
+Data la distribuzione di probabilità dell'età:
+\[
+  E[A] = \sum_a a \cdot P(a)
+\]
+\begin{itemize}
+  \item \textbf{Model based}: stima $\hat{P}(a)$.
+  \begin{itemize}
+    \item $\hat{P}(a) = \frac{num(a)}{N}$
+    \item $E[A] = \sum_a a \cdot \hat{P}(a)$
+    \item dove $num(a)$ è il numero di studenti con età $a$ e $N$ è il numero totale di studenti
+    \item Funziona perché abbiamo imparato il modello corretto 
+  \end{itemize}
+  \item \textbf{Model free:} nessuna stima
+  \begin{itemize}
+    \item $E[A] \approx \frac{1}{N} \sum_{i=1}^{N} a_i$
+    \item dove $a_i$ è l'età dello studente $i$
+    \item funziona perché ogni campoione appare con la giusta frequenza
+  \end{itemize}
+\end{itemize}
+\noindent
+L'idea generale: 
+\begin{itemize}
+  \item Stima $P(x)$ dai campioni.
+  \begin{itemize}
+    \item Ottieni campioni $x_i \tilde P(x)$
+    \item Stima $\hat{P}(x) = count(x) / k$
+  \end{itemize}
+  \item Stima $\hat{T}(s,a,s')$ dai campioni:
+  \begin{itemize}
+    \item Ottieni i campioni $s_0, a_0, s_1, a_1, \dots, s_k$
+    \item Stima $\hat{T}(s,a,s') = count(s,a,s') / count(s,a)$
+    \item Funziona perché i campioni appaiono con la giusta frequenza 
+  \end{itemize}
+\end{itemize}
+}
+
+\ex{Imparare il modello per il robot che ricicla}
+{
+  Guardate l'immagine del robot che ricicla e dati i seguenti epsiodi di apprendimento:
+  \[ 
+    \begin{aligned}
+      E_1 &: (L,R,H,0), (H,S,H,10), (H,S,L,10) \\
+      E_2 &:  (L,R,H,0), (H,S,L,10), (L,R,H,10)\\
+      E_3 &: (H,S,L,0), (L,R,H,10), (H,S,L,10) \\
+    \end{aligned}
+  \]
+  Stima $T(s,a,s')$ e $R(s,a,s')$.
+  Se voglio stimare $T(L,R,H)$:
+  \[
+    T(L,R,H) = \frac{count(L,R,H)}{count(L,R)} = \frac{3}{4} = 0.75
+  \]
+  Mentre se voglio stimare i reward $R(L,R,H)$:
+  \[
+    R(L,R,H) = \frac{r_1 + r_2 + r_3}{count(L,R,H)} = \frac{0 + 10 + 10}{3} = \frac{20}{3} \approx 6.67
+  \]
+}
+\noindent
+
+\subsubsection{Metodi Model-based}
+
+Il seguente, è un algoritmo model-based per RL:
+
+\begin{figure}[H] 
+  \centering
+  \begin{minipage}{0.8\textwidth} % Optional: controls the width of the algorithm
+      \begin{algorithm}[H] % [H] also works inside the algorithm environment
+          \caption{Model Based approach to RL}
+          \begin{algorithmic}[1]
+              \REQUIRE $A, S, S_0$
+              \ENSURE $\hat{T}, \hat{R}, \hat{\pi}$
+              \STATE Initialize $\hat{T}, \hat{R}, \hat{\pi}$
+              \REPEAT
+                  \STATE Execute $\hat{\pi}$ for a learning episode
+                  \STATE Acquire a sequence of tuples $\langle s, a, s', r \rangle$
+                  \STATE Update $\hat{T}$ and $\hat{R}$ according to tuples $\langle s, a, s', r \rangle$
+                  \STATE Given current dynamics, compute a policy $\hat{\pi}$ (e.g., VI or PI)
+              \UNTIL{termination condition is met}
+          \end{algorithmic}
+      \end{algorithm}
+  \end{minipage}
+\end{figure}
+
+\subsubsection{Model-free Reinforcement Learning}
+
+\begin{itemize}
+  \item Vogliamo calcolare il peso atteso da $P(x)$
+  \[  
+    E[f(x)] = \sum_x f(x) \cdot P(x)
+  \]
+  \item Stima Model-based $P(x)$ dai campioni e poi calcolare:
+  \[ 
+    x_i \tilde P(x), \hat{P}(x) = num(x)/N, E[f(x)] \approx \sum_x f(x) \cdot \hat{P}(x)
+  \]
+  \item Stima model-free lo fa direttamente sui campioni:
+  \[
+    x_i \tilde P(x), E[f(x)] \approx \frac{1}{N} \sum_{i=1}^{N} f(x_i)
+  \]
+\end{itemize}
+\noindent
+Obiettivo: calcolare il valore della funzione data una policy $\pi$
+\begin{itemize}
+  \item Media di tutti i campioni osservati
+  \item Esegui $\pi$ per alcuni episodi di apprendimento
+  \item Calcola la somma delle ricompense (scontate) ogni volta che uno stato viene visitato
+  \item Calcola la media sui campioni raccolti
+\end{itemize}
+
+
+
 \end{document}
