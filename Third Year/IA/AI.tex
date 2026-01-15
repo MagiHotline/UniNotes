@@ -1739,6 +1739,210 @@ Obiettivo: calcolare il valore della funzione data una policy $\pi$
   \item Calcola la somma delle ricompense (scontate) ogni volta che uno stato viene visitato
   \item Calcola la media sui campioni raccolti
 \end{itemize}
+\noindent
+TD learning for control: 
+\begin{itemize}
+  \item TD da una valutazione basata sui campioni data una policy $\pi$
+  \item Vogliamo calcolare la policy basata su $V(s)$
+  \item Non posso direttamente usare $V$ per calcolare $\pi$:
+  \begin{itemize}
+    \item $\pi(s) = arg \; max_a Q(s,a)$
+    \item $Q(s,a) = \sum_{s'} T(s,a,s')[R(s,a,s') + \gamma V(s')]$
+  \end{itemize}
+  \item Idea chiave: possiamo imparare i $Q-values$ direttamente!
+\end{itemize}
+
+\subsubsection{Q-Learning}
+
+Q-Learning è un metodo di RL a modello libero per imparare la funzione $Q(s,a)$.
+\begin{itemize}
+  \item Q-learning: Iterazione Q-value basata su campioni
+  \item Value iteration:
+  \[ 
+    V_{k+1} = max_a \Sigma_{s'} T(s,a,s')[R(s,a,s') + \gamma V_k(s')]
+  \]
+  \[  
+    Q_{k+1} = \Sigma_{s'} T(s,a,s')[R(s,a,s') + \gamma max_{a'} Q_k(s',a')]
+  \]
+  Questa equazione trova iterativamente il valore ottimo di $Q$.
+\end{itemize}
+Ma come funziona questa iterazione?
+\begin{itemize}
+  \item Calcola l'aspettativa basata sui campioni: $\mathbb{E}(f(x)) = \frac{1}{N} \sum_{i=1}^{N} f(x_i)$
+  \item I nostri campioni: $R(s,a,s') + \gamma max_{a'} Q_k(s',a')$
+  \item Imparo $Q(s,a)$ valori durante l'esecuzione:
+  \begin{itemize}
+    \item Ricevi il campione: $(s,a,s',r)$
+    \item Considero il mio vecchio stimato $Q(s,a)$
+    \item Considero il nuovo campione: $R(s,a,s') + \gamma max_{a'} Q(s',a')$
+    \item Incoporo il nuovo stimato nella media usando un \textbf{tasso di apprendimento} $\alpha$:
+    \[ 
+      Q(s,a) \leftarrow (1 - \alpha) Q(s,a) + \alpha [r + \gamma max_{a'} Q(s',a')]
+    \]
+    Il tasso di apprendimento $\alpha$ controlla quanto peso dare al nuovo campione e quanto al vecchio stimato.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Proprietà del Q-learning}
+
+Il Q-learning converge ad una policy ottimale se:
+
+\begin{itemize}
+  \item Esplori abbastanza 
+  \item Se rendi il tasso di apprendimento $\alpha$ abbastanza piccolo col tempo (ma che non decresca troppo velocemente)
+  \item $\alpha = \frac{1}{n(s,a)}$ dove $n(s,a)$ è il numero di visite per $(s,a)$
+  \item La selezione delle scelte non impatta sulla convergenza: \textbf{off-policy learning} impara la policy ottimale senza seguirla.
+  \item \textbf{MA} per garantire la convergenza devi visitare ogni coppia $(s,a)$ un numero infinito di volte.
+\end{itemize}
+
+\begin{figure}[H] 
+  \centering
+  \begin{minipage}{0.8\textwidth} % Optional: controls the width of the algorithm
+      \begin{algorithm}[H] % [H] also works inside the algorithm environment
+          \caption{Q-learning}
+          \begin{algorithmic}[2]
+              \STATE INITIALIZE $Q(s,a)$ arbitrarily for all $s \in S, a \in A(s)$
+              \REPEAT 
+                \STATE INITIALIZE $s$
+                \REPEAT
+                  \STATE CHOOSE $a$ from $s$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
+                  \STATE TAKE action $a$, OBSERVE $r, s'$
+                  \STATE UPDATE $Q(s,a) \leftarrow (1 - \alpha) Q(s,a) + \alpha [r + \gamma max_{a'} Q(s',a')]$
+                  \STATE $s \leftarrow s'$
+                \UNTIL{$s$ is terminal}
+              \UNTIL{per ogni episodio}
+          \end{algorithmic}
+      \end{algorithm}
+  \end{minipage}
+\end{figure}
+\noindent
+Scegliamo l'azione A in base a diversi algoritmi tra cui $\epsilon$-greedy: Scegli la migliore azione la maggior parte delle
+volte, ma ogni tanto (con probabilità $\epsilon$) 
+scegli un'azione a caso per esplorare nuove azioni (con uguale probabilità).
+
+\begin{figure}[H] 
+  \centering
+  \begin{minipage}{0.8\textwidth} % Optional: controls the width of the algorithm
+      \begin{algorithm}[H] % [H] also works inside the algorithm environment
+          \caption{Q-learning con SARSA}
+          \begin{algorithmic}[3]
+              \STATE INITIALIZE $Q(s,a)$ arbitrarily for all $s \in S, a \in A(s)$
+              \REPEAT 
+                \STATE INITIALIZE $s$
+                \STATE CHOOSE $a$ from $s$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
+                \REPEAT
+                  \STATE TAKE action $a$, OBSERVE $r, s'$
+                  \STATE CHOOSE $a'$ from $s'$ using policy derived from $Q$ (e.g., $\epsilon$-greedy)
+                  \STATE UPDATE
+                  $
+                    Q(s,a) \leftarrow (1 - \alpha) Q(s,a) + \alpha [r + \gamma max_{a'} Q(s',a')]
+                  $
+                  \STATE $s \leftarrow s'$
+                  \STATE $a \leftarrow a'$
+                \UNTIL{$s$ is terminal}
+              \UNTIL{per ogni episodio}
+          \end{algorithmic}
+      \end{algorithm}
+  \end{minipage}
+\end{figure}
+SARSA deriva dalla tupla $(s,a,r,s',a')$:
+\begin{itemize}
+  \item Caratterizzata dal fatto che calcoliamo la prossima azione basata sulla policy 
+  \item Se la policy converge (nel limite) con la policy greedy (ed ogni coppia è stata visitata abbastanza)
+  $SARSA$ converge alla policy ottimale.
+\end{itemize}
+Q-learning impara la policy ottimale ma occasionalmente fallisce a causa della selezione delle azioni 
+di $\epsilon$-greedy.
+SARSA, essendo $on-policy$ ha prestazioni $on-line$ migliori.
+
+\subsubsection{Exploration vs Exploitation}
+
+Un problema fondamentale nel reinforcement learning è il trade-off tra
+\begin{itemize}
+  \item \textbf{Exploration:} provare nuove azioni per scoprire il loro valore
+  \item \textbf{Exploitation:} usare le azioni che si pensa abbiano il valore più alto
+\end{itemize}
+La scelta diepnde dal contesto e dall'obiettivo dell'agente.
+Ci sono due approcci principali:
+\begin{itemize}
+  \item \textbf{Epsilon-greedy:} con probabilità $\epsilon$ scegli un'azione a caso (exploration),
+  altrimenti scegli l'azione con il valore più alto (exploitation).
+  \item \textbf{Softmax:} assegna una probabilità a ogni azione basata sui suoi valori stimati,
+  quindi scegli un'azione in base a queste probabilità.
+  La probabilità di scegliere un'azione $a$ in stato $s$ è data da:
+  \[
+    P(a|s) = \frac{e^{Q(s,a)/\tau}}{\sum_{a'} e^{Q(s,a')/\tau}}
+  \]
+  dove $\tau$ è la temperatura che controlla il livello di exploration.
+  Se $\tau$ è alta le azioni hanno probabilità simili (più exploration),
+  se $\tau$ è bassa l'azione con il valore più alto ha probabilità maggiore (più exploitation).
+\end{itemize}
+
+\subsubsection{Funzioni di esplorazione}
+
+L'idea è quella di aggiungere un bonus di esplorazione al valore stimato di un'azione
+per incentivare l'esplorazione di azioni meno visitate.
+Considera un estimato $u$ e visita $n$ volte e calcola $f(u,n) = u + \frac{k}{n}$:
+\begin{itemize}
+  \item Aggiornamento regolare: $Q(s,a) \leftarrow (1 - \alpha) Q(s,a) + \alpha [r + \gamma max_{a'} Q(s',a')]$
+  \item Aggiornamento modificato: $Q(s,a) \leftarrow (1 - \alpha) Q(s,a) + \alpha [r + \gamma max_{a'} f(Q(s',a'), N(s,a))]]$
+  \item Dove $N(s,a)$ è il numero di volte che l'azione $a$ è stata scelta nello stato $s$.
+  \item $k$ è un parametro fissato
+\end{itemize}
+
+\subsection{Deep Reinforcement Learning}
+
+Per molti problemi reali non possiamo esplicitamente 
+rappresentare funzioni chiave con reinforcement learning (es. $Q(s,a)$, $\pi(s)$, $V(s)$)
+Per risolvere questo problema possiamo usare:
+\begin{itemize}
+  \item Approssimazione lineare
+  \item Approssimazione tramite rete neurale (Deep RL)
+  \item Approssimazione con Deep Q-Networks (DQN)
+\end{itemize}
+
+\subsubsection{Gradient Q-Learning}
+
+Peer approssimare $Q(s,a)$ con una rete parametrica $Q_w(s,a)$ si
+può usare il gradiente per aggiornare i pesi $w$:
+\begin{itemize}
+  \item Stima $Q(s,a)$ con $Q_w(s,a)$
+  \item Target per Q-learning: $y = r(s,a,s') + \gamma max_{a'} Q_w(s',a')$
+  \item Errore quadrato:
+  \[
+    E(w) = (Q_w(s,a) - r(s,a,s') - \gamma max_{a'} Q_w(s',a'))^2
+  \]
+  \item Gradiente:
+  \[
+    \frac{\partial E(w)}{\partial w} = 2 (Q_w(s,a) - r(s,a,s') - \gamma max_{a'} Q_w(s',a')) \cdot \frac{\partial Q_w(s,a)}{\partial w}
+  \]
+  Il valore scalare $2$ è un fattore costante e non è importante per l'update.
+\end{itemize}
+
+\begin{figure}[H] 
+  \centering
+  \begin{minipage}{0.8\textwidth} % Optional: controls the width of the algorithm
+      \begin{algorithm}[H] % [H] also works inside the algorithm environment
+          \caption{Gradient Q-Learning}
+          \begin{algorithmic}[4]
+
+              \STATE Initiliaze weights $w$ arbitrarily
+              \STATE INITIALIZE $s$ (osserva stato corrente)
+
+              \LOOP 
+                  \STATE SELECT and EXECUTE actiona $a$
+                  \STATE OBSERVE new state $s'$ receive immediate reward $r$
+                  \STATE COMPUTE target: $y = r + \gamma max_{a'} Q_w(s',a')$
+                  \STATE UPDATE weights:
+                  $
+                    w \leftarrow w - \alpha (Q_w(s,a) - y) \cdot \nabla_w Q_w(s,a)
+                  $
+                  \STATE $s \leftarrow s'$
+              \ENDLOOP
+          \end{algorithmic}
+      \end{algorithm}
+  \end{minipage}
+\end{figure}
 
 
 
