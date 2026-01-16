@@ -24,6 +24,43 @@
 
 \section{Grammatiche CF}
 
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 1.25}]
+    Dimostrare che il seguente linguaggio sia context-free:
+    \[
+        L = \{0^n1^m0^{n+m} \; | \; n,m \in \mathbb{N}\}
+    \]
+    \end{tcolorbox}
+\textbf{Soluzione: }
+
+\begin{proof}
+Dimostriamo la seconda tesi per induzione su $n$.
+\\
+\textbf{Base:} Sia $n=2$. L'unica derivazione di lunghezza 2 è $S \rightarrow A \rightarrow \varepsilon$ dove 
+$\varepsilon \in L$.
+\\
+\textbf{Passo induttivo:} Supponiamo che la tesi sia vera per ogni derivazione di lunghezza minore o uguale a $n$.
+\[
+    \forall k \in \mathbb{N} \; . \; k \le n : S \Rightarrow_{k} x \implies x \in L \; con \; x = 0^i1^j0^{i+j} \; con \; i,j \ge 0
+\]
+Scomponiamo la derivazione a partire dalle prime produzioni.
+Dimostriamo che vale per S $\Rightarrow_{n+1} x$ con $x \in \{0,1\}^{\ast}$.
+L'ultima produzione sarà sicuramente $A \rightarrow \varepsilon$ ovvero:
+\[
+    \text{[COND 1]} \quad S \Rightarrow_{n+1} x \equiv \overbrace{S \Rightarrow_{n} yAz \rightarrow y\varepsilon z}^{n+1} = yz = x
+\]
+Osservando $COND 1$ notiamoc he per come è fatta la grammatica $y$ e $z$ possono essere scritte come:
+\begin{itemize}
+    \item $y = 0^h1^k$ e $z = 0^l$ con $h,k,l \ge 0$ 
+    \[
+        S \Rightarrow_{n} yAz \equiv S \Rightarrow_{n-1} \hat{y}A\hat{z} \rightarrow \hat{y}10\hat{z} = yz
+    \]
+    \item $y = 0^h$ e $z = 0^l$ con $h,l \ge 0$
+\end{itemize}
+Consideriamo il primo caso. Allora possiamo prendere la de
+
+
+\end{proof}
+
 \begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 1.18}]
 Dimostrare che il seguente linguaggio sia context-free:
 \[

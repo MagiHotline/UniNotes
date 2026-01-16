@@ -3236,6 +3236,1025 @@ Quindi $\Pi$ deve essere $\varnothing$ o $\mathbb{N}$. $\quad \quad \square$
   Quindi $\Pi$ \textbf{NON} è estensionale.
 }
 
+\subsection{Dimostrare che un insieme è ricorsivamente enumerabile}
+Per dimostrare che un insieme è RE si fornisce l'algoritmo che implementa la
+funzione semicaratteristica.
+
+\subsection{Dimostrare che un insieme non è ricorsivamente enumerabile}
+Per dimostrare che un insieme non è RE si usa il \textbf{teorema di Post}
+\[
+  A \text{ è ricorsivo } \iff A \wedge \bar{A} \text{ sono RE}
+\] 
+
+\subsection{Riducibilità funzionale}
+Si usa per "ridurre" un problema sconosciuto ad un problema noto.
+L'inclusione insiemistica non permette di ereditare proprietà di ricorsione, ad
+esempio:
+\[
+  \underset{RIC}{\varnothing} \subseteq \underset{RE}{K} \subseteq \underset{RIC}{\mathbb{N}}
+\] 
+
+\vspace{1em}
+\noindent
+Consideriamo un insieme \( A \) di cui non conosciamo la ricorsività e un
+insieme \( B \) con ricorsività nota (ad esempio \( B \) ricorsivo). Allora:
+\[
+  \exists f_B(x) =
+  \begin{cases}
+    1 & \text{se } x \in B \\
+    0 & \text{se } x \notin B
+  \end{cases}
+\] 
+Se si riesce a prendere un elemento \( x \in A \) e trasformarlo in un elemento
+di B \( h(x) \in B \), allora si può prendere l'elemento \( h(x) \) e calcolare
+\( f_B(h(x)) \) per sapere se \( x \in A \):
+\[
+   x \leadsto h(x) \leadsto f_B(h(x)) =
+  \begin{cases}
+    1 & \text{se } h(x) \in B \implies x \in A \\
+    0 & \text{se } h(x) \notin B \implies x \notin A
+  \end{cases}
+\] 
+La riducibilità funzionale da \( A \) a \( B \) è definita come
+la funzione \textbf{totale} \( h: \mathbb{N} \to \mathbb{N} \) tale che
+\( x \in A \iff h(x) \in B \):
+\[
+  \implies (B \text{ ricorsivo } \implies A \text{ ricorsivo})
+\] 
+Quindi \( f \circ h \) è la funzione caratteristica di \( A \) e
+quindi \( A \) è ricorsivo.
+
+\begin{definition}
+  Siano \( A, B \subseteq \mathbb{N} \). \( A \) si \textbf{si riduce} (funzionalmente)
+  a \( B \) (denotato \( A \preceq_f B \)) se esiste \( f: \mathbb{N} \to \mathbb{N} \) 
+  \textbf{totale ricorsiva} tale che:
+  \[
+    x \in A \iff f(x) \in B
+  \] 
+\end{definition}
+
+\ex{}
+{
+  Consideriamo l'insieme di
+  coppie programma-input tali che il programma \( x \) termina sull'input \( y \).
+  \[
+    \begin{aligned}
+      K_2 &= \left\{ \left. \left<x, y \right> \;\right|\; y \in W_x \right\}
+          &= \left\{ \left. \left<x, y \right> \;\right|\; \varphi_x(y) \downarrow \right\}\\
+    \end{aligned}
+  \] 
+  Ci chiediamo in che classe di ricorsività sia \( K_2 \).
+
+  \vspace{1em}
+  \noindent
+  Sappiamo che \( K_2 \subseteq \mathbb{N} \times \mathbb{N} \), e generalizzando
+  abbiamo che:
+  \[
+    x \in K \iff \left<x, x \right> \in K_2
+  \] 
+  Questa è una riduzione funzionale da \( K \) a \( K_2 \):
+  \[
+    f(x) = \lambda x. \left<x, x \right>
+  \] 
+  Quindi:
+  \[
+     x \in K \iff f(x) \in K_2 \implies k \preceq_f K_2
+  \] 
+  Siccome \( K \) è ricorsivamente enumerabile ma non ricorsivo, allora
+  se \( K_2 \) fosse ricorsivo anche \( K \) lo sarebbe, quindi \( K_2 \)
+  non è ricorsivo.
+  Possiamo costruire l'algoritmo della semicaratteristica di \( K_2 \), quindi
+  \( K_2 \) è RE non ricorsivo.
+}
+
+\subsubsection{Insieme completo}
+\dfn{}
+{
+  Un insieme \( C \in RE \) è completo se per ogni \( A \in RE \) \( A \) si riduce
+  a \( C \):
+  \[
+    \forall a \in RE \;.\; A \preceq_f C
+  \] 
+
+  \vspace{1em}
+  \noindent
+  La riducibilità funzionale è:
+  \begin{itemize}
+    \item \textbf{Transitiva}:
+      \[
+        A \preceq_f B \wedge B \preceq_f C \implies A \preceq_f C
+      \] 
+      Quindi:
+      \[
+        \begin{aligned}
+          &x \in A \iff f(x) \in B\\
+          &y \in B \iff g(y) \in C
+        \end{aligned}
+        \implies x \in A \iff g(f(x)) \in C
+      \] 
+
+    \item \textbf{Riflessiva}:
+      \[
+        A \preceq_f A
+      \]
+      Quindi:
+      \[
+        x \in A \iff x \in A
+      \] 
+      e la funzione di riduzione è l'identità:
+      \[
+        f(x) = \lambda x. x
+      \] 
+  \end{itemize}
+}
+
+\thm{}
+{
+  L'insieme \( K_2 \) è completo per la classe RE.
+
+  \vspace{1em}
+  \noindent
+  \textbf{Dimostrazione}: Sia \( A \in RE \), allora esiste un algoritmo di cui
+  \( A \) è il dominio:
+  \[
+    \exists y_0 \;.\; A = W_{y_0}
+  \] 
+  \[
+    x \in A = W_{y_0} \underset{def W_{y_0}}{\iff} \varphi_{y_0}(x) \downarrow
+    \underset{def K_2}{\iff} \left<y_0, x\right> \in K_2
+  \] 
+  Quindi la funzione di riduzione funzionale è:
+  \[
+    f_{y_0} = \lambda x. \left<y_0, x\right> \implies A \preceq_f K_2
+  \] 
+  cioè:
+  \[
+    x \in A \iff f_{y_0}(x) \in K_2
+  \] 
+  Vista la genericità di \( A \), vale per ogni insieme \( A \) in RE,
+  quindi \( K_2 \) è completo.
+}
+\vspace{1em}
+\noindent
+\begin{theorem}
+  \( K \) è completo.
+
+  \vspace{1em}
+  \noindent
+  \textbf{Dimostrazione:}
+  (\( \forall A \in RE \;.\; A \preceq_f K_2 \))
+  Siccome \( \preceq_f \) è transitiva se dimostriamo che \( K_2 \preceq_f K \)
+  allora \( K \) è completo:
+  \[
+    \forall A \;.\; A \preceq_f K_2 \preceq_f K \implies K \text{ completo}
+  \] 
+  \[
+    \left<x, y \right> \in K_2 \iff \varphi_x(y) \downarrow
+  \] 
+  Definiamo la funzione \( \psi \) con un numero di input pari agli input dell'insieme
+  di partenza più uno:
+  \[
+    \psi(x, y, z) =
+    \begin{cases}
+      1 & \text{se } \varphi_x(y) \downarrow \\
+      \uparrow & \text{altrimenti}
+    \end{cases}
+  \] 
+  Questa funzione è la caratteristica di \( K_2 \) con un input in più \( z \).
+  Esiste un algoritmo che calcola \( \psi \) e quindi \( \psi \) è parziale ricorsiva
+  e possiamo applicare il teorema smn:
+  \[
+    \exists g \text{ totale ricorsiva } \quad g: \mathbb{N} \times \mathbb{N} \to \mathbb{N}
+  \] 
+  tale che:
+  \[
+    \psi(x,y,z) = \varphi_{g(x, y)}(z)
+  \] 
+  si specializza sui primi due input. Ci chiediamo se \( g \) è una funzione di
+  riduzione funzionale da \( K_2 \) a \( K \):
+  \[
+   \left<x, y \right> \in K_2 \iff g(x, y) \in K
+  \] 
+  \[
+    \begin{aligned}
+      \left<x, y \right> \in K_2 &\underset{def K_2}{\implies} \varphi_x(y) \downarrow\\
+                                 &\underset{def \psi}{\implies} \psi(x, y, z) \downarrow\\
+                                 &\underset{smn}{\implies} \forall z \;.\; \varphi_{g(x, y)}(z) \downarrow\\
+                                 &\underset{z = g(x,y)}{\implies} \varphi_{g(x, y)}(g(x, y)) \downarrow\\
+                                 &\underset{def K}{\implies} g(x, y) \in K
+    \end{aligned}
+  \] 
+  Quindi:
+  \[
+    \begin{aligned}
+      \left<x, y \right> \notin K_2 &\underset{def K_2}{\implies} \varphi_x(y) \uparrow\\
+                                    &\underset{def \psi}{\implies} \forall z \;.\; \psi(x, y, z) \uparrow\\
+                                    &\underset{smn}{\implies} \forall z \;.\; \varphi_{g(x, y)}(z) \uparrow\\
+                                    &\underset{z = g(x,y)}{\implies} \varphi_{g(x, y)}(g(x, y)) \uparrow\\
+                                    &\underset{def K}{\implies} g(x, y) \notin K
+    \end{aligned}
+  \] 
+\end{theorem}
+
+\subsubsection{Proprietà della riducibilità funzionale}
+\begin{enumerate}
+  \item \( A \) si riduce a \( B \) se e solo se \( \bar{A} \) si riduce a \( \bar{B} \):
+    \[
+      A \preceq_f B \iff \bar{A} \preceq_f \bar{B}
+    \]
+    \[
+      x \in A \iff f(x) \in B \equiv x \notin \bar{A} \iff f(x) \notin \bar{B}
+    \] 
+
+  \item Se \( A \) si riduce a \( B \) e \( B \) è ricorsivamente enumerabile,
+    allora anche \( A \) è ricorsivamente enumerabile: 
+    \[
+      A \preceq_f B \implies \exists f: \mathbb{N} \to \mathbb{N} \text{ totale ricorsiva }
+      \;.\; x \in A \iff f(x) \in B
+    \] 
+    \[
+      B \in RE \implies \exists \psi_B(x) =
+      \begin{cases}
+        1 & \text{se } x \in B \\
+        \uparrow & \text{se } x \notin B
+      \end{cases}
+    \] 
+    Possiamo definire:
+    \[
+      \psi(x) =
+      \begin{cases}
+        1 & \text{se } f(x) \in B \\
+        \uparrow & \text{altrimenti}
+      \end{cases}
+      \underset{\text{per riduzione}}{=}
+      \begin{cases}
+        1 & \text{se } x \in A \\
+        \uparrow & \text{altrimenti}
+      \end{cases}
+    \] 
+    è parziale ricorsiva in quanto \( f \) è totale. Ci dobbiamo assicurare che diverge solo
+    quando la condizione di terminazione è falsa.
+    \( \psi  \) è la semicaratteristica di \( A \) e quindi \( A \in RE \).
+
+  \item Se \( A \) si riduce a \( B \) e \( B \) è ricorsivo,
+    allora anche \( A \) è ricorsivo:
+    \[
+      A \preceq_f B \implies \exists f: \mathbb{N} \to \mathbb{N} \text{ totale ricorsiva }
+      \;.\; x \in A \iff f(x) \in B
+    \] 
+    \[
+      B \in RIC \implies \exists f_B(x) =
+      \begin{cases}
+        1 & \text{se } x \in B \\
+        0 & \text{se } x \notin B
+      \end{cases}
+    \] 
+    Possiamo definire:
+    \[
+      h(x) =
+      \begin{cases}
+        1 & \text{se } f(x) \in B \\
+        0 & \text{se } f(x) \notin B
+      \end{cases}
+      \underset{\text{per riduzione}}{=}
+      \begin{cases}
+        1 & \text{se } x \in A \\
+        0 & \text{se } x \notin A
+      \end{cases}
+    \] 
+    è totale ricorsiva in quanto \( f \) è totale. \( h \) è la caratteristica di \( A \)
+    e quindi \( A \in RIC \).
+\end{enumerate}
+
+\subsection{Insiemi creativi}
+\begin{definition}
+  Un insieme \( I \subseteq \mathbb{N} \) è \textbf{creativo} se è \textbf{ricorsivamente
+  enumerabile} ed è il complemento di un insieme \textbf{produttivo}
+\end{definition}
+Gli insiemi creativi coincidono esattamente con gli insiemi completi, cioè \( A \) 
+è completo se:
+\[
+  \forall B \in RE \;.\; B \preceq_f A
+\] 
+
+\subsection{Insiemi produttivi}
+Il complemento di un insieme produttivo può essere:
+\begin{itemize}
+  \item Ricorsivamente enumerabile, e allora l'insieme produttivo è creativo
+  \item Non ricorsivamente enumerabile
+\end{itemize}
+Quindi:
+\[
+  A \in RE \leadsto \psi_A(x) =
+  \begin{cases}
+    1 & \text{se } x \in A \\
+    \uparrow & \text{se } x \notin A
+  \end{cases}
+\] 
+\[
+  \bar{A} \notin RE \leadsto \psi_{\bar{A}}(x) =
+  \begin{cases}
+    \uparrow & \text{se } x \in \bar{A} \\
+    1 & \text{se } x \notin \bar{A}
+  \end{cases}
+\] 
+Questa \textbf{NON} è la semicaratteristica di \( \bar{A} \) perchè diverge quando l'imput
+appartiene a \( \bar{A} \). Ma la non appartenenza a \( \bar{A} \) (\( x \in A \)) è
+\textbf{semidecidibile}, cioè esiste un algoritmo che si ferma quando l'input
+appartiene a \( A \).
+Possono esistere insiemi in cui nessuno dei due test (\( \in, \notin  \)) è semidecidibile.
+Quindi:
+\[
+  \begin{aligned}
+    A &\notin RE \implies \bar{A} \in RE \vee \bar{A} \notin RE\\
+    A &\in RE \implies \bar{A} \notin RE
+  \end{aligned}
+\] 
+\ex{}
+{
+  L'insieme:
+  \[
+    \left\{\left. x \;\right|\; W_x = \varnothing \right\}
+  \] 
+  non è ricorsivamente enumerabile, ma il suo complemento:
+  \[
+    \left\{\left. x \;\right|\; W_x \neq \varnothing \right\}
+  \] 
+  è ricorsivamente enumerabile.
+}
+
+\ex{}
+{
+  L'insieme:
+  \[
+    \left\{\left. x \;\right|\; W_x = \mathbb{N} \right\}
+  \] 
+  non è ricorsivamente enumerabile perchè:
+  \[
+    \forall n \in \mathbb{N} \;.\; \varphi_x(n) \downarrow
+  \] 
+  e anche il suo complemento:
+  \[
+    \left\{\left. x \;\right|\; W_x \neq \mathbb{N} \right\}
+  \] 
+  non è ricorsivamente enumerabile perchè:
+  \[
+    \exists y \in \mathbb{N} \;.\; \varphi_x(y) \uparrow
+  \] 
+}
+
+\dfn{}
+{
+  L'insieme \( A \subseteq \mathbb{N} \) è \textbf{produttivo} se esiste una
+  funzione \textbf{totale ricorsiva} tale che:
+  \[
+    \forall x \in \mathbb{N} \;.\; \left( W_x \subseteq A \implies f(x) \in A \setminus W_x \right) 
+  \] 
+  Per qualunque tentativo di enumerare gli elementi di \( A \) con un algoritmo
+  \( \varphi_x \), la funzione \( f \) trasforma \( x \in A \) in un elemento
+  non enumerato da \( W_x \).
+}
+Quindi:
+\[
+  \begin{aligned}
+    A \text{ produttivo } &\implies \bar{A} \text{ produttivo} \vee \bar{A} \text{ creativo}\\
+    A \text{ creativo } &\implies \bar{A} \text{ produttivo }
+  \end{aligned}
+\] 
+L'insieme \( K \) è creativo, quindi il suo complemento \( \bar{K} \) è produttivo.
+
+\subsubsection{Insieme \texorpdfstring{\( \bar{K} \)}{K} produttivo}
+Per dimostrare che un insieme è produttivo bisogna costruire la funzione
+\( f \) che soddisfa la definizione di insieme produttivo. Per dimostrare
+che \( \bar{K} \) è produttivo consideriamo la funzione identità:
+\[
+  \begin{aligned}
+    f &= id\\
+    f(x) &= x
+  \end{aligned}
+\] 
+\textbf{Dimostrazione}: dimostriamo che \( \bar{k} \) è produttivo con \( f = id \).
+Prendiamo \( x \in \mathbb{N} \), prendiamo \( W_x \) supponendo che \( W_x \subseteq \bar{K} \),
+cioè esiste almeno un tale \( W_x \) perchè \( A \) non può essere vuoto.
+Sapendo che \( f(x) = x \), allora \( \varphi_x(x) \) può terminare?
+No perchè per definizione \( x \in W_x  \), quindi:
+\[
+  \begin{aligned}
+    x &\in W_x \subseteq \bar{K}\\
+      &\implies x \in \bar{K} \text{ ovvero } \varphi_x(x) \uparrow\\
+      &\implies x \in \bar{K} \land x \notin W_x \implies x \in \bar{K} \setminus W_x\\
+      &\implies \text{ per def. } \bar{K} \text{ è produttivo}
+  \end{aligned}
+\] 
+
+\vspace{1em}
+\noindent
+Per definizione di insieme creativo (\( A \) è creativo se \( A \in RE \) e
+\( \bar{A} \) è produttivo)
+abbiamo dimostrato che \( K \in RE \) e anche che \( K \) è il complemento
+di \( \bar{K} \) che è produttivo, quindi \( K \) è \textbf{creativo}. 
+
+\thm{Teorema di Myhill}
+{
+  L'insieme \( A \) è creativo se e solo se \( A \) è completo, cioè:
+  \[
+    A \text{ creativo } \iff \forall B \in RE \;.\; B \preceq_f A
+  \] 
+
+  \vspace{1em}
+  \noindent
+  \textbf{Dimostrazione}:
+  \begin{itemize}
+    \item \( \Leftarrow \):\\
+      Sia \( A \) completo (di conseguenza anche \( RE \)), allora per definizione di completezza:
+      \[
+        \forall B \in RE \;.\; B \preceq_f A
+      \] 
+      Essnedo \( A \) completo, si ha che:
+      \[
+        K \in RE \implies K \preceq_f A \underset{prop.\;riduzione}{\iff}
+        \bar{K} \preceq_f \bar{A}
+      \] 
+      \[
+        \bar{K} \text{ produttivo} \implies \bar{A} \text{ produttivo} \quad \text{ (Per il teorema \ref{thm:produttivo}.1)}
+      \] 
+      Quindi se \( A \) è, cioè se \( A \) è \( RE \) e \( \bar{A} \) è produttivo, allora
+      \( A \) è creativo.
+
+    \item \( \Rightarrow \): Non dimostrato in questo corso.
+  \end{itemize}
+}
+
+\thm{}
+{
+  Siano \( A, B \subseteq \mathbb{N} \) allora: 
+  \begin{enumerate}
+    \item  Se \( A \) è produttivo e \( A \preceq_f B \),
+      allora \( B \) è produttivo.
+
+    \item Se \( A \) è creativo, \( A \preceq_f B \) e \( B \in RE \),
+      allora \( B \) è creativo. Dimostrare la sola riduzione non è sufficiente
+      per ereditare la proprietà di creatività.
+      \[
+        k \preceq_f A \equiv \bar{K} \preceq_f \bar{A}
+      \] 
+      e si ha che:
+      \begin{itemize}
+        \item \( \bar{K} \preceq_f \bar{A} \implies \bar{A} \text{ produttivo} \)
+        \item \( K \preceq_f A \) e:
+          \begin{itemize}
+            \item Se \( A \) è \( RE \), allora \( A \) è creativo
+            \item Se \( A \) non è \( Re \), allora \( \bar{K} \preceq_f A \) e
+              \( A \) è produttivo
+          \end{itemize}
+      \end{itemize}
+  \end{enumerate}
+
+  \vspace{1em}
+  \noindent
+  \textbf{Dimostrazione}:
+  \begin{enumerate}
+    \item Sia \( A \) produttivo, allora:
+      \[
+        \exists f_A \;.\; \forall x \; W_x \subseteq A \implies f_A(x) \in A \setminus W_x
+      \] 
+      \[
+        A \preceq_f B \quad \exists f \;.\; x \in A \iff f(x) \in B
+      \] 
+      \[
+        \psi(xy) =
+        \begin{cases}
+          1 & \text{se } f(y) \in W_x\\
+          \uparrow & \text{altrimenti}
+        \end{cases}
+      \] 
+      Questa è una condizione semidecidibile, quindi \( \psi(xy) \) è parziale ricorsiva
+      perchè diverge \textbf{solo} quando la condizione è falsa. Di conseguenza si
+      può applicare il teorema smn:
+      \[
+        \exists g \text{ totale ricorsiva } \;.\; \psi(xy) = \varphi_{g(x)}(y)
+      \] 
+
+      \vspace{1em}
+      \noindent
+      Per dimostrare che \( B \) è produttivo dobbiamo definire \( f' \) tale
+      che:
+      \[
+        W_x \subseteq B \implies f'(x) \in B \setminus W_x
+      \] 
+      \begin{itemize}
+        \item 
+          Prendiamo \( W_{g(x)} \subseteq A \) e applichiamo la funzione \( f_A \):
+          \[
+            f_A(g(x)) \in A \setminus W_{g(x)} \text{ (per produttività di A)}
+          \] 
+
+        \item Prendiamo \( W_x \subseteq B \) e applichiamo la funzione di riduzione \( f \) a
+          \( f_A(g(x)) \). La funzione \( f \) mappa elementi da \( A \) a \( B \)
+          e bisogna capire se il risultato appartiene a \( B \setminus W_x \)
+          o a \( W_x \).
+
+          Supponiamo (per assurdo) che \( f(f_A(g(x))) \in W_x \), allora:
+          \[
+            \begin{aligned}
+              f(f_A(g(x))) \in W_x &\underset{def\; \psi}{\implies} \psi(x, f_A(g(x))) = 1\\
+                                   &\underset{smn}{\implies} \varphi_{g(x)}(f_A(g(x))) = \downarrow\\
+                                   &\underset{def\; W_{g(x)}}{\implies} f_A(g(x)) \in W_{g(x)} \text{ Assurdo}
+            \end{aligned}
+          \] 
+          Quindi:
+          \[
+            f(f_A(g(x))) \in B \setminus W_x \implies B \text{ è produttivo con }
+            f' = f \circ f_A \circ g
+          \] 
+      \end{itemize}
+
+    \item A è creativo solo se \( \bar{A} \) è produttivo e \( RE \):
+      \[
+        A \text{ creativo} \iff \bar{A} \text{ produttivo } \land \bar{A} \in RE
+      \] 
+       e 
+      \[
+        A \preceq_f B \implies \bar{A} \preceq_f \bar{B}
+      \] 
+      Di conseguenza \( \bar{B} \) è produttivo e anche \( RE \), quindi \textbf{è creativo}.
+  \end{enumerate}
+}
+
+\thm{}
+{
+  Se \( A \) è produttivo, allora \( A \notin RE \).
+
+  \vspace{1em}
+  \noindent
+  \textbf{Dimostrazione}: Supponiamo (per assurdo) che \( A \in RE \) e sia
+  \( f \) la funzione di produttività di \( A \):
+  \[
+    \exists f \;.\; W_x \subseteq A \implies f(x) \in A \setminus W_x
+  \] 
+  Per definizione di \( A \in RE \):
+  \[
+    \begin{aligned}
+      \exists u \in \mathbb{N} \;.\; A = W_u &\implies W_u \subseteq A \\
+                                             &\underset{\text{def produttività}}{\implies} f(u) \in A \setminus W_u = \varnothing \text{ Assurdo}
+    \end{aligned}
+  \] 
+}
+
+\subsection{Riassunto di classificazione degli insiemi}
+\subsubsection{Insiemi ricorsivi}
+L'unico modo per dimostrare che un insieme è ricorsivo è:
+\begin{itemize}
+  \item Dimostrazione per definizione:\\
+    Bisogna fornire l'algoritmo \textbf{decidibile}
+    della funzione caratteristica:
+    \[
+      f_A(x) =
+      \begin{cases}
+        1 & \text{se } x \in A \\
+        0 & \text{se } x \notin A
+      \end{cases}
+    \] 
+\end{itemize}
+
+\subsubsection{Insiemi ricorsivamente enumerabili}
+Per dimostrare che un insieme è ricorsivamente enumerabile si possono usare i seguenti
+moetodi:
+\begin{itemize}
+  \item Dimostrazione per definizione:\\
+    Bisogna fornire l'algoritmo \textbf{semidecidibile}
+    della funzione semicaratteristica:
+    \[
+      \psi_A(x) =
+      \begin{cases}
+        1 & \text{se } x \in A \\
+        \uparrow & \text{ altrimenti}
+      \end{cases}
+    \]
+
+  \item Dimostrazione per riduzione funzionale da un insieme noto RE:
+    \[
+      A \preceq_f K \land K \in RE \implies A \in RE
+    \] 
+\end{itemize}
+
+\vspace{1em}
+\noindent
+Per dimostrare che un insieme non è ricorsivamente enumerabile si può usare il
+teorema di Post:
+\[
+  A \text{ non è ricorsivo } \implies A \notin RE \vee \bar{A} \notin RE
+\]
+
+\subsubsection{Insiemi creativi}
+L'unico modo per dimostrare che un insieme è creativo è:
+\begin{itemize}
+  \item Dimostrazione per definizione: \\
+    Bisogna dimostrare che l'insieme è ricorsivamente enumerabile e che il suo
+    complemento è produttivo:
+    \[
+      A \in RE \land \bar{A} \text{ produttivo } \equiv \bar{K} \preceq_f \bar{A} \equiv K \preceq_f A
+      \implies A \text{ creativo}
+    \]
+    Questo dimostra anche che \( \bar{A} \) è produttivo
+\end{itemize}
+\textbf{Gli insiemi creativi non sono ricorsivi}.
+
+\subsubsection{Insiemi produttivi}
+L'unico modo per dimostrare che un insieme è produttivo è:
+\begin{itemize}
+  \item Dimostrazione per teorema \ref{thm:produttivo}.1:
+    \[
+      \bar{K} \preceq_f A \implies A \text{ produttivo}
+    \] 
+    Per quanto riguarda \( K \preceq_f \bar{A} \) non dice nulla su \( \bar{A} \).
+\end{itemize}
+\textbf{Gli insiemi produttivi non sono in RE}.
+
+
+\subsection{Esercizi}
+
+  Consideriamo l'insieme dei programmi che terminano sul quadrato del loro input:
+  \[
+    A = \left\{\left. x \;\right|\; \varphi_x(x^2) \downarrow \right\}
+  \] 
+  \begin{enumerate}
+    \item 
+      Questo insieme è intuitivamente ricorsivamente enumerabile. Per dimostrarlo
+      bisogna costruire l'algoritmo per \( \psi_A(x) \) che si ferma solo se
+      l'input appartiene ad \( A \):
+      \[
+        \psi_A(x) =
+        \begin{cases}
+          1 & \text{se } x \in A\\
+          \uparrow & \text{altrimenti}
+        \end{cases}
+      \] 
+      L'algoritmo è il seguente:
+\begin{lstlisting}[language=Python]
+input(x) {
+  y = x^2; # funzione x^2 e' totale ricorsiva
+  costruisci phi_x; # esiste una procedura totale e ricorsiva per costruire phi_x da x
+  stop = false;
+  while !stop {
+    esegui il prossimo passo di phi_x(y);
+    if phi_x(y) ha terminato {
+      stop = true;
+    }
+  }
+  return 1;
+}
+\end{lstlisting}
+    Questo dimostra che \( A \in RE \).
+
+  \item Dimostrare che \( K \preceq_f A \). Per farlo bisogna costruire una
+    funzione totale ricorsiva \( f \) tale che:
+    \[
+      \exists f \text{ totale ricorsiva } \;.\; x \in K \iff f(x) \in A
+    \]
+    La funzione \( f(x) \) viene costruita a partire da una \( g \) del teorema smn.
+
+    \vspace{1em}
+    \noindent
+    \[
+      \psi(xy) = 
+      \begin{cases}
+        1 & \text{se } x \in K\\
+        \uparrow & \text{altrimenti}
+      \end{cases}
+    \] 
+    La funzione \( \psi  \) è parziale ricorsiva perchè la condizione di terminazione
+    è l'appartenenza ad un insieme ricorsivamente enumerabile. Di conseguenza
+    si può applicare il teorema smn:
+    \[
+      \exists g \text{ totale ricorsiva } \;.\; \psi(xy) = \varphi_{g(x)}(y)
+    \] 
+    \begin{itemize}
+      \item Se \( x \in K \) allora:
+        \[
+          \begin{aligned}
+            x \in K &\underset{def\; \psi}{\implies} \forall y \;.\; \psi(xy) = 1\\
+                    &\underset{smn}{\implies} \forall y \;.\; \varphi_{g(x)}(y)\downarrow\\
+                    &\underset{y = g(x)^2}{\implies} \varphi_{g(x)}(g(x)^2)\downarrow\\
+                    &\underset{def\; A}{\implies} g(x) \in A
+          \end{aligned}
+        \] 
+
+      \item Se \( x \notin K \) allora:
+        \[
+          \begin{aligned}
+            x \notin K &\underset{def\; \psi}{\implies} \forall y \;.\; \psi(xy)\uparrow\\
+                        &\underset{smn}{\implies} \forall y \;.\; \varphi_{g(x)}(y) \uparrow\\
+                        &\underset{y = g(x)^2}{\implies} \varphi_{g(x)}(g(x)^2) \uparrow\\
+                        &\underset{def\; A}{\implies} g(x) \notin A
+          \end{aligned}
+        \]
+    \end{itemize}
+    Abbiamo dimostrato che \( f(x) = g(x) \) è la funzione di riduzione funzionale
+    da \( K \) ad \( A \):
+    \[
+      x \in K \iff f(x) \in A
+    \]
+    Quindi \( A \) è creativo e \( \bar{A} \) è produttivo.
+  \end{enumerate}
+
+
+  Consideriamo l'insieme:
+  \[
+    A = \left\{\left. x \;\right|\; \varphi_x(x^2) = 3 \right\}
+  \] 
+  \begin{enumerate}
+    \item Dimostrare che \( A \in RE \). Per farlo bisogna costruire l'algoritmo
+      della semicaratteristica di \( A \):
+      \[
+        \psi_A(x) =
+        \begin{cases}
+          1 & \text{se } x \in A\\
+          \uparrow & \text{altrimenti}
+        \end{cases}
+      \] 
+      L'algoritmo è il seguente:
+\begin{lstlisting}[language=Python]
+input(x) {
+  y = x^2; # funzione x^2 e' totale ricorsiva
+  costruisci phi_x; # esiste una procedura totale e ricorsiva per costruire phi_x da x
+  stop = false;
+  while !stop {
+    esegui il prossimo passo di phi_x(y);
+    if phi_x(y) ha terminato {
+      if phi_x(y) == 3 {
+        stop = true;
+      }
+    }
+  }
+  return 1;
+}
+\end{lstlisting}
+    Questo dimostra che \( A \in RE \).
+
+    \item Dimostrare che \( K \preceq_f A \). Per farlo bisogna costruire una
+      funzione totale ricorsiva \( f \) tale che:
+      \[
+        \exists f \text{ totale ricorsiva } \;.\; x \in K \iff f(x) \in A
+      \]
+      La funzione \( f(x) \) viene costruita a partire da una \( g \) del teorema smn.
+
+      \vspace{1em}
+      \noindent
+      \[
+        \psi(xy) = 
+        \begin{cases}
+          3 & \text{se } x \in K\\
+          \uparrow & \text{altrimenti}
+        \end{cases}
+      \] 
+      La funzione \( \psi  \) è parziale ricorsiva perchè la condizione di terminazione
+      è l'appartenenza ad un insieme ricorsivamente enumerabile. Di conseguenza
+      si può applicare il teorema smn:
+      \[
+        \exists g \text{ totale ricorsiva } \;.\; \psi(xy) = \varphi_{g(x)}(y)
+      \] 
+      \begin{itemize}
+        \item Se \( x \in K \) allora:
+          \[
+            \begin{aligned}
+              x \in K &\underset{def\; \psi}{\implies} \forall y \;.\; \psi(xy) = 3\\
+                      &\underset{smn}{\implies} \forall y \;.\; \varphi_{g(x)}(y) = 3\\
+                      &\underset{y = g(x)^2}{\implies} \varphi_{g(x)}(g(x)^2) = 3\\
+                      &\underset{def\; A}{\implies} g(x) \in A
+            \end{aligned}
+          \] 
+
+        \item Se \( x \notin K \) allora:
+          \[
+            \begin{aligned}
+              x \notin K &\underset{def\; \psi}{\implies} \forall y \;.\; \psi(xy)\uparrow\\
+                         &\underset{smn}{\implies} \forall y \;.\; \varphi_{g(x)}(y) \uparrow\\
+                         &\underset{y = g(x)^2}{\implies} \varphi_{g(x)}(g(x)^2) \uparrow\\
+                         &\underset{def\; A}{\implies} g(x) \notin A
+            \end{aligned}
+          \]
+      \end{itemize}
+      Abbiamo dimostrato che \( f(x) = g(x) \) è la funzione di riduzione funzionale
+      da \( K \) ad \( A \):
+      \[
+        x \in K \iff f(x) \in A
+      \]
+      Quindi \( A \) è creativo e \( \bar{A} \) è produttivo.
+  \end{enumerate}
+\noindent
+
+  Consideriamo l'insieme:
+  \[
+    A = \left\{\left. x \;\right|\; \varphi_x(x^2) = x^3 \right\}
+  \] 
+  \begin{enumerate}
+    \item Dimostrare che \( A \in RE \). Per farlo bisogna costruire l'algoritmo
+      della semicaratteristica di \( A \):
+      \[
+        \psi_A(x) =
+        \begin{cases}
+          1 & \text{se } x \in A\\
+          \uparrow & \text{altrimenti}
+        \end{cases}
+      \] 
+      L'algoritmo è il seguente:
+\begin{lstlisting}[language=Python]
+input(x) {
+  y = x^2; # funzione x^2 e' totale ricorsiva
+  z = x^3; # funzione x^3 e' totale ricorsiva
+  costruisci phi_x; # esiste una procedura totale e ricorsiva per costruire phi_x da x
+  stop = false;
+  while !stop {
+    esegui il prossimo passo di phi_x(y);
+    if phi_x(y) ha terminato {
+      if phi_x(y) == z {
+        stop = true;
+      }
+    }
+  }
+  return 1;
+}
+\end{lstlisting}
+    Questo dimostra che \( A \in RE \).
+
+    \item Dimostrare che \( K \preceq_f A \). Per farlo bisogna costruire una
+      funzione totale ricorsiva \( f \) tale che:
+      \[
+        \exists f \text{ totale ricorsiva } \;.\; x \in K \iff f(x) \in A
+      \]
+      La funzione \( f(x) \) viene costruita a partire da una \( g \) del teorema smn.
+
+      \vspace{1em}
+      \noindent
+      Bisogna ricreare la \( x \) partendo dall'input \( y \) per poter calcolare \( x^3 \):
+      \[
+        \psi(xy) = 
+        \begin{cases}
+          z^3 & \text{se } \overbrace{x \in K}^{\text{parziale}}
+          \land \overbrace{\exists z \;.\; y = z^2}^{\text{totale}}\\
+          \uparrow & \text{altrimenti}
+        \end{cases}
+      \] 
+      Dobbiamo dimostrare che \( \psi  \) è parziale ricorsiva costruendo il procedimento
+      che calcola \( \psi  \) in modo tale che termini sui valori che rendono vera la
+      condizione (l'ordine non è importante perchè c'è un \( \land  \)):
+\begin{lstlisting}[language=Python]
+input(x, y) {
+  z = 0;
+  w = 0; # z^2
+  # se non troviamo z tale che y = z^2, il ciclo diverge, ma la condizione e' falsa, quindi va bene
+  while y != w {
+    z = z + 1;
+    w = z^2;
+  }
+
+  costruisci phi_x; # esiste una procedura totale e ricorsiva per costruire phi_x da x
+  stop = false;
+  while !stop {
+    esegui il prossimo passo di phi_x(x);
+    if phi_x(x) ha terminato {
+      stop = true;
+    }
+
+  # Se entrambi i cicli terminano, allora la condizione e' vera
+  return z^3;
+}}
+\end{lstlisting}
+     Quindi \( \psi \) è parziale ricorsiva e si può applicare il teorema smn:
+      \[
+        \exists g \text{ totale ricorsiva } \;.\; \psi(xy) = \varphi_{g(x)}(y)
+      \] 
+      \begin{itemize}
+        \item Se \( x \in K \) allora:
+          \[
+            \begin{aligned}
+              x \in K &\underset{def\; \psi}{\implies} \psi(xy)\downarrow = z^3 \iff 
+              \exists z \;.\; y = z^2\\
+                      &\underset{smn}{\implies} \varphi_{g(x)}(y)\downarrow = z^3 \iff
+              \exists z \;.\; y = z^2\\
+                      &\underset{\underset{z = g(x)}{y = g(x)^2}}{\implies} \varphi_{g(x)}(g(x)^2)\downarrow = g(x)^3\\
+                      &\underset{def\; A}{\implies} g(x) \in A
+            \end{aligned}
+          \]
+
+        \item Se \( x \notin K \) allora:
+          \[
+            \begin{aligned}
+              x \notin K &\underset{def\; \psi}{\implies} \forall y \;.\; \psi(xy)\uparrow\\
+                         &\underset{smn}{\implies} \forall y \;.\; \varphi_{g(x)}(y) \uparrow\\
+                         &\underset{y = g(x)^2}{\implies} \varphi_{g(x)}(g(x)^2) \uparrow\\
+                         &\underset{def\; A}{\implies} g(x) \notin A
+            \end{aligned}
+          \]
+      \end{itemize}
+      Abbiamo dimostrato che \( f(x) = g(x) \) è la funzione di riduzione funzionale
+      da \( K \) ad \( A \):
+      \[
+        x \in K \iff f(x) \in A
+      \]
+      Quindi \( A \) è creativo e \( \bar{A} \) è produttivo.
+  \end{enumerate}
+
+  Consideriamo l'insieme:
+  \[
+    \begin{aligned}
+      A &= \left\{\left. x^4 \;\right|\; \varphi_x(x^2) = x^3 \right\}\\
+        &= \left\{\left. y \;\right|\; \exists x \;.\; y = x^4 \land \varphi_x(y^2) = y^3 \right\}
+    \end{aligned}
+  \] 
+  \begin{enumerate}
+    \item L'insieme \( A \) rimane \( RE \) per la stessa dimostrazione dell'esercizio
+      precedente. La funzione semicaratteristica è:
+\begin{lstlisting}[language=Python]
+input(y) {
+  x = 0; # base x^4
+  z = 0; # z = x^4
+  while y != z {
+    x = x + 1;
+    z = x^4; # se y = x^4, il ciclo termina e x e' la base
+  }
+  # se il while termina, y = x^4
+
+  w = x^2;
+  z = x^3;
+  costruisci phi_x; # esiste una procedura totale e ricorsiva per costruire phi_x da x
+  stop = false;
+  while !stop {
+    esegui il prossimo passo di phi_x(w);
+    if phi_x(w) ha terminato {
+      if phi_x(w) == z {
+        stop = true;
+      }
+    }
+  }
+  # se il while termina, phi_x(x^2) == x^3
+
+  # se entrambi i cicli terminano, allora la condizione e' vera
+  return 1;
+}
+\end{lstlisting}
+
+    \item Dimostrare che \( K \preceq_f A \). Per farlo bisogna costruire una
+      funzione totale ricorsiva \( f \) tale che:
+      \[
+        \exists f \text{ totale ricorsiva } \;.\; x \in K \iff f(x) \in A
+      \]
+      La funzione \( f(x) \) viene costruita a partire da una \( g \) del teorema smn.
+
+      \vspace{1em}
+      \noindent
+      La stessa funzione dell'esercizio precedente funziona anche qui perchè
+      l'unica differenza è la condizione sull'input:
+      \[
+        \psi(xy) = 
+        \begin{cases}
+          z^3 & \text{se } \overbrace{x \in K}^{\text{parziale}}
+          \land \overbrace{\exists z \;.\; y = z^2}^{\text{totale}}\\
+          \uparrow & \text{altrimenti}
+        \end{cases}
+      \] 
+      La dimostrazione che \( \psi  \) è parziale ricorsiva è uguale a quella
+      dell'esercizio precedente. Quindi si può applicare il teorema smn:
+      \[
+        \exists g \text{ totale ricorsiva } \;.\; \psi(xy) = \varphi_{g(x)}(y)
+      \] 
+      \begin{itemize}
+        \item Se \( x \in K \) allora:
+          \[
+            \begin{aligned}
+              x \in K &\underset{def\; \psi}{\implies} \psi(xy) = z^3 \iff 
+              \exists z \;.\; y = z^2\\
+                      &\underset{smn}{\implies} \varphi_{g(x)}(y) = z^3 \iff
+              \exists z \;.\; y = z^2\\
+                      &\underset{\underset{z = g(x)}{y = g(x)^2}}{\implies} \varphi_{g(x)}(g(x)^2) = g(x)^3\\
+                      &\underset{def\; A}{\implies} g(x)^4 \in A
+            \end{aligned}
+          \]
+        \item Se \( x \notin K \) allora:
+          \[
+            \begin{aligned}
+              x \notin K &\underset{def\; \psi}{\implies} \forall y \;.\; \psi(xy)\uparrow\\
+                         &\underset{smn}{\implies} \forall y \;.\; \varphi_{g(x)}(y) \uparrow\\
+                         &\underset{y = g(x)^2}{\implies} \varphi_{g(x)}(g(x)^2) \uparrow\\
+                         &\underset{def\; A}{\implies} g(x)^4 \notin A
+            \end{aligned}
+          \]
+      \end{itemize}
+      Abbiamo dimostrato che \( f(x) = g(x)^4 \) è la funzione di riduzione funzionale
+      da \( K \) ad \( A \):
+      \[
+        x \in K \iff f(x) \in A
+      \]
+      Quindi \( A \) è creativo e \( \bar{A} \) è produttivo.
+  \end{enumerate}
+
+  \textbf{Osservazione}: Tutto questo vale perchè \( x^4 \) è una funzione crescente
+  e invertibile su \( \mathbb{N} \), quindi esiste sempre un unico \( x \) input
+  per ogni \( y \) tale che \( y = x^4 \).
+
+
+
 
 
 \end{document}
