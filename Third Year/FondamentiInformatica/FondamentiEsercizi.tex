@@ -4,7 +4,7 @@
 
 \onehalfspacing
 \title{Fondamenti di Informatica | Esercizi}
-\author{Università di Verona\\Imbriani Paolo - VR500437\\Professor Isabella Mastroeni}
+\author{Università di Verona\\Imbriani Paolo - VR500437\\Prof.ssa Isabella Mastroeni}
 
 \begin{document}
 
@@ -277,5 +277,309 @@ e quindi possiamo costruire:
 \]
 \end{proof}
 
+\section{Successioni}
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 1}]
+Definire una successione di insiemi ricorsivi $X_n$ tale che
+\[  
+    \bigcup_n X_n = k \leftarrow \text{ creativo}
+\]
+\end{tcolorbox}
+
+\begin{itemize}
+    \item Vanno definiti $X_n$ al valore di $n$
+    \item $X_n$ sono ricorsivi 
+    \item Dimostrare che $\bigcup_n X_n = k$ 
+\end{itemize}
+\[  
+    k = \{x \; |\; \varphi_x(x) \downarrow\}
+\]
+Sappiamo che $y \in \bigcup_n X_n$ corrisponde a $\exists n . y \in X_n$ 
+e che $\downarrow$ è un $\exists n$ tale che per $\varphi_x(x)$ termina 
+in $n$ passi. 
+\[ 
+    X_n = \{x \; |\; \varphi_x(x) \text{ termina in } n \text{ passi}\}
+\]
+Una volta aver mostrato questo insieme le cose da fare sono due:
+\begin{itemize}
+    \item $X_n$ è ricorsivo 
+    \item $\bigcup_{n} X_n = k$ 
+\end{itemize}
+Dimostriamo che $X_n$ è ricorsivo.
+Dobbiiamo costruire l'agloritmo per la funzione caratteristica di $X_n$.
+\[      
+    f_n(x) = \begin{cases}
+        1 & \text{se } x \in X_n\\
+        0 & \text{se } x \notin X_n
+    \end{cases}
+\]
+L'algoritmo è il seguente:
+\begin{lstlisting}[language=Python]
+input(x)
+costruisci phi_x 
+for y to n-1 
+    esegui un passo di phi_x(x)
+    if termina return 0
+esegui un passo di phi_x(x) 
+if termina return 1
+else return 0
+\end{lstlisting}
+\noindent
+Questo è l'algoritmo per $f_n$ che è totale quindi $X_n$ è ricorsivo.
+Ora dimostriamo che $\bigcup_n X_n = k$.
+\[
+\begin{aligned}
+    \bigcup_n X_n &= \bigcup_n \; \{x \; | \; \varphi_x{x} \text{ termina in } n \text{ passi}\}\\
+    &= \{x \; | \; \exists n \; . \; \varphi_x(x) \text{ termina in } n \text{ passi}\}\\
+    &= \{x \; | \; \varphi_x(x) \downarrow\} = k
+\end{aligned}
+\] 
+
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 2}]
+Definire una successione di insiemi ricorsivi $X_n$ tale che
+\[  
+    \bigcap_n X_n = \overline{k} \leftarrow \text{ produttivo}
+\]
+\end{tcolorbox}
+\begin{itemize}
+    \item Definite $X_n$ al variare di $n$
+    \item $X_n$ sono ricorsivi
+    \item Dimostrare che $\bigcap_n X_n = \overline{k}$
+\end{itemize}
+\[
+    \bigcap_n = \forall n 
+\]
+\[
+    \overline{k} = \{x \; | \; \varphi_x(x) \uparrow\} = 
+    \{x \; | \; \forall n \; . \; \varphi_x(x) \text{ non termina in n passi}\}
+\]
+\begin{itemize}
+    \item Definiamo:
+    \[
+        X_n = \{x \; | \; \varphi_x(x) \text{ non termina in n passi}\}
+    \]
+    Dimostriamo che $f_n(x) = \begin{cases}
+        1 & \text{se } x \in X_n\\
+        0 & \text{se } x \notin X_n
+    \end{cases}$ è ricorsiva.
+    Costruiamo l'algoritmo per $f_n$:
+\begin{lstlisting}[language=Python]
+input(x)
+costruisci phi_x
+for y to n-1  
+    esegui un passo di phi_x(x)
+    if termina return 1 
+esegui un passo di phi_x(x)
+if termina return 0
+else return 1
+\end{lstlisting}
+\item  
+\[ 
+\begin{aligned}
+    \bigcap_n X_n &= \bigcap_n \; \{x \; | \; \varphi_x(x) \text{ non termina in n passi}\}\\
+    &= \{x \; | \; \forall n \; . \; \varphi_x(x) \text{ non termina in n passi}\}\\
+    &= \{x \; | \; \varphi_x(x) \uparrow\} = \overline{k}
+\end{aligned}
+\]
+\end{itemize}
+
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 3}]
+Definire una successione di insiemi ricorsivi $X_n$ tale che
+\[  
+    A = \{x \; | \; \bigcap_n \; \overline{X_n} \preceq W_x \}
+\]
+\end{tcolorbox}
+\noindent
+\begin{itemize}
+    \item Definire $X_n$ al variare di $n$
+    \item $X_n$ sono ricorsivi
+    \item Dimostrare che $A = \{x \; | \; \bigcap_n \; \overline{X_n} \preceq W_x \}$
+    \item Dimostrare che $A$ è produttivo
+\end{itemize}
+Capiamo cosa significa $\bigcap_n \overline{X_n} \preceq W_x$.
+$W_x$ è sempre re per definizione. Mentre $\bigcap_n \overline{X_n}$ non è produttivo.
+\[
+    k \preceq W_x 
+\]
+Vuol dire che $W_x$ è re ma anche creativo.
+\begin{itemize}
+    \item Definiamo:
+    \[
+        \overline{X_n} = \{x \; | \; \varphi_x(x) \text{ termina in n passi}\}
+        \quad X_n = \{x \; | \; \varphi_x(x) \text{ non termina in n passi}\} 
+    \] 
+    \item $\bigcup_n \overline{X_n} = k$ (esercizio 1)
+    \item $A = \{x \; | \; k \preceq W_x \}$
+    \item $A$ produttivo se $\overline{k} \preceq A$.
+    \[
+    \begin{aligned}
+        x \in k &\implies g(x) \notin A \text{ ovvero $W_{g(x)}$ non creativo $\leadsto$ Ricorsivo}\\
+        x \notin k &\implies g(x) \in A \text{ ovvero $W_{g(x)}$ creativo $\leadsto$ K (creativo)}
+    \end{aligned}
+    \]
+    \[
+        \psi(x,y) = \begin{cases}
+            1 & x \in k \lor y \in k\\
+            \uparrow & \text{se non termina}
+        \end{cases}
+    \]
+    Con $\psi$ parziale ricorsiva.
+\begin{lstlisting}[language=Python]
+input(x,y)
+costruisci phi_x, phi_y
+while true
+    esegui next step di phi_x(x)
+    if termina: return 1
+    esegui next step di phi_y(y)
+    if termina: return 1
+\end{lstlisting}
+Per il teorema di s-m-n esiste una funzione totale e calcolabile $g$ tale che:
+\[
+    \varphi_{g(x)}(y) = \psi(x,y)
+\]
+\[
+    \begin{aligned}
+        x \in k &\implies \forall y \; . \; \psi(x,y)\downarrow\\
+        &\implies \forall y \; . \; \varphi_{g(x)}(y) \downarrow \\
+        &\implies W_{g(x)} = \mathbb{N}\\ 
+        &\implies g(x) \notin A\\
+    \end{aligned}
+\]
+\[ 
+    \begin{aligned}
+        x \notin k &\implies y \in k \iff \psi(x,y) \uparrow\\
+        &\implies y \in k \iff \varphi_{g(x)}(y) \uparrow \\
+        &\implies W_{g(x)} = k\\ 
+        &\implies g(x) \in A\\
+    \end{aligned}
+\]
+\end{itemize}
+
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 3}]
+    Definire una successione di insiemi ricorsivi $X_n$ tale che
+    \[  
+        C = \{x \; | \; \bigcap_n \; X_n \preceq W_x \} \text{ sia ricorsivo}
+    \]
+\end{tcolorbox}
+\noindent
+Essendo che per definizione $W_x$ è sempre RE allora 
+$\overline{k} \preceq W_x$ è sempre falso. Basta trovare 
+una successione di insiemi ricorsivi
+t.c he $\bigcap_n X_n = \overline{k}$ (esercizio 2). 
+Per dimostrare che $C$ è ricorsivo basta notare che possiamo
+ricondurci al problema di appartenenza a $\overline{k}$ che è ricorsivo.
+\[
+    C = \{x \; | \; \bigcap_n X_n \preceq W_x\} = \{x \; | \; \overline{k} \preceq W_x \} = \emptyset
+\]
+
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 4}]
+Successione di funzioni parziali ricorsive $\psi_n$ tali che $dom(\psi_n)$ 
+sono re non completi (ricorsivi) e che 
+\[  
+    \bigcup_n \; dom(\psi_n) = \{x \; | \; 2x \in W_x\}
+\]
+\end{tcolorbox}
+Sappiamo che $\bigcup_n$ corrisponde a $\exists n$.
+\[
+\{x \; | \; 2x \in W_x\} = \{x \; | \; \varphi_x(2x)\downarrow\}
+\]
+\begin{itemize}
+    \item Definire $X_n = dom(\psi_n)$
+    \item Dimostrare che $X_n$ sono ricorsivi 
+    \item Mostrare che $\bigcup_n dom(\psi_n) = \{x \; | \; \varphi_x(2x)\downarrow\}$
+\end{itemize}
+Definiamo $\psi_n$ t.c. $X_n = dom(\psi_n)$:
+\[ 
+    \psi_n(x) = \begin{cases}
+        1 & x \in X_n \land \varphi_x(2x) \text{ termina in n passi}\\
+        \uparrow & \text{altrimenti}
+    \end{cases}
+\] 
+Dimostriamo che $X_n$ è ricorsivo. (COMPLETARE)
+\[ 
+\begin{aligned}
+    \bigcup_n dom(\psi_n) &\implies \{x \; | \; \exists n. x \in dom(\psi_n)\}\\
+    &\implies \{x \; |\; \exists n. \varphi_x(2x) \text{ termina in passi}\} \\
+    &\implies \{x \; | \; \varphi_x(2x)\downarrow\}
+\end{aligned}
+\]
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 4}]
+Successione di funzioni parziali ricorsive $\psi_n$ tali che $dom(\psi_n)$ 
+sono re non completi (ricorsivi) e che 
+\[  
+    \bigcap_n \; dom(\psi_n) = \{x \; | \; \varphi_x(2^x + 2)\uparrow\}
+\]
+\end{tcolorbox}
+\noindent
+Sappiamo che $\bigcap_n$ corrisponde a $\forall n$.
+Mentre la divergenza può essere vista come $\forall n$ non termina.
+\[
+    X_n = dom(\psi_n) = \{x \; | \; \varphi_x(2^x + 2) \text{ non termina in n passi}\} 
+\]
+\[
+    \psi_n(x) = \begin{cases}
+        1 & \varphi_x(2^x + 2) \text{ non termina in n passi}\\
+        \uparrow & \text{altrimenti}
+    \end{cases}
+\]
+Dimostra che $X_n$ è ricorsivo. (COMPLETARE)
+\[
+\begin{aligned}
+    \bigcap_n \; dom(\psi_n) &\implies \{x \; | \; \forall n \; . \; x \in X_n\}\\
+    &\implies \{x \; |\; \forall n. \varphi_x(2^x + 2) \text{ non termina in n passi}\} \\
+    &\implies \{x \; | \; \varphi_x(2^x + 2)\uparrow\}
+\end{aligned}
+\]
+
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 4}]
+Successione di funzioni parziali ricorsive $\psi_n$ tali che $Range(\psi_n)$ 
+sono creativi e che 
+\[  
+    \bigcap_n \; Range(\psi_n) = \{x^2 \; | \; W_x = \mathbb{N}\}
+\]
+\end{tcolorbox}
+Sappiamo che $\bigcap_n$ corrisponde a $\forall n$ e 
+che $W_x = \mathbb{N}$ vuol dire che $\forall n \; .\; n \in W_x (\text{ovvero } \varphi_x(n) \downarrow)$.
+
+\begin{itemize}
+    \item 
+    \[
+        X_n = Range(\psi_n) = \{x^2 \; | \; \varphi_x(n)\downarrow\} = \{x^2\;  | \; n \in W_x\}
+    \]
+    \[
+    \psi_n(x) = \begin{cases}
+        x^2 & \varphi_x(n) \downarrow\\
+        \uparrow & \text{altrimenti}
+    \end{cases}
+    \]
+\end{itemize}
+Dimostrare che $X_n$ è creativo. (dimostrare quindi che siano RE e che $k \preceq X_n$)
+\[
+\begin{aligned}
+  \bigcap_n X_n = \bigcap_n Range(\psi_n) &= \{x^2 \; | \; \forall n \; . \; \varphi_x(n)\downarrow\}\\
+  &= \{x^2 \; | \; W_x = \mathbb{N}\}   
+\end{aligned}
+\] 
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 8}]
+Successione di $X_n$ produttivi tale che $\bigcap_n X_n \preceq k$ ($k$ completo
+$\Rightarrow \forall X \; re$ e $x \preceq k$).
+\\
+Una possibile soluzione potrebbe essere 
+\[
+\bigcap_n X_n = \varnothing
+\]
+può essere una soluzione in quanto $\varnothing \preceq k$ perché
+$\varnothing$ è ricorsivo e quindi re. k completo. 
+\end{tcolorbox}
+\[
+    X_n = \{x \; | \; W_x = [0,n]\} \forall m \neq n \; . \; W_x \neq [0,m] 
+\]
+\[
+    \bigcap X_n = \varnothing \quad \begin{aligned}
+        y \in X_n &\implies W_y = [0,n] \neq [0,n+1]\\
+        &\implies y \notin X_{n+1} 
+    \end{aligned}
+\]
+visto genericità di $y$ e $n$ allora $\bigcap X_n = \varnothing$.
+$\varnothing \preceq k$ perché $k$ completo (Sol. alternativa: $X_n = \{x \; | \; W_x = n\mathbb{N}\}$ o $\{x \; | \; W_x = \{n\}^{\mathbb{N}}\}$).
 
 \end{document}
