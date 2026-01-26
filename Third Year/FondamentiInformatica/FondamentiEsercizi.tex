@@ -277,6 +277,125 @@ e quindi possiamo costruire:
 \]
 \end{proof}
 
+\section{Insiemi produttivi}
+
+
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 1}]
+Dimostrare che l'insieme
+\[ 
+    A = \{x \; | \; W_x = REC \implies \varphi_x (x^2) \downarrow\}
+\]
+oppure 
+\[  
+    A = \{x \; | \; W_x \neq REC \lor \varphi_x (x^2) \downarrow\}
+\]
+è produttivo.  
+\end{tcolorbox}
+\noindent
+Il complemento di $A$ è:
+\[
+    \overline{A} = \{x \; | \; W_x = REC \land \varphi_x (x^2) \uparrow\}
+\]
+Notiamo come i due insiemi siano entrambi produttivi essendo che in $A$ abbiamo 
+\[
+    W_x \neq REC 
+\]
+non è possibile decidere se un insieme non è ricorsivo. 
+La stessa cosa per $\overline{A}$ essendo che non è possibile decidere se
+\[ 
+    \varphi_x (x^2) \uparrow
+\]
+Per dimostrare che un insieme è produttivo dobbiamo dimostrare che 
+$\overline{K} \preceq A$ o $K \preceq \overline{A}$.
+Definiamo la funzione parziale ricorsiva:
+\[ 
+\psi(x,y) = 
+\begin{cases}
+    1 & x \in K \land y \neq x^2\\
+    \uparrow & \text{altrimenti}
+\end{cases}
+\]
+Costruiamo l'algoritmo per $\psi$:
+\begin{lstlisting}[language=Python]
+input(x,y)
+if y != x^2: 
+    while true
+costruisci phi_x
+while true
+    esegui next step di phi_x(x)
+    if termina: return 1
+\end{lstlisting}
+Per il teorema di s-m-n esiste una funzione totale e calcolabile $f$ tale che:
+\[
+    \varphi_{g(x)}(y) = \psi(x,y)
+\]
+Sappiamo che se $x \in \overline{K}$ allora $\psi(x,y) \uparrow$ per ogni $y$.
+\[
+\begin{aligned}
+x \in K &\implies \psi(x,y) \downarrow \iff y \neq x^2\\
+&\implies \varphi_{g(x)}(y) \downarrow \iff y \neq g(x)^2\\
+&\implies W_{g(x)} = \mathbb{N} / \mathbb{N}^2 = \text{REC} \implies g(x) \notin A
+\end{aligned}
+\]
+\[
+\begin{aligned}
+  x \notin K &\implies \forall y \; . \; \psi(x,y) \uparrow\\
+  &\implies \forall y \; . \; \varphi_{g(x)}(y) \uparrow \\
+  &\implies \varphi_{g(x)}(g(x)^2) \uparrow \\
+    &\implies W_{g(x)} = \varnothing \implies g(x) \in A 
+\end{aligned}
+\]
+Ora dimostriamo che $\overline{A}$ è produttivo.
+Per dimostrare che $\overline{A}$ è produttivo dobbiamo dimostrare che
+\[ 
+    \overline{K} \preceq \overline{A} \text{ o } K \preceq A
+\]
+Quindi se $x \in K$ allora  $g(x) \in A$.
+Definiamo la funzione parziale ricorsiva:
+\[
+    \psi(x,y) = \begin{cases}
+        1 & \varphi_x(x) \text{ NON termina in meno di $y$ passi} \land y \in 2\mathbb{N} + 1\\
+        \uparrow & y = 1\\
+        \uparrow & \text{altrimenti}
+    \end{cases}
+\]
+Costruiamo l'algoritmo per $\psi$:
+\begin{lstlisting}[language=Python]
+input(x,y)
+if y == 1: 
+    while true
+if y % 2 == 0:
+    while true
+costruisci phi_x
+for 0 to y-1
+    esegui next step di phi_x(x)
+    if termina
+        while true
+return 1
+\end{lstlisting}
+Per il teorema di s-m-n esiste una funzione totale e calcolabile $g$ tale che:
+\[
+    \varphi_{g(x)}(y) = \psi(x,y)
+\]
+Sappiamo che 
+\[
+\begin{aligned}
+    x \notin K &\implies \psi(x,y) \downarrow \iff y \in 2\mathbb{N} + 1 \; \backslash \; \{1\}\\
+    &\implies \forall y \in 2\mathbb{N} + 1 \backslash \{1\} \; . \; \varphi_{g(x)}(y) \downarrow\\
+    &\implies W_x = 2\mathbb{N} + 1 \backslash \{1\} \in REC \land g(x)^2 \notin W_x \iff g(x) = 1\\
+    &\implies g(x) \notin A
+\end{aligned}
+\]
+\[
+\begin{aligned}
+    x \in K &\implies W_x = [0, n-1] \cap 2\mathbb{N} + 1 \; \backslash \; \{1\}\\
+    &\implies \varphi_{g(x)}(y) \downarrow \text{ in n passi}\\
+    &\implies W_{g(x)} = [0, n-1] \cap 2\mathbb{N} + 1 \; \backslash \; \{1\} \notin REC\\
+    &\implies g(x) \in A
+\end{aligned}
+\]
+
+
 \section{Successioni}
 \begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 1}]
 Definire una successione di insiemi ricorsivi $X_n$ tale che
@@ -581,5 +700,54 @@ $\varnothing$ è ricorsivo e quindi re. k completo.
 \]
 visto genericità di $y$ e $n$ allora $\bigcap X_n = \varnothing$.
 $\varnothing \preceq k$ perché $k$ completo (Sol. alternativa: $X_n = \{x \; | \; W_x = n\mathbb{N}\}$ o $\{x \; | \; W_x = \{n\}^{\mathbb{N}}\}$).
+
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 9}]
+\[
+    D_n = Dom(\psi_n)
+\]
+\[
+    \psi_n(x) = \begin{cases}
+        \lceil\sqrt{n+x}\rceil & 4x+1 \in 2\mathbb{N} +1 \land 4x + 1 \in W_x \text{ non termina in meno di $n$ passi}\\
+        \uparrow & \text{ altrimenti}
+    \end{cases}
+\]
+Presa la seguente successione di insiemi:
+\[
+    X_n = \{ \lceil\sqrt{x}\rceil \; | \; n \in W_x\}
+\]
+\[
+    S = \bigcap_{n \in R} X_n 
+\]
+\[  
+    R = \bigcap_{n \ge 3} D_n
+\]
+Studiare l'insieme S.
+\end{tcolorbox}
+\noindent
+Sappiamo che per esempio l'insieme $D_3$ è fatto:
+\[
+D_3 = \{x \;|\; 4x+1 \notin W_x \text{ in meno di 3 passi}\}
+\]
+E così via per gli altri $D_n$. 
+\[
+    R = \bigcap_{n \ge 3} D_n = \{x \; | \; 4x + 1 \notin W_x\}
+\]
+quindi 
+\[
+    S = \bigcap_{n \in R} X_n = \{\lceil\sqrt{x}\rceil \; | \; W_x = \{x \; | \; 4x + 1 \notin W_x\}\}
+\]
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \end{document}
