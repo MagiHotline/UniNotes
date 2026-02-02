@@ -701,53 +701,292 @@ $\varnothing$ è ricorsivo e quindi re. k completo.
 visto genericità di $y$ e $n$ allora $\bigcap X_n = \varnothing$.
 $\varnothing \preceq k$ perché $k$ completo (Sol. alternativa: $X_n = \{x \; | \; W_x = n\mathbb{N}\}$ o $\{x \; | \; W_x = \{n\}^{\mathbb{N}}\}$).
 
-\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 9}]
+\pagebreak
+
+\section{Esame 03-02-2025}
+
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 1}]
+Studiare gli insiemi $D_n = dom(\psi_n)$ (e i loro complementari) al variare di $n > 2$ 
+dove:
 \[
-    D_n = Dom(\psi_n)
-\]
-\[
-    \psi_n(x) = \begin{cases}
-        \lceil\sqrt{n+x}\rceil & 4x+1 \in 2\mathbb{N} +1 \land 4x + 1 \in W_x \text{ non termina in meno di $n$ passi}\\
-        \uparrow & \text{ altrimenti}
-    \end{cases}
-\]
-Presa la seguente successione di insiemi:
-\[
-    X_n = \{ \lceil\sqrt{x}\rceil \; | \; n \in W_x\}
-\]
-\[
-    S = \bigcap_{n \in R} X_n 
-\]
-\[  
-    R = \bigcap_{n \ge 3} D_n
-\]
-Studiare l'insieme S.
+\psi_n(x) = \begin{cases}
+    \lceil \sqrt{n+x} \rceil & 4x + 1 \in 2\mathbb{N} + 1 \land 4x + 1 \in W_x \text{ non termina in meno di n passi}\\
+    \uparrow & \text{altrimenti}
+\end{cases}
+\] 
 \end{tcolorbox}
 \noindent
-Sappiamo che per esempio l'insieme $D_3$ è fatto:
+Per studiare gli insiemi $D_n$ e i loro complementari al variare di $n > 2$, iniziamo analizzando la definizione di $\psi_n(x)$.
+L'insieme $D_n$ è definito come il dominio della funzione parziale ricorsiva $\psi_n$. Quindi, $D_n$ contiene tutti gli elementi $x$ per cui $\psi_n(x)$ è definita, ovvero:
 \[
-D_3 = \{x \;|\; 4x+1 \notin W_x \text{ in meno di 3 passi}\}
+D_n = \{ x \; | \; 4x + 1 \in 2\mathbb{N} + 1 \land 4x + 1 \in W_x \text{ non termina in meno di n passi} \}
 \]
-E così via per gli altri $D_n$. 
+L'insieme è intuitivamente ricorsivo poiché possiamo fornire un algoritmo che verifica le condizioni sopra elencate per ogni $x$ e quindi
+riesce a decidere se $x$ appartiene a $D_n$ o meno.
 \[
-    R = \bigcap_{n \ge 3} D_n = \{x \; | \; 4x + 1 \notin W_x\}
+    f_{D_n}(x) = \begin{cases}
+        1 & \text{se } x \in D_n\\
+        0 & \text{se } x \notin D_n
+    \end{cases}
 \]
-quindi 
+\begin{lstlisting}[language=Python]
+input(x, n)
+costruisci phi_x
+z = 4*x + 1
+if z % 2 == 0:
+    return 0
+for i in range(n):
+    esegui un passo di phi_x(z)
+    if termina:
+        return 0
+return 1
+\end{lstlisting}
+\noindent
+Abbiamo costruito un algoritmo che verifica se $x$ appartiene a $D_n$. Quindi, $D_n$ è ricorsivo per ogni $n > 2$.
+\noindent
+Il complementare di $D_n$, denotato come $\overline{D_n}$, è l'insieme degli elementi $x$ per cui $\psi_n(x)$ non è definita:
 \[
-    S = \bigcap_{n \in R} X_n = \{\lceil\sqrt{x}\rceil \; | \; W_x = \{x \; | \; 4x + 1 \notin W_x\}\}
+\overline{D_n} = \{ x \; | \; 4x + 1 \notin 2\mathbb{N} + 1 \lor 4x + 1 \notin W_x \text{ termina in meno di n passi} \}
+\] 
+Anche $\overline{D_n}$ è ricorsivo, poiché possiamo costruire un algoritmo simile a quello precedente che verifica le condizioni per l'appartenenza a $\overline{D_n}$.
+\[
+    f_{\overline{D_n}}(x) = \begin{cases}
+        1 & \text{se } x \in \overline{D_n}\\
+        0 & \text{se } x \notin \overline{D_n}
+    \end{cases}
+\]
+\begin{lstlisting}[language=Python]
+input(x, n)
+costruisci phi_x
+z = 4*x + 1
+if z % 2 == 1:
+    return 1
+for i in range(n):
+    esegui un passo di phi_x(z)
+    if termina:
+        return 1
+return 0
+\end{lstlisting}
+\noindent
+Abbiamo costruito un algoritmo che verifica se $x$ appartiene a $\overline{D_n}$. 
+Quindi, $\overline{D_n}$ è ricorsivo per ogni $n > 2$.
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 2}]
+Studiare l'insieme:
+\[
+R = \bigcap_{n > 0} D_n
+\]
+e il suo complementare.
+\end{tcolorbox}
+\noindent
+L'insieme $R$ è definito come l'intersezione di tutti gli insiemi $D_n$ per $n > 0$:
+\[
+R = \bigcap_{n > 0} D_n = \{ x \; | \; \forall n > 0, x \in D_n \}
+\]
+Per capire cosa significa appartenere a $R$, dobbiamo analizzare le condizioni per l'appartenenza a ciascun $D_n$. 
+Un elemento $x$ appartiene a $R$ se soddisfa le condizioni di appartenenza a tutti gli insiemi $D_n$.
+In particolare, ciò significa che per ogni $n > 0$, $4x + 1$ deve essere un numero dispari e deve appartenere a $W_x$ senza terminare in meno di $n$ passi.
+Quindi, possiamo riscrivere $R$ come:
+\[
+R = \{ x \; | \; \forall n > 0, \; 4x + 1 \in 2\mathbb{N} + 1 \land \varphi_x(4x+1)\downarrow \text{ non deciso in $n$ passi} \}
+\]
+Il complementare di $R$, denotato come $\overline{R}$, è l'insieme degli elementi $x$ che non appartengono a $R$:
+\[
+\overline{R} = \{ x \; | \; \exists n > 0, x \notin D_n \}
+\]
+Ciò significa che esiste almeno un $n > 0$ tale che $x$ non soddisfa le condizioni di appartenenza a $D_n$.
+In particolare, ciò significa che per almeno un $n > 0$, $4x + 1$ deve essere un numero pari o non deve appartenere a $W_x$ o deve terminare in meno di $n$ passi.
+\[
+\overline{R} = \{ x \; | \; 4x + 1 \notin 2\mathbb{N} + 1 \lor 4x + 1 \notin W_x \text{ deciso in un numero finito di passi} \}
+\]
+Posso scriverlo come
+\[
+    \overline{R} = \{x \; | \; \exists n > 0,  4x+1 \notin 2\mathbb{N} + 1 \lor \varphi_x(4x+1)\uparrow \text{ deciso in $n$ passi}\}
+\]
+Notiamo come R non sia ricorsivo in quanto non è possibile decidere se un programma 
+non termina in un numero finito di passi. R è quindi produttivo. 
+Per dimostrare che R è produttivo dobbiamo dimostrare che
+\[
+    \overline{K} \preceq R \text{ o } K \preceq \overline{R}
+\]
+Definiamo la funzione parziale ricorsiva:
+\[
+    \psi(x,y) = \begin{cases}
+        1 & x \in K\\
+        \uparrow & \text{altrimenti}
+    \end{cases}
+\]
+Costruiamo l'algoritmo per $\psi$:
+\begin{lstlisting}[language=Python]
+input(x,y)
+costruisci phi_x
+while true
+    esegui next step di phi_x(x)
+    if termina: return 1    
+\end{lstlisting}
+Per il teorema di s-m-n esiste una funzione totale e calcolabile $g$ tale che:
+\[
+    \varphi_{g(x)}(y) = \psi(x,y)
+\]
+Se non termina su tutti gli input, sicuramente non termina su $4g(x) + 1$ e quindi
+non verrà deciso in n passi.
+\[ 
+\begin{aligned}
+    x \notin K &\implies \forall y \; . \; \psi(x,y)\uparrow\\
+    &\implies \forall y \; . \; \varphi_{g(x)}(y) \uparrow \\
+    &\implies W_{g(x)} = \varnothing \\
+    &\implies \varphi_{g(x)}(4g(x) + 1) \uparrow \text{ non verrà mai deciso in n passi}\\
+    &\implies g(x) \in R\\
+\end{aligned}
+\]
+Se termina su tutti gli input, sicuramente termina su $4g(x) + 1$ e quindi 
+esiste $n$ tale che termina in $n$ passi.
+\[
+\begin{aligned}
+    x \in K &\implies \forall y \; . \; \psi(x,y)\downarrow\\
+    &\implies \forall y \; . \; \varphi_{g(x)}(y) \downarrow \\
+    &\implies W_{g(x)} = \mathbb{N} \\
+    &\implies \varphi_{g(x)}(4g(x) + 1) \downarrow \\
+    &\implies g(x) \notin R\\
+\end{aligned}
+\]
+Dobbiamo fare la stessa cosa per $\overline{R}$. Per provare
+che sia produttivo dobbiamo dimostrare che
+\[
+    K \preceq R
+\]
+In questo caso 
+Definiamo la funzione parziale ricorsiva:
+\[
+    \psi(x,y) = \begin{cases}
+        1 & x \in K \lor y = 4x + 1\\
+        \uparrow & \text{altrimenti}
+    \end{cases}
+\]
+Costruiamo l'algoritmo per $\psi$:
+\begin{lstlisting}[language=Python]
+
+\end{lstlisting}
+Per il teorema di s-m-n esiste una funzione totale e calcolabile $g$ tale che:
+\[
+    \varphi_{g(x)}(y) = \psi(x,y)
+\]
+Vorremmo che quando $x \in K$ allora $g(x) \in R$. Questa cosa è possibile solo se 
+\[
+\begin{aligned}
+  x \in K &\implies \forall y \; . \; \psi(x,y)\downarrow\\
+  &\implies \forall y \; . \; \varphi_{g(x)}(y) \downarrow \\
+  &\implies W_{g(x)} = \mathbb{N} \\ 
+  &\implies \varphi_{g(x)}(4g(x) + 1) \downarrow \\
+  &\implies g(x) \in \overline{R}
+\end{aligned}
 \]
 
+\pagebreak
 
-
-
-
-
-
-
-
-
-
-
+\begin{tcolorbox}[colback=gray!5, colframe=gray!50, title=\textbf{Esercizio 3}]
+Studiare il seguente insieme (ed il suo complementare)
+\[
+T = \{x \; | \; (\exists n \in \mathbb{N} \; . \; y = 3^{3n} \Rightarrow \varphi_x(y)\downarrow) \land (y \in W_x \Rightarrow \exists n \in \mathbb{N} \; . \; y = 3^n)\}
+\]
+\end{tcolorbox}
+\noindent
+Scriviamo meglio l'insieme T. Sappiamo che $\exists n \in \mathbb{N} \; . \; y = 3^{3n}$ corrisponde a $y \in \{27\}^{\mathbb{N}}$ e 
+$\exists n \in \mathbb{N} \; . \; y = 3^n$ corrisponde a $y \in \{3\}^{\mathbb{N}}$. Sappiamo inoltre che
+\[
+    y \in W_x \Leftrightarrow \varphi_x(y)\downarrow
+\]
+Quindi possiamo riscrivere T come:
+\[
+    T = \{x \; | \; \{27\}^{\mathbb{N}} \subseteq W_x \subseteq \{3\}^\mathbb{N}\}
+\]
+Questo insieme richiede che per ogni $y \in W_x$ deve essere una potenza di 3 e che tutte le potenze di $27$ devono essere in $W_x$.
+Questo insieme è intuitivamente produttivo in quanto non è possibile decidere se un programma termina su tutte le potenze di 27 e
+non è possibile decidere se un programma termina solo su potenze di 3. Per dimostrare che $T$ 
+è produttivo dobbiamo dimostrare che
+\[
+    \overline{K} \preceq T \text{ o } K \preceq \overline{T}
+\]
+Definiamo la funzione parziale ricorsiva:
+\[
+    \psi(x,y) = \begin{cases}
+        1 & x \in K \lor y \in \{3\}^\mathbb{N}\\
+        \uparrow & \text{altrimenti}
+    \end{cases}
+\]
+Costruiamo l'algoritmo che calcola $\psi$:
+\begin{lstlisting}[language=Python]
+input(x,y)
+costruisci phi_x  (procedura effettiva algoritmica calcolabile)
+if y in 3^N: (procedura effettiva algoritmica calcolabile)
+    return 1
+while true
+    esegui next step di phi_x(x)
+    if termina: return 1
+\end{lstlisting}
+Per il teorema di smn esiste una funzione totale ricorsiva $g$ tale che:
+\[
+    \varphi_{g(x)}(y) = \psi(x,y)
+\]
+Valgono le seguenti implicazioni:
+\[
+\begin{aligned}
+    x \in K &\implies \forall y \; . \; \psi(x,y)\downarrow\\
+    &\implies \forall y \; . \; \varphi_{g(x)}(y) \downarrow \\
+    &\implies W_{g(x)} = \mathbb{N} \neq \{3\}^\mathbb{N}\\
+    &\implies g(x) \notin T\\
+\end{aligned}
+\quad 
+\begin{aligned}
+    x \notin K &\implies \psi(x,y)\downarrow \text{ sse } y \in \{3\}^\mathbb{N}\\
+    &\implies \varphi_{g(x)}(y) \downarrow \text{ sse } y \in \{3\}^\mathbb{N} \land y \in \{27\}^\mathbb{N} \\
+    &\implies W_{g(x)} = \{3\}^\mathbb{N} \supseteq \{27\}^\mathbb{N}\\
+    &\implies g(x) \in T\\
+\end{aligned}
+\]
+Dimostriamo ora che $\overline{T}$ è produttivo dimostrando che
+\[
+    \overline{K} \preceq \overline{T} \text{ o } K \preceq T
+\]
+Sappiamo che $\overline{T}$ può essere scritto come:
+\[
+    \overline{T} = \{x \; | \; W_x \not\supseteq \{27\}^\mathbb{N} \lor W_x \not\subseteq \{3\}^\mathbb{N}\}
+\]
+Definiamo la funzione parziale ricorsiva:
+\[
+    \psi(x,y) = \begin{cases}
+        1 & x \in K \land y \in \{3\}^\mathbb{N}\\
+        \uparrow & \text{altrimenti}
+    \end{cases}
+\]
+Costruiamo l'algoritmo che calcola $\psi$:
+\begin{lstlisting}[language=Python]
+input(x,y)
+costruisci phi_x  (procedura effettiva algoritmica calcolabile)
+if y in 3^N: (procedura effettiva algoritmica calcolabile)
+    while true
+        esegui next step di phi_x(x)
+        if termina: return 1
+\end{lstlisting}
+Per il teorema di smn esiste una funzione totale ricorsiva $g$ tale che:
+\[
+    \varphi_{g(x)}(y) = \psi(x,y)
+\]
+Valgono le seguenti implicazioni:
+\[
+\begin{aligned}
+    x \in K &\implies \psi (x,y)\downarrow \text{ sse } y \in \{3\}^\mathbb{N}\\
+    &\implies \varphi_{g(x)}(y) \downarrow \text{ sse } y \in \{3\}^\mathbb{N} \\
+    &\implies W_{g(x)} = \{3\}^\mathbb{N} \supseteq \{27\}^\mathbb{N}\\
+    &\implies g(x) \in T\\
+\end{aligned}
+\quad
+\begin{aligned}
+    x \notin K &\implies \forall y \; . \; \psi(x,y)\uparrow\\
+    &\implies \forall y \; . \; \varphi_{g(x)}(y) \uparrow \\
+    &\implies W_{g(x)} = \varnothing \not\supseteq \{27\}^\mathbb{N}\\
+    &\implies g(x) \notin T\\
+\end{aligned}
+\]
 
 
 \end{document}
