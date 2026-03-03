@@ -147,6 +147,17 @@ Due caratteri speciali per il confronto “$\_$” e “$\%$”:
 ‘$\_o\%i$’ = stringa che ha una o in seconda posizione, seguita da una
 sequenza qualsiasi di caratteri (anche vuota) e che termina con una i.
 
+\subsubsection{BETWEEN}
+
+L’operatore BETWEEN consente di verificare se un valore è compreso tra due valori
+\begin{verbatim}
+    WHERE attributo [NOT] BETWEEN valore1 AND valore2;
+\end{verbatim}
+\noindent
+Il predicato ritorna true se il valore di attributo è compreso tra valore1 e
+valore2 (inclusi). Se è presente NOT, ritorna true se il valore di attributo è
+minore di valore1 o maggiore di valore2.
+
 \subsubsection{SIMILAR TO}
 
 L’operatore SIMILAR TO è un LIKE più espressivo che accetta,
@@ -194,5 +205,291 @@ SQL-2 implementa la logica a 3 valori:
     il valore NULL.
 \end{itemize}
 
+\subsection{SQL e Algebra Relazionale}
 
+\subsubsection{Duplicati}
+
+Una significativa differenza tra SQL e algebra relazionale è la gestione dei duplicati.
+L’operazioni di eliminazione delle righe doppie 
+(ad esempio al seguito di una selezione con where) è molto costosa, quindi di default SQL
+mantiene le righe duplicate.
+
+\begin{itemize}
+    \item Il costrutto DISTINCT dopo la parola chiave SELECT permette di
+    eliminare i duplicati.
+    \item Il costrutto ALL permette invece di mantenerli, ma questa è già la scelta di default.
+\end{itemize}
+
+\subsubsection{Selezione, Proiezione, Join}
+
+\begin{itemize}
+    \item L’istruzione SELECT, con una sola relazione nella clausola FROM
+    permette di realizzare: selezioni, proiezioni, ridenominazioni.
+    \item con più relazioni nella clausola FROM si realizzano join (e prodotti
+cartesiani)
+\end{itemize}
+\noindent
+In SQL il join si può definire in due modi diversi:
+\begin{itemize}
+    \item Il primo non richiede l’uso di nuova sintassi, e specifica il legame
+    tra le tabelle coinvolte a livello della clausola WHERE.
+    \item Il secondo usa una sintassi riservata a livello di clausola FROM
+    (useremo questo).
+\end{itemize}
+La clausola FROM ammette come argomento: \texttt{table\_name [[AS] name]] [, ...]}.
+Si è visto che se sono presenti due o più nomi di tabelle, si esegue
+il prodotto cartesiano tra tutte le tabelle e lo schema del risultato
+può contenere tutti gli attributi del prodotto cartesiano.
+Il prodotto cartesiano di due o più tabelle è un \textbf{CROSS JOIN}.
+A partire da SQL-2, esistono altri tipi di JOIN (join\_type):
+INNER JOIN, LEFT [OUTER] JOIN, RIGHT [OUTER] JOIN e FULL
+[OUTER] JOIN.
+
+\subsection{JOIN}
+
+\begin{verbatim}
+    table_name [ NATURAL ] join_type table_name [ON join_condition [, ...]].
+\end{verbatim}
+\noindent
+dove join\_condition è un’espressione booleana che
+seleziona le tuple del join da aggiungere al risultato. Le
+tuple selezionate possono essere poi filtrate con la
+condizione della clausola WHERE.
+Il join si può spostare nella clausola from, a livello delle tabelle (nello
+svolgere gli esercizi, useremo questa sintassi dedicata).
+
+\begin{itemize}
+    \item \begin{verbatim}
+        SELECT ListaAttributi
+        FROM Tabella1 JOIN Tabella2 ON ( CondizioneDiJoin )
+        [ WHERE AltraCondizione]
+    \end{verbatim}
+    \item \begin{verbatim}
+        SELECT i.Nome, d.Città
+        FROM Impiegato AS i JOIN Dipartimento as d ON ( i.Dipart = d.Nome )
+    \end{verbatim}
+\end{itemize}
+\noindent
+Le parole OUTER, LEFT, RIGHT e FULL sono opzionali. Se non sono presenti, si intende INNER JOIN.
+
+\subsubsection{INNER JOIN}
+
+\begin{verbatim}
+    table1 [ INNER ] JOIN table2 ON join_condition [, ...].
+\end{verbatim}
+\noindent
+Rappresenta il tradizionale $\theta$-join dell’algebra relazionale.
+Combina ciascuna riga r1 di table1 con ciascuna riga di
+table2 che soddisfa la condizione della clausola ON.
+
+\subsubsection{LEFT [OUTER] JOIN}
+
+\begin{verbatim}
+    table1 LEFT [ OUTER ] JOIN table2 ON join_condition [, ...].
+\end{verbatim}
+\noindent
+Si esegue un INNER JOIN. Poi, per ciascuna riga r1 di
+table1 che non soddisfa la condizione con qualsiasi
+riga di table2, si aggiunge una riga al risultato con i
+valori di r1 e assegnando NULL agli altri attributi...
+
+\begin{Warning}{Attenzione}{}
+Il LEFT [OUTER] JOIN non è simmetrico! Con le medisime tabelle si possono ottenere risultati diversi invertendo l’ordine delle
+tabelle nel join! 
+\end{Warning}
+
+\subsubsection{RIGHT [OUTER] JOIN}
+
+\begin{verbatim}
+    table1 RIGHT [ OUTER ] JOIN table2 ON join_condition [, ...].
+\end{verbatim}
+\noindent
+Si esegue un INNER JOIN. Poi, per ciascuna riga r2 di
+table2 che non soddisfa la condizione con qualsiasi
+riga di table1, si aggiunge una riga al risultato con i
+valori di r2 e assegnando NULL agli altri attributi..
+
+\subsubsection{FULL [OUTER] JOIN}
+
+\begin{verbatim}
+    table1 FULL [ OUTER ] JOIN table2 ON join_condition [, ...].
+\end{verbatim}
+
+È equivalente a: INNER JOIN + LEFT OUTER JOIN + RIGHT OUTER JOIN.
+
+\subsection{ALIAS}
+
+SQL permette di associare un nome alternativo (alias) alle tabelle
+che compaiono nella clausola FROM. Il nome viene usato per far riferimento alla tabella nel contesto
+dell’interrogazione. Questo perché:
+\begin{itemize}
+    \item Far riferimento alla tabella in modo compatto.
+    \item Fare accesso più volte alla stessa tabella
+\end{itemize}
+
+\subsection{ORDER BY}
+
+Come abbiamo visto, una relazione è un insieme di tuple non ordinato. Nella
+realtà, però, sorge spesso il bisogno di costruire un ordine sulle righe.
+SQL permette di specificare un ordinamento sulle righe dell'output grazie alla
+clausola ORDER BY.
+\begin{verbatim}
+    ORDER BY attributo [{ ASC | DESC }] [, ... ];
+\end{verbatim}
+\noindent
+Le righe vengono ordinate per il primo attributo nell’elenco, a parità di valore
+del primo attributo si usa il secondo, e così via in sequenza.
+
+\subsection{OPERAZIONI INSIEMISTICHE}
+
+SQL mette a disposizione degli operatori insiemistici. 
+\begin{verbatim}
+    SELECT
+    { UNION | INTERSECT| EXCEPT
+    [ALL] SELECT }
+\end{verbatim}
+Gli operatori insiemistici, al contrario del resto del linguaggio,
+assumono come default di eseguire un’eliminazione dei duplicati, a
+meno che si usi ALL.\\
+Sono sufficienti domini compatibili ed ugual numero di attributi
+\begin{itemize}
+    \item Ordine posizionale: la corrispondenza degli attributi si basa sulla posizione
+    \item Se i nomi degli attributi sono diversi di solito il sistema usa il nome del primo
+    operando
+\end{itemize}
+
+\subsection{OPERATORI AGGREGATI}
+
+Una delle più importanti estensioni di SQL rispetto all’algebra
+relazionale: \textbf{COUNT, SUM, AVG, MIN, MAX}.
+In algebra relazionale tutte le condizioni specificate vengono
+valutate su una tupla alla volta.
+Gli operatori di aggregazione permettono di valutare proprietà che
+dipendono da insiemi di tuple. Prima viene eseguita l’interrogazione considerando 
+solo le clausole FROM e WHERE, quindi l’operatore di aggregazione viene applicato alla
+tabella contenente il risultato.
+
+\subsubsection{COUNT}
+
+L’operatore COUNT conta il numero di righe di una tabella o il
+numero di valori di uno o più attributi:
+
+\begin{verbatim}
+    COUNT ( <* | [DISTNCT | ALL] ListaAttributi> )
+\end{verbatim}
+\noindent
+\begin{itemize}
+    \item *: conta il numero di righe della tabella
+    \item DISTINCT ListaAttributi: conta il numero di valori diversi degli attributi ListaAttributi
+    \item ALL ListaAttributi: conta il numero di righe che hanno valori diversi
+    da NULL negli attributi in ListaAttributi (comportamento di default)
+\end{itemize}
+
+\subsubsection{MAX, MIN, AVG, SUM}
+
+\begin{verbatim}
+    <SUM | MAX | MIN | AVG > ( [DISTINCT | ALL] AttrExpr )
+\end{verbatim}
+
+\begin{itemize}
+    \item SUM: calcola la somma dei valori di AttrExpr
+    \item MAX: calcola il valore massimo di AttrExpr
+    \item MIN: calcola il valore minimo di AttrExpr
+    \item AVG: calcola la media dei valori di AttrExpr
+\end{itemize}
+\noindent
+\textbf{SUM} e \textbf{AVG} ammettono come argomento solo espressioni che
+rappresentano valori numerici o intervalli di tempo.
+\textbf{MAX} e \textbf{MIN} ammettono come argomento solo espressioni su cui è
+definito un ordinamento (quindi anche stringhe). \textbf{DISTINCT} 
+elimina i duplicati mentre \textbf{ALL} trascura solo i valori NULL. (DISTINCT e ALL non hanno effetto su MIN e MAX)
+\begin{verbatim}
+    SELECT Cognone, Nome, MAX( I.Stipendio )
+    FROM Impiegato as I JOIN Diparmento as D
+    ON I.Dipart = D.Nome
+    WHERE D.Città = ‘Milano’
+\end{verbatim}
+\begin{Warning}{}{}
+la precedente query non è corretta!
+Gli operatori aggregati non sono un meccanismo di selezione, ma solo
+funzioni che restituiscono un valore quando sono applicate ad un insieme.
+Cognome e Nome restituiscono un valore per ogni tupla selezionata, mentre
+MAX() restituisce un valore unico per tutto l’insieme. Per risolvere questa situazione serve il meccanismo di raggruppamento che
+non vediamo.
+\end{Warning}
+
+\subsection{OPERATORI DI RAGGRUPPAMENTO}
+
+\subsubsection{GROUP BY}
+
+Gli operatori aggregate possono essere applicati separatamente a
+sottoinsiemi di righe.
+La clausola GROUP BY permette di specificare come dividere le
+tabelle in sottoinsiemi. La clausola permette di specificare un insieme di attributi e
+l’interrogazione raggrupperà le righe che possiedono gli stessi
+valori per questo insieme di attributi.
+In una interrogazione che fa uso della clausola GROUP BY può comparire
+come argomento della SELECT solo un sottoinsieme degli attributi usati nella
+clausola GROUP BY oppure operatori di aggregazione.
+
+\subsubsection{HAVING}
+
+È possibile applicare delle selezioni ai gruppi generati tramite la
+clausola GROUP BY. La clausola HAVING permette di specificare delle condizioni che
+devono essere soddisfatte dai gruppi generati dopo l’esecuzione
+del raggruppamento tramite GROUP BY.
+
+\begin{Observation}{}{}
+    \begin{itemize}
+        \item La clausola WHERE applica delle selezioni su SINGOLE RIGHE, prima
+        dell’eventuale raggruppamento tramite GROUP BY.
+        \item La clausola HAVING applica delle selezioni su GRUPPI, generati a
+        seguito dell’esecuzione del raggruppamento tramite GROUP BY.
+    \end{itemize}
+
+    \begin{enumerate}
+        \item WHERE $\to$ seleziona le righe che
+        verranno raggruppate
+        \item GROUP BY $\to$ raggruppa le righe selezionate
+        \item HAVING $\to$ seleziona i gruppi che fanno parte del risultato
+    \end{enumerate}
+\end{Observation}
+
+\subsection{Interrogazioni nidificate}
+
+Una interrogazione nidificata è una interrogazione che contiene al
+suo interno altre interrogazioni.
+La nidificazione può avvenire sia nella clausola SELECT, che nella
+clausola FROM, che nella clausola WHERE.
+Il caso tipico è la nidificazione nella clausola WHERE, dove un
+predicato contiene un confronto tra un valore (espressione su una
+singola riga) ed il risultato di un’interrogazione SQL.
+
+\subsubsection{Nidificazione nella clausola WHERE}
+
+Se in un predicato si confronta un attributo o una espressione che
+produce un valore singolo con il risultato di un’interrogazione,
+sorge il problema di disomogeneità dei termini del confronto.
+I normali operatori di confronto ($=, <>, <, >, <=, =>$) possono
+essere estesi con le parole chiave ANY e ALL.
+\begin{itemize}
+    \item ANY: la riga soddisfa la condizione se risulta vero il confronto (con
+    l’operatore specificato) tra il valore dell’attributo (o espressione) e
+    \textbf{ALMENO} uno degli elementi restituiti dall’interrogazione.
+    \item ALL: la riga soddisfa la condizione se risulta vero il confronto (con
+    l’operatore specificato) tra il valore dell’attributo (o espression) e
+    \textbf{TUTTI} gli elementi restituiti dall’interrogazione
+\end{itemize}
+\noindent
+Per le interrogazioni nidificate viste fino ad ora, l’interrogazione
+può essere eseguita una volta sola ed il risultato ottenuto può
+essere salvato in una tabella temporanea usata per eseguire
+ciascun confronto con le righe dalla tabella esterna.
+Talvolta però l’interrogazione nidificata fa riferimento al contesto
+dell’interrogazione che la racchiude attraverso l’uso di una
+variabile (\textit{passaggio di binding}).
+L’interrogazione nidificata dovrà essere valutata separatamente
+per ciascuna riga prodotta dalla valutazione della query esterna.
+
+\subsubsection{Nidificazione nidifiicate Binding e EXISTS}
 \end{document}
