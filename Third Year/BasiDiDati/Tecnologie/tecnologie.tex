@@ -1,0 +1,198 @@
+\documentclass[a4paper]{article}
+\usepackage{import}
+\input{../../../setup.sty}
+
+\onehalfspacing
+\title{Basi di dati | Tecnologie}
+\author{Università di Verona\\Imbriani Paolo - VR500437\\Professor Sara Migliorini}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.3\textwidth]{../../UniversityofVerona.png}
+    \label{fig:centered-image}
+\end{figure}
+
+\maketitle
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{SQL}
+
+SQL è il linguaggio di riferimento per le basi di dati relazionali. Originariamente SQL
+era l'acronimo di "Structured Query Language", ma oggi è semplicemente SQL. 
+SQL ha varie funzionalità:
+\begin{itemize}
+    \item \textbf{Data Definition Language (DDL)}: consente di definire la struttura del database, 
+    come la creazione di tabelle, l'aggiunta di colonne e la definizione di chiavi primarie.
+    \item \textbf{Data Manipulation Language (DML)}: consente di manipolare i dati 
+    all'interno del database, come l'inserimento, l'aggiornamento e la cancellazione di record.
+    \item \textbf{Data Query Language (DQL)}: consente di interrogare il database 
+    per recuperare informazioni specifiche.
+\end{itemize}
+Ne esistono inoltre varie versioni. In laboratorio useremo 
+SQL-2 poiché sappiamo che è supportato da tutti i DBMS.
+
+\subsection{Istruzioni}
+
+La sintassi di base è:
+\begin{verbatim}
+    SELECT [ DISTINCT ]
+    [ * | expression [[ AS] output_name ] [, ...] ]
+    [ FROM from_item [, ...] ]
+    [ WHERE condition ]
+    [ GROUP BY grouping_element [, ...] ]
+    [ HAVING condition [, ...] ]
+    [ { UNION | INTERSECT | EXCEPT } [ DISTINCT ] other_select ]
+    [ ORDER BY expression [ ASC | DESC | USING operator ]]
+\end{verbatim}
+\noindent
+\begin{itemize}
+    \item expression è un' espressione che determina un attributo.
+    \item from$\_$item è un' espressione che determina una sorgente per gli attributi.
+    \item condition è un' espressione booleana per selezionare i valori degli attributi.
+    \item grouping$\_$element è un’espressione per poter eseguire operazioni su più valori di un attributo e
+    considerare il risultato
+    \item SELECT, FROM e WHERE sono chiamate clausole.
+    \item Estrae dal prodotto cartesiano delle tabelle elencate nella clausola FROM, le righe che soddisfano la
+    condizione specificata nella clausola WHERE.
+    \begin{itemize}
+        \item Il risultato dell‘interrogazione è una tabella con una riga per ogni riga prodotta dalla clausola FROM ed
+        eventualmente filtrata dalla clausola WHERE (se esiste), le cui colonne dipendono dalla lista degli attributi
+        nella clausola SELECT.
+    \end{itemize}
+\end{itemize}
+
+\subsection{SELECT}
+
+\begin{verbatim}
+    SELECT [ DISTINCT ]
+    [{* | expression [[ AS] output_name ]} [, ...]]
+\end{verbatim}
+
+
+\begin{itemize}
+    \item è un’abbreviazione per indicare tutti gli attributi delle tabelle.
+    \item expression è un’espressione che coinvolge gli attributi della tabella (può anche essere semplicemente
+    il nome di un attributo).
+    \item output$\_$name è il nome assegnato all’attributo che conterrà il risultato della valutazione
+    dell’espressione expression nella relazione risultato.
+    \item DISTINCT: se presente richiede l’eliminazione delle tuple duplicate.
+\end{itemize}
+
+\subsection{FROM}
+
+\begin{verbatim}
+    FROM from_item [, ...]
+\end{verbatim}
+\noindent
+
+\begin{enumerate}
+    \item \texttt{table\_name [[AS] alias [(column\_alias [, ...])]}
+    \begin{itemize}
+        \item Se sono presenti due o più tabelle, si esegue il prodotto cartesiano tra
+         tutte le tabelle. Se ci sono attributi con lo stesso nome su tabelle
+        diverse, nella SELECT questi attributi sono identificati anteponendo il nome
+        della tabella e un ’.’: nomeTabella.nomeAttributo
+    \end{itemize}
+    \item \texttt{(other\_select) [AS] nomeRisultato [(column\_alias [,...])]}
+    \begin{itemize}
+        \item è una SELECT innestata. Il risultato della SELECT interna è lo schema con nome nomeRisultato su cui fare la SELECT corrente.
+    \end{itemize}
+    \item \texttt{from\_item [NATURAL] join\_type from\_item [ON condition]}
+    \begin{itemize}
+        \item è la clausola JOIN.
+        \item Metodo più sofisticato che permette di selezionare 
+        un sottoinsieme del prodotto cartesiano di due o più tabelle. join\_type specifica
+        il tipo di join. I tipi principali sono riassunti nelle slide seguenti.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{WHERE}
+
+\begin{verbatim}
+    WHERE condition
+\end{verbatim}
+\noindent
+La clausola WHERE ammette come argomento un’espressione booleana costruita
+    combinando predicati semplici con gli operatori AND, OR e NOT
+\begin{itemize}
+    \item AND: seleziona le righe in cui tutti i predicati sono veri
+    \item OR: seleziona le righe in cui almeno un predicato è vero
+    \item NOT: seleziona le righe in cui il predicato è falso
+\end{itemize}
+\noindent
+Ciascun predicato semplice usa gli operatori $= , <>, <, >, <=$ e $>=$ p
+er confrontare un’espressione costruita a 
+partire dal valore di un attributo con un valore costante,
+oppure un’altra espressione.
+Per esprimere la precedenza degli operatori AND e OR si fa uso della parentesi.
+
+\subsubsection{LIKE}
+
+Per il confronto tra stringhe, SQL mette a disposizione anche
+l’operatore LIKE che consente verificare se una stringa rispetta un certo
+“pattern” (oppure ILIKE per case insentive). \\
+Due caratteri speciali per il confronto “$\_$” e “$\%$”:
+\begin{itemize}
+    \item “$\_$”: confronto con un carattere arbitrario
+    \item “$\%$”: confronto con una stringa di lunghezza arbitraria (anche 0) di caratteri
+    arbitrari
+\end{itemize}
+‘$\_o\%i$’ = stringa che ha una o in seconda posizione, seguita da una
+sequenza qualsiasi di caratteri (anche vuota) e che termina con una i.
+
+\subsubsection{SIMILAR TO}
+
+L’operatore SIMILAR TO è un LIKE più espressivo che accetta,
+come pattern, un sottoinsieme delle espressioni regolari POSIX
+(versione SQL). \\
+Esempi di componenti di espressioni regolari:
+\begin{itemize}
+    \item $\_$: confronto con un carattere arbitrario
+    \item $\%$: 0 o più caratteri arbitrari
+    \item $\*$: ripetizione dell’elemento precedente (carattere o gruppo) 0 o più volte
+    \item $+$: ripetizione dell’elemento precedente (carattere o gruppo) 1 o più volte
+    \item $\{n,m\}$: ripetizione del precedente match almeno n e non più di m volte. 
+    \item $[...]$: elenco di caratteri ammissibili
+\end{itemize}
+
+\subsubsection{IN}
+
+Nella clausola WHERE può apparire l’operatore [NOT] IN per
+testare l’appartenenza di un valore ad un insieme.
+
+\begin{verbatim}
+    WHERE attributo [NOT] IN ( valore [, ...] );
+\end{verbatim}
+
+\subsubsection{IS NULL}
+
+Per verificare se un attributo ha un valore nullo o meno si utilizza il predicato
+IS NULL.
+
+\begin{itemize}
+    \item Attributo IS NULL: ritorna true se l’attributo ha valore nullo
+    \item IS NOT NULL: è la negazione, ritorna true se l’attributo ha valore diverso da
+    nullo
+\end{itemize}
+
+\begin{verbatim}
+    WHERE attributo IS [ NOT ] NULL;
+\end{verbatim}
+
+SQL-2 implementa la logica a 3 valori:
+\begin{itemize}
+    \item Un predicato semplice restituisce il valore NULL quando uno qualsiasi dei termini del
+    predicato ha valore nullo.
+    \item Il predicato IS NULL è una eccezione, restituendo sempre il valore vero oppure false, mai
+    il valore NULL.
+\end{itemize}
+
+
+\end{document}
