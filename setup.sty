@@ -262,6 +262,52 @@
 }
 {def}
 
+%================================
+% OBSERVATION BOX
+%================================
+
+\newtcbtheorem[number within=section]{Observation}{\faLightbulbO $\;$ Osservazione}
+{%
+    enhanced,
+    breakable,
+    colback=orange!10!white,
+    colframe=orange!60!black,
+    coltitle=orange!40!black,
+    boxrule=0.8pt,
+    sharp corners,
+    detach title,
+    before upper=\tcbtitle\par\smallskip,
+    fonttitle=\bfseries,
+    description font=\mdseries,
+    separator sign none,
+    description delimiters parenthesis,
+    borderline west={2pt}{0pt}{orange!80!black}
+}
+{obs}
+
+%================================
+% WARNING BOX
+%================================
+
+\newtcbtheorem[number within=section]{Warning}{\faExclamationTriangle $\;$ Warning}
+{%
+    enhanced,
+    breakable,
+    colback=red!5!white,
+    colframe=red!70!black,
+    coltitle=red!60!black,
+    boxrule=0.8pt,
+    sharp corners,
+    detach title,
+    before upper=\tcbtitle\par\smallskip,
+    fonttitle=\bfseries,
+    description font=\mdseries,
+    separator sign none,
+    description delimiters parenthesis,
+    borderline west={2pt}{0pt}{red!80!black}
+}
+{warn}
+
 \newcommand{\thm}[3][]{\begin{Theorem}{#2}{#1}#3\end{Theorem}}
 \newcommand{\ex}[3][]{\begin{Example}{#2}{#1}#3\end{Example}}
 \newcommand{\dfn}[3][]{\begin{Definition}[colbacktitle=green!75!black]{#2}{#1}#3\end{Definition}}
