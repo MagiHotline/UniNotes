@@ -492,4 +492,286 @@ L’interrogazione nidificata dovrà essere valutata separatamente
 per ciascuna riga prodotta dalla valutazione della query esterna.
 
 \subsubsection{Nidificazione nidifiicate Binding e EXISTS}
+
+L’operatore logico \textbf{EXISTS} riceve come parametro
+un’interrogazione nidificata e restituisce il valore vero solo se
+l’interrogazione fornisce un risultato non vuoto.
+Questo operatore può essere usato in modo significativo solo
+quando si ha un passaggio di binding tra la query esterna e quella
+interna.
+
+\begin{verbatim}
+SELECT * FROM Persona P
+WHERE EXISTS (SELECT * FROM Persona P1 WHERE P1.Nome 
+    = P.Nome AND P1.Cognome = P.Cognome AND P1.CodFiscale 
+    <> P.CodFiscale );
+\end{verbatim}
+Nel codice sopra si estraggono le persone che hanno degli omonimi (ovvero
+persone con lo stesso nome e cognome, ma codice fiscale
+diverso).
+In questo prossimo codice si vanno ad estrarre le persone che non hanno degli omonimi (ovvero
+persone con lo stesso nome e cognome, ma codice fiscale
+diverso)
+
+\begin{verbatim}
+SELECT * FROM Persona P
+WHERE NOT EXISTS (SELECT * FROM Persona P1
+    WHERE P1.Nome = P.Nome AND
+    P1.Cognome = P.Cognome AND
+    P1.CodFiscale <> P.CodFiscale );
+\end{verbatim}
+\noindent
+Le interrogazioni nidificate possono essere specificate anche come
+elemento della clausola SELECT.
+Spesso l’uso di query nidificate nella SELECT sostituiscono l’uso del JOIN.
+Per esempio, estrarre per ogni cantante il numero di canzoni di cui è autore.
+\begin{verbatim}
+SELECT DISTINCT Nome, NumCanzoni =
+    (SELECT COUNT(*) FROM Autore A
+    WHERE A.Nome = C.Nome)
+    FROM Cantante C
+\end{verbatim}
+\noindent
+oppure
+\begin{verbatim}
+SELECT DISTINCT C.Nome, COUNT(*) as NumCanzoni
+FROM Cantante C JOIN Autore A
+ON C.Nome = A.Nome
+GROUP BY C.Nome
+\end{verbatim}
+
+\begin{Observation}{}{}
+Ricordiamo che è necessario che l’interrogazione nidificate restituisca una
+sola tupla (riferimenti tramite variabile alla interrogazione esterna).
+\end{Observation}
+\noindent
+Le interrogazioni nidificate possono essere utilizzate nella
+clausola FROM come sorgente dati su cui eseguire
+l’interrogazione. È possibile creare una catena di interrogazioni, dove ciascuna
+interrogazione utilizza il risultato della precedente come una
+tabella di base. 
+Per esempio: si estrae per ogni cantante che è anche autore di canzoni il numero
+di canzoni di cui è rispettivamente interprete e autore.
+\begin{verbatim}
+SELECT DISTINCT C.Nome, C.NumCantate, A.NumScritte
+FROM
+(SELECT Nome, Count(*) as NumCantate FROM Cantante) C
+JOIN
+(SELECT Nome, Count(*) as NumScritte FROM Autore ) A
+ON C.Nome = A.Nome
+\end{verbatim}
+\noindent
+Prima vengono eseguite le interrogazioni nella clausola FROM e i
+risultati di queste vengono usati come normali tabelle.
+
+\subsection{VIEW}
+
+Le viste permettono di salvare una query che genera una tabella temporanea.
+
+\begin{lstlisting}[language=SQL]
+CREATE VIEW <nome_vista> AS (<QUERY>)
+\end{lstlisting}
+\noindent
+Dato un nome alla query, la possiamo usare come se fosse il nome di una tabella.
+
+\subsection{Esercizi}
+
+\begin{Example}{}{}
+We have here three tables:
+\begin{itemize}
+    \item \textbf{TURISTA} con gli attributi USERNAME, COGNOME, NOME, DATA\_NASCITA, NAZIONALITA
+    \item \textbf{ATTRAZIONE} con gli attributi CODICE, NOME, DESCRIZIONE, LATITUDINE, LONGITUDINE, INDIRIZZO, CITTA, PROV
+    \item \textbf{RECENSIONE} con gli attributi ATTRAZIONE, TURISTA, TIMESTAMP, TITOLO, TESTO, VOTO
+\end{itemize}
+\begin{enumerate}
+    \item Trovare tutte le attrazioni della città di Verona il cui nome inizia con la lettera
+    $f$ maiuscola o minuscola. 
+\begin{lstlisting}[language=SQL]
+SELECT *
+FROM ATTRAZIONE
+WHERE CITTA = 'Verona' AND NOME ILIKE 'f%';
+\end{lstlisting}
+    \item Trovare tutti i turisti che nel 2025 non hanno mai rilasciato
+    recensioni con un voto $>$ 2 per attrazioni fuori dalla provincia di Verona.
+\begin{lstlisting}[language=SQL]
+SELECT T.USERNAME FROM TURIST T 
+EXCEPT (
+    SELECT R.TURISTA
+    FROM RECENSIONE R JOIN ATTRAZIONE A ON R.ATTRAZIONE = A.CODICE 
+    WHERE 
+        R.VOTO > 2 AND 
+        A.PROVINCIA <> 'VERONA' AND 
+        EXTRACT (YEAR FROM R.TIMESTAMP) = '2025'
+)
+\end{lstlisting}
+\noindent
+\begin{Observation}{}{}
+Le due query devono essere compatibili.
+\end{Observation}{}{}
+Questa query nidificata che restituisce i turisti che hanno rilasciato 
+recensioni con voto $>$ 2 per attrazioni fuori dalla provincia di Verona nel 2025 e la chiararemo Q1.
+Oppure 
+\begin{lstlisting}[language=SQL]
+SELECT T.USERNAME, T.NOME, T.COGNOME FROM TURIST T 
+NOT IN (
+    SELECT R.TURISTA
+    FROM RECENSIONE R JOIN ATTRAZIONE A ON R.ATTRAZIONE = A.CODICE 
+    WHERE 
+        R.VOTO > 2 AND 
+        A.PROVINCIA <> 'VERONA' AND 
+        EXTRACT (YEAR FROM R.TIMESTAMP) = '2025'
+)
+\end{lstlisting}
+\begin{Observation}
+Questa query non richiede che gli schemi siano compatibili,e permette di 
+aggiungere facilmente altri attributi alla query esterna 
+\end{Observation}
+    \item Trovare tutte le attrazioni che hanno ricevuto nel 2025 un numero di recensioni
+    superiore a quelle ricevute nel 2024.
+    \begin{itemize}
+        \item Date tutte le righe di R1 
+        \item Le divide per attrazioni in un gruppo per ogni ATTRAZIONE
+        \item Applica count su ogni gruppo
+    \end{itemize}
+\begin{lstlisting}[language=SQL]
+SELECT COUNT(*) AS NumRecensioni, R1.ATTRAZIONE
+FROM RECENSIONE R1 
+WHERE EXTRACT (YEAR FROM R1.TIMESTAMP) = '2025'
+GROUP BY R1.ATTRAZIONE 
+HAVING 
+    NumRecensioni > (
+        SELECT COUNT(*) AS NumRecensioni2024
+        FROM RECENSIONE R2  
+        WHERE 
+            EXTRACT (YEAR FROM R2.TIMESTAMP) = '2024' AND
+            R1.ATTRAZIONE = R2.ATTRAZIONE
+    );
+\end{lstlisting}
+Nella query annidata non ci sta bisogno di fare il \texttt{GROUP BY} 
+poiché abbiamo già fatto il DATA BINDING tra R1 e R2 con
+\texttt{R1.ATTRAZIONE = R2.ATTRAZIONE} e di conseguenza 
+R2.ATTRAZIONE è già un valore singolo e non un insieme di valori.
+    \item Trovare la media dei voti massimi rilasciati dagli utenti. 
+    \begin{itemize}
+        \item Calcolare il voto massimo rilasciato da ciascun utente $\{max_1, \dots, max_n\}$
+        \item Calcolare la media dei valori in $\{max_1, \dots, max_n\}$
+    \end{itemize}
+    \begin{Warning}{}{}
+        NO! Questa query non si può fare
+\begin{lstlisting}[language=SQL]
+SELECT AVG(MAX(VOTO))
+... 
+\end{lstlisting}
+    \end{Warning}
+\noindent
+Procediamo in questa maniera:
+\begin{lstlisting}[language=SQL]
+SELECT TURISTA, MAX(VOTO) AS MaxVoto
+FROM RECENSIONE
+GROUP BY TURISTA
+\end{lstlisting}
+\noindent 
+e poi facciamo la media:
+\begin{lstlisting}[language=SQL]
+SELECT AVG(T.MaxVoto)
+FROM ( 
+    -- Prendiamo il voto massimo rilasciato da ciascun utente
+    SELECT TURISTA, MAX(VOTO) AS MaxVoto
+    FROM RECENSIONE R
+    GROUP BY R.TURISTA
+) AS T 
+\end{lstlisting}
+    \end{enumerate}
+\end{Example}
+
+\begin{Example}{}{}
+Consideriamo le seguenti tre tabelle: 
+\begin{itemize}
+    \item AUTO(TARGA, NUM\_TELAIO, MODELLO, COLORE, KM, CILINDRATO, POSTI, PROPRIETARIO)
+    \item PARCHEGGIO(NUMERO, COMUNE, INDIRIZZO, COPERTO)
+    \item PRENOTAZIONE(CODICE, PARCHEGGIO, POSTO, AUTO, DATA\_ORA\_INIZIO, DATA\_ORA\_FINE, TIPO, PAGATO)
+\end{itemize}
+Dove 
+\[\text{PRENOTAZIONE.PARCHEGGIO} \to \text{PARCHEGGIO}\]
+\[\text{PRENOTAZIONE.AUTO} \to \text{AUTO}\]
+\begin{Observation}{}{}
+    Ricordiamo che SQL è case insentive.
+\end{Observation}
+\begin{enumerate}
+    \item Trovare tutti i parcheggi coperti di Verona 
+\begin{lstlisting}[language=SQL]
+SELECT * 
+FROM PARCHEGGIO 
+WHERE COMUNE = 'VERONA' AND COPERTO; 
+\end{lstlisting}
+\item Trovare tutti i parcheggi in cui non sono mai sstate fatte prenotazioni 
+online nel 2024. Per ciascun parcheggio riportarare il nome ed il numero di
+prenotazioni complessive.
+\begin{lstlisting}[language=SQL]
+SELECT P.NOME, COUNT(*) AS NumeroPrenotazioni
+FROM PARCHEGGIO P JOIN PRENOTAZIONE R ON (P.CODICE = R.PARCHEGGIO)
+WHERE P.CODICE NOT IN ( 
+    -- Query annidata che trova tutti i parcheggi che hanno avuto prenotazioni online nel 2024 
+    SELECT R1.PARCHEGGIO
+    FROM PRENOTAZIONI R1
+    WHERE 
+        EXTRACT (YEAR FROM DATA_ORA_INIZIO) = '2024' AND
+        TIPO = 'ONLINE'
+)
+GROUP BY P.NOME;
+\end{lstlisting}
+\item Trovare tutti i parcheggi in cui vengono effettuate
+più prenotazioni online che prenotazioni fisiche. 
+\begin{lstlisting}[language=SQL] 
+SELECT PR.PARCHEGGIO
+FROM PRENOTAZIONE PR
+WHERE R.TIPO = 'ONLINE'  
+GROUP BY R.PARCHEGGIO
+HAVING COUNT(*) > (
+    SELECT COUNT(*)
+    FROM PRENOTAZIONE R2 
+    WHERE 
+        R2.TIPO = 'FISICA' AND 
+        R2.PARCHEGGIO = R.PARCHEGGIO -- DATA BINDING
+)
+\end{lstlisting}
+\begin{Observation}{}{}
+La query interna è eseguita per ogni riga della query esterna. 
+\end{Observation}
+
+\item Trovare quanti parcheggi del comune di Verona hanno avuto un numoro 
+medio di prenotazioni nel 2024 superiore al numero 
+medio di prenotazioni complessive del 2024 dei parcheggi del comune di Padova.
+\begin{enumerate}
+    \item Calcolare \# prenotazioni nel 2025 per parcheggio per ogni parcheggio di Verona 
+    \item Calcolare \# prenotazioni nel 2025 per parcheggio per ogni parcheggio di Padova
+    \item Calcolare la media su (b)
+\end{enumerate}
+\begin{lstlisting}[language=SQL]
+CREATE VIEW NPRENOTAZIONI AS 
+( 
+    SELECT R.PARCHEGGIO, P.COMUNE, COUNT(*) AS NUM_PR
+    FROM PARCHEGGIO P JOIN PRENOTAZIONE R ON (P.CODICE = R.PARCHEGGIO)
+    WHERE EXTRACT (YEAR FROM R.DATA) = '2024'
+    GROUP BY R.PARCHEGGIO, P.COMUNE
+)
+
+SELECT N.PARCHEGGIO 
+FROM NPRENOTAZIONI AS N 
+WHERE 
+    N.NUM_PR > (
+        -- numero medio di prenotazioni dei parcheggi di PD nel 2024
+        -- (ritorna un solo valore)
+        SELECT AVG(N1.NUM_PR)
+        FROM NPRENOTAZIONI AS N1 
+        WHERE N1.COMUNE = 'PADOVA' 
+    ) AND 
+    N.COMUNE = 'VERONA'; -- Per ogni parcheggio VR guardo quali hanno # prenotazioni maggiori
+\end{lstlisting}
+\end{enumerate}
+
+\end{Example}
+
+
+
 \end{document}
