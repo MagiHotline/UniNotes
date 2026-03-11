@@ -192,6 +192,13 @@ che è un modello di esecuzione che rappresenta il flusso di controllo del progr
     $M_{i-1}, M_i, M_{i+1}$ e i linguaggi macchina $L_{m_{i-1}}, L_{m_i}, L_{m_{i+1}}$ .
     Il linguaggio $L_{m_i}$ può essere usato ai livelli superiori.
 }
+
+\thm{}{
+    Per ogni $M_L$ esiste un unico linguaggio che è il linguaggio riconosciuto
+    ed eseguito da $M_L$ (linguaggio macchina di $M_L$).
+    Per ogni LP possono esister infinite macchine astratte per $L$.
+}
+
 \noindent
 Se immaginiamo le macchine astratte a più livelli, le macchine astratte di livello più basso
 donano i loro servizi ai livelli superiori che usano i linguaggi ad alto livello per implementare 
@@ -237,6 +244,7 @@ Per definire cosa è un interprete dobbiamo introdurre le seguenti notazioni:
     \]
 }
 
+
 \subsubsection{Struttura dell'interprete}
 
 Vediamo ora come un generico interprete è strutturato, e quali sono le sue componenti principali.
@@ -258,5 +266,260 @@ while go do
     if opcode has res then store(res)
     pc = pc + sizeof(opcode) + sizeof(arguments);
 \end{verbatim}
+
+\begin{Example}{}{}
+    Un \textbf{autointerprete} è un interprete scritto 
+    nello stesso linguaggio che interpreta. Vediamo un esempio di codice:
+\begin{lstlisting}[language=scala]
+input P, d; // Programma che deve essere interpretato e il suo dato 
+pc := 2; store := [in -> d, out -> 0, x_1 -> 0,...]
+while pc < length(P) do {
+    instruction := lookup(P, pc); // Trova l'istruzione da eseguire
+    case instruction of // Dispatch on syntax 
+    skip : pc++;
+    x := e : store := store [x -> eval(e, store)]; pc++;
+    ... endw; 
+}
+output(e, store) = case e of 
+    costant: e 
+    variable: store(e)
+    e1 + e2: eval(e1, store) + eval(e2, store)
+    e1 - e2: eval(e1, store) - eval(e2, store)
+    e1 * e2: eval(e1, store) * eval(e2, store)
+    ...
+end
+\end{lstlisting}  
+\end{Example}
+
+\subsection{Compilatore}
+
+\dfn{Compilatore}
+{
+Un compilatore da $L$ a $L_0$ è un
+programma \[C^{LL_0}: Prog^L \to Prog^{L_0}\]
+Dove 
+\[
+    \forall P^L \in Prog^L \; . \; C^{LL_0}(P^L) = P^{L_0} 
+    \text{ t.c. } \forall d \in D \; .\; P^L(d) = P^{L_0}(d)
+\]
+}
+
+\begin{figure}[H]
+    \centering 
+    \begin{tikzpicture}[node distance=1.5cm, >=Stealth, thick]
+        \node[draw, rectangle, minimum width=2cm, minimum height=1.2cm] (CL) at (0,0) {$C^{LL_0}$};        
+   
+        \node (PL)  [left=of CL]  {$P^L$};
+        \node (PL0) [right=of CL] {$P^{L_0}$};
+        \node (ML1) [below=of CL] {$M_{L_1 \equiv M_{L_0}}$};
+
+        % Arrows
+        \draw[->] (PL) -- (CL);
+        \draw[->] (CL) -- (PL0);
+        \draw[->] (CL) -- (ML1);
+    \end{tikzpicture}
+\end{figure}
+\noindent
+Traduce in un codice diverso e separa la traduzione dall'esecuzione. 
+\subsubsection{Struttura del compilatore}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        node distance=1cm, 
+        >=Stealth, 
+        thick,
+        block/.style={
+            draw, 
+            rectangle, 
+            minimum width=4cm, 
+            minimum height=1cm, 
+            align=center
+        }
+    ]
+        \node[block] (SOURCE) {Programma Sorgente};
+        \node[block] (LEX)    [below=of SOURCE] {Analizzatore Lessicale};
+        \node[block] (PARSE)  [below=of LEX]    {Analizzatore Sintattico};
+        \node[block] (CODE)   [below=of PARSE]    {Generatore di codice intermedio};
+        \node[block] (TAB)    [left=of CODE] {Tabella dei Simboli};
+        \node[block] (OPT)    [right=of CODE] {Ottimizzatore};
+        \node[block] (TARGET) [below=of CODE]   {Generatore Target};
+
+        \draw[->] (SOURCE) -- (LEX);
+        \draw[->] (LEX) -- (PARSE);
+        \draw[->] (PARSE) -- (CODE);
+        \draw[->] (TAB) -- (CODE);
+        \draw[->] (CODE) -- (OPT);
+        \draw[->] (OPT) |- (TARGET);
+        \draw[->] (PARSE) -| (TAB);
+        \draw[->] (LEX) -| (TAB);
+        \draw[->] (CODE) -- (TARGET);
+    \end{tikzpicture}
+\end{figure}
+\noindent
+Dove rispettivamente:
+\begin{itemize}
+    \item Il programma sorgente è il programma scritto in $L$ che deve essere compilato
+    \item L'analizzatore lessicale è la fase che prende in input il programma sorgente 
+    e lo suddivide in token, ovvero unità lessicali come parole chiave, identificatori, operatori, ecc.
+    \item L'analizzatore sintattico prende i token prodotti dall'analizzatore lessicale e costruisce una
+     rappresentazione ad albero del programma, chiamata albero sintattico o AST (Abstract Syntax Tree).
+    \item Il generatore di codice prende l'albero sintattico e
+     produce un codice intermedio o direttamente il codice target.
+    \item La tabella dei simboli è una struttura dati che memorizza informazioni sui simboli utilizzati nel programma,
+come variabili, funzioni, classi, ecc. Viene utilizzata durante l'analisi semantica e la generazione del codice.
+    \item l'ottimizzatore migliora il codice generato in modo da renderlo più efficiente, ad esempio eliminando codice morto,
+riducendo il numero di istruzioni, migliorando l'uso della memoria, ecc.
+    \item il generatore target prende il codice intermedio e lo traduce in codice eseguibile per la macchina target,
+\end{itemize}
+Ci sono alcune modifiche che agevolano l'ultima parte di generazione del codice 
+e che ottimizza il codice generato in modo da renderlo più efficiente. 
+\begin{Example}{}{}
+Considerando $M_L$ con $L \; PL$ da implementare e $M_0$ con $L_0 \; PL$ eseguibile. \\
+L'interprete:
+\[M_L \Longleftarrow M_i \Longleftarrow M_0\]
+Il compilatore:
+\[M_L \Longrightarrow M_i \Longrightarrow M_0\]
+\end{Example}
+
+\subsection{Specializzazione}
+
+\dfn{Specializzatore}
+{
+Uno specializzatore per un PL L è un programma che realizza la funzione:
+\[
+    Spec_L : Prog^L \times D \to Prog^L
+\]
+tale che 
+\[
+    \forall P^L \in Prog^L, \forall d \in D\] \[Spec_L(P^L, d) = P^L_d \text{ t.c. } P^L(d, y) = P^L_d(y)
+\]
+}
+
+\begin{Observation}{}{}
+Lo specializzatore fornisce un legame tra interprete e compilatore. 
+Specializzando un interprete (scritto in $L_0$) sul programma (Scritto in $L$) 
+otteniamo un \textbf{compilatore} da $L$ a $L_0$. Dove $I$ è scritto in $L_0$: 
+\[
+    Spec(I, P^L) \text{ è un programma scritto in $L_0$ che integra nel codice l'esecuzione di PL} 
+\]
+\end{Observation}
+
+\section{Descrivere i linguaggi di programmazione}
+
+I linguaggi di programmazione sono pur sempre qualcosa di simili a quelli naturali
+con la quale condividono alcuni elementi in comune come:
+\begin{itemize}
+    \item \textbf{La sintassi}: l'insieme delle regole di formazione (determina 
+    quali sono le frasi ben formate nel linguaggio) descrive relazioni tra simboli;
+    \item \textbf{La semantica}: Attribuzione del significato ai simboli (determina 
+    il significato delle frasi ben formate nel linguaggio) descrive relazioni tra simboli
+    e significati;
+    \item \textbf{La pragmatica}: regole di buon utilizzo del linguaggio;
+    \item \textbf{L'implementazione}: esistono strumenti che eseguento frasi 
+    ben formate nel linguaggio, e che quindi ne permettono l'utilizzo (interpreti, compilatori). 
+\end{itemize}
+
+\subsection{La sintassi}
+
+\dfn{Parola}{
+    La parola è definita come una stringa in un alfabeto finito $\Sigma$ ed 
+    è un oggetto atomico. 
+}
+\dfn{Frase}{
+    La frase è definita come una sequenza di parole (ben formata ovvero che segue 
+    le regole della sintassi).
+}
+\dfn{Linguaggio}{
+    Il \textbf{linguaggio} è un insieme di frasi ben formate.
+}
+
+\ex{}
+{
+    Per esempio, in fondamenti avevamo i visto i seguenti:
+    \[\text{Il linguaggio = } \{a^nb^n \; | \; n \in \mathbb{N}\} \text{ con } \Sigma = \{a,b\}\]
+    Dove le stringhe possono essere $\varepsilon, ab, a^2b^2, \dots$ 
+    Per i linguaggi di programmazione 
+    \[\Sigma = \text{if, while, then, else}\]
+    Le stringhe sono i programmi (sequenza di parole) e il linguaggio è il nostro linguaggio di programmazione. 
+}
+\dfn{Lessema}{
+    Un \textbf{lessema} è una parola che ha significato (costituito da soli terminali nell'alfabeto)
+}
+\ex{}
+{
+    Nella frase "if exp then com else com":
+    \begin{itemize}
+        \item if, then, else, sono lessemi 
+        \item exp, com non sono lessemi (non hanno significato)
+    \end{itemize}
+}
+
+\dfn{Token}
+{
+    I \textbf{token} sono categorie sintattiche (simboli non terminali). Nell'esempio (4.2)
+    \begin{itemize}
+        \item if, then, else sono lessemi 
+        \item exp, com sono token (categorie sintattiche)
+    \end{itemize}
+}
+\ex{}
+{
+    Nella frase "if x $>$ 0 then $x = x + 1$ else $x = x - 1$":
+    \begin{itemize}
+        \item if, then, else sono lessemi
+        \item $x > 0$, $x = x + 1$, $x = x - 1$ sono token (categorie sintattiche)
+    \end{itemize}
+}
+
+\subsubsection{Strumenti di def. della sintassi}
+
+\dfn{Riconoscitore}
+{
+    Il \textbf{riconoscitore} è uno strumento per il riconoscimento di stringhe appartenti 
+    al linguaggio. 
+}
+\noindent
+In Fondamenti, abbiamo visto come il riconoscitore più semplice
+per un linguaggio è rappresentato da un automa a stati finiti e li ritroviamo
+nell'analisi lessicale per riconoscimento dei lessemi.
+\dfn{Generatore}{
+    Il \textbf{generatore} è uno strumento per la generazione 
+    di stringhe appartenenti al linguaggio.
+}
+\noindent
+Il generatore più semplice per un linguaggio è rappresentato da una grammatica, utilizzate
+nell'analisi sintattica dell'albero di parsing.
+Una grammatica CF per i PL è $G = (V, \Sigma, R, S)$ dove:
+\begin{itemize}
+    \item V è un insieme finito di categorie sintattiche
+    \item $\Sigma$ è un insieme di vocabolario parole ($V \cap T = \varnothing$)
+    \item R è un insieme di regole di regole di produzione 
+    \[
+        A   \to \alpha, \; A \in V, \; \alpha \in (V \cup T)^*
+    \]
+    \item $S \in V$ è la categoria della frase (programma)
+\end{itemize}
+Si utilizza la notazione BNF (CF) spesso usato per i PL:
+\begin{itemize}
+    \item $\leadsto \; \equiv \; ::=$ 
+\end{itemize}
+\ex{}
+{
+    Supponiamo di avere una grammatica per le espressioni booleane: 
+    \[
+        G = <\{Exp\}>, \{1, 0, not, and, or, (, )\}, P, Exp>
+    \]
+    Dove $Exp$ può essere:
+    \begin{itemize}
+        \item $Exp \to 0$, $Exp \to 1$,
+        \item $Exp \to not \; Exp$, $not \; Exp, \; Exp \; and \; Exp$, $Exp \; or \; Exp$
+    \end{itemize}
+    quindi:
+    \[
+        Exp \to 0 \; | \; 1 \; | \; (Exp \; or\;  Exp)\;  |\;  (Exp \; and\;  Exp) \; | \; (not\; Exp)
+    \]
+}
+
 
 \end{document}
