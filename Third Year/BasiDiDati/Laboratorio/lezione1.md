@@ -101,4 +101,98 @@ VALUES ('Van Gogh Notte', '2024-05-10', '2024-08-15', 'Arena', 'Verona'),
 
 ```sql 
 INSERT INTO Opera (nome, cognomeautore, nomeautore, nomemuseo, cittamuseo, epoca, anno)
-VALUES ('Pippo', 'Druta', 'Valeria', 'Arena', 'Verona', )
+VALUES ('Pippo', 'Druta', 'Valeria', 'Arena', 'Verona', 'Rinascimento', 1600),
+        ('Pluto', 'Druta', 'Valeria', 'Arena', 'Verona', 'Medioevo', 1200),
+        ('Paperino', 'Imbriani', 'Paolo', 'CastelVecchio', 'Verona', 'Medioevo', 1203);
+```
+
+## Esercizio 4 
+
+Provare ad inserire nella relazione Museo tuple che violino i vincoli specificati.
+
+```sql
+INSERT INTO Museo (nome, città, indirizzo, numeroTelefono, giornoChiusura, prezzo)
+VALUES ('Arena', 'Verona', 'Nuovo Indirizzo', '045123456', 'Lunedì', 10);
+```
+
+## Esercizio 5 
+
+Nell’entità Museo, aggiungere l’attributo sitoInternet e inserire gli opportuni valori.
+
+```sql
+ALTER TABLE Museo 
+ADD COLUMN sitoInternet CHARACTER VARYING(50);
+```
+
+## Esercizio 6 
+
+Nell’entità Mostra modificare l’attributo prezzo in prezzoIntero ed aggiungere l’attributo
+prezzoRidotto con valore di default 5. Aggiungere il vincolo (di tabella o di attributo?)
+che garantisca che Mostra.prezzoRidotto sia minore di Mostra.prezzoIntero.
+
+```sql
+ALTER TABLE Mostra 
+ADD COLUMN prezzoRidotto NUMERIC(5,2) DEFAULT 5;
+
+ALTER TABLE Mostra
+ADD CONSTRAINT check_prezzi 
+CHECK (prezzoRidotto < prezzoIntero);
+```
+
+## Esercizio 7
+
+Nell’entità Museo aggiornare il prezzo aggiungendo 1 Euro alle tuple esistenti.
+
+```sql
+UPDATE Museo
+SET prezzo = prezzo + 1;
+```
+
+## Esercizio 8
+
+Nell’entità Mostra aggiornare il prezzoRidotto aumentandolo di 1 Euro per quelle
+mostre che hanno prezzoIntero inferiore a 15 Euro.
+
+```sql
+UPDATE Mostra
+SET prezzoRidotto = prezzoRidotto + 1 
+WHERE prezzoIntero < 15;
+```
+
+## Esercizio 9
+
+Si assume che in ciascuna tabella della base di dati ci siano almeno 3 righe inserite.
+Implementare le chiavi esportate per ciascuna delle 4 politiche di reazione presentate
+nella pagina precedente (usare il comando DROP CONTRAINTS e ADD CONSTRAINTS
+per effettuare il cambio di politica). Provare ad eseguire una cancellazione ed un
+aggiornamento dei valori riferiti (e dei valori non riferiti) per verificare il diverso
+comportamento del DBMS.
+
+```sql
+-- NO ACTION
+ALTER TABLE Opera ADD CONSTRAINT fk_opera_noaction 
+FOREIGN KEY (nomeMuseo, cittaMuseo) REFERENCES Museo(nome, città)
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- ON CASCADE
+ALTER TABLE Opera DROP CONSTRAINT fk_opera_noaction;
+ALTER TABLE Opera ADD CONSTRAINT fk_opera_cascade 
+FOREIGN KEY (nomeMuseo, cittaMuseo) REFERENCES Museo(nome, città)
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+-- SET NULL 
+ALTER TABLE Opera DROP CONSTRAINT fk_opera_cascade;
+ALTER TABLE Opera ADD CONSTRAINT fk_opera_setnull 
+FOREIGN KEY (nomeMuseo, cittaMuseo) REFERENCES Museo(nome, città)
+ON DELETE SET NULL;
+
+-- SET DEFAULT
+ALTER TABLE Opera ALTER COLUMN nomeMuseo SET DEFAULT 'Arena'; 
+ALTER TABLE Opera ALTER COLUMN cittaMuseo SET DEFAULT 'Verona';
+
+ALTER TABLE Opera DROP CONSTRAINT fk_opera_setnull;
+ALTER TABLE Opera ADD CONSTRAINT fk_opera_setdefault 
+FOREIGN KEY (nomeMuseo, cittaMuseo) REFERENCES Museo(nome, città)
+ON DELETE SET DEFAULT;
+```
