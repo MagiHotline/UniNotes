@@ -52,6 +52,54 @@ Visualizzare tutte le mostre che hanno prezzo ridotto non valorizzato usando pri
 ’prezzoRidotto = NULL’ e poi l’espressione corretta prezzoRidotto IS NULL.
 
 ```sql
-UPDATE TABLE SET prezo 
+UPDATE Mostra
+SET prezzoRidotto = NULL 
+WHERE titolo = 'Rococo Veneziano';
 
+SELECT * FROM Mostra
+WHERE prezzoRidotto = NULL;
+
+SELECT * FROM Mostra
+WHERE prezzoRidotto IS NULL;
+```
+
+## Esercizio 6
+
+Visualizzare tutte le mostre non terminate in ordine di data inizio e, in caso di pari data inizio, data fine.
+
+```sql
+SELECT * FROM Mostra
+WHERE fine > CURRENT_DATE
+ORDER BY inizio, fine;
+```
+
+## Esercizio 7
+
+Visualizzare il numero totale di giorni di apertura del museo "Arena" di "Verona".
+
+```sql
+SELECT COUNT(*) as giorniApertura
+FROM Orario JOIN Museo ON (Orario.nomemuseo = Museo.nome AND Orario.cittamuseo = Museo.città)
+WHERE Museo.nome = 'Arena' AND Museo.città = 'Verona' AND Orario.giorno != Museo.giornochiusura;
+```
+
+## Esercizio 8
+
+Visualizzare le ore medie di apertura del museo ’Arena’ di ’Verona’.
+Suggerimento: convertire orarioapertura e orariochiusura usando ’::time’.
+
+```sql
+SELECT AVG(orariochiusura::time - orarioapertura::time) AS media_ore_apertura
+FROM Orario
+WHERE nomeMuseo = 'Arena' AND cittaMuseo = 'Verona';
+```
+
+## Esercizio 9
+
+Indicare il numero di autori distinti presenti in tutti i musei.
+
+```sql
+SELECT DISTINCT cognomeautore, COUNT(cognomeautore) AS NumeroAutori
+FROM Opera
+GROUP BY cognomeautore;
 ```
