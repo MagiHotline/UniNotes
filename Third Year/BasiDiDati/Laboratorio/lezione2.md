@@ -36,7 +36,8 @@ WHERE CURRENT_DATE < fine;
 
 ## Esercizio 4 
 
-Visualizzare per ogni museo l’orario di apertura e chiusura il martedì. Se per un museo il martedì è giorno di chiusura, non mostrare nulla.
+Visualizzare per ogni museo l’orario di apertura e chiusura il martedì. 
+Se per un museo il martedì è giorno di chiusura, non mostrare nulla.
 
 ```sql
 SELECT orarioapertura, orariochiusura 

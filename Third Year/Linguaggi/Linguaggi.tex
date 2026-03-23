@@ -521,5 +521,683 @@ Si utilizza la notazione BNF (CF) spesso usato per i PL:
     \]
 }
 
+\subsubsection{Definizione non formale}
+
+Un linguaggio si può definire anche in un modo non formale,
+definendo i costrutti base:
+
+\begin{itemize}
+    \item Assegnamento
+    \item Composizione sequenziale 
+    \item Comando iterativo (ciclo)
+    \item Comando condizionale (if)
+\end{itemize}
+Il linguaggio è definito su livelli, partendo dal basso verso l'alto:
+\begin{enumerate}
+    \item Notazione sulla grammatica
+    \item Linguaggio regolare per riconoscere gli identificatori
+    e le parole riservate al linguaggio di programmazione.
+    \item Espressioni booleane che parte dai simboli definiti 
+    ai livelli sottostanti:
+    \[
+        Exp \to 0 \; | \; 1 \; | \; (Exp \; or\;  Exp)\;  |\;  (Exp \; and\;  Exp) \; | \; (not\; Exp)
+    \]
+    \item Comandi atomici, ad esempio l'assegnamento. 
+    Utilizza identificatori, un simbolo d'assegnamento e un'espressione (booleana  in questo caso):
+    \[
+        A \to x := B
+    \]
+    \item Comandi, come per esempio l'if o un ciclo. 
+    Utilizzano i comandi atomici e le espressioni booleane:
+    \[
+        C \to A \; | \; C;C \; | \; while \; B \; do \; C \; | \; if \; B \; then \; C \; else \; C
+    \]
+    \item Programmi, cioè sequenze di comandi.
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{inf_ling.png}
+        \caption{Rappresentazione grafica dei livelli di definizione del linguaggio}
+    \end{figure}
+\end{enumerate}
+Si utilizzano espressioni parantesizzate 
+per evitare ambiguità. Se non si utilizzassero le parentesi si 
+potrebbe scegliere di eseguire prima un operatore invece di un altro, 
+e questo porterebbe a risultati diversi dalla stessa espressione.
+
+\subsection{Analisi semantica}
+
+L'analisi semantica verifica i vincoli sintattici, ad esempio che il numero di 
+parametri formali sia uguale al numero di parametri attuali, oppure che l'uso 
+di una variabile sia possibile solo dopo che sia stata dichiarata.
+Questi sono vincoli sul codice, quindi non vanno catturati dalla grammatica e
+si dicono \textbf{contestuali}. 
+\begin{itemize}
+    \item Sintassi $\to$ Grammatica CF
+    \item Semantica $\to$ Tutti i processi di verifica ed esclusione che non sono
+    descritti dalla sintassi. 
+\end{itemize}
+
+\subsubsection{Induzione strutturale}
+
+L'induzione strutturale permette di dimostrare proprietà di oggetti descritti in 
+modo induttivo o ricorsivo. Una grammatica in modo induttivo il linguaggio (insieme
+di stringhe) che genera, quindi si può utilizzare l'induzione strutturale per dimostrare 
+proprietà delle stringhe generate.
+\dfn{}{
+    Per dimostrare che una proprietà $\Pi$ su tutti gli elementi di un insieme definito in modo
+    strutturale da una grammatica bisogna:
+    \begin{enumerate}
+        \item Caso base: dimostrare la proprietà su tutti gli elementi di base, cioè quelli che
+        sono esplicitamente inseriti nell'insieme di stringhe generate dalla grammatica.
+        \item Passo induttivo: dimostrare la proprietà sugli elementi composti sotto l'ipotesi induttiva
+        che la proprietà valga per gli elementi che la compongono
+    \end{enumerate} 
+}
+
+\begin{Example}{}{}
+    Definiamo l'insieme $X \subseteq \mathbb{N}$:
+    \[
+    \begin{cases}
+        \text{Base} & : 0 \in X \\
+        \text{Passo induttivo} & : \text{se } n \in X \text{ allora } n+3 \in X
+    \end{cases}
+    \]
+    La proprietà è $X = 3\mathbb{N}$.\\
+    La proprietà è dimostrabile in modo strutturale è: $X \subseteq 3\mathbb{N}$: 
+    \begin{enumerate}
+        \item Caso base: 0 è la base di $X$ e $0 \in 3\mathbb{N}$ 
+        \item Passo induttivo: dimostriamo $\forall n. \; n \in X \rightarrow n \in \mathbb{N}$.
+        Prendiamo $n \in X$, l'ipotesi induttiva è la seguente:
+        \[
+            n \in X \rightarrow n \in 3\mathbb{N}
+        \]
+        bisogna dimostrare che $n+3 \in 3\mathbb{N}$. Ma sappiamo che:
+        \[
+        \begin{aligned}
+            n \in 3\mathbb{N} &\Rightarrow \exists i. n = 3i\\
+            &\Rightarrow n + 3 = 3i + 3 = 3(i+1) \in 3\mathbb{N}
+        \end{aligned}
+        \]
+    \end{enumerate}
+\end{Example}
+
+\begin{Example}{}{}
+Definiamo induttivamente gli alberi binari in cui i nodi sono 
+numeri $n \in \mathbb{N}$. Ogni numero è un albero binario, perché
+è un albero con un solo nodo:
+\[
+    n \in BT \text{ (base)}
+\]
+Consideriamo due alberi binari $T_1, T_2 \in BT$. allora:
+\begin{figure}[H]
+    \centering 
+    \begin{tikzpicture}[
+        level distance=1.5cm,
+        level 1/.style={sibling distance=3cm},
+        level 2/.style={sibling distance=1.5cm},
+        every node/.style={circle, draw, minimum size=0.8cm}
+    ]
+        \node {n}
+            child { node {$T_1$} }
+            child { node {$T_2$} };
+        
+    \end{tikzpicture}
+\end{figure}
+Quindi:
+\[
+    br(T_1, T_2) \in BT
+\]
+dove $br()$ è l'operatore che aggiunge un nodo ad una radice comune a $T_1$ e $T_2$.\\
+\tcblower
+
+\textbf{IMPORTANTE:} Dimostriamo che la funzione che calcola il numero di foglie 
+(\texttt{\#foglie(T)}) e la funizone che restituisce il numero di nodi che hanno figli 
+(\texttt{\#branch(T)}) sono uguali a:
+\[
+    \forall T \in BT . \; \text{\#foglie(T) = \#branch(T) + 1}
+\]
+Definiamo la funzione \texttt{\#foglie(T)}:
+\[
+\begin{cases}
+    \text{\#foglie(n)} & = 1\\
+    \text{\#foglie(br($T_1$, $T_2$))} & = \text{\#foglie($T_1$)} + \text{\#foglie($T_2$)}
+\end{cases}
+\]
+Definiamo la funzione \texttt{\#branch(T)}:
+\[
+\begin{cases}
+    \text{\#branch(n)} & = 0\\
+    \text{\#branch(br($T_1$, $T_2$))} & = \text{\#branch($T_1$)} + \text{\#branch($T_2$)} + 1
+\end{cases}
+\]
+Dimostrazione per induzione sulla costruzione degli elementi di $BT$:
+\begin{itemize}
+    \item Caso base: è il nodo che non ha figli in $BT$:
+    \[T = n \in BT\]
+    Sappiamo che 
+    \[
+    \text{\#foglie(T)} = \text{\#foglie(n)} = 1 = 1 + 0 =  1 + \text{\#branch(T)}
+    \]
+    e questo soddisfa la proprietà.
+    \item Passo induttivo: $T = br(T_1, T_2)$. Ipotesi induttiva: supponiamo che $T_1$
+    e $T_2$, soddisfino la proprietà, quindi:
+    \[
+    \text{\#foglie($T_1$)} = \text{\#branch($T_1$)} + 1
+    \text{\#foglie($T_2$)} = \text{\#branch($T_2$)} + 1
+    \]
+    Dobbiamo dimostrare che \#foglie(T) = \#branch(T) + 1, ovvero che:
+    \[
+    \begin{aligned}
+    \text{\#foglie(T)} &\stackrel{def \; T}{=} \text{\#foglie(br($T_1$, $T_2$))} \\ 
+    & \stackrel{def \; \#foglie}{=} \text{\#foglie($T_1$)} + \text{\#foglie($T_2$)}\\
+    & \stackrel{Hp \; ind}{=} \text{\#branch($T_1$)} + 1 + \text{\#branch($T_2$)} + 1\\
+    & = \text{\#branch(br($T_1$, $T_2$))} + 1\\
+    & = \text{\#branch(T)} + 1
+    \end{aligned}
+    \]
+\end{itemize} 
+Quindi anche $T$ soddisfa la proprietà.
+\end{Example}
+
+\begin{Example}{}{}
+Consideriamo la seguente grammatica:
+\[
+    S \to aa \; | \; bb \; | \; aSa \; | \; bSb
+\]
+questa grammatica genera tutte le stringhe palindrome di lunghezza pari.
+  Siccome \( aa \) e \( bb \) sono nel linguaggio, se si prende una qualsiasi
+  stringa nel linguaggio \( S \) e si aggiungono \( a \) o \( b \) all'inizio e
+  alla fine, si ottiene una stringa ancora palindroma, quindi anche questa stringa è
+  nel linguaggio. Si può quindi definire questa grammatica in modo induttivo:
+  \[
+    LS: 
+    \begin{cases}
+      aa, bb, \in LS \quad \text{(Base)} \\
+      \sigma \in LS \Rightarrow a\sigma a, b\sigma b \in LS \quad \text{(Passo induttivo)}
+    \end{cases}
+  \] 
+  Quindi \( L(S) = LS \) e la proprietà da dimostrare è:
+  \[
+    \sigma \in LS \Rightarrow \exists x, y.\; \sigma = x y \land x = reverse(y)
+  \] 
+
+  \begin{enumerate}
+    \item \textbf{Caso base}: Prendiamo:
+      \[
+        aa = \sigma \Rightarrow x = a, y = a \quad \text{e} \quad
+        x = a = reverse(a) = reverse(y)
+      \] 
+      analogo per \( \sigma = bb \).
+
+    \item \textbf{Passo induttivo}: Prendiamo \( \sigma \in LS \), l'ipotesi
+      induttiva è la seguente:
+      \[
+        \sigma = xy \;t.c.\; x = reverse(y)
+      \] 
+      Prendiamo \( \sigma' = a \sigma a \). Per ipotesi induttiva:
+      \[
+        \sigma' = a \sigma a = a \overbrace{xy}^{\sigma} a = x'y'
+      \] 
+      con \( x' = ax \) e \( y' = ya \). Quindi:
+      \[
+        \begin{aligned}
+          x' = ax &= a reverse(y) \\
+                  &= reverse(\underbrace{ya}_{y'}) \\
+                  &= reverse(y')
+        \end{aligned}
+      \] 
+      Abbiamo dimostrato che \( \sigma' \) è palindroma, quindi \( \sigma' \in LS \).
+  \end{enumerate}
+\end{Example}
+
+\begin{Example}{}{}
+    Consideriamo la seguente grammatica:
+    \[
+      E \to n \color{red}\mid\color{black} E + E \color{red}\mid\color{black} E * E
+    \] 
+    \begin{enumerate}
+      \item Definire strutturalmente l'insieme \( Exp \)
+  
+      \item Si considerino le seguenti funzioni:
+        \begin{itemize}
+          \item Conta il numero di operatori:\\
+            \( op(E): op(n) = 0 \quad op(E_1 + E_2) = op(E_1 * E_2) = 1 + op(E_1) +
+            op(e_2) \)
+  
+          \item Conta il numero di valori:\\
+            \( val(E): val(n) = 1 \quad val(E_1 + E_2) = val(E_1 * E_2) = val(E_1) + val(E_2) \)
+        \end{itemize}
+        Dimostrare che:
+        \[
+          \forall E \;.\; val(E) = op(E) + 1
+        \] 
+    \end{enumerate}
+  
+    Definizione strutturale dell'insieme \( Exp \):
+    \begin{itemize}
+      \item \textbf{Base}: \( n \in L(E) \)
+      \item \textbf{Passo induttivo}: se \( e_1, e_2 \in Exp \) allora
+        \( e_1 + e_2, e_1 * e_2 \in Exp \).
+        Le espressioni sono il minimo insieme chiuso che soddisfa queste condizioni,
+        quindi non ci sono altre espressioni in \( L(E) \). Quindi ad esempio:
+        \[
+          3 + 5 * 2 \in Exp
+        \] 
+    \end{itemize}
+    Sappiamo che:
+    \[
+      \begin{aligned}
+        &\begin{cases}
+          val(n) = 1 \\
+          val(e_1 + e_2) = val(e_1 * e_2) = val(e_1) + val(e_2)
+        \end{cases} \\
+        &\begin{cases}
+          op(n) = 0 \\
+          op(e_1 + e_2) = op(e_1 * e_2) = op(e_1) + op(e_2) + 1
+        \end{cases}
+      \end{aligned}
+    \] 
+    Quindi sull'esempio precedente:
+    \[
+      \begin{aligned}
+        val(\underbrace{3 + 5}_{e_1} * \underbrace{2}_{e_2}) &= val(3 + 5) + val(2) \\
+                                                             &= val(3) + val(5) + val(2) \\
+                                                             &= 1 + 1 + 1 = 3
+      \end{aligned}
+    \] 
+    \[
+      \begin{aligned}
+        op(\underbrace{3 + 5}_{e_1} * \underbrace{2}_{e_2}) &= op(3 + 5) + op(2) + 1 \\
+                                                            &= op(3) + op(5) + op(2) + 1 + 1 \\
+                                                            &= 0 + 0 + 0 + 1 + 1 = 2
+      \end{aligned}
+    \] 
+    Dimostriamo che \( \Pi:\; \forall e \in Exp \;.\; val(e) = op(e) + 1 \) per induzione
+    strutturale su \( Exp \) 
+    \begin{itemize}
+      \item \textbf{Caso base}: Verifichiamo \( \Pi  \) sugli elementi esplicitamente
+        inseriti nell'insieme \( Exp \), cioè sui numeri \( n \in \mathbb{N}\):
+        consideriamo le espressioni \( e = n \) 
+        \[
+          val(e) = val(n) = 1 \quad \textbf{=} \quad 1 + 0 = 1 + op(n) = 1 + op(e)
+        \] 
+  
+      \item \textbf{Ipotesi induttiva}: Dimostriamo per gli elementi composti supponendo
+        l'ipotesi induttiva sugli elementi che li compongono. Sia \( e = e_1 + e_2 \) (ipotesi1)
+        (analogo per \( e = e_1 * e_2 \)), l'ipotesi induttiva è la seguente:
+        \[
+          val(e_1) = op(e_1) + 1 \quad \land \quad val(e_2) = op(e_2) + 1
+        \] 
+        Dobbiamo dimostrare che \( val(e) = op(e) + 1 \):
+        \[
+          \begin{aligned}
+            val(e) &\stackrel{ipotesi1}{=} val(e_1 + e_2) \\
+                   &\stackrel{def\; val}{=} val(e_1) + val(e_2) \\
+                   &\stackrel{Hp.\; Ind.}{=} \underbrace{op(e_1) + 1 + op(e_2)}_{op(e_1 + e_2)} + 1 \\
+                   &\stackrel{def\; op}{=} op(e_1 + e_2) + 1 \\
+                   &\stackrel{ipotesi1}{=} op(e) + 1
+          \end{aligned}
+        \] 
+    \end{itemize}
+    Abbiamo dimostrato che \( \Pi \) è vera per tutti gli elementi di \( Exp \).
+\end{Example} 
+
+\subsubsection{Semantica}
+La semantica è l'attribuzione di significato ai simboli.
+Il significato è un'entità autonoma che esiste indipendentemente dai simboli
+usati per descriverlo. Esistono 3 tipi di semantica:
+\begin{itemize}
+  \item \textbf{Denotazionale}: È un modello completamente matematico che descrive il
+    programma come una funzione su stati (programmi come funzioni). Lo \textbf{stato}
+    descrive il valore di tutte le variabili in un certo momento.
+    \[
+      Stato: Var \mapsto Val
+    \] 
+    La semantica denotazionale è una funzione che prende un programma e restituisce
+    una funzione che prende uno stato iniziale e restituisce uno stato finale:
+    \[
+      E: Prog \mapsto \underbrace{(Stato \to Stato)}_{\text{Denotazione associata al programma}}
+    \] 
+    Un esempio di semantica denotazionale è il comportamento input/output
+
+  \item \textbf{Operazionale}: Descrive il significato del programma come sequenza
+    di trasformazione di stati, \textbf{eseguendo} i suoi comandi sulla macchina astratta.
+    Per semplificare vedremo lo stato come se fosse la memoria:
+    \[
+      \text{Memoria: } \sigma: Var^n \mapsto Val^n
+    \] 
+    \[
+      \text{Stato: } (Prog \times Mem) \cup Mem
+    \] 
+    dove:
+    \begin{itemize}
+      \item \( Prog \) è il programma che stiamo eseguendo
+      \item \( Mem \) è la memoria su cui stiamo eseguendo il programma
+      \item \( \cup Mem \) è l'insieme degli stati finali
+    \end{itemize}
+    Ad esempio:
+    \[
+      \text{Variabili:} <x, y, z> \mapsto <2, 5, 3>
+      \leadsto <x \mapsto 2, y \mapsto 5, z \mapsto 3>
+    \] 
+    Per eseguire un programma si utilizza un \textbf{sistema di transizione}:
+    \[
+      <\Sigma, \to>
+    \] 
+    dove:
+    \begin{itemize}
+      \item \( \Sigma \) è l'insieme degli stati
+      \item \( \to \) è la relazione di transizione che descrive come si passa da
+        uno stato ad un altro eseguendo un comando del programma
+    \end{itemize}
+
+  \item \textbf{Assiomatica}: Descrive il programma attraverso le proprietà che
+    soddisfa. Si calcola utilizzando un sistema di derivazione che fornisce regole per
+    dimostrare proprietà sui programmi:
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=0.6\textwidth]{assiomatica}
+      \caption{Esempio di sistema di derivazione per la semantica assiomatica}
+    \end{figure}
+    \noindent
+    Quindi descrive relazioni tra proprietà di stati.
+    Ad esempio fornendo le proprietà invarianti dei programmi, cioè le
+    proprietà che sono vere prima e dopo l'esecuzione di un programma.
+\end{itemize}
+
+\begin{Example}{}{}
+  Consideriamo il seguente programma:
+  \[
+  P = \begin{cases}
+    z := 2; \\
+    y := z; \\
+    y := y + 1; \\
+    z := y;
+  \end{cases}
+  \] 
+  Applichiamo i tre tipi diversi di semantica al programma \( P \):
+  \begin{itemize}
+    \item \textbf{Semantica denotazionale}:
+      \[
+        \begin{aligned}
+          &\mathcal{D}[\overbrace{P}^{Prog}]
+          (\overbrace{z \mapsto \bot, y \mapsto \bot}^{Stato\; iniziale}) = \\
+          &= \mathcal{D}[z := 2; y := z; y := y + 1; z := y](z \mapsto \bot, y \mapsto \bot) \\
+          &= \mathcal{D}[z := y] \circ \mathcal{D}[y := y + 1] \circ \mathcal{D}[y := z] \circ
+          \color{blue!80!black}\mathcal{D}[z := 2] (z \mapsto \bot, y \mapsto \bot) \\
+          &= \mathcal{D}[z := y] \circ \mathcal{D}[y := y + 1] \circ
+          \color{blue!80!black}\mathcal{D}[y := z] (z \mapsto 2, y \mapsto \bot) \\
+          &= \mathcal{D}[z := y] \circ
+          \color{blue!80!black}\mathcal{D}[y := y + 1] (z \mapsto 2, y \mapsto 2) \\
+          &= \color{blue!80!black}\mathcal{D}[z := y] (z \mapsto 2, y \mapsto 2) \\
+          &= \color{blue!80!black}(z \mapsto 3, y \mapsto 2)
+        \end{aligned}
+      \] 
+      Quindi \( \mathcal{D}[P](z \mapsto \bot, y \mapsto \bot) = (z \mapsto 3, y \mapsto 2) \)
+      è usata per:
+      \begin{itemize}
+        \item Dimostrare proprietà (correttezza)
+        \item Fornisce uno strumento formale per ragionare sulle funzionalità dei
+          programmi
+        \item Non è utile a chi usa il linguaggio di programmazione
+      \end{itemize}
+
+    \item \textbf{Semantica assiomatica}: Fornisce proprietà relazionali sull'input
+      e sull'output del programma, ad esempio:
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\textwidth]{esempio_assiomatica}
+        \caption{Esempio di proprietà assiomatica per il programma \( P \)}
+      \end{figure}
+
+    \item \textbf{Semantica operazionale}:
+      \[
+        \begin{aligned}
+          &<P, (z \mapsto \bot, y \mapsto \bot)> = \\
+          &= <\color{blue!80!black}z := 2\color{black}; y := z; y := y + 1; z := y, (z \mapsto \bot, y \mapsto \bot)> \\
+          &= <\color{blue!80!black}y := z\color{black}; y := y + 1; z := y, (z \mapsto 2, y \mapsto \bot)> \\
+          &= <\color{blue!80!black}y := y + 1\color{black}; z := y, (z \mapsto 2, y \mapsto 2)> \\
+          &= <\color{blue!80!black}z := y\color{black}, (z \mapsto 2, y \mapsto 3)> \\
+          &= <z \mapsto 3, y \mapsto 3>
+        \end{aligned}
+      \] 
+  \end{itemize}
+\end{Example}
+
+\subsubsection{Composizionalità della semantica}
+Il significato di ogni programma è funzione del significato dei suoi componenti
+immediati, cioè si possono ottenere le proprietà semantiche di un programma a partire
+dalle proprietà semantiche dei suoi componenti.
+
+\subsubsection{Equivalenza di programmi}
+La semantica viene utilizzata per verificare l'equivalenza tra programmi.
+\begin{itemize}
+  \item \( P_1 = P_2 \) dice che \( P_1 \) è esattamente lo stesso programma di \( P_2 \),
+    cioè sono sintatticamente uguali. Questa si dice \textbf{uguaglianza sintattica}.
+
+  \item \( P_1 \equiv P_2 \) dice che \( P_1 \) e \( P_2 \) hanno lo stesso comportamento
+    (stesso significato), anche se sono scritti in modo diverso. Questa si dice
+    \textbf{equivalenza} o uguaglianza semantica.
+\end{itemize}
+
+\begin{Example}{}{}
+  Consideriamo i seguenti programmi:
+  \begin{itemize}
+    \item \( P_1 \) insertion sort
+    \item \( P_2 \) bubblue!80!black sort
+  \end{itemize}
+  Sappiamo che i due programmi sono diversi, quindi:
+  \[
+    P_1 \neq P_2
+  \] 
+  Ma sappiamo che entrambi ordinano una lista, quindi il loro comportamento è lo stesso:
+  \begin{itemize}
+    \item Con la semantica denotazionale si ha:
+      \[
+        \mathcal{D}[P_1] = \mathcal{D}[P_2] \leadsto P_1 \equiv P_2
+      \] 
+
+    \item Con la semantica operazionale si ha:
+      \[
+        [\![ P_1 ]\!] \neq [\![ P_2 ]\!] \leadsto P_1 \not\equiv P_2
+      \] 
+  \end{itemize}
+  Quindi l'equivalenza dipende dalla scelta della semantica
+\end{Example}
+
+\subsubsection{Categorie sintattiche}
+Le categorie sintattiche sono insiemi di stringhe che condividono una certa proprietà
+per:
+\begin{itemize}
+  \item Manipolare dati (espressioni)
+  \item Trasformare stati (comandi)
+  \item Creare e manipolare i legami (dichiarazioni), ad esempio variabile-valore,
+    variabile-tipo, funzione-codice, ecc...
+\end{itemize}
+Si hanno quindi:
+\begin{itemize}
+  \item \textbf{Stato}: descrive gli effetti sugli identificatori
+  \item \textbf{Ambiente}: è un insieme di legami tra identificatori e oggetti
+    denotati
+\end{itemize}
+
+\vspace{1em}
+\noindent
+Le categorie sintattiche principali sono:
+\begin{itemize}
+  \item \textbf{Espressioni}: denotano e manipolano valori. Le espressioni possono
+    essere complesse e quindi devono essere \textbf{valutate} per restituire il
+    singolo valore che sta denotando.
+    Espressioni \textbf{sintatticamente diverse} possono denotare lo stesso valore.
+    Ad esempio \( 1 + 5 \) e \( 3 * 2 \) denotano lo stesso valore.
+
+    \begin{definition}
+      Due espressioni sono equivalenti se vengono valutate nello \textbf{stesso}
+      valore a partire da qualunque stato/memoria iniziale.
+    \end{definition}
+
+  \item \textbf{Comandi}: denotano richieste di modifica della memoria.
+    \begin{itemize}
+      \item Le strutture di controllo decidono quali comandi eseguire
+      \item Gli assegnamenti modificano effettivamente la memoria
+    \end{itemize}
+    Rappresentano funzioni: \( Memoria \mapsto Memoria \). I comandi vengono
+    \textbf{eseguiti} per attuare la corrispondente richiesta di trasformazione della
+    memoria. Queste trasformazioni sono \textbf{irreversibili}, cioè non possono essere
+    cancellate, ma solo annullate semanticamente, ad esempio:
+    \[
+      x := x + 1; \; x := x - 1
+    \] 
+    Questi comandi si annullano, ma lo stato è stato comunque modificato.
+
+    \begin{definition}
+      Due comandi sono equivalenti se per ogni stato iniziale in input producono lo
+      stesso stato in output. Quindi l'equivalenza è vista come uguaglianza della
+      funzione calcolata.
+    \end{definition}
+
+  \item \textbf{Dichiarazioni}: denotano richieste di creazione o modifica di legami,
+    ovvero di \textbf{ambienti}. Le dichiarazioni vengono \textbf{elaborate} per
+    attuare le richieste di creazione o modifica degli ambienti.
+
+    \begin{definition}
+      Due dichiarazioni sono equivalenti se producono lo stesso ambiente (e la stessa
+      memoria) a partire da qualunque stato iniziale.
+    \end{definition}
+\end{itemize}
+La separazione tra le categorie sintattiche non è rigida, ad esempio un'espressione
+può avere anche side effects, quindi modificare la memoria, ecc...
+
+\subsubsection{Linguaggio "giocattolo" PLO}
+In questo corso considereremo un linguaggio di programmazione "giocattolo" 
+simile al linguaggio Pascal in cui:
+\begin{itemize}
+  \item Esiste un singolo tipo di dato \texttt{integer}
+  \item I booleani sono rappresentati come interi
+  \item Strutture di controllo standard
+  \item Astrazione del controllo
+  \item Le procedure non hanno parametri
+\end{itemize}
+Il linguaggio è definito nel seguente modo:
+\[
+  \begin{aligned}
+    \texttt{\color{orange}<Program>} \quad &\texttt{\color{orange}P\color{black}} \to
+    \texttt{\color{purple}B} \\
+    %
+    \texttt{\color{purple}<Block>} \quad &\texttt{\color{purple}B\color{black}} \to
+    \texttt{\color{green!60!black}D\color{blue!80!black}S} \\
+    %
+    \texttt{\color{green!60!black}<Declar>} \quad & \texttt{\color{green!60!black}D\color{black}} \to
+    \texttt{[const I = N\{,I=N\};]} \\
+                   & \color{red}\color{red}\mid\color{black}\color{black} \texttt{[var I\{,I\};]} \\
+                   & \color{red}\color{red}\mid\color{black}\color{black} \texttt{[procedure I;\color{green!60!black}B\color{black};]} \\
+    %
+    \texttt{\color{blue!80!black}<Stmts>} \quad & \texttt{\color{blue!80!black}S\color{black}} \to
+    \varepsilon 
+    \color{red}\color{red}\mid\color{black}\color{black} \texttt{I := E} \\
+                   & \color{red}\color{red}\mid\color{black}\color{black} \texttt{call I} \\
+                   & \color{red}\color{red}\mid\color{black}\color{black} \texttt{if \color{olive}C\color{black}\ then \color{blue!80!black}S\color{black}} \\
+                   & \color{red}\color{red}\mid\color{black}\color{black} \texttt{while \color{olive}C\color{black}\ do \color{blue!80!black}S\color{black}} \\
+                   & \color{red}\color{red}\mid\color{black}\color{black} \texttt{begin \color{blue!80!black}S\color{black}\{;\color{blue!80!black}S\color{black}\} end} \\
+    %
+    \texttt{\color{olive}<Cond>} \quad & \texttt{\color{olive}C\color{black}} \to
+    \texttt{odd \color{gray}E\color{black}} 
+                    \color{red}\color{red}\mid\color{black}\color{black} \texttt{\color{gray}E\color{black}\ > \color{gray}E\color{black}} \\
+                   & \color{red}\color{red}\mid\color{black}\color{black} \texttt{\color{gray}E\color{black}\ >= \color{gray}E\color{black}} 
+                    \color{red}\color{red}\mid\color{black}\color{black} \texttt{\color{gray}E\color{black}\ = \color{gray}E\color{black}} \\
+                   & \color{red}\color{red}\mid\color{black}\color{black} \texttt{\color{gray}E\color{black}\ \# \color{gray}E\color{black}} 
+                    \color{red}\color{red}\mid\color{black}\color{black} \texttt{\color{gray}E\color{black}\ < \color{gray}E\color{black}} \\
+                   & \color{red}\color{red}\mid\color{black}\color{black} \texttt{\color{gray}E\color{black}\ <= \color{gray}E\color{black}} \\
+    %
+    \texttt{\color{gray}<Expr>} \quad & \texttt{\color{gray}E\color{black}} \to
+    \texttt{I} \color{red}\color{red}\mid\color{black}\color{black} \texttt{N} 
+                      \color{red}\color{red}\mid\color{black}\color{black} \texttt{\color{gray}E\color{black}\ op \color{gray}E\color{black}} 
+                      \color{red}\color{red}\mid\color{black}\color{black} \texttt{(\color{gray}E\color{black})}
+  \end{aligned}
+\] 
+\begin{itemize}
+  \item I programmi \( \color{orange}P \) sono blocchi \( \color{purple}B \).
+  \item I blocchi \( \color{purple}B \) sono una dichiarazione \( \color{green!60!black}D \)
+    seguita da un comando \( \color{blue!80!black}S \).
+    Si noti che \( \color{green!60!black}D \) ed \( \color{blue!80!black}S \) sono definiti in modo
+    libero dal contesto, ovvero quello che possiamo generare da \( \color{blue!80!black}S \)
+    non deve avere necessariamente nessun vincolo con quello che generiamo da
+    \( \color{green!60!black}D \). In altre parole questa grammatica non ci obbliga in nessun
+    modo ad usare identificatori precedentemente definiti. Quindi dalla descrizione
+    sintattica rimangono fuori gli aspetti context sensitive (vincoli sintattici)
+    che la grammatica CF non è in grado di rappresentare. Servirà la definizione di
+    una “semantica statica” che avrà il ruolo di verificare questi vincoli prima di
+    compilare e/o eseguire.
+
+  \item Le dichiarazioni \( \color{green!60!black}D \) sono dichiarazioni di valori costanti
+    con nome (\texttt{const}), dichiarazioni di variabili (\texttt{var}) e
+    dichiarazioni di procedure (ovvero di un blocco riferibile con un nome).
+
+  \item I nomi sono gli identificatori \( I \), considerati qui parte del vocabolario;
+    \( N \) sono i numeri naturali, considerati anch’essi parte del vocabolario.
+
+  \item Non abbiamo bisogno del concetto di tipo in quanto abbiamo solo un tipo di dato.
+
+  \item Si noti che le produzioni di \( \color{green!60!black}D \) sono tutte opzionali, questo
+    significa che un programma può essere un blocco senza dichiarazioni.
+
+  \item I comandi sono: il comando vuoto, l’assegnamento di un valore (denotato da una
+    espressione) ad un identificatore, la chiamata ad una procedura mediante il suo
+    nome, il comando condizionale che esegue un comando al verificarsi di una
+    condizione booleana \( \color{olive}C \), il ciclo che ripete un comando finché una data
+    condizione \( \color{olive}C \) è vera e la composizione sequenziale di comandi.
+
+  \item Le condizioni \( \color{olive}C \) sono espressioni dal valore booleano:
+    \texttt{odd} è un predicato unario che verifica se l’espressione è
+    0, poi ci sono vari operatori di confronto di espressioni \( \color{gray}E \).
+
+  \item Le espressioni \( \color{gray}E \) sono identificatori, valori naturali,
+    operazioni tra espressioni e espressioni tra parentesi.
+
+  \item Si sintetizza con \( \texttt{op} \) la metavariabile dell’insieme
+    \( \{+, -, *, /\} \). La stessa cosa si potrebbe fare per gli operatori
+    di confronto, mettendo in \( \color{olive}C \) la produzione \( E \; cop \; E \) con
+    \( cop \) metavariabile per gli elementi in \( \{ >, >=, =, \#, <=, < \} \).
+\end{itemize}
+La grammatica delle espressioni è ambigua, ma più comoda da usare e si può utilizzare
+per definire la semantica. Per il compilatore però bisogna fornire una grammatica
+equivalente precisa e quindi non ambigua, come la seguente:
+\[
+  \begin{aligned}
+    \texttt{\color{gray}<Expr>} \quad &\texttt{\color{gray}E\color{black}} \to
+    \texttt{[+,-]\color{gray}
+    T\color{black} [\color{gray}A\color{black} \color{gray}T\color{black}]} \\
+    %
+    \texttt{\color{gray}<Add op>} \quad &\texttt{\color{gray}A\color{black}} \to
+    \texttt{+} \color{red}\mid\color{black} \texttt{-} \\
+    %
+    \texttt{\color{gray}<Terms>} \quad &\texttt{\color{gray}T\color{black}} \to
+    \texttt{\color{gray}F\color{black} [\color{gray}M\color{black}
+    \color{gray}F\color{black}]} \\
+                                       &\texttt{\color{gray}M\color{black}} \to
+                                       \texttt{*} \color{red}\mid\color{black}
+                                       \texttt{/} \\
+    %
+    \texttt{\color{gray}<Factor>} \quad &\texttt{\color{gray}F\color{black}} \to 
+    \color{blue!80!black}\texttt{I}\color{red} \color{red}\mid\color{black}
+    \color{green!60!black}\texttt{N}\color{black} \color{red}\mid\color{black} \texttt{\color{black}(\color{gray}E\color{black})} \\
+    %
+    \texttt{\color{green!60!black}{<Numbers>}} \quad &\texttt{\color{green!60!black}N\color{black}}
+    \to \texttt{[+,-]\color{purple}d\color{black}\{\color{purple}d\color{black}\}} \\
+    %
+    \texttt{\color{purple}{<Digit>}} \quad &\texttt{\color{purple}d\color{black}} \to
+    \texttt{0} \color{red}\mid\color{black} \ldots \color{red}\mid\color{black} \texttt{9} \\
+    %
+    \texttt{\color{blue!80!black}{<Ident>}} \quad &\texttt{\color{blue!80!black}I\color{black}} \to
+    \texttt{\color{brown}l\color{black}\{\color{brown}l\color{black},
+    \color{purple}d\color{black}\}} \\
+    %
+    \texttt{\color{brown}{<Letter>}} \quad &\texttt{\color{brown}l\color{black}} \to
+    \texttt{A} \color{red}\mid\color{black} \ldots \color{red}\mid\color{black} \texttt{Z}
+  \end{aligned}
+\] 
+
+
+
 
 \end{document}
