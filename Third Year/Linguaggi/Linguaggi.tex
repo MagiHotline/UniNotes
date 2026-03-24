@@ -1031,10 +1031,78 @@ Le categorie sintattiche principali sono:
     Espressioni \textbf{sintatticamente diverse} possono denotare lo stesso valore.
     Ad esempio \( 1 + 5 \) e \( 3 * 2 \) denotano lo stesso valore.
 
-    \begin{definition}
+    \dfn{}
+    {
       Due espressioni sono equivalenti se vengono valutate nello \textbf{stesso}
       valore a partire da qualunque stato/memoria iniziale.
-    \end{definition}
+    }
+
+    Tra le espressioni ci sono quelle aritmiche di cui gli aspetti progettuali sono:
+    \begin{itemize}
+        \item Arietà delle operazioni (notazione)
+        \item Regole di precedenza e associatività
+        \item Ordine di valutazione (left-to-right, right-to-left, non specificato)
+        \item Side effects (modificano la memoria)
+        \item Overloading di operatori
+        \item Espressioni con operandi di tipo misto. (i.e $1 + ciao$)
+        \item Notazione:
+        \begin{itemize}
+            \item Infix: \( 1 + 5 \)
+            \item Postfix: \( 1 \; 5 \; + \)
+            \item Prefix: \( + \; 1 \; 5 \)
+        \end{itemize}
+        Quella prefissa e postfissa non richiedono regole di associatività e precedenza. 
+        \ex{}
+        {   
+            Prendiamo la notazione \textbf{postfissa}.
+            Immaginiamo di avere la seguente espressione:
+            \[
+            5 \;  3 \; 2 \;  \ast \; +
+            \]
+            \begin{itemize}
+                \item Si legge 5, si inserisce nello stack (5)
+                \item Si legge 3, si inserisce nello stack (5, 3)
+                \item Si legge 2, si inserisce nello stack (5, 3, 2)
+                \item Si legge \(*\), si esegue l'operazione con i due operandi in cima allo stack, quindi si esegue \( 3 * 2 \) e si inserisce il risultato nello stack (5, 6)
+                \item Si legge \( + \), si esegue l'operazione con i due operandi in cima allo stack, quindi si esegue \( 5 + 6 \) e si inserisce il risultato nello stack (11)
+                \item Il risultato finale è 11 
+            \end{itemize}
+        }
+        \ex{}
+        {
+            Nel caso della notazione \textbf{prefissa}:
+            \[
+            + \; * \;  3  \; 2 \; 5
+            \]
+            Consideriamo $c$ come l'arietà che memorizza il numero di operandi dell'operatore da applicare è 2, quindi:
+            \begin{itemize}
+                \item Si legge \( + \), si inserisce nello stack (+) 
+                \item Si legge \(*\), si inserisce nello stack (*, +) (l'arietà ora è $c = 2$)
+                \item Si legge 5, si inserisce nello stack (5, *, +) e si decrementa l'arietà di \(*\) di uno: $c = 1$.
+                \item Si legge 3, si inserisce nello stack (3, 5, *, +) e si decrementa l'arietà di \(*\) di uno: $c = 0$.
+                Quindi si esegue \( 2 * 3 \) e si inserisce il risultato nello stack (6, +)
+                \item Si legge 5, si inserisce nello stack (5, 6, +) e si decrementa l'arietà di \( + \) di uno: $c = 0$.
+                \item Si esegue \( 5 + 6 \) e si inserisce il risultato nello stack (11)
+            \end{itemize}
+        }
+        \ex{}
+        {
+            Nel caso della notazione \textbf{infix}:
+            \[
+            5 + 3 * 2
+            \]
+
+            Le regole di \textbf{precedenza} servono per definire quale operatore applicare prima.
+            Solitamente 
+            \begin{itemize}
+                \item $+, -$ sono allo stesso livello. 
+                \item $*, /$ sono allo stesso livello e hanno precedenza su $+, -$.
+            \end{itemize}
+            Le regole di \textbf{associtività} decidono l'ordine di 
+            applicazione di operatori allo stesso livello di prededenza. Solitamente nella matematica
+            è sempre left-to-right.
+        }
+    \end{itemize}
 
   \item \textbf{Comandi}: denotano richieste di modifica della memoria.
     \begin{itemize}
@@ -1067,6 +1135,7 @@ Le categorie sintattiche principali sono:
 \end{itemize}
 La separazione tra le categorie sintattiche non è rigida, ad esempio un'espressione
 può avere anche side effects, quindi modificare la memoria, ecc...
+
 
 \subsubsection{Linguaggio "giocattolo" PLO}
 In questo corso considereremo un linguaggio di programmazione "giocattolo" 
@@ -1198,6 +1267,130 @@ equivalente precisa e quindi non ambigua, come la seguente:
 \] 
 
 
+\subsubsection{Espressioni: ordine di valutazione degli operandi}
 
+L'ordine di valutazione degli operandi è un aspetto progettuale importante dove si vanno a definire:
+\begin{itemize}
+    \item Operandi non definiti 
+    \item Side effects (modificano la memoria).
+    \item Aritmetica finita
+\end{itemize}
+Per ragionare sull'ordine di valutazione dobbiamo capire come alcuni dei linguaggi di programmazione
+valutano le espressioni e ci sono due modi principali:
+\dfn{Valutazione eager e lazy}{
+\begin{itemize}
+    \item \textbf{Eager}: valuta tutte le parti dell'espressione, 
+    quindi valuta anche quelle che non gli servono per restituire il risultato.
+    \item \textbf{Lazy}: valuta solo le parti dell'espressione che 
+    gli servono per restituire il risultato.
+\end{itemize}
+}
+\begin{Example}{Operandi non definiti}{}
+    Un espressione del tipo:
+    \[
+        a == 0 \; ? \; b \; :\; b / a
+    \]
+    Questa espressione può causare problemi perché se \( a == 0 \) allora
+     \( b / a \) è non definita (divisione per zero).
+    Dove in base al linguaggio di programmazione:
+    \begin{itemize}
+        \item Per la valutazione \textbf{eager}, valuta tutte le parti dell'espressione, quindi valuta anche \( b / a \) che è non definita
+         (divisione per zero)
+        \item Per la valutazione \textbf{lazy}, valuta la prima parte ma solo una volta che ha la risposta
+        valuta quella che gli serve. In questo caso se \( a == 0 \) allora valuta \( b \) e restituisce 
+        il risultato, altrimenti valuta \( b / a \) e restituisce il risultato. Quindi non si ha una valutazione di un operando non definito.
+    \end{itemize}
+    Prendiamo il seguente esempio:
+    \begin{lstlisting}
+p := lista;
+while (p != nil) and (p.valore != 3) do {...}
+\end{lstlisting}
+    Se la valutazione è eager, questo codice mi da un \textbf{errore} 
+    perché se mi valuta $p = nil$ ma valuta anche $p.valore$ e quindi mi da errore. 
+    Con valutazione lazy, valuta $p = nil$ e restituisce false. 
+\end{Example}
+
+\begin{Example}{Side Effects}{}
+    Prendiamo come esempio il seguente codice:
+    \begin{lstlisting}
+a = 10; 
+b := a + fun(&a); // fun modifica il parametro
+\end{lstlisting}
+    Anche qua a seconda del linguaggio di programmazione e dell'ordine di valutazione 
+    degli operandi, si ha:
+    \begin{itemize}
+        \item Se valutiamo prima \( a \) allora $a$ manterrà il valore 10.
+        \item Altrimenti se valutiamo prima \( fun(\&a) \) allora $a$ sarà modificato da 
+        $fun$ e quindi $b$ avrà un valore diverso.
+    \end{itemize}
+\end{Example}
+
+\subsubsection{Espressioni IMP} 
+
+Definiamo la grammatica delle espressioni. Prendiamo dove $Eval = bool \cup int$ (quindi 
+può essere sia un booleano che un intero):
+\[
+  \begin{aligned}
+    E &\to E + E \color{red}\mid\color{black} E * E \color{red}\mid\color{black} (E) \color{red}\mid\color{black} n \\
+    A &\to n \; |\;  A \; op \; A \; \; \; op = \{+,-,*\}\\
+    B &\to true \; |\; false \; |\; A \; = \; A \; | \; not \; B \; | \; B \; or \; B \;
+  \end{aligned}
+\]
+Un po' di notazizone:
+\begin{itemize}
+    \item $\mathcal{N} \leadsto$ insieme dei valori numerici $n,m,p$ 
+    \item $\mathcal{E} \leadsto$ insieme di alberi di valutazione di espressioni $e$
+    (stringa di soli terminali generati in Exp)
+\end{itemize}
+Diamo semantica definendo un sistema di transizione
+\[
+\text{Stati : } \mathcal{E} \cup \mathcal{N} \text{ (stati terminali)}
+\]
+Relazione$\&$Transizione: definita attraverso regole ccostruite induttivamente sulla grammatica. 
+Definiamo le seguenti regole sulle espressioni:
+\[
+    \mathcal{E}_1: \overbrace{m \; op \; n}^{\text{simboli}} \to p \text{ dove } p = \underbrace{m \; op \; n}_{\text{calcolo effettivo}}
+\]
+con $n,m$ simboli $\mathcal{N}$. 
+Quindi ad esempio:
+\[
+    10 + 12 \to 22 
+\]
+Prendiamo le seguenti regole che impongono una valutazione left-to-right:
+\[\mathcal{E}_2 : \frac{e_0 \to e_0'}{e_o \; op \; e_1 \to e_0' \; op \;e }\]
+\[\mathcal{E}_3 : \frac{e_1 \to e_1'}{n \; op \; e_1 \to m \; op \; e_1'}\]
+\begin{Example}
+Prendiamo per esempio questa espressione seguendo le regole che abbiamo appena definito:
+\[
+    \underbrace{(2 + 3)}_{e_0} * \underbrace{(5 - (1 + 4))}_{e_1}
+\]
+Costruiamo l'albero di valutazione:
+\begin{figure}[H]
+    \centering 
+    \begin{forest} 
+    [$*$ 
+        [$+$ 
+            [2] 
+            [3]
+        ] 
+        [$-$ 
+            [5] 
+            [$+$ 
+                [1] 
+                [4]
+            ]
+        ]
+    ]
+    \end{forest}
+\end{figure}
+\noindent
+Le regole che abbiamo fissato non ci permettono di valutare prima \( e_1 \) e poi
+ \( e_0 \), ma ci obbliga a valutare prima \( e_0 \) e poi \( e_1 \).
+Potremmo aggiungere quest'ultima regola per permettere 
+anche quella a destra prima di quella sinistra:
+\[
+    \mathcal{E}_3 : \frac{e_1 \to e_1'}{e_0 \; op \; e_1 \to e_0 \; op \; e_1'}
+\]
+\end{Example}
 
 \end{document}
