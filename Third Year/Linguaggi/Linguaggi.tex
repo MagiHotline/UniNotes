@@ -1368,16 +1368,16 @@ Costruiamo l'albero di valutazione:
 \begin{figure}[H]
     \centering 
     \begin{forest} 
-    [$*$ 
-        [$+$ 
-            [2] 
-            [3]
+    [$*$, blue  
+        [$+$, blue 
+            [2, blue] 
+            [3, blue ]
         ] 
-        [$-$ 
-            [5] 
-            [$+$ 
-                [1] 
-                [4]
+        [$-$, red
+            [5, red] 
+            [$+$, orange 
+                [1, orange] 
+                [4, orange]
             ]
         ]
     ]
@@ -1386,10 +1386,10 @@ Costruiamo l'albero di valutazione:
 \noindent
 Le regole che abbiamo fissato non ci permettono di valutare prima \( e_1 \) e poi
  \( e_0 \), ma ci obbliga a valutare prima \( e_0 \) e poi \( e_1 \).
-Potremmo aggiungere quest'ultima regola per permettere 
-anche quella a destra prima di quella sinistra:
+Potremmo aggiungere questa regola alternativa per permettere 
+la valutazione right-to-left:
 \[
-    \mathcal{E}_3 : \frac{e_1 \to e_1'}{e_0 \; op \; e_1 \to e_0 \; op \; e_1'}
+    \mathcal{E}_3' : \frac{e_1 \to e_1'}{e_0 \; op \; e_1 \to e_0 \; op \; e_1'}
 \]
 \end{Example}
 
