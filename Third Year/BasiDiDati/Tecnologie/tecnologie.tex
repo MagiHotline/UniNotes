@@ -772,6 +772,208 @@ WHERE
 
 \end{Example}
 
+\section{METODI DI ACCESSO} 
+
+
+\subsection{Operazioni sulle pagine} 
+
+\begin{itemize}
+    \item \textbf{Inserimento}
+    \begin{itemize}
+        \item Se esiste uno spazio contiguo sufficiente $\Rightarrow$ siamo nel caso semplice 
+        perché ci basta aggiungere una tupla e aggiornare il dizionario. 
+        \item Se non esiste uno spazio sufficiente $\Rightarrow$ 
+        dobbiamo avere un'interazione con il filesyste per allocare nuovi blocchi per
+        i file. 
+        \item Se esiste uno spazio sufficiente ma non contiguo $\Rightarrow$
+        Riorganizzazione spazio: inserimento semplice.
+    \end{itemize}
+    \item \textbf{Cancellazione}
+    \begin{itemize}
+        \item Sempre possibile e non necessita riorganizzazione
+    \end{itemize}
+    \item  \textbf{Accesso}
+    \begin{itemize}
+        \item Tupla $\leadsto$ dizionario, accesso sequenziale  
+        \item Ad un attributo di una tupla: 
+        \begin{itemize}
+            \item Identificare la tupla $t$ 
+            \item Scorrere elementi di $t$ tramite offset
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\subsection{Criteri di organizzazione}
+
+I criteri per cui organizziamo le tuple nei blocchi possono essere:
+
+\begin{itemize}
+    \item \textbf{Sequenziale}: abbiamo una disposizione consecutiva 
+    delle tuple in base ad un criterio specifico (es. ordine di inserimento). 
+    \item \textbf{Accesso calcolato (Hash)}: La posizione delle tuple nei blocchi
+    dipende da un algoritmo di hashing. 
+    \item \textbf{Albero}: principato utilizzato per la costruzione di indici. 
+\end{itemize}
+
+\subsubsection{Struttura primaria sequenziale/seriale}
+
+Nella struttura primaria sequenziale, costruiamo i blocchi 
+"logicamente" consecutivi. Assumiamo che questi blocchi siano uno vicini all'altro,
+in modo da minimizzare i tempi di accesso.
+Ci sono due modi per organizzare le tuple nei blocchi:
+\begin{itemize}
+    \item \textbf{Disordinata}: le tuple sono disposte rispetto all'ordine di inserimento.
+    È la forma più semplice con cui salviamo i nostri dati. 
+    Quali sono le sue caratteristiche?
+    \begin{itemize}
+        \item \textbf{Inserimento:} prendo l'ultimo blocco ($b$) del file libero e tento di fare 
+        l'inserimento $b$. Ha bisogno di un solo accesso a memoria secondaria. 
+        \item \textbf{Ricerca:} non è efficiente perché dovremmo fare una scansione 
+        sequenziale di tutti i blocchi del file. 
+        \item \textbf{Cancellazione/Modifica:} Per potere eliminare una tupla 
+        abbiamo prima bisogno di trovarla. Dunque richiede la ricerca. Una volta
+        che l'abbiamo trovata, basta semplicemente che cancelliamo senza ricompattare. 
+        Nella modifica invece può cambiare la dimensione della tepla e potrebbe 
+        non starci nello stesso spazio. In questo caso,
+        devo cancellare e inserire. Per far fronte a questo problema,
+        il DBMS può riorganizzare i blocchi periodicamente. 
+    \end{itemize}
+    \item \textbf{Ordinata}: le tuple sono disposte rispetto ad un campo chiamato "chiave di ordinamento".
+    Questa struttura rende efficiente le operazioni che hanno bisogno dell'ordinamento 
+    utilizzato ad esempio:
+    \begin{itemize}
+        \item Elenco ordinato
+        \item Range query 
+        \item Operazioni aggregate 
+    \end{itemize}
+    In caso di aggiornammento è necessario mantenere l'ordinamento,
+    quindi servono periodiche riorganizzazioni dei blocchi.
+    \begin{itemize}
+        \item \textbf{Inserimento: } 
+        \begin{itemize}
+            \item Quando devo fare l'inserimento
+            devo prima individuare il blocco in cui fare l'inserimento. 
+            Devo andare a pescare il blocco candidato ovvero quello che contiene
+            la tupla precedente nell'ordinamento.
+            \item Se c'è spazio, allora faccio l'inserimento e basta, altrimenti
+            devo aggiungere un nuovo blocco in cui mettere questa tupla.
+        \end{itemize}
+        \item \textbf{Cancellazione: }
+        \begin{itemize}
+            \item Devo individuare il blocco $b$ che la contiene
+            \item Cancellare la tupla 
+            \item Aggiusto i puntatori tra i blocchi per mantenere l'ordinamento
+        \end{itemize}
+        \item \textbf{Riorganizzazione: }
+        TODO 
+    \end{itemize}
+\end{itemize}
+
+\subsection{Indici}
+
+Gli indici sono delle strutture dati per l'accesso efficiente ai file sequenziali. 
+L'obiettivo degli indici è quello di velocizzare l'accesso casuale 
+via chiave di ricerca (un insieme di attributi).
+Gli indici si contraddistinguono tra due tipi:
+\begin{itemize}
+    \item \textbf{Indici primari}: la chiave di ordinamento è uguale alla chiave di ricerca. 
+    Ogni record dell'indice è composto da:
+    \[
+        < v_i, p_i >
+    \]
+    dove $v_i$ è il valore della chiave di ricerca e $p_i$ è il puntatore 
+    alla prima tupla con quel valore di chiave (basta 1 puntatore perché chiave 
+    ricerca = chiave ordinamento). Trovata la prima tupla, le altre sono di seguito.
+    Inoltre l'indice può essere 
+    \begin{itemize}
+        \item \textbf{denso}, ovvero che esiste un recordo di indice per ogni chiave di ricerca.
+        \item \textbf{sparso}, solo per alcune occorrenze dlle chiave persenti nel file esiste un corrispondente 
+        record nell'indice, tipicamente una per blocco.
+    \end{itemize}
+    \begin{itemize}
+        \item Per la \textbf{ricerca} di una chiave $k$ se è \textbf{denso}:
+        \begin{itemize}
+            \item $K$ è presente nell'indice?
+            Se no, allora è finito subito e ho solo un acccesso all'indice (vuol dire 
+            fare una scansione sequenziale dei blocchi in cui è salvato l'indice).
+            Altrimenti, se è presente, faccio accesso al blocco puntato da
+            $p_k$ e quindi il mio costo equivale a un accesso all'indice + 
+            un accesso al blocco dati. Per l'accesso all'indice devo comunque 
+            caricar el'indice di memoria che sono comunque molto meno rispetto
+            a fare una scansione sequenziale. 
+        \end{itemize}
+        \item Per la \textbf{ricerca} di una chiave $K$ se è \textbf{sparso} ($k$ potrebbe 
+        non essere presente nell'indice ma essere presente nelle tuple. ):
+        \begin{itemize}
+            \item Eseguo una scansione sequenziale dell'indice per trovare $(k', p_k)$
+            dove $k'$ è il valore di chiave più grande minore 
+            o uguale alla chiave $k$ che sto cercando
+            \item A questo punto seguo il puntatore $p_k$ per accedere al blocco.
+            In questo caso il costo dell'operazione è:
+            \[
+                \text{costo = un accesso all'indice + 
+            un accesso al blocco dei dati. }
+            \]
+        \end{itemize}
+        \item \textbf{Inserimento}:
+        \begin{itemize}
+            \item Come un inserimento su file sequenziale disordinato/ordinato
+            \item Aggiornare indice (mantenere l'indice è costoso, quindi 
+            bisogna fare dei buon compromessi su il numero di indici che costruiamo
+            e il numero di attributi su cui non calcoliamo l'indice poiché 
+            non ha senso)
+            \begin{itemize}
+                \item Se è denso, inserire una coppia nel file indice solo se la chiave 
+                è nuova 
+                \item Se è sparso, inserire una coppia solo se l'inserimento della 
+                tupla aggiunge un nuovo blocco 
+            \end{itemize}
+        \end{itemize}
+        \item \textbf{Cancellazione}: 
+        \begin{itemize}
+            \item Cancellazione dal file sequenziale disordinato/ordinato 
+            \item Aggiorniamo l'indice:
+            \begin{itemize}
+                \item Se è denso, cancelliamo anche la coppia 
+                nel file di indice solo se la tupla era l'ultima con chiave $k$.  
+                \item Se è sparso procediamo a cancellare anche la coppia nel file 
+                di indice se la tupla era l'ultima con chiave $k$ 
+                inoltre aggiungere una nuova coppia con chiave $k'$ (chiave 
+                più grande minore o uguale a $k$) se $k'$ è diverso da $k$.
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Indici secondari}: la chiave di ordinamento è diversa 
+    dalla chiave di ricerca. 
+    Ogni record dell'indice è composto da:
+    \[
+        < v_i, p_i >
+    \]
+dove $v_i$ è il valore della chiave di ricerca e $p_i$ è un puntatore ad un bucket
+di puntatori che individuano nel file sequenziale tutte le tuple con chiave $v_i$. 
+Gli indice secondari \textbf{sono sempre densi} perché non si può sfruttare 
+l'ordinamento delle tuple. \\
+Le operazioni che si possono eseguire su un indice secondario sono:
+\begin{itemize}
+    \item \textbf{Ricerca} di una chiave $k$:
+    \begin{itemize}
+        \item Ricerca sequenziale per trovare $k \Rightarrow (k, p_k)$:
+        \begin{itemize}
+            \item Se è denso, se $k$ non c'è, non esistono tuple con chiave $k$ 
+        \end{itemize}
+        \item Accesso al bucket $b$ $p_k$
+        \item Accesso al file tramite i puntatori in $b$.
+    \end{itemize}
+    Il costo dell'operazione è:
+    \[
+        \text{costo = un accesso all'indice + un accesso al bucket + $n$ accessi al file}
+    \]
+    dove $n$ è uguale al numero di puntatori in $b$. 
+    \end{itemize}
+    \item \textbf{Inserimento/Cancellazione}: rimane come un indice primario 
+    denso ma con aggiornamento dei bucket. 
+\end{itemize}
+
 
 
 \end{document}
