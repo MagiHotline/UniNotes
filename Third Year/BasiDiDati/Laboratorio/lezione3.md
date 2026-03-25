@@ -1,0 +1,253 @@
+# Esercizi
+ 
+## Esercizio 1
+
+Visualizzare il numero di corso studi presenti nella base di dati.
+Soluzione: ci sono 635 corsi di studio.
+
+```sql
+SELECT COUNT(*)
+FROM corsostudi
+GROUP BY id;
+```
+
+## Esercizio 2 
+
+Visualizzare il nome, il codice, l’indirizzo e l’identificatore del preside di tutte le facoltà.
+
+```sql 
+SELECT P.nome, F.codice, F.indirizzo, P.id
+FROM Facolta as F JOIN Persona as P ON (F.id_persona_preside = P.id);
+```
+
+Soluzione: ci sono 8 facoltà.
+
+## Esercizio 3 
+
+Trovare per ogni corso di studi che ha erogato insegnamenti nel 2010/2011 il suo nome e il nome delle facoltà che lo gestiscono (si noti che un corso può essere gestito da più facoltà). Non usare la relazione diretta tra InsErogato e Facoltà. Porre i risultati in ordine di nome corso studi.
+
+Soluzione: ci sono 211 righe. Le 5 righe dalla X posizione sono:
+
+| nome | nome |
+| :--- | :--- |
+| Corso di Perfezionamento IN Traumatologia dentale | Medicina e Chirurgia |
+| Laurea IN Beni culturali | Lettere e filosofia |
+| Laurea IN Bioinformatica | Scienze matematiche fisiche e naturali |
+| Laurea IN Bioinformatica (ordinamento fino ALL’a.a. 2008/09) | Scienze matematiche fisiche e naturali |
+| Laurea IN Biotecnologie | Scienze matematiche fisiche e naturali |
+
+```sql
+SELECT C.nome, F.nome 
+FROM InsErogato as I 
+JOIN CorsoInFacolta as CF ON (I.id_corsostudi = CF.id_corsostudi) 
+JOIN CorsoStudi as C ON (I.id_corsostudi = C.id)
+JOIN Facolta as F ON (CF.id_facolta = F.id)
+WHERE I.annoaccademico = '2010/2011'
+GROUP BY (C.nome, F.nome);
+```
+
+## Esercizio 4
+
+Visualizzare il nome, il codice e l’abbreviazione di tutti i corsi di studio gestiti dalla facoltà di Medicina e Chirurgia.
+
+Soluzione: ci sono 236 righe.
+
+```sql
+SELECT C.nome, C.codice, C.abbreviazione
+FROM CorsoInFacolta as CF
+JOIN Facolta as F ON (CF.id_facolta = F.id)
+JOIN CorsoStudi as C ON (CF.id_corsostudi = C.id)
+WHERE F.nome = 'Medicina e Chirurgia';
+```
+
+## Esercizio 5
+
+Visualizzare il codice, il nome e l’abbreviazione di tutti corsi di studio che nel nome contengono la
+sottostringa ’lingue’ (eseguire il confronto usando ILIKE invece di LIKE: in questo modo i caratteri
+maiuscolo e minuscolo non sono diversi).
+Soluzione: ci sono 16 righe.
+
+```sql
+SELECT C.codice, C.nome, C.abbreviazione 
+FROM CorsoStudi as C
+WHERE nome ILIKE '%lingue%';
+```
+
+## Esercizio 6
+
+Visualizzare le sedi dei corsi di studi in un elenco senza duplicati.
+Soluzione: ci sono 48 righe.
+
+```sql
+SELECT DISTINCT C.sede 
+FROM CorsoStudi;
+```
+
+## Esercizio 7 
+
+Visualizzare solo i moduli degli insegnamenti erogati nel 2010/2011 nei corsi di studi della facoltà di
+Economia.
+Si visualizzi il nome dell’insegnamento, il discriminante (attributo descrizione della tabella Discriminante),
+il nome del modulo e l’attributo modulo.
+
+Soluzione: ci sono 27 righe.
+
+```sql
+SELECT I.nomeins, D.descrizione, InsErogato.nomemodulo, InsErogato.modulo
+FROM InsErogato
+JOIN Insegn as I ON (InsErogato.id_insegn = I.id)
+JOIN Discriminante as D ON (InsErogato.id_discriminante = D.id)
+JOIN CorsoFacolta as CF
+ON (CF.id_corsostudi = InsErogato.id_corsostudi)
+JOIN Facolta AS F 
+ON (CF.id_facolta = F.id)
+WHERE F.nome = 'Economia' AND InsErogato.annoaccademico = '2010/2011'
+AND InsErogato.modulo > 0; -- Questo perché i moduli > 0 descrivono i singoli moduli
+```
+
+## Esercizio 8
+
+Visualizzare il nome e il discriminante (attributo descrizione della tabella Discriminante) degli
+insegnamenti erogati nel 2009/2010 che non sono moduli e che hanno 3, 5 o 12 crediti. Si ordini il
+risultato per discriminante.
+
+Soluzione: ci sono 724 righe distinte. Le ultime 5 righe sono:
+
+| nomeins | discriminante |
+| :--- | :--- |
+| Prova finale | CInt | 
+| Laboratorio di composizione italiana | Cognomi A-K |
+| Biologia | Cognomi A-L
+| Laboratorio di composizione italiana | Cognomi L-Z | 
+| Biologia | Cognomi M-Z
+
+```sql
+SELECT DISTINCT I.nomeins, D.descrizione 
+FROM InsErogato as IE
+JOIN Discriminante as D
+ON (IE.id_discriminante = D.id)
+JOIN Insegn as I
+ON (IE.id_insegn = I.id)
+WHERE IE.annoaccademico = '2009/2010'
+AND IE.crediti IN (3,5,12)
+AND IE.modulo = 0
+ORDER BY D.descrizione;
+```
+
+## Esercizio 9 
+
+Visualizzare l’identificatore, il nome e il discriminante degli insegnamenti erogati nel 2008/2009 che non
+sono moduli o unità logistiche e con peso maggiore di 9 crediti. Ordinare per nome.
+Soluzione: ci sono 1218 righe. 
+
+Le 5 righe dalla MXXIII riga sono:
+
+| id | nomeins | discriminante |
+| :--- | :--- | :--- |
+| 39872 | Storia del diritto medievale e moderno | Matricole pari |
+| 44440 | Storia del diritto medievale e moderno | Matricole dispari |
+| 39724 | Storia del diritto medievale e moderno | Matricole pari |
+| 44428 | Storia del diritto medievale e moderno | Matricole dispari |
+| 44441 | Storia del diritto medievale e moderno | Matricole dispari |
+
+```sql
+SELECT I.id, I.nomeins, D.descrizione
+FROM InsErogato as IE 
+JOIN Insegn AS I 
+ON (IE.id_insegn = I.id)
+JOIN Discriminante AS D
+ON (IE.id_discriminante = D.id)
+WHERE IE.annoaccademico = '2008/2009'
+AND IE.crediti > 9
+AND IE.modulo = 0 
+ORDER BY I.nomeins;
+```
+
+## Esercizio 10 
+
+Visualizzare in ordine alfabetico di nome degli insegnamenti (esclusi i moduli e le unità logistiche) erogati
+nel 2010/2011 nel corso di studi in Informatica, riportando il nome, il discriminante, i crediti e gli anni di
+erogazione.
+
+Soluzione: ci sono 26 righe.
+
+```sql
+SELECT I.nomeins, D.descrizione, IE.crediti, IE.annierogazione
+FROM InsErogato AS IE
+JOIN Insegn AS I ON (IE.id_insegn = I.id)
+JOIN Discriminante AS D ON (IE.id_discriminante = D.id)
+JOIN CorsoInFacolta as CF ON (CF.id_corsostudi = IE.id_corsostudi)
+JOIN CorsoStudi as C ON (CF.id_corsostudi = C.id)
+WHERE 
+    IE.annoaccademico = '2010/2011' AND
+    C.nome = 'Laurea in Informatica' AND
+    IE.modulo = 0
+ORDER BY I.nomeins;
+```
+
+## Esercizio 11
+
+Trovare il massimo numero di crediti associato a un insegnamento fra quelli erogati nel 2010/2011.
+
+Soluzione: 180
+
+```sql
+SELECT MAX(IE.crediti)
+FROM InsErogato AS IE 
+WHERE IE.annoaccademico = '2010/2011';
+```
+
+## Esercizio 12 
+
+Trovare, per ogni anno accademico, il massimo e il minimo numero di crediti erogati tra gli insegnamenti
+dell’anno.
+
+Soluzione: ci sono 16 righe.
+
+```sql
+SELECT IE.annoaccademico, MAX(IE.crediti) as MaxCrediti, MIN(IE.crediti) as MinCrediti
+FROM InsErogato as IE
+GROUP BY IE.annoaccademico;
+```
+
+## Esercizio 13
+
+Trovare, per ogni anno accademico e per ogni corso di studi la somma dei crediti erogati (esclusi i moduli e
+le unità logistiche: vedi nota sopra) e il massimo e minimo numero di crediti degli insegnamenti erogati
+sempre escludendo i moduli e le unità logistiche.
+
+
+Soluzione: ci sono 1587 righe. Le riga relativa alla "Scuola di Specializzazione in Urologia (Vecchio
+ordinamento)" nell’anno 2011/2012 ha valori 52.00, 10.00 e 162.00.
+
+```sql
+SELECT 
+    IE.annoaccademico, C.nome, 
+    MAX(IE.crediti) as MaxCrediti, 
+    MIN(IE.crediti) as MinCrediti,
+    SUM(IE.crediti) as SommaCrediti
+FROM InsErogato AS IE
+JOIN CorsoStudi AS C ON (IE.id_corsostudi = C.id)
+WHERE IE.modulo = 0
+GROUP BY (IE.annoaccademico, C.nome);
+```
+
+## Esercizio 14
+
+Trovare per ogni corso di studi della facoltà di Scienze Matematiche Fisiche e Naturali il numero di
+insegnamenti (esclusi i moduli e le unità logistiche) erogati nel 2009/2010.
+
+Soluzione: ci sono 19 righe.
+
+```sql
+SELECT C.nome, COUNT(*) AS NumeroInsegnamenti
+FROM InsErogato as IE
+JOIN CorsoInFacolta as CF ON (CF.id_corsostudi = IE.id_corsostudi)
+JOIN Facolta as F ON (CF.id_facolta = F.id)
+JOIN CorsoStudi as C ON (CF.id_corsostudi = C.id)
+WHERE 
+    IE.annoaccademico = '2009/2010' AND
+    IE.modulo = 0 AND
+    F.nome = 'Scienze matematiche fisiche e naturali'
+GROUP BY C.nome;
+```
