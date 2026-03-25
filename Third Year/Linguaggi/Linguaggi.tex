@@ -1,4 +1,5 @@
 \documentclass[a4paper]{article}
+\usepackage{prooftrees}
 \usepackage{import}
 \input{../../setup.sty}
 
@@ -564,7 +565,7 @@ per evitare ambiguità. Se non si utilizzassero le parentesi si
 potrebbe scegliere di eseguire prima un operatore invece di un altro, 
 e questo porterebbe a risultati diversi dalla stessa espressione.
 
-\subsection{Analisi semantica}
+\subsection{L'analisi semantica}
 
 L'analisi semantica verifica i vincoli sintattici, ad esempio che il numero di 
 parametri formali sia uguale al numero di parametri attuali, oppure che l'uso 
@@ -842,7 +843,7 @@ questa grammatica genera tutte le stringhe palindrome di lunghezza pari.
     Abbiamo dimostrato che \( \Pi \) è vera per tutti gli elementi di \( Exp \).
 \end{Example} 
 
-\subsubsection{Semantica}
+\subsection{Semantica}
 La semantica è l'attribuzione di significato ai simboli.
 Il significato è un'entità autonoma che esiste indipendentemente dai simboli
 usati per descriverlo. Esistono 3 tipi di semantica:
@@ -1005,7 +1006,7 @@ La semantica viene utilizzata per verificare l'equivalenza tra programmi.
   Quindi l'equivalenza dipende dalla scelta della semantica
 \end{Example}
 
-\subsubsection{Categorie sintattiche}
+\subsection{Categorie sintattiche}
 Le categorie sintattiche sono insiemi di stringhe che condividono una certa proprietà
 per:
 \begin{itemize}
@@ -1267,7 +1268,129 @@ equivalente precisa e quindi non ambigua, come la seguente:
 \] 
 
 
-\subsubsection{Espressioni: ordine di valutazione degli operandi}
+\section{IMP}
+
+\subsection{Espressioni} 
+
+Definiamo la grammatica delle espressioni. Prendiamo dove $Eval = bool \cup int$ (quindi 
+può essere sia un booleano che un intero):
+\[
+  \begin{aligned}
+    E &\to E + E \color{red}\mid\color{black} E * E \color{red}\mid\color{black} (E) \color{red}\mid\color{black} n \\
+    A &\to n \; |\;  A \; op \; A \; \; \; op = \{+,-,*\}\\
+    B &\to true \; |\; false \; |\; A \; = \; A \; | \; not \; B \; | \; B \; or \; B \;
+  \end{aligned}
+\]
+Un po' di notazizone:
+\begin{itemize}
+    \item $\mathcal{N} \leadsto$ insieme dei valori numerici $n,m,p$ 
+    \item $\mathcal{E} \leadsto$ insieme di alberi di valutazione di espressioni $e$
+    (stringa di soli terminali generati in Exp)
+    \item $A \leadsto $ sono le espressioni aritmetiche
+    \item  $B \leadsto$ sono le espressioni booleane 
+\end{itemize}
+Diamo semantica definendo un sistema di transizione
+\[
+\text{Stati : } \mathcal{E} \cup \mathcal{N} \text{ (stati terminali)}
+\]
+Relazione$\&$Transizione: definita attraverso regole ccostruite induttivamente sulla grammatica. 
+Definiamo le seguenti regole sulle espressioni: 
+\[
+    \mathcal{E}_1: \overbrace{m \; op \; n}^{\text{simboli}} \to p \text{ dove } p = \underbrace{m \; op \; n}_{\text{calcolo effettivo}}
+\]
+con $n,m \in \mathcal{N}$. 
+Quindi ad esempio:
+\[
+    10 + 12 \to 22 
+\]
+Prendiamo le seguenti regole che impongono \textbf{una valutazione degli operandi left-to-right}:
+\[\mathcal{E}_2 : \frac{e_0 \to e_0'}{e_o \; op \; e_1 \to e_0' \; op \;e_1 }\]
+\[\mathcal{E}_3 : \frac{e_1 \to e_1'}{n \; op \; e_1 \to m \; op \; e_1'}\]
+\begin{Example}
+Prendiamo per esempio questa espressione seguendo le regole che abbiamo appena definito:
+\[
+    \underbrace{(2 + 3)}_{e_0} * \underbrace{(5 - (1 + 4))}_{e_1}
+\]
+Costruiamo l'albero di valutazione:
+\begin{figure}[H]
+    \centering 
+    \begin{forest} 
+    [$*$  
+        [$+$, blue 
+            [2, blue] 
+            [3, blue ]
+        ] 
+        [$-$, red
+            [5, red] 
+            [$+$, orange 
+                [1, orange] 
+                [4, orange]
+            ]
+        ]
+    ]
+    \end{forest}
+\end{figure}
+\noindent
+Le regole che abbiamo fissato non ci permettono di valutare prima \( e_1 \) e poi
+ \( e_0 \), ma ci obbliga a valutare prima \( e_0 \) e poi \( e_1 \).
+Potremmo aggiungere questa regola alternativa per permettere 
+la valutazione right-to-left:
+\[
+    \mathcal{E}_3' : \frac{e_1 \to e_1'}{e_0 \; op \; e_1 \to e_0 \; op \; e_1'}
+\]
+\end{Example}
+\noindent
+Vediamo ora le regole per le espressioni booleane:
+\[
+  B = \{true, false\} \text{ stati terminali per expr booleane}
+\]
+\[
+  \mathcal{E}_4 = t_1 \; or \; t_2 \to t \text{ dove } 
+  t = \underbrace{t_1 \; or \; t_2}_{\text{significato}}
+\]
+con $t, t_1, t_2 \in B$.
+La regola $\mathcal{E}_2$ vale anche per le espressioni booleane. 
+\[
+  \mathcal{E}_3' = \frac{e_1 \to e_1'}{t \; or \; e_1 \to t \; or \; e_1'}
+\]
+Uniamo $\mathcal{E}_3$ con $\mathcal{E}_3'$. Con $k \in \mathcal{N} \cup B$:
+\[
+  \mathcal{E}_3 =\frac{e_1 \to e_1'}{k \; bop \; e_{1} \to k \; bop \; e_1'}
+\]
+\[
+  \mathcal{E}_5 = \frac{e \to e'}{not \; e \to not \; e'}
+\]
+\[
+  \mathcal{E}_6 = not \; t \to t \text{ dove } t' = not \; t 
+\]
+e $t,t' \in B$.
+Definiamo ora il sistema di transizione:
+\[
+  < \mathcal{E} \cup \mathcal{N} \cup B,\to >
+\]
+\dfn{Valutazione}
+{
+  La funzione 
+  \[
+    Eval : Exp \to \mathcal{N} \cup B 
+  \]
+  di valutazione descrive il comportamento dinamico delle espressioni:
+  \[
+    \forall e \in \mathcal{E} .\; Eval(e) = k \text{ sse } e \to^{*e} k  
+  \]
+  Dove $\to^{*e}$ è la chiusura transitiva di $\to$. quindi $\exists \;n\; t.c. \; e \to e_1 \to e_2 \to \dots \to k$ con
+  $n$ transizioni.
+}
+\dfn{Equivalenza di espressioni}
+{
+ \[\equiv \; \subseteq Exp \times Exp\]
+ è la relazione di equivalenza tra espressioni, definita come:
+ \[
+  e_1 \equiv e_2 \text{ sse } Eval(e_1) = Eval(e_2)
+ \]
+}
+
+\subsubsection{Aspetti implementativi}
 
 L'ordine di valutazione degli operandi è un aspetto progettuale importante dove si vanno a definire:
 \begin{itemize}
@@ -1325,80 +1448,202 @@ b := a + fun(&a); // fun modifica il parametro
     \end{itemize}
 \end{Example}
 
-\subsubsection{Espressioni IMP} 
+\subsection{Identificatori}
 
-Definiamo la grammatica delle espressioni. Prendiamo dove $Eval = bool \cup int$ (quindi 
-può essere sia un booleano che un intero):
+Un identificatore è una sequenza di caratteri usata per riferirsi 
+ad un altro oggetto (detto \textbf{denotabile}). 
+Come ad esempio:
+\begin{lstlisting}
+const pi := 3.14;
+int x; 
+void f {...}
+\end{lstlisting}
+Dove chiaramente non posso usare come identificatori 
+le keyword del linguaggio o altre speciche che variano da linguaggio di programmazione.
+Li chiaremo "id". 
 \[
-  \begin{aligned}
-    E &\to E + E \color{red}\mid\color{black} E * E \color{red}\mid\color{black} (E) \color{red}\mid\color{black} n \\
-    A &\to n \; |\;  A \; op \; A \; \; \; op = \{+,-,*\}\\
-    B &\to true \; |\; false \; |\; A \; = \; A \; | \; not \; B \; | \; B \; or \; B \;
+  \text{Id = \{a, rate, b20, \dots\}}
+\]
+Utilizzeremo solitamente $id$ o $x$. 
+
+\subsubsection{Aspetti implementativi}
+  
+Gli aspetti implementativi e progettuali che posso decidere se apportare al linguaggio e capire
+se voglio permettere:
+\begin{itemize}
+  \item Nomi case-sensitive
+  \item Parole riservate (come \texttt{const}, \texttt{var}, \texttt{procedure}, \texttt{if}, \texttt{while}, ecc...)
+  \item Vincoli sulla lunghezza 
+  \item Presenza di caratteri speciali
+\end{itemize}
+
+\subsubsection{Bindings}
+Consideriamo la seguente formula:
+\[
+  \left(\sum_{i+1}^{n}\left(\sum_{j+1}^m a_{i,j} \dots b_{j,k}\right)\right)
+\]
+In questo caso, sto creando dei legami tra i miei identificatori
+\( i, j \) che sono sotto al raggio di definizione che li definisce e 
+permette di dare significato. Queste
+due occorrenze vengono chiamate \textbf{binding} ovvero creano il nome
+e il significato.
+Le occorrenze $a_{i,j}$ e $b_{j,k}$ vengono chiamate \textbf{occorrenze 
+d'uso} o \textbf{applied}. In questo caso stiamo usando il nome per 
+poter fare riferimento al suo significato.
+Tuttavia all'interno della formula ci sono occorrenze a cui non vengono date significato
+ovvero $n,m,k$ che vengono chiamate \textbf{occorrenze libere} o \textbf{free}.
+Nei linguaggi di programmazione:
+\dfn{Bindings nei PL}
+{
+  Un identificatore è in posizione di definizione quando
+  is attribuisce il significato all'identificatore.
+}
+\dfn{Occorrenze d'uso nei PL}
+{
+  Un identificatore è in posizione di uso quando
+  l'occorrenza serve per riferirsi al significato dell'identificatore
+  (deve trovarsi nel raggio d'azione di una definizione).
+}
+\dfn{Occorrenze libere nei PL}
+{
+  Un identificatore è in posizione libera se
+  la sua occorrenza non si trova nel raggio d'azione di una definizione.
+}
+
+\subsubsection{Tipi di bindings}
+
+Esistono diversi tipi di bindings a seconda dell'oggetto denotato:
+\begin{itemize}
+  \item \textbf{Costante}: un identificatore che denota un valore costante, ad esempio \texttt{pi}.
+  \item \textbf{Variabile}: un identificatore che denota una cella di memoria che può essere modificata, ad esempio \texttt{x}.
+  \item \textbf{Procedura}: un identificatore che denota un blocco di codice eseguibile, ad esempio \texttt{f}.
+\end{itemize}
+Questi legami sono \textbf{statici}.
+Alcuni legami possono cambiare, come ad esempio, locazione - valore. 
+\begin{itemize}
+  \item \textbf{Binding statico}: un legame che dura per tutta la durata del programma e non può essere cambiato.
+  \item \textbf{Binding dinamico}: un legame che dura solo per un certo intervallo di tempo, ad esempio durante l'esecuzione 
+  di una procedura.
+\end{itemize}
+Nel momento in cui viene creato, viene definisce il \textbf{tempo di binding}.
+
+\dfn{Ambiente}
+{
+  I legami vengono inseriti nell'\textbf{ambiente}, che non è 
+  altro che un insieme di bindings. 
+}
+\dfn{Termine Ground}
+{
+  Un termine è detto \textbf{ground} se non ha identificatori.
+  Nel nostro caso, le espressioni che abbiamo definito.
+}
+\dfn{Termine chiuso}{
+  Un termine è detto \textbf{chiuso} quando 
+  non ci sono identificatori in posizione libera. 
+}
+\noindent
+Questi due termini hanno significato senza dover ricorrere ad un contesto esterno.\\
+
+\subsubsection{Ambienti in IMP}
+Aggiungendo ora i bindings al nostro linguaggio IMP, abbiamo che:
+\[
+  \mathcal{E} \text{ espressioni}
+\]
+\[
+  N \cup B \leadsto \text{ sono anche valori denotabili}
+\]
+Creiamo ora l'ambiente all'interno di IMP:
+\[
+  Env = \bigcup_{I \subseteq_f Id} Env_I
+\]
+dove $\subseteq_f$ è l'inclusione tra insiemi finiti.
+\[
+  Env: I \to DVal \text{ dove } \rho \text{ metavariabile}
+\]
+è una funzione che associa un valore denotabile ad ogni identificatore
+in un insieme $I$ finito.
+
+\begin{Example}
+  Supponiamo che ci venga dato questo ambiente:
+  \[
+  I = \{x,y\}
+\]
+\[\rho \in Env_I\]
+\[\rho(x) = 2 \quad \rho(y) = 5\]
+dove 
+\[
+  \rho \vdash x + y - 5 \text{ è un espressione}
+\]
+Valutiamo $x+y-5$ dentro $\rho$. La seguente è la grammatica
+definita dalle espressioni:
+\[
+  Exp: \begin{aligned}
+    E &\to A \; | \; B\\
+    A &\to n | \; \mathcolor{blue}{x} \; | \; A \; op \; A\\
+    B &\to true \; | \; false \; | \; \mathcolor{blue}{x} \; | \; A = A \;| \;  not \; B \; | \; B \; or \; B
   \end{aligned}
 \]
-Un po' di notazizone:
+dove $x \in Id$. Espressioni da valutare in ambiente:
+\[
+  \rho \vdash e \to e'
+\]
+Definiamo le regole della semantica: $e$ viene valutata in $e'$ dentro l'ambiente $\rho$. 
 \begin{itemize}
-    \item $\mathcal{N} \leadsto$ insieme dei valori numerici $n,m,p$ 
-    \item $\mathcal{E} \leadsto$ insieme di alberi di valutazione di espressioni $e$
-    (stringa di soli terminali generati in Exp)
+  \item Regola 1:
+  \[
+   \mathcal{E}_1 : \rho \vdash m \; op \; n \to p \text{ dove } p = m \; op \; n
+  \]
+  \item Regola 2:
+  \[
+    \mathcal{E}_2 : \frac{\rho \vdash e_0 \to e_0'}{\rho \vdash e_0 \; op \; e_1 \to e_0' \; op \; e_1}
+  \]
+  \item Regola 3:
+  \[
+    \mathcal{E}_3 : \frac{\rho \vdash e_1 \to e_1'}{\rho \vdash k \; bop \; e_1 \to k \; bop \; e_1'}
+  \]
+  \item Regola 4: 
+  \[
+    \mathcal{E}_5: \frac{\rho \vdash e \to e'}{\rho \vdash not \; e \to not \; e'}
+  \]
+  \item Regola 5:
+  \[
+    \mathcal{E}_7: \rho \vdash x \to k \text{ se } \rho(x) = k
+  \]
 \end{itemize}
-Diamo semantica definendo un sistema di transizione
 \[
-\text{Stati : } \mathcal{E} \cup \mathcal{N} \text{ (stati terminali)}
+  x + y - 5 \leadsto \text{valutare in } \rho [x \mapsto 2, y \mapsto 5]
 \]
-Relazione$\&$Transizione: definita attraverso regole ccostruite induttivamente sulla grammatica. 
-Definiamo le seguenti regole sulle espressioni:
-\[
-    \mathcal{E}_1: \overbrace{m \; op \; n}^{\text{simboli}} \to p \text{ dove } p = \underbrace{m \; op \; n}_{\text{calcolo effettivo}}
-\]
-con $n,m$ simboli $\mathcal{N}$. 
-Quindi ad esempio:
-\[
-    10 + 12 \to 22 
-\]
-Prendiamo le seguenti regole che impongono una valutazione left-to-right:
-\[\mathcal{E}_2 : \frac{e_0 \to e_0'}{e_o \; op \; e_1 \to e_0' \; op \;e }\]
-\[\mathcal{E}_3 : \frac{e_1 \to e_1'}{n \; op \; e_1 \to m \; op \; e_1'}\]
-\begin{Example}
-Prendiamo per esempio questa espressione seguendo le regole che abbiamo appena definito:
-\[
-    \underbrace{(2 + 3)}_{e_0} * \underbrace{(5 - (1 + 4))}_{e_1}
-\]
-Costruiamo l'albero di valutazione:
-\begin{figure}[H]
-    \centering 
-    \begin{forest} 
-    [$*$  
-        [$+$, blue 
-            [2, blue] 
-            [3, blue ]
-        ] 
-        [$-$, red
-            [5, red] 
-            [$+$, orange 
-                [1, orange] 
-                [4, orange]
-            ]
-        ]
-    ]
-    \end{forest}
-\end{figure}
-\noindent
-Le regole che abbiamo fissato non ci permettono di valutare prima \( e_1 \) e poi
- \( e_0 \), ma ci obbliga a valutare prima \( e_0 \) e poi \( e_1 \).
-Potremmo aggiungere questa regola alternativa per permettere 
-la valutazione right-to-left:
-\[
-    \mathcal{E}_3' : \frac{e_1 \to e_1'}{e_0 \; op \; e_1 \to e_0 \; op \; e_1'}
-\]
+
+% TODO: FARE PROOF TREE
 \end{Example}
 
-Trovare nome, cognome dei docenti che nell’anno accademico 2010/2011 erano docenti in almeno due
-corsi di studio (vale a dire erano docenti in almeno due insegnamenti o moduli A e B dove A è del corso C1
-e B è del corso C2 con C1 <> C2).
-La soluzione ha 839 righe. Se si ordina la risposta per un opportuno attributo, le 5 righe a partire dalla 50-
-esima sono:
 
+\subsubsection{Scope}
 
+Consideriamo ancora la precedente formula
+\[
+  \underbrace{\left(\sum_{i+1}^{n}\underbrace{\left(\sum_{j+1}^m a_{i,j} \dots b_{j,k}\right)}_{\text{spazio di
+   definizione di $j$}}\right)}_{\text{spazio di definizione di $i$}}
+\]
+Se io dovessi usare $j$ fuori da questo scope, esso assume un significato diverso o 
+potrebbe essere anche libero. Stessa cosa chiaramente per $i$.
+\dfn{Scope}
+{
+  Lo \textbf{scope} è il raggio di azione di una definizione.
+  Determina lo spazio in cui le potenziali occorrenze dell'identificatore
+  defiinito fanno riferimento alla definizione stessa.
+}
+
+\subsection{Tipo}
+
+Un \textbf{tipo} è l'insieme dei valori che una variabile può riferire.
+Tali valori devono condividere una certa proprietà invariante.
+L'utilizzo del tipo ha varie finalità:
+\begin{itemize}
+  \item A tempo di progettazione, permette di organizare delle funzionalità.
+  \item A tempo di sviluppo serve a prevedere errori (controllo dimensionale).
+  \item A tempo di implementazione, servono inoltre per capire quanta memoria allocare per una variabile.
+\end{itemize}
+Inoltre vi è un ulteriore legame, quello di tipo (aggiunto al legame con l'oggetto denotato).
 
 \end{document}
