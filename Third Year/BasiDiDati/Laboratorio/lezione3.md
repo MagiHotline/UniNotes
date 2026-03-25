@@ -241,13 +241,53 @@ Soluzione: ci sono 19 righe.
 
 ```sql
 SELECT C.nome, COUNT(*) AS NumeroInsegnamenti
-FROM InsErogato as IE
-JOIN CorsoInFacolta as CF ON (CF.id_corsostudi = IE.id_corsostudi)
-JOIN Facolta as F ON (CF.id_facolta = F.id)
-JOIN CorsoStudi as C ON (CF.id_corsostudi = C.id)
+FROM InsErogato AS IE
+JOIN CorsoInFacolta AS CF ON (CF.id_corsostudi = IE.id_corsostudi)
+JOIN Facolta AS F ON (CF.id_facolta = F.id)
+JOIN CorsoStudi AS C ON (CF.id_corsostudi = C.id)
 WHERE 
     IE.annoaccademico = '2009/2010' AND
     IE.modulo = 0 AND
     F.nome = 'Scienze matematiche fisiche e naturali'
 GROUP BY C.nome;
+```
+
+## Esercizio 15
+Trovare i corsi di studi che nel 2010/2011 hanno erogato insegnamenti con un numero di crediti pari a 4 o
+6 o 8 o 10 o 12 o un numero di crediti di laboratorio tra 10 e 15 escluso, riportando il nome del corso di
+studi e la sua durata. Si ricorda che i crediti di laboratorio sono rappresentati dall’attributo creditilab della
+tabella InsErogato.
+
+Soluzione: ci sono 197 righe.
+
+```sql
+SELECT DISTINCT C.nome, C.durataAnni
+FROM InsErogato AS IE 
+JOIN CorsoStudi AS C
+ON (IE.id_corsostudi = C.id)
+WHERE
+    (IE.crediti IN (4,6,8,10,12) OR
+    IE.creditilab BETWEEN 10 AND 14) AND
+    IE.annoaccademico = '2010/2011';
+```
+
+## Esercizio 16
+
+Trovare nome, cognome dei docenti che nell’anno accademico 2010/2011 erano docenti in almeno due
+corsi di studio (vale a dire erano docenti in almeno due insegnamenti o moduli A e B dove A è del corso C1
+e B è del corso C2 con C1 <> C2).
+
+La soluzione ha 839 righe. Se si ordina la risposta per un opportuno attributo, le 5 righe a partire dalla 50-
+esima sono:
+
+| id | nome | cognome |
+| :--- | :--- | :--- |
+| 268 | Paolo | Roffia |
+| 269 | Andrea | Lionzo | 
+| 270 | Corrado | Corsi |
+| 278 | Alessandro | Lai |
+| 280 | Giuseppe | Ceriani |
+
+```sql
+
 ```
