@@ -565,7 +565,7 @@ per evitare ambiguità. Se non si utilizzassero le parentesi si
 potrebbe scegliere di eseguire prima un operatore invece di un altro, 
 e questo porterebbe a risultati diversi dalla stessa espressione.
 
-\subsection{L'analisi semantica}
+\subsection{L'analisi semantica per le espressioni}
 
 L'analisi semantica verifica i vincoli sintattici, ad esempio che il numero di 
 parametri formali sia uguale al numero di parametri attuali, oppure che l'uso 
@@ -1634,7 +1634,7 @@ potrebbe essere anche libero. Stessa cosa chiaramente per $i$.
   defiinito fanno riferimento alla definizione stessa.
 }
 
-\subsection{Tipo}
+\subsection{Tipi}
 
 Un \textbf{tipo} è l'insieme dei valori che una variabile può riferire.
 Tali valori devono condividere una certa proprietà invariante.
@@ -1645,5 +1645,298 @@ L'utilizzo del tipo ha varie finalità:
   \item A tempo di implementazione, servono inoltre per capire quanta memoria allocare per una variabile.
 \end{itemize}
 Inoltre vi è un ulteriore legame, quello di tipo (aggiunto al legame con l'oggetto denotato).
+
+\subsubsection{Ambiente statico}
+
+\textbf{L'ambiente statico} è l'insieme di legami tra identificatore e tipi.
+\[
+  \underbrace{DTyp}_{\text{tipi denotabili}} = \{int, bool\} \quad [DVal = \mathcal{N} \cup B]
+\]
+\[
+  TEnv = \bigcup_{I \subseteq_f Id} TEnv_I 
+\]
+Dove $\subseteq_f$ è l'inclusione tra insiemi finiti di identificatori.
+L'insieme di tutti gli ambiente è l'insieme di tutte i possibili ambienti I finiti di identificatori.
+\[
+  TEnv = I \to DTyp
+\]
+ad ogni identificatore in I associa un tipo in $DTyp$.
+\[\text{Metavariabile} : \Delta \in TEnv \text{ generico ambiente statico}\]
+\[
+  \Delta \vdash_I e : \tau 
+\]
+asserisce che $e$ è di tipo $\tau \in DTyp$ nell'ambiente statico $\Delta$
+definito sugli identificatori in $I$.
+Dove $\vdash_I$ è la relazione di giudizio di tipo, che è definita attraverso regole 
+costruite induttivamente sulla grammatica delle espressioni.\\
+Se le regole di semantica statica permettono di associare 
+un tipo ad una espressione allora diciamo che 
+l'espressione è \textbf{ben formata}.
+
+\subsubsection{Semantica statica}
+
+Quello che andremo a definire è un insieme di regole che permettono di verificare
+la corretta costruzione (in termini di tipi) delle espressioni. Questo 
+sistema lo chiameremo \textbf{semantica statica}.
+
+\begin{itemize}
+  \item Assioma 1:
+  \[
+    \mathcal{E}_{s_1}: \; \vdash n : int 
+  \]
+  \item Assioma 2:
+  \[
+    \mathcal{E}_{s_2}: \; \vdash t : bool 
+  \]
+  \item Assioma 3: 
+  \[
+    \mathcal{E}_{s_3}: \; \Delta \vdash_{I} x : \tau \text{ se } x \in I, \Delta(x) = \tau
+  \]
+  \item Per le espressioni aritmetiche:
+  \[
+    \mathcal{E}_{s_4}: \; \frac{\Delta \vdash_I e_1 : int \quad \Delta \vdash_I e_2 : int}{\Delta \vdash_I e_1 \; op \; e_2 : int} 
+  \]
+  \[
+    \mathcal{E}_{s_5}: \; \frac{\Delta \vdash_I e_1 : bool \quad \Delta \vdash_I e_2 : bool}{\Delta \vdash e_1 \; op \; e_2 : int}
+  \]
+  \item Per le espressioni booleane:
+  \[
+    \mathcal{E}_{s_6}: \; \frac{\Delta \vdash_I e : bool}{\Delta \vdash_I not \; e : bool}
+  \]
+  \[
+    \mathcal{E}_{s_7}: \; \frac{\Delta \vdash_I e_1: int \quad \Delta \vdash_I e_2 : int}{\Delta \vdash_I e_1 = e_2 : bool}
+  \]
+\end{itemize}
+
+\subsubsection{Ambienti compatibili}
+
+\dfn{Ambiente compatibile} 
+{
+Dato un ambiente dinamico che associa valori a nomi agli identificatori $I$, $\rho \in Env_I$
+e $\Delta \in TEnv_I$ un ambiente statico che associa tipi a nomi agli identificatori $I$, diciamo che 
+$\rho$ e $\Delta$ sono compotabili se 
+\[
+  \forall \; Id \in I \; . \; \Delta(id) = \tau \text{ sse } \rho(id) = \tau \text{ (è un valore di tipo $\tau$)}
+\]
+}
+\begin{Example}{}{}
+Dati:
+\[\Delta = [x \mapsto int, y \mapsto bool]\]
+\[\rho = [x \mapsto 2, y \mapsto true]\]
+\textbf{NON} sono compatibili.
+\end{Example}
+\noindent
+Se usiamo la notazione $\rho \vdash_{\Delta}$ per indicare
+che $\rho$ e $\Delta$ sono compatibili.
+Abbiamo bisogno per definire gli ambienti (sia $\Delta$ che $\rho$)
+di una categoria sintattica che permette di creare e 
+modificare legami che vanno a costituire l'ambiente.
+
+\subsection{Dichiarazioni}
+
+Le \textbf{dichiarazioni} sono una categoria sintattica che fornisce 
+il meccanismo (implicito o esplicito) per creare legami (tra identificatori 
+e tipi (statico) o oggetti (dinamico)).
+Inoltre denotano richieste di modifica o creazione di ambienti.
+Le dichiarazioni vengono elaborate per attuare richieste di modifica o
+creazione di ambienti.
+
+\subsubsection{Sintassi}
+
+Definiamo la sintassi delle dichiarazioni:
+\[
+  \mathcal{D}: \quad D \to nil \; | \; const\; x : \; \tau = e \; | \;  D ; D \; | \;  D \text{ in } D \; | \; \rho 
+\]
+dove 
+\begin{itemize}
+  \item $nil$ è la dichiarazione nulla che non crea nessun legame.
+  \item $const\; x : \; \tau = e$ è la dichiarazione di una costante $x$ di tipo $\tau$ e valore rappresentato da $e$.
+  \item $D ; D$ è la composizione sequenziale di dichiarazioni, che permette di creare legami multipli.
+  \item $D \text{ in } D$ è la composizione di dichiarazioni con annidamento, che permette di creare legami con scope annidati.
+  \item $\rho$ è una dichiarazione che rappresenta un ambiente dinamico
+\end{itemize}
+
+\subsubsection{Aggiornamento di un ambiente}
+
+Consideriamo $\beta, \beta'$ ambienti. Cerchiamo di definire la 
+seguente operazione: 
+\[
+  \beta[\beta'] \quad \text{ $\beta$ modificato da $\beta'$}
+\]
+\[
+  \beta: I \quad I \subseteq_f Id \text{($\beta$ è definito su $I$)}
+\]
+\[
+  \beta': I' \quad I' \subseteq_f Id \text{($\beta'$ è definito su $I'$)}
+\]
+Dove l'aggiornamento di un ambiente:
+\[
+  \beta[\beta'] = \overline{\beta} \text{ nuovo ambiente } \overline{\beta} : I \cup I' 
+\]
+\[
+  \forall x \in I' \; . \; \overline{\beta}(x) = \beta'(x)
+\]
+\[
+  \forall x \in I \backslash I' \; . \; \overline{\beta}(x) = \beta(x)
+\]
+Intuitivamente quindi $\overline{\beta}$ è un nuovo ambiente in cui 
+prendo tutti i legami di $\beta$ e $\beta'$ e per i legami in comune 
+tengo solo $\beta'$.
+
+\begin{Example}{}{}
+Prendiamo per esempio l'ambiente dinamico:
+\[
+\rho = [x \mapsto 2, y \mapsto true, z \mapsto 5]
+\]
+\[
+  \rho' = [x \mapsto 5, w \mapsto false]
+\]
+dove
+\[
+  \rho[\rho'] = [x \mapsto 5, y \mapsto true, z \mapsto 5, w \mapsto false]
+\]
+Come possiamo notare, abbiamo sovrascritto $x$ con il nuovo legame (5), abbiamo mantenuto $y$ e $z$ e abbiamo aggiunto $w$.
+\end{Example}
+
+\subsubsection{Composizione sequenziale}
+
+Prendiamo per esempio $D_1$ e $D_2$ due dichiarazioni.
+
+% TODO 
+\noindent
+Ogni dichiarazione successiva o aggiunge nuovi legami o 
+sovrascrive legami esistenti. L'ambiente risultante è così 
+visibile al codice successivo. 
+
+\subsubsection{Composizione privata}
+
+% TODO 
+I legami creati o sovrascritti da $D_1$ sono ad uso esclusivo dell'elaborazione 
+di $D_2$ e non visibili al codice successivo.
+\begin{Example}{}{} 
+\begin{lstlisting}
+const x : int = 3; 
+const x : int = 5 in y : int = 6 * x; 
+const z : int = x * y;
+\end{lstlisting}
+\begin{itemize}
+  \item Nella prima dichiarazione, $x$ è legato a 3.
+  \[
+    \rho = [x \mapsto 3]
+  \]
+  \item Nella seconda dichiarazione, associamo $x$ a 5 ma solo per 
+  la dichiarazione $y : int = 6 * x$. 
+  Quindi $y$ è legato a $6 * 5 = 30$.
+  \[
+    \rho[x \mapsto 5] = [x \mapsto 5] = \rho_1
+  \]
+  dove 
+  \[
+    \rho_2 = [y \mapsto 6 * 5 = 30]
+  \]
+  \item Nella terza dichiarazione $z$ è legato a $x * y$.
+  \[
+    \rho[\rho_2] = [x \mapsto 3, y \mapsto 30]
+  \]
+\end{itemize}
+\end{Example}
+
+\begin{Example}{}{}
+\begin{lstlisting}
+const x : int = 3;
+const x : int = 5;
+const y : int = 6 * x;
+const z : int = x * y;
+\end{lstlisting}
+
+\begin{itemize}
+  \item Nella prima dichiarazione, $x$ è legato a 3.
+  \item Nella seconda dichiarazione, associamo $x$ a 5 e sovrascriviamo il legame precedente.
+  \item Nella terza dichiarazione $y$ è legato a $6 * 5 = 30$.
+  \item Nella quarta dichiarazione $z$ è legato a $5 * 30 = 150$.
+\end{itemize}
+
+\end{Example}
+
+\subsubsection{Identificatori in posizione libera e di definizione}
+Caratteriziamo gli identificatori in posizione libera (FI) e in posizione 
+di definizione (DI). 
+\[
+  FI(Exp \cup Dec) = I \subseteq Id \quad FI \; : \; Exp \cup Dec \to \mathcal{P}(Id)
+\]
+Ricordiamo come gli identificatori \textbf{liberi} non hanno un legame, quindi 
+richiedono un contesto esterno per avere significato.
+Definiamo FI per induzione sulle espressioni:
+\begin{itemize}
+  \item $FI(k) = \varnothing$ con $k \in \mathcal{N} \cup B$.
+  \item $FI(x) = \{x\}$ perché $x$ è in posizione di uso e quindi è libero.
+  \item $FI(e_1 \; op \; e_2) = FI(e_1) \cup FI(e_2)$ perché se $e_1$ o $e_2$ hanno identificatori in posizione libera, allora anche $e_1 \; op \; e_2$ li ha.
+  \item $FI(not \; e) = FI(e)$ perché se $e$ ha identificatori in posizione libera, allora anche $not \; e$ li ha.
+\end{itemize}
+Per le dichiarazioni:
+\begin{itemize}
+  \item $FI(nil) = \varnothing$ 
+  \item $FI(const x : \tau = e) = FI(e)$ perché $x$ è in posizione 
+  di definizione e quindi non è libero.
+  \item $FI(D_1 ; D_2) = FI(D_1) \cup FI(D_2 \backslash \; DI(D_1))$ 
+  \item $FI(D_1 \text{ in } D_2) = (FI(D_1) \cup FI(D_2)) \backslash DI(D_1)$ 
+\end{itemize}
+\noindent
+Definiamo ora DI, che restituixce gli identificatori che nel costrutto vengono 
+legati a un significato che è visibile all'esterno del costrutto.
+\[
+  DI : Exp \cup Dec \to \mathcal{P}(Id)
+\]
+Per le espressioni, sappiamo che non ci sono identificatori in posizione di definizione, quindi:
+\[
+  DI(e) = \varnothing \text{ con } \forall e \in Exp
+\]
+Per le dichiarazioni:
+
+\begin{itemize}
+  \item $D(nil) = \varnothing$ 
+  \item $D(const x : \tau = e) = \{x\}$
+  \item $D(\rho) = I$ se $\rho \in Env_I$
+  \item $D(D_1 ; D_2) = D(D_1) \cup D(D_2)$ tutti gli id legati in $D_1$ e $D_2$ 
+  restono poi legati al loro significato.
+  \item $D(D_1 \text{ in } D_2) = D(D_2)$ solo gli id legati in $D_2$ hanno significato dopo
+\end{itemize}
+
+\subsubsection{Analisi semantica per le dichiarazioni}
+
+\textbf{L'analisi semantica} per le dichiarazioni associa un ambiente statico 
+alle dichiarazioni ben formate. Dato $\Delta$ è il contesto, con eventuali dichiarazioni precedenti,
+questa è la seguente forma delle regole:
+\[
+  \Delta \vdash d : \Delta' \text{ con $\Delta'$ l'ambiente definiti e quindi associato da $d$}
+\]
+\begin{itemize}
+  \item Assioma 1:
+  \[
+    \mathcal{D}_{S1}: \; \vdash nil : \varnothing
+  \]
+  \item Assioma 2:
+  \[
+    \mathcal{D}_{S2}: \; \vdash \rho : \Delta 
+  \]
+  dove $\rho$ e $\Delta$ sono compatibili.
+  \item Assioma 3:
+  \[
+    \mathcal{D}_{S3}: \; \frac{\Delta \vdash e : \tau}{\Delta \vdash const \; x : \tau = e : [x \mapsto \tau]}
+  \]
+  Dove $\tau$ è una metavariabile per lo stesso oggetto. Quindi devono essere tutti uguali. 
+  Se dichiaro $x$ di tipo $int$, l'espressione deve essere intera e se dichiaro $x$ booleana 
+  l'espressione deve essere booleana.
+  \item Assioma 4: 
+  \[
+    \mathcal{D}_{S4}: \; \frac{\Delta \vdash d_1 : \Delta_1 \quad \Delta[\Delta_1] \vdash d_2 : \Delta_2}{\Delta \vdash d_1 \text{ in } d_2 : \Delta_2}
+  \]
+  \item Assioma 5: 
+  \[
+    \mathcal{D}_{S5}: \; \frac{\Delta \vdash d_1 : \Delta_1 \quad \Delta[\Delta_1] \vdash d_2 : \Delta_2}{\Delta \vdash d_1 ; d_2 : \Delta_1[\Delta_2]}
+  \]
+\end{itemize}
+
+
 
 \end{document}
