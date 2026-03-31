@@ -1,6 +1,7 @@
 \documentclass[a4paper]{article}
 \usepackage{import}
 \input{../../../setup.sty}
+\usetikzlibrary{shapes.multipart, positioning, arrows.meta}
 
 \onehalfspacing
 \title{Basi di dati | Tecnologie}
@@ -974,6 +975,496 @@ Le operazioni che si possono eseguire su un indice secondario sono:
     denso ma con aggiornamento dei bucket. 
 \end{itemize}
 
+\subsection{Minimizzare i costi di accesso}
+
+Per migliorare l'accesso agli indici, possiamo migliorare le prestazioni 
+utilizzando la struttura ad albero (B+TREE) oppure le strutture ad accesso 
+calcolato (Hash).
+
+\subsubsection{B+TREE}
+
+\begin{itemize}
+    \item Struttura ad albero 
+    \item Ogni nodo viene memorizzato in una pagina/blocco di memoria 
+    secondaria.
+    \item Ogni nodo ci sono dei legami che rappresentano i puntatori alle pagine. 
+    \item È caratterizzato per avere pochi livelli e molti nodi foglia. 
+    \item È un albero bilanciato in modo che non esistono dei path preferenziali o 
+    più "fortunati" rispetto agli altri. Inserimenti e cancellazioni non devono alterare 
+    le prestazioni di accesso ai dati. 
+\end{itemize}
+
+\subsubsection*{Struttura dell'albero}
+
+\begin{itemize}
+    \item \textbf{Nodi foglia: } (con fan-out = $n$) Può contenere fino a $n - 1$ 
+    valori ordinati di chiave di ricerca e fino ad $n$ puntatori ai dati. 
+
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.7\textwidth]{btree_f.png}
+        \caption{Struttura di un B+TREE con fan-out = n}
+    \end{figure}
+    \noindent
+    Ogni nodo foglia ha un \textit{vincolo di ordinamento}. 
+    Questo vuol dire che le chiave dentro ad un nodo foglia sono ordinate 
+    e inoltre sono ordinate rispetto alle chiavi degli altri nodi foglia.
+    \[
+        \forall L_i, L_j \text{ nodi foglia } i < j: 
+        \forall k_t \in L_i, k_j \in L_j: k_i < k_j
+    \]
+    Il puntatore $p_m$ del nodo $L_i$ punta al nodo $L_{i+1}$, ovvero al nodo foglia successivo
+    se esiste e altrimenti è nullo.
+
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.7\textwidth]{btree_pm.png}
+        \caption{Puntatore $p_m$ del nodo $L_i$ che punta al nodo $L_{i+1}$}
+    \end{figure}
+
+    \item \textbf{Nodi intermedi} (con fan-out = $n$)
+    è una sequenza di $m' \le n$ valori ordinati di chiave. Può contenere fino a $n$ puntatori a nodo.
+    Ogni chiave $K_i$ è seguita da un puntatore $p_i$: 
+
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.7\textwidth]{btree_int.png}
+        \caption{Struttura di un nodo intermedio di un B+TREE con fan-out = n}
+    \end{figure}
+    \noindent
+\end{itemize}
+\noindent
+Entrambi i due nodi devono rispettare il vincolo di reimpimento. 
+\begin{itemize}
+    \item Per un nodo foglia con fanout = $n$, ogni nodo foglia 
+    può contenere un numero di valori di chiae (\#chiavi) vincolato come:
+    \[
+        \left\lceil \frac{n-1}{2} \right\rceil \le \colorbox{yellow}{\#\text{chiavi}} \le n - 1
+    \]
+    \item Per un nodo intermedio con fanout = $n$, ogni nodo intermedio
+    contiene un numero di puntatori (\#puntatori) vincolato come:
+    \[
+        \left\lceil \frac{n}{2} \right\rceil \le \colorbox{green!90!black}{\#\text{puntatori}} \le n
+    \]
+\end{itemize}
+
+\begin{Example}{}{}
+ Esempio di B+Tree con contenuti (A, B, C, D, E, F, G, L, M, N, P) e
+ con fanout = 4. Il fanout ci dice che ci sta un vincolo di reimpimento 
+ dove i nodi foglia devono essere:
+ \[
+    2 \le \text{ \#chiavi} \le 3
+ \]   
+e i nodi intermedi devono essere:
+\[
+    2 \le \text{ \#puntatori} \le 4
+\]
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=1\textwidth]{btree_ex.png}
+    \caption{Esempio di B+Tree con fanout = 4}
+\end{figure}
+\noindent
+Questo esempio di albero per chiavi desiderate che rispetta
+il vincolo di reimpimento usando un reimpimento \textbf{minimo}.
+Tuttavia si poteva gestire il reimpimento in modo diverso, ad esempio con un reimpimento \textbf{massimo} 
+che avrebbe portato ad avere nodi con 3 chiavi e 4 puntatori.
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=1\textwidth]{btree_ex_2.png}
+    \caption{Esempio di B+Tree con fanout = 4 e reimpimento massimo}
+\end{figure}
+\noindent
+In questo caso non è necessario passare da un livello intermedio, possiamo rappresentare
+tutto con unico nodo radice, perché puntare a $9$ nodi foglia ci servono 
+$4$ puntatori e questo è compatibile con il vincolo di reimpimento.
+\end{Example}
+
+\subsubsection{Ricerca in un B+TREE}
+
+\begin{enumerate}
+    \item Cercare nel nodo radice il più 
+    piccolo valore di chiave $>$ di $K$. 
+
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.9\textwidth]{btree_ric.png}
+        \caption{Ricerca di una chiave $K$ in un B+TREE}
+    \end{figure}
+
+    \item  Se il nodo raggiunto è un nodo foglia cercare 
+    il valore $K$ nel nodo e seguire il
+    corrispondente puntatore verso le tuple, altrimenti riprendere il passo 1
+
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.7\textwidth]{btree_ric_2.png}
+    \end{figure}
+\end{enumerate}
+
+\begin{Example}{}{}
+
+Ricerca delle tuple con valore $G$ della chiave di ricerca:
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=1\textwidth]{btree_ric_ex.png}
+    \caption{Esempio di ricerca di una chiave $G$ in un B+TREE}
+\end{figure}
+\end{Example}
+
+\begin{Observation}{Costo di una ricerca}
+    Il costo di una ricerca di un valore $K$ in un B+TREE è dato da:
+    \begin{itemize}
+        \item La profondità dell'albero (ovvero il numero di nodi intermedi che dobbiamo attraversare)
+        Questo dipende dal \textit{fanout}.
+        La profondità è limitata da:
+        \[
+            prof_{B+Tree} \le \underbrace{1}_{\text{radice}} + \underbrace{\log_{\lceil \frac{n}{2} \rceil} \underbrace{\left( \frac{\text{\#valoriChiave}}{\lceil \frac{n-1}{2} \rceil} \right)}_{\text{MAX \# FOGLIE}}}_{\text{\# livelli}}
+        \]
+        \item \# di accessi alla memoria secondaria + ogni nodo è un blocco
+    \end{itemize}
+\end{Observation}
+
+\subsubsection{Inserimento in un B+TREE}
+
+\begin{enumerate}
+    \item Ricerca del nodo foglia $NF$ dove $K$ va inserito. 
+    \item Ci possono essere vari casi:
+    \begin{itemize}
+        \item Se $K$ è presente in $NF$:
+        \begin{itemize}
+            \item Se è un indice primario, allora nessuna azione. 
+            \item Se è un indice secondario, allora aggiornare il bucket dei puntatori.
+        \end{itemize}
+        \item Se $K$ non è presente in $NF$, inserire $K$ in $NF$ rispettando ordine:
+        \begin{itemize}
+            \item Se è un indice primario, inserire $K$ e il puntatore alla tupla.
+            \item Se è un indice secondario, inserire $K$ e creare un nuovo bucket
+             che sarà puntato all'interno dell'indice.
+        \end{itemize}
+    \end{itemize}
+    Se violo il vincolo di riempimento massimo, devo dividere $NF$ in due nodi foglia.
+    \item Passo split: se in $NF$ esistono già $n$ valori di chiave:
+    \begin{itemize}
+        \item Creare due nodi foglia $NF_1$ e $NF_2$.
+        \item Devo inserire i primi $\lceil \frac{n-1}{2} \rceil$ valori di chiave 
+        in $NF_1$ e i restanti in $NF_2$.
+        \item Aggiornare il padre. Se il padre viola il vincolo di riempimento massimo, 
+        devo propagare lo split. Questa propagazione può arrivare fino alla radice 
+        e in questo caso devo creare un nuovo nodo radice.
+    \end{itemize}
+\end{enumerate}
+
+\begin{Example}{}{}
+Consideriamo il seguente esempio:
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=1\textwidth]{btree_ins_ex_2.png}
+    \caption{Esempio di split di un nodo foglia $NF$ in un B+TREE con fanout = 5}
+\end{figure}
+\noindent
+Se aggiungo $15$ a $NF \Rightarrow$ \# chiavi = 5 
+allora violo il vincolo di riempimento massimo, devo fare lo split. 
+\end{Example}
 
 
+\subsubsection{Cancellazione}
+
+\begin{enumerate}
+    \item Ricerca del nodo foglia $NF$ che contiene $K$.
+    \item Cancellare $K$ ed il suo puntatore:
+    \begin{itemize}
+        \item Potrebbe violare il vincolo di riempimento minimo. 
+        Dopo la cancellazione:
+        \[
+            \text{ \#chiavi} < \left\lceil \frac{n-1}{2} \right\rceil
+        \]
+        In questo caso dobbiamo ricorrere all'operazione opposta dello split:
+        il \textbf{merge}.
+        Per effettuare il merge:
+        \begin{itemize}
+            \item Individuiamo il nodo fratello. 
+            \item Si genera un unico nodo foglia. Se non esiste il fratello che unito 
+            rispetta il vincolo di riempimento max, merge + split.
+            \item Si aggiorna il nodo padre
+            \item Se anche il padre viola il vincolo di riempimento minimo, merge anche per il padre.
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+\begin{Example}{}{}
+Consideriamo il seguente esempio di merge:
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=1\textwidth]{btree_mer_ex.png}
+    \caption{Esempio di merge di un nodo foglia $NF$ in un B+TREE con fanout = 5}
+\end{figure}
+Dopo eliminazione di $K$ uguale a 3, il nodo $NF_1$ viola il vincolo di reimpimento 
+minimo. 
+\end{Example}
+\begin{Example}{Esercizio da Esame}{}
+Costruire B+Tree con fanout = 5 con i seguenti valori di chiave:
+\[
+    (A,B,C,D) \quad (F,G,M,N) \quad (O,P) \quad (S,T) \quad (W, Z)
+\]
+Vincoli di reimpimento:
+\[
+    NF: \left\lceil \frac{n-1}{2} \right\rceil = 2 \le \text{ \#chiavi} \le 4 = n - 1
+\]
+\[
+    NI: \left\lceil \frac{n}{2} \right\rceil = 3 \le \text{ \#puntatori} \le 5 = n
+\]
+Le task sono le seguenti:
+\begin{enumerate}
+    \item Costruzione dell'albero 
+    \item Inserire $H$
+    \item Cancellare $Z$ 
+\end{enumerate}
+(1) Abbiamo $5$ nodi foglia quindi abbiamo bisogno di $5$ puntatori.
+Possiamo usare un unico livello intermedio. 
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        >=Latex, 
+        font=\sffamily,
+        % Stile base per i nodi del B-Tree
+        bnode/.style={
+            draw,
+            rectangle split,
+            rectangle split horizontal,
+            rectangle split empty part width=1.5em,
+            minimum height=0.6cm,
+            inner sep=4pt
+        }
+    ]
+    
+    % ==========================
+    % FOGLIE (Leaves)
+    % ==========================
+    % Disegniamo prima le foglie, affiancandole da sinistra a destra
+    \node[bnode, rectangle split parts=4] (l1) {A \nodepart{two} B \nodepart{three} C \nodepart{four} D};
+    \node[bnode, rectangle split parts=4, right=0.4cm of l1] (l2) {F \nodepart{two} G \nodepart{three} M \nodepart{four} N};
+    \node[bnode, rectangle split parts=2, right=0.4cm of l2] (l3) {O \nodepart{two} P};
+    \node[bnode, rectangle split parts=2, right=0.4cm of l3] (l4) {S \nodepart{two} T};
+    \node[bnode, rectangle split parts=2, right=0.4cm of l4] (l5) {W \nodepart{two} Z};
+    
+    % ==========================
+    % RADICE (Root)
+    % ==========================
+    % Usiamo la libreria calc per trovare il centro esatto tra l1 e l5
+    \node[bnode, rectangle split parts=4, above=2cm of $(l1.north)!0.5!(l5.north)$] (root) {F \nodepart{two} O \nodepart{three} S \nodepart{four} W};
+    
+    % ==========================
+    % PUNTATORI INTERNI
+    % ==========================
+    \draw[->] (root.south west) ++(0.1,0) -- (l1.north);
+    \draw[->] (root.one split south)      -- (l2.north);
+    \draw[->] (root.two split south)      -- (l3.north);
+    \draw[->] (root.three split south)    -- (l4.north);
+    \draw[->] (root.south east) ++(-0.1,0)-- (l5.north);
+    
+    % ==========================
+    % PUNTATORI TRA FOGLIE (Linked List del B+ Tree)
+    % ==========================
+    \draw[->, thick, blue!80] (l1.east) -- (l2.west);
+    \draw[->, thick, blue!80] (l2.east) -- (l3.west);
+    \draw[->, thick, blue!80] (l3.east) -- (l4.west);
+    \draw[->, thick, blue!80] (l4.east) -- (l5.west);
+    
+    \end{tikzpicture}
+\end{figure}
+\noindent
+(2) Inseriamo $H$: Partendo dalla radice si cerca il nodo più piccolo con chiave maggiore di $H$ che 
+in questo caso è $O$.
+Ci sta un problema però. Il nuovo nodo foglia viola il vincolo di riempimento massimo.
+Dobbiamo ricorrere allo split del nodo foglia $NF$ che contiene $F,G,H,M,N$.
+Facendo però abbiamo $6$ puntatori e questo viola il vincolo di riempimento massimo dei nodi intermedi.
+Quindi non possiamo più usare un unico livello intermedio, ma dobbiamo aggiungere un nuovo livello intermedio.
+\begin{figure}[H]
+    \centering 
+    \begin{tikzpicture}[
+        >=Latex, 
+        font=\sffamily,
+        % Stile base per i nodi del B-Tree
+        bnode/.style={
+            draw,
+            rectangle split,
+            rectangle split horizontal,
+            rectangle split empty part width=1.5em,
+            minimum height=0.6cm,
+            inner sep=4pt
+        }
+    ]
+    
+    % ==========================
+    % LIVELLO 2: FOGLIE (Leaves)
+    % ==========================
+    \node[bnode, rectangle split parts=4] (l1) {A \nodepart{two} B \nodepart{three} C \nodepart{four} D};
+    % Il nodo splittato origina l2 e l3
+    \node[bnode, rectangle split parts=2, right=0.3cm of l1] (l2) {F \nodepart{two} G};
+    \node[bnode, rectangle split parts=3, right=0.3cm of l2] (l3) {H \nodepart{two} M \nodepart{three} N};
+    % Le altre foglie scalano a destra
+    \node[bnode, rectangle split parts=2, right=0.3cm of l3] (l4) {O \nodepart{two} P};
+    \node[bnode, rectangle split parts=2, right=0.3cm of l4] (l5) {S \nodepart{two} T};
+    \node[bnode, rectangle split parts=2, right=0.3cm of l5] (l6) {W \nodepart{two} Z};
+    
+    % ==========================
+    % LIVELLO 1: NODI INTERNI
+    % ==========================
+    % Nodo interno sinistro [F, M]
+    \node[bnode, rectangle split parts=2, above=1.5cm of l2] (i1) {F \nodepart{two} H};
+    % Nodo interno destro [S, W]
+    \node[bnode, rectangle split parts=2, above=1.5cm of l5] (i2) {S \nodepart{two} W};
+    
+    % ==========================
+    % LIVELLO 0: NUOVA RADICE (Root)
+    % ==========================
+    % La nuova radice [O] è calcolata per stare al centro esatto tra i1 e i2
+    \node[bnode, rectangle split parts=1, above=1.5cm of $(i1.north)!0.5!(i2.north)$] (root) {O};
+    
+    % ==========================
+    % PUNTATORI RADICE -> INTERNI
+    % ==========================
+    \draw[->] (root.south west) ++(0.1,0) -- (i1.north);
+    \draw[->] (root.south east) ++(-0.1,0) -- (i2.north);
+    
+    % ==========================
+    % PUNTATORI INTERNI -> FOGLIE
+    % ==========================
+    % Da i1 alle foglie l1, l2, l3
+    \draw[->] (i1.south west) ++(0.1,0) -- (l1.north);
+    \draw[->] (i1.one split south)      -- (l2.north);
+    \draw[->] (i1.south east) ++(-0.1,0)-- (l3.north);
+    
+    % Da i2 alle foglie l4, l5, l6
+    \draw[->] (i2.south west) ++(0.1,0) -- (l4.north);
+    \draw[->] (i2.one split south)      -- (l5.north);
+    \draw[->] (i2.south east) ++(-0.1,0)-- (l6.north);
+    
+    % ==========================
+    % PUNTATORI TRA FOGLIE (Linked List)
+    % ==========================
+    \draw[->, thick, blue!80] (l1.east) -- (l2.west);
+    \draw[->, thick, blue!80] (l2.east) -- (l3.west);
+    \draw[->, thick, blue!80] (l3.east) -- (l4.west);
+    \draw[->, thick, blue!80] (l4.east) -- (l5.west);
+    \draw[->, thick, blue!80] (l5.east) -- (l6.west);
+    
+    \end{tikzpicture}
+\end{figure}
+\noindent
+(3) Cencelliamo ora il nodo $Z$. Si cerca la chiave, non esiste quindi 
+si seuge il puntatore a destra. Sappiamo però che se lo cancello, il nodo foglia $NF$ che 
+contiene $W$ e $Z$ viola il vincolo di riempimento minimo.
+Il nodo foglia ha un unico fratello e quindi senza ambiguità riesco a 
+fonderlo con il nodo $S,T$. 
+
+\begin{figure}[H]
+    \centering 
+    \begin{tikzpicture}[
+        >=Latex, 
+        font=\sffamily,
+        % Stile base per i nodi del B-Tree
+        bnode/.style={
+            draw,
+            rectangle split,
+            rectangle split horizontal,
+            rectangle split empty part width=1.5em,
+            minimum height=0.6cm,
+            inner sep=4pt
+        }
+    ]
+    
+    % ==========================
+    % LIVELLO 1: FOGLIE (Leaves)
+    % ==========================
+    \node[bnode, rectangle split parts=4] (l1) {A \nodepart{two} B \nodepart{three} C \nodepart{four} D};
+    \node[bnode, rectangle split parts=2, right=0.3cm of l1] (l2) {F \nodepart{two} G};
+    \node[bnode, rectangle split parts=3, right=0.3cm of l2] (l3) {H \nodepart{two} M \nodepart{three} N};
+    \node[bnode, rectangle split parts=2, right=0.3cm of l3] (l4) {O \nodepart{two} P};
+    % Ecco la nuova foglia fusa:
+    \node[bnode, rectangle split parts=3, right=0.3cm of l4] (l5) {S \nodepart{two} T \nodepart{three} W};
+    
+    % ==========================
+    % LIVELLO 0: NUOVA RADICE (Root)
+    % ==========================
+    % La nuova radice raggruppa tutti i separatori. La posizioniamo sopra l3 (il nodo centrale).
+    \node[bnode, rectangle split parts=4, above=1.5cm of l3] (root) {F \nodepart{two} H \nodepart{three} O \nodepart{four} S};
+    
+    % ==========================
+    % PUNTATORI RADICE -> FOGLIE
+    % ==========================
+    \draw[->] (root.south west) ++(0.1,0) -- (l1.north);
+    \draw[->] (root.one split south)      -- (l2.north);
+    \draw[->] (root.two split south)      -- (l3.north);
+    \draw[->] (root.three split south)    -- (l4.north);
+    \draw[->] (root.south east) ++(-0.1,0)-- (l5.north);
+    
+    % ==========================
+    % PUNTATORI TRA FOGLIE (Linked List)
+    % ==========================
+    \draw[->, thick, blue!80] (l1.east) -- (l2.west);
+    \draw[->, thick, blue!80] (l2.east) -- (l3.west);
+    \draw[->, thick, blue!80] (l3.east) -- (l4.west);
+    \draw[->, thick, blue!80] (l4.east) -- (l5.west);
+    
+    \end{tikzpicture}
+\end{figure}
+\noindent
+Ora che abbiamo cancellato $Z$, abbiamo di nuovo $5$ puntatori quindi 
+possiamo usare un unico livello intermedio, come prima. Quindi viene 
+creata una nuova radice.
+\end{Example}
+
+\subsubsection{Hash}
+
+Questa struttura sfrutta l'accesso associativo nel senso 
+che la localizzazione fisica dei dati diende dal valore della chiave. 
+Viene utilizzata una funzione di hash che mappa i valori di chiave 
+in indirizzi di memorizzazione delle tuple. 
+\[
+    h : K \to B 
+\]
+dove $K$ è il dominio delle chiavi e $B$ è il dominio degli indirizzi.
+Costo della ricerca è uguale quindi ad un accesso alla memoria secondaria. 
+Tuttavia il problema dell'hashing sono le collisioni: valori di chiavi diverse 
+possono produrre lo stesso indirizzo.
+Una funzione di hash è buona se minimizza il numero di collisioni. 
+Viene definito il concetto di fattore di riempimento. 
+\dfn{}
+{
+    \textbf{Il fattore di riempimento} mi dice lo spazio medio fisico utilizato 
+    in ciascun blocco. 
+}
+\noindent
+Consideriamo:
+\begin{itemize}
+    \item $T = \#\text{tuple}$ 
+    \item $F = \#\text{tuple ci stanno in un blocco}$
+    \item $f = \text{fattore di riempimento}$
+    \item $B = \left \lceil \frac{T}{F \cdot f} \right \rceil$ viene allocato 
+    il numero di bucket di puntatori uguale a $B$.
+\end{itemize}
+Viene definita una funzione di folding: 
+\[
+    \varphi : K \to \mathbb{Z}^+ \text{ trasforma chiavi in interi}
+\]
+La funzione di hashing è data da:
+\[
+    h : \mathbb{Z}^+ \to B 
+\]
+\subsubsection{Ricerca in un indice hash}
+
+\begin{enumerate}
+    \item Dobbiamo calcolare $b = h(\varphi(K))$ dove il costo è dato da un accesso alla memoria secondaria e quindi è zero. 
+    \item Accedere al bucket $b$ dove il costo è uguale a $1$ essendo che facciamo un accesso alla pagina 
+    \item Accedere alle $n$ tuple tramite puntatori dove il costo è uguale $m \le n$ dove $m$ sono il numero di pagine.
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.7\textwidth]{hash_ex.png}
+        \caption{Ricerca di una chiave $K$ in un indice hash}
+    \end{figure}
+\end{enumerate}
 \end{document}
