@@ -3,6 +3,8 @@
 \usepackage{import}
 \input{../../setup.sty}
 
+\usepackage{mathpartir}
+
 \onehalfspacing
 \title{Linguaggi}
 \author{Università di Verona\\Imbriani Paolo -VR500437\\Prof.ssa Isabella Mastroeni}
@@ -1937,6 +1939,307 @@ questa è la seguente forma delle regole:
   \]
 \end{itemize}
 
+\subsubsection{Semantica dinamica} 
+
+L'ambiente statico generato dalla semantica statica è compatibile 
+con l'ambiente dinamico: 
+\[
+  \rho \vdash_{\Delta} d \to_d d' \text{ forma delle regole}
+\]
+$d$ viene elaborato (1 passo) in $d'$ nell'ambiente dinamico $\rho$. 
+Gli stati sono le dichiarazioni e gli stati terminali sono gli ambienti:
+\[
+  Stati: \mathcal{D} \cup Env
+\]
+Definiamo ora le regole:
+\begin{itemize}
+  \item Assioma 1:
+  \[
+    \mathcal{D}_1: \; \vdash nil \to \varnothing \text{ perché } d  = \rho \text{ è già terminale non abbiamo nulla da elaborare}
+  \]
+  \item Assioma 2:
+  \[
+    \mathcal{D}_2: \; \rho \vdash const \; x : \tau = k \to [x \mapsto k]
+  \]
+  \item Assioma 3: 
+  \[
+    \mathcal{D}_3: \; \frac{\rho \vdash e \to_e e'}{\rho \vdash cost \; x : \tau = e \to_d const \; x : \tau = e'}
+  \]
+  \item Sequenziale:
+  \[
+    \mathcal{D}_4: \; \frac{\rho \vdash d_1 \to_d d_1'}{\rho \vdash d_1 \text{ ; } d_2 \to d_1' \text{ ; } d_2}
+  \]
+  \[
+    \mathcal{D}_5: \; \frac{\rho[\rho_1] \vdash  d_2 \to_d d_2'}{\rho \vdash \rho_1 \text{ ; } d_2 \to \rho_1 \text{ ; } d_2}
+  \]
+  \[
+    \mathcal{D}_6: \; \rho \vdash \rho_1 \text{ ; } \rho_2 \to_d \rho_1[\rho_2]
+  \]
+  \item Privata: 
+  \[
+    \mathcal{D}_7: \; \frac{\rho \vdash d_1 \to_d d_1'}{\rho \vdash d_1 \text{ in } d_2 \to_d d_1' \text{ in } d_2}
+  \]
+  \[
+    \mathcal{D}_8: \; \frac{\rho[\rho_1] \vdash d_2 \to_d d_2'}{\rho \vdash rho_1 \text{ in } d_2 \to_d \rho_1 \text{ in } d_2'}
+  \]
+  \[
+    \mathcal{D}_9: \; \rho \vdash \rho_1 \text{ in } \rho_2 \to_d \rho_2
+  \]
+\end{itemize}
+
+\dfn{Funzione di elaborazione}
+{
+  La funzione di elaborazione prende una dichiarazione e restituisce un ambiente, ovvero l'ambiente che viene creato o 
+  modificato da quella dichiarazione.
+  \[
+    Elab: \mathcal{D} \to Env
+  \]
+  dove $\mathcal{D}$ è generato dalla grammatica delle dichiarazioni 
+  \[
+    \forall d \in \mathcal{D} . \; Elab(d) = \rho \text{ sse } \vdash d \to_d^* \rho
+  \]
+}
+
+\thm{Equivalenza di dichiarazioni} 
+{
+  \[
+    \equiv \; \subseteq \mathcal{D} \times \mathcal{D} \text{ è la relazione di equivalenza tra dichiarazioni}
+  \]
+  dove 
+  \[
+    \forall d_1, d_2 \in \mathcal{D} . \; d_1 \equiv d_2 \text{ sse } Elab(d_1) = Elab(d_2)
+  \]
+}
+
+
+\begin{Example}{}{} 
+\begin{lstlisting}
+const x : int = 2 in const y : int = x + 1; const z : int = x + y;
+\end{lstlisting}
+Prendiamo:
+\begin{itemize}
+  \item \texttt{const x : int = 2} è $d_1$ 
+  \item \texttt{const y : int = x + 1; const z : int = x + y} è $d_2$
+\end{itemize}
+\noindent 
+I passi che dobbiamo fare ora sono: 
+\begin{itemize}
+  \item Dobbiamo elaborare $d_1$ in $d_2$: 
+  \[
+    \inferrule
+      {\vdash d_1 \to_d d_1' \quad \text{( oppure p )}}
+      {\vdash d_1 \text{ in } d_2 \to d_1' \text{ in } d_2}
+  \]
+  
+  nel nostro caso:
+  \[
+    \inferrule
+      {\vdash \text{const } x : \text{int} = 2 \to_d [x \mapsto 2]}
+      {\vdash d_1 \text{ in } d_2 \to_d [x \mapsto 2] \text{ in } d_2}
+  \]
+  
+  Regola ora da applicare:
+  \[
+    \inferrule
+      {\rho_1 \vdash d_2 \to d_2'}
+      {\vdash \rho_1 \text{ in } d_2 \to \rho_1 \text{ in } d_2'}
+    \quad \equiv \quad
+    \inferrule
+      {\rho_1 \vdash d_2 \to_d^* \rho_2}
+      {\vdash \rho_1 \text{ in } d_2 \to \rho_1 \text{ in } \rho_2}
+  \]
+  \item Ora dobbiamo elaborare $d_2$ che può essere scomposto in $d_3$ e $d_4$:
+  Per elaborare $d_3$ dobbiamo usare la seguente regola:
+  \[
+    \inferrule
+      {\rho_1 \vdash d_3 \to_d \rho_3'}
+      {\rho_1 \vdash const \; y : int = x + 1 \to_d \rho_3'}
+  \]
+  \[
+    \inferrule
+      {\rho_1 \vdash x+1 \to_d^* \text{?}}
+      {\rho_1 \vdash const \; y : int = x + 1 \to_d const \; y : int = \text{?}}
+  \]
+  dove sappiamo "unfoldare" il contesto:
+  \[
+    \inferrule
+      {\rho_1 \vdash x \to 2}
+      {\rho_1 \vdash x + 1 \to 2 + 1}
+  \]
+  di conseguenza riscriviamo la regola:
+  \[
+    \inferrule
+      {\rho_1 \vdash x + 1 \to_d^* 3}
+      {\rho_1 \vdash const \; y : int = x + 1 \to_d const \; y : int = 3}
+  \]
+  quindi $\rho \vdash const \; y : int = 3 \to [y \mapsto 3]$.
+  Riscriviamo la regola:
+  \[
+    \inferrule
+      {\rho_1 \vdash d_3 \to_d [y \mapsto 3]}
+      {\rho_1 \vdash d_3 \text{ ; } d_4 \to \rho_3 \text{ ; } d_4}
+  \]
+  \item Ora preoccupiamoci di $d_4$. La regola che dobbiamo utilizzare è la seguente:
+  \[
+    \inferrule
+      {\rho_1[\rho_3] \to_d \rho_4}
+      {\rho_1 \vdash \rho_3 \text{ ; } d_4 \to \rho_3 \text{ ; } \rho_4}
+  \]
+  Elaboriamo $d_4$, $d_4 = const ; z : int = x + y$ in $\rho_1[\rho_3] = [x \mapsto 2, y \mapsto 3]$:
+  Le regole da applicare sono:
+  \[
+    \inferrule
+      {\rho_1[\rho_3] \vdash x + y \to_d^* k}
+      {\rho_1[\rho_3] \vdash const \; z : int = x + y \to_d const \; z : int = k}
+  \]
+  Sviluppiamo $x + y$:
+  \[
+    \inferrule
+      {\rho_1[\rho_3] \vdash x \to 2}
+      {\rho_1[\rho_3] \vdash x + y \to 2 + y}
+  \]
+  \[
+    \inferrule
+      {\rho_1[\rho_3] \vdash y \to 3}
+      {\rho_1[\rho_3] \vdash 2 + y \to 2 + 3}
+  \]
+  \[
+    \rho_1[\rho_3] \vdash 2 + 3 \to 5
+  \]
+  Riscrivo la regola istanziata:
+  \[
+    \inferrule
+      {\rho_1[\rho_3] \vdash x + y \to_d^* 5}
+      {\rho_1[\rho_3] \vdash const \; z : int = x + y \to_d const \; z : int = 5}
+  \]
+  Applichiamo l'assioma:
+  \[
+    \rho_1[\rho_3] \vdash const \; z : int = 5 \to [z \mapsto 5]
+  \]
+  \item Torniamo all'elaborazione di $d_2 = d_3 \text{ ; } d_4$:
+  Descriviamo l'ultima regola usata per $d_2$:
+  \[
+    \inferrule
+      {\rho_1[\rho_3] \vdash d_4 \to^* \rho_4}
+      {\rho_1 \vdash d_3 \text{ ; } d_4 \to_d \rho_3 \text{ ; } \rho_4}
+  \]
+  Applichiamo l'assioma:
+  \[
+    \rho_1 \vdash \rho_3 \text{ ; } \rho_4 \to_d \rho_3[\rho_4] = \rho_2 = [y \mapsto 3, z \mapsto 5]
+  \]
+  Riscriviamo la regola:
+  \[
+    \inferrule 
+      {\rho_1 \vdash d_2 \to^* \rho_2}
+      {\vdash \rho_1 \text{ in } d_2 \to \rho_1 \text{ in } \rho_2 }
+  \]
+  Applichiamo l'assioma:
+  \[
+    \vdash \rho_1 \text{ in } \rho_2 \to_d \rho_2 \Rightarrow \vdash d_1 \text{ in } d_2 \to^* \rho_2 = [y \mapsto 3, z \mapsto 5]
+  \]
+\end{itemize}
+
+\end{Example}
+
+\subsection{Comandi}
+
+L'introduzione di \textbf{identificatori variabili} richiede l'introduzione della
+\textbf{memoria} e dei \textbf{comandi}. 
+\[
+  x := x + 1
+\]
+dove 
+\begin{itemize}
+  \item $x$ è il target e lo scriviamo $l-value$ 
+  \item $x + 1$ è l'espressione da valutare e lo scriviamo $r-value$
+\end{itemize}
+Ci sono alcuni problemi che l'ambiente non ci permette di distinguere:
+\begin{itemize}
+  \item Gestire diversi oggetti con lo stesso nome (ricorsione, ridefinzione di variabili...).
+  \item Gestire diversi nomi per lo stesso oggetto (puntatori, aliasing...).
+  \item Nomi e valori che cambiano durante l'esecuzione. 
+\end{itemize}
+Dobbiamo introdurre il concetto della \textbf{locazione}.
+
+\subsubsection{Locazione}
+
+Una \textbf{locazione} è un identificatore che denota una cella di memoria, 
+ovvero un oggetto che può essere modificato durante l'esecuzione.
+Quindi sta "in mezzo" tra l'identificatore e l'oggetto denotato, e permette di distinguere 
+tra oggetti con lo stesso nome e nomi diversi per lo stesso oggetto.
+\[
+  ID \underbrace{\stackrel{\text{Ambiente}}{\longleftrightarrow}}_{\text{Trasformazioni reversibili}} \text{LOCAZIONE} \underbrace{\stackrel{\text{Memoria}}{\longleftrightarrow}}_{\text{Trasformazioni irreversibili}} OGGETTO
+\]
+
+\dfn{Memoria}
+{
+  La \textbf{memoria} tiene traccia delle trasformazioni effettuate dall'
+  esecuzione di programmi.   
+}
+
+\dfn{Locazione}
+{
+  La \textbf{locazione} è un astrazione che viene creata delle dichiarazioni:
+  \begin{itemize}
+    \item Se la creazione è implicita, viene creata dai comandi a tempo di esecuzione 
+    (nei linguaggi dinamici/interpretati). Altrimenti se è esplicita, 
+    allora viene creata a tempo di compilazione.
+    \item Ha un tempo di vita 
+    \item Viene usato per contenere/riferire a oggetti che possono cambiare durante
+    l'esecuzione 
+    \item sono considerate illimitate, quindi non dobbiamo 
+    preoccuparci di esaurirle.
+  \end{itemize}
+}
+\noindent
+In una locazione possiamo inserire:
+\begin{itemize}
+  \item Gli \textbf{identificatori costanti} non usano la memoria poiché vengono associati 
+  a valori che non cambiano durante l'esecuzione. Sono legami che 
+  restano nell'ambiente. 
+  \[x \to 2 \quad \text{ x sarà sempre 2}\]
+  Useremo la notazione \texttt{const}.
+  \item Le \textbf{variabili} usano identificate da due legami: uno nell'ambiente:
+  \[
+    x \to \square \text{ (locazione)}
+  \]
+  e uno nella memoria:
+  \[
+    \square \to 2 \text{ (valore)}
+  \]
+  il cui valore memorizzabile può essere modificato durante l'esecuzione.
+  Useremo la notazione \texttt{var}.
+\end{itemize}
+All'interno di IMP abbiamo:
+\begin{itemize}
+  \item Valori esprimibili (elementi primitivi di Exp, come i booleani e gli interi)
+  \item Valori memorizzaibili ($B \cup \mathcal{N}$) ovvero che possono essere associati ad una locazione.
+  \item Valori denotabili ($B \cup \mathcal{N} \cup \underbrace{L}_{\text{locazioni}}$) ovvero che possono 
+  essere legati da un identificatore.
+\end{itemize}
+$\mathcal{D}$ viene modificata aggiungendo la dichiarazione di variabile. 
+
+\[
+  \mathcal{D}: \; D \to nil \; | \; const\; x : \; \tau = e \; | \; var \; x : \tau \; | \;  D ; D \; | \;  D \text{ in } D \; | \; \rho \; |  \; var \; x : \tau = e 
+\]
+$var \; x : \tau = e$ è la dichiarazione di una variabile $x$ di tipo $\tau$ che viene inizializzata con un valore $e$. 
+\[
+\begin{cases}
+  FI(var \; x : \tau = e) = FI(e)\\
+  DI(var \; x : \tau = e) = \{x\}
+\end{cases}
+\]
+Dobbiamo aggiungere i tipi $DTyp$ per le locazioni. 
+\[
+  DTyp = \{int, bool, \underbrace{intloc, boolloc}_{\text{tipi delle locazioni ($\tau$ loc)}}\}
+\]
+Regola statica per var:
+\[
+  \inferrule
+  {\Delta \vdash e : \tau}
+  {\Delta \vdash var \; x : int \to [x \mapsto \tau loc]}
+\]
+Ovvero che $x$ è una variabile di tipo $\tau$ se $e$ è un'espressione di tipo $\tau$.
 
 
 \end{document}
