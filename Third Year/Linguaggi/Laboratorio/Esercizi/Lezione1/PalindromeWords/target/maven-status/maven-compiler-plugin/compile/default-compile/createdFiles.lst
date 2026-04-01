@@ -1,0 +1,9 @@
+PalindromeWordsListener.class
+PalindromeWordsParser.class
+PalindromeWordsBaseVisitor.class
+App.class
+PalindromeWordsBaseListener.class
+PalindromeWordsLexer.class
+PalindromeWordsParser$MainContext.class
+PalindromeWordsParser$PalContext.class
+PalindromeWordsVisitor.class
