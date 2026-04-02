@@ -1,9 +1,0 @@
-BinWordsListener.class
-BinWordsBaseListener.class
-BinWordsBaseVisitor.class
-App.class
-BinWordsParser$MainContext.class
-BinWordsParser.class
-BinWordsParser$BinContext.class
-BinWordsLexer.class
-BinWordsVisitor.class
