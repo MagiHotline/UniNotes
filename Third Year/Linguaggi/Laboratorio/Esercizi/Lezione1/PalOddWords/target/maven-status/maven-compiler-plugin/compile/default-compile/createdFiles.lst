@@ -1,9 +1,0 @@
-PalOddBaseListener.class
-PalOddVisitor.class
-PalOddLexer.class
-App.class
-PalOddParser$MainContext.class
-PalOddParser$PalContext.class
-PalOddListener.class
-PalOddParser.class
-PalOddBaseVisitor.class
