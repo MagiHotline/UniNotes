@@ -1,4 +1,59 @@
-# Esercizi
+# Lezione 3
+
+- [Esercizi](#esercizi)
+  - [Esercizio 1](#esercizio-1)
+  - [Esercizio 2](#esercizio-2)
+  - [Esercizio 3](#esercizio-3)
+  - [Esercizio 4](#esercizio-4)
+  - [Esercizio 5](#esercizio-5)
+  - [Esercizio 6](#esercizio-6)
+  - [Esercizio 7](#esercizio-7)
+  - [Esercizio 8](#esercizio-8)
+  - [Esercizio 9](#esercizio-9)
+  - [Esercizio 10](#esercizio-10)
+  - [Esercizio 11](#esercizio-11)
+  - [Esercizio 12](#esercizio-12)
+  - [Esercizio 13](#esercizio-13)
+  - [Esercizio 14](#esercizio-14)
+  - [Esercizio 15](#esercizio-15)
+  - [Esercizio 16](#esercizio-16)
+  - [Esercizio 17](#esercizio-17)
+  - [Esercizio 18](#esercizio-18)
+
+Si considerino le seguenti tabelle (grassetto per le chiavi primarie), presenti
+nella base di dati did2014 nel database di UniVR:
+
+- CorsoStudi(**id**, nome, codice, abbreviazione, durataAnni, sede, informativa)
+- Facolta(**id**, nome, codice, indirizzo, informativa, id_preside_persona, id_segreteria)
+- Insegn(**id**, nomeins, codiceins)
+- Discriminante(**id**, nome, descrizione)
+- InsErogato(**id**, annoaccademico, id_insegn, id_corsostudi, id_discriminante, modulo,
+  discriminantemodulo, nomemodulo, crediti, programma, id_facolta, hamoduli,
+  id_inserogato_padre, nomeunità, annierogazione)
+- CorsoInFacolta(**id**, id_corsostudi, id_facolta)
+
+e le seguenti indicazioni:
+
+- Nella tabella `InsErogato` gli insegnamenti che non hanno moduli hanno l'attributo
+  `hamoduli = '0'`; nella medesima tabella le righe che descrivono un insegnamento nel
+  suo complesso hanno l'attributo `modulo = 0`, mentre le righe che descrivono singoli
+  moduli hanno `modulo > 0`.
+- L'attributo `discriminante` distingue repliche dello stesso insegnamento (ad esempio,
+  tale attributo può contenere valori come: `'matricole pari'`, `'matricole dispari'`).
+- Alcuni insegnamenti sono divisi in unità logistiche (teoria, laboratorio,
+  esercitazioni, ecc. . . ). Tali unità sono rappresentate come entità di `InsErogato`
+  in cui: il loro nome è dato dall'attributo `nomeunita`, hanno un valore `modulo < 0` e
+  sono legate al padre (insegnamento erogato con `modulo = 0`) da una relazione
+  esplicita implementata dall'attributo `id_inserogato_padre`. L'attributo `haunita` ha
+  per le unità lo stesso significato di `hamoduli` per i moduli.
+- L'attributo `annierogazione` indica gli anni a cui è offerto l'insegnamento (1°,
+  1° e 2°, 3° ecc. . . ). Esso viene rappresentato da un intero che va interpretato
+  come stringa di bit: `2 = 000010` indica il secondo anno, `3 = 000011` indica la
+  combinazione 1° e 2° anno, `4 = 000100` indica il 3° anno, ecc. . .
+  - Le tabelle `PeriodoLez` e `PeriodoDid` fanno parte di una gerarchia (`PeriodoDid`
+    è padre di `PeriodoLez`) dove il padre è la tabella `PeriodoDid`, mentre la tabella
+    `PeriodoLez` permete di specificare un ulteriore attributo (`abbreviazione`). Il join
+    tra le due tabelle viene fatto per uguaglianza rispetto all'attributo `id`.
  
 ## Esercizio 1
 
@@ -289,5 +344,66 @@ esima sono:
 | 280 | Giuseppe | Ceriani |
 
 ```sql
+SELECT DISTINCT P.id, P.nome, P.cognome
+FROM InsErogato as IE 
+JOIN Docenza as D ON D.id_inserogato = IE.id
+JOIN Persona as P ON D.id_persona = P.id 
+WHERE 
+    IE.annoaccademico = '2010/2011'
+GROUP BY P.id, P.nome, P.cognome
+HAVING COUNT(DISTINCT D.id_inserogato) > 1 AND
+    COUNT(DISTINCT IE.id_corsostudi) > 1
+ORDER BY P.id;
+```
 
+## Esercizio 17
+
+Trovare per ogni periodo di lezione del 2010/2011 la cui descrizione inizia con ’I semestre’ o ’Primo
+semestre’ il numero di occorrenze di insegnamento allocate in quel periodo. Si visualizzi quindi:
+l’abbreviazione, il discriminante, inizio, fine e il conteggio richiesto ordinati rispetto all’inizio e fine.
+
+La soluzione ha 3 righe:
+
+| abbreviazione | discriminante | inizio | fine | insprimosem |
+| :--- | :--- | :--- | :--- | :--- |
+| Primo semestre | eco | 2010 -10 -04 | 2010 -12 -22 | 104 |
+| Primo semestre | Primo semestre | 2010 -10 -04 | 2011 -01 -22 | 124 |
+| I semestre | I semestre | 2010 -10 -04 | 2011 -01 -31 | 159 |
+
+```sql
+SELECT PL.abbreviazione, PD.discriminante,
+    PD.inizio, PD.fine, COUNT(IE.id) as insprimosem
+FROM PeriodoDid as PD
+JOIN PeriodoLez as PL ON PD.id = PL.id
+JOIN InsInPeriodo as IP ON PL.id = IP.id_periodolez
+JOIN InsErogato as IE ON IE.id = IP.id_inserogato
+WHERE
+    PD.annoaccademico = '2010/2011' AND 
+    (PD.descrizione LIKE 'I semestre' OR 
+    PD.descrizione LIKE 'Primo semestre')
+GROUP BY (
+    PL.abbreviazione, 
+    PD.discriminante, 
+    PD.inizio, 
+    PD.fine
+)    
+ORDER BY PD.inizio, PD.fine;
+```
+
+## Esercizio 18
+
+Trovare per ogni segreteria che serve almeno un corso di studi il numero di corsi di
+studi serviti, riportando il nome della struttura, il suo numero di fax e il conteggio
+richiesto.
+
+La soluzione ha 42 righe.
+
+```sql
+SELECT SS.nomestruttura, SS.fax, COUNT(CS.id) as NumCorsi
+FROM StrutturaServizio as SS 
+JOIN CorsoStudi as CS ON SS.id = CS.id_segreteria
+GROUP BY (
+    SS.nomestruttura,
+    SS.fax
+)
 ```
