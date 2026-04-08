@@ -2141,7 +2141,7 @@ I passi che dobbiamo fare ora sono:
 
 \end{Example}
 
-\subsection{Comandi}
+\subsection{Variabili}
 
 L'introduzione di \textbf{identificatori variabili} richiede l'introduzione della
 \textbf{memoria} e dei \textbf{comandi}. 
@@ -2240,6 +2240,283 @@ Regola statica per var:
   {\Delta \vdash var \; x : int \to [x \mapsto \tau loc]}
 \]
 Ovvero che $x$ è una variabile di tipo $\tau$ se $e$ è un'espressione di tipo $\tau$.
+
+%% TODO 
+
+\subsection{Semantica dell'if}
+
+\subsubsection*{Semantica statica}
+
+La semantica statica ci determinava se il comando è ben formato
+e quindi va a verificare la soddisfiazione di eventuali vincoli.
+Per quanto riguarda gli identificatori liberi e definiti:
+\[
+\begin{aligned}
+  &FI(\text{if $b$ then $c_1$ else $c_2$}) = FI(b) \cup FI(c_1) \cup FI(c_2)\\
+  &DI(\text{if $b$ then $c_1$ else $c_2$}) = DI(c_1) \cup DI(c_2)
+\end{aligned}
+\]
+Dove nei definiti si conta anche $DI(c_1)$ a causa della presenza di blocchi 
+contenenti dichiarazioni  (da inserire nella sintassi).
+\[
+  \inferrule 
+  {\Delta \vdash b : bool \quad \Delta \vdash c_1\quad \Delta \vdash c_2}
+  {\Delta \vdash if \; b \; then \; c_1 \; else \; c_2}
+\]
+dove l'unico vincolo di tipo è che $b$ deve essere di tipo $bool$.
+
+\subsubsection*{Semantica dinamica}
+
+Abbiamo le seguenti regole:
+Regola per l'esecuzione dell'if: per eseguire un if bisogna valutare 
+la guardia $b$ e poi a seconda del risultato eseguire $c_1$ o $c_2$:
+\[
+  \inferrule 
+  {\rho \vdash <b, \sigma > \to^* <t, \sigma>}
+  {\rho \vdash < if \; b \; then \; c_1 \; else \; c_2, \sigma>  \; \to \; <\text{if $t$ then $c_1$ else $c_2$}, \sigma >}
+\]
+Assioma per il true: se la guardia è true allora il comando da eseguire è $c_1$:
+\[
+  \rho \vdash < \text{if true then $c_1$ else $c_2$}, \sigma > \to <c_1, \sigma>
+\]
+Assioma per il false: se la guardia è false allora il comando da eseguire è $c_2$:
+\[
+  \rho \vdash < \text{if false then $c_1$ else $c_2$}, \sigma > \to <c_2, \sigma>
+\]
+
+\begin{Example}
+Prendiamo come esempio questa espressione:
+
+\[
+  if x = y then x := 5 else x:= 6
+\]
+Dove $x, y$ sono identificatori liberi e dobbiamo fornire un ambiente e memoria per poterlo eseguire:
+\[
+\begin{aligned}
+  &\rho = [x \mapsto l_x, y \mapsto 2 ] \\
+  &\sigma_1 [l_x \mapsto 3], \sigma_2 = [l_x \mapsto 2]\\
+  &\Delta = [x \mapsto intloc, y \mapsto int]\\
+\end{aligned}
+\]
+Guardiamo la semantica statica:
+\[
+  \inferrule
+  {\Delta \vdash x : intloc \quad \Delta \vdash y : int \quad \Delta \vdash x := 5 \quad \Delta \vdash x := 6}
+  {\Delta \vdash if \; x = y \; then \; x := 5 \; else \; x := 6}
+\]
+
+\begin{itemize}
+  \item Dobbiamo prima vedere se l'uguaglianza è tra interi:
+  \[
+    \inferrule 
+    {\Delta \vdash x : int \quad \Delta \vdash y : int}
+    {\Delta \vdash x = y : bool}
+  \]
+  \item Controlliamo se $x := 5$ è ben formato:
+  \[
+    \inferrule
+    {\Delta \vdash x : int \quad \Delta \vdash 5 : int}
+    {\Delta \vdash x := 5}
+  \]
+  \item Controlliamo se $x := 6$ è ben formato:
+  \[
+    \inferrule
+    {\Delta \vdash x : int \quad \Delta \vdash 6 : int}
+    {\Delta \vdash x := 6}
+  \]
+\end{itemize}
+Guardiamo ora la semantica dinamcia a partire da $\sigma_1$:
+\[
+  < if \; x = y \; then \; ..., \sigma_1 > \to ? 
+\]
+\[
+  \inferrule
+  {\rho \vdash <x = y, \sigma_1> \to^* <t, \sigma_1>}
+  {\rho \vdash < if \; x = y \; then \; x := 5 \; else \; x := 6, \sigma_1 > \to <\text{if $t$ then $x := 5$ else $x := 6$}, \sigma_1>}
+\]
+\begin{itemize}
+  \item Valutiamo $x$: 
+  \[
+    \inferrule
+    {\rho \vdash <x, \sigma_1> \to^* <3, \sigma_1>}
+    {\rho \vdash <x = y, \sigma_1> \to^* <3 = y, \sigma_1>}
+  \]
+  \item Valutiamo $y$:
+  \[
+    \inferrule 
+    {\rho \vdash <y, \sigma_1> \to^* <2, \sigma_1>}
+    {\rho \vdash <3 = y, \sigma_1> \to^* <3 = 2, \sigma_1>}
+  \]
+  \item E quindi:
+  \[
+    \rho \vdash <3 = 2, \sigma_1> \to^* <false, \sigma_1>
+  \]
+  \item Riscriviamo la regola $*$ con $t = false$. 
+  \[
+    \inferrule 
+    {\rho \vdash <x = y, \sigma_1> \to^* <false, \sigma_1>}
+    {\rho \vdash < if \; x = y \; then \; x := 5 \; else \; x := 6, \sigma_1 > \to <\text{if false then $x := 5$ else $x := 6$}, \sigma_1>}
+  \]
+  \item Applichiamo l'assioma per il false:
+  \[
+    \rho \vdash <\text{if false then $x := 5$ else $x := 6$}, \sigma_1> \to <x := 6, \sigma_1>
+  \]
+  Eseguiamo $x := 6$:
+  \[
+  \rho \vdash < x := 6, \sigma_1 > \to \sigma_1[l_x \mapsto 6] = [ l_x \mapsto 6]
+  \]
+\end{itemize}
+Ora proviamo ad eseguire l'if a partire da $\sigma_2$:
+\[
+\text{DA FARE A CASA}
+\]
+\end{Example}
+
+\subsection{Composizione} 
+Per comporre due comandi $c_1$ e $c_2$ usiamo il simbolo $;$, che rappresenta la composizione sequenziale.
+Per quanto riguarda gli identificatori liberi e definiti:
+\[
+\begin{aligned}
+  &FI(c_1; c_2) = FI(c_1) \cup FI(c_2)\\
+  &DI(c_1; c_2) = DI(c_1) \cup DI(c_2)
+\end{aligned}
+\]
+Per quanto riguarda la semantica statica, per poter comporre due comandi $c_1$ e $c_2$ è necessario che entrambi siano ben formati:
+\[
+  \inferrule
+  {\Delta \vdash c_1 \quad \Delta \vdash c_2}
+  {\Delta \vdash c_1 ; c_2}
+\]
+Per quanto riguarda la semantica dinamica, per eseguire $c_1 ; c_2$ dobbiamo eseguire completamente $c_1$ e poi eseguire $c_2$ a partire dallo stato restituito da $c_1$:
+\[
+  \inferrule 
+  {\rho \vdash <c_1, \sigma> \to^* \sigma_1}
+  {\rho \vdash <c_1 ; c_2, \sigma> \; \to \; <c_2, \sigma_1>}
+\]
+Eseguiamo completamente $c_1$ che restituisce un nuovo stato $\sigma_1$.
+Da $\sigma_1$ continuiamo l'esecuzione di $c_2$.
+
+\subsection{Comando iterativo}
+
+Il comando iterativo ci permette di ripetere 
+sequenze di comandi.
+Esiste anche un altro meccanismo che garantisce la possibilità di ripetere
+comandi, ovvero la ricorsione, ma utilizza le procedure ed è più complesso
+e permette di richiamare comandi in modo non lineare, che vedremo successivamente.
+Esistono linguaggi che non permettono la ricorsione.
+Prima di parlare dell'istruzione dobbiamo parlare di:
+\begin{itemize}
+  \item L'iterazione è controllata da: 
+  \begin{itemize}
+    \item Controllo logico: \texttt{while} 
+    \item Controllo numerico: \texttt{for}
+  \end{itemize}
+  \item Dove si trova il meccanismo di controllo (questo riguarda più il design del \texttt{while}):
+  \begin{itemize}
+    \item Controllo all'inizio: \texttt{while} 
+    \item Controllo alla fine: \texttt{do-while}
+  \end{itemize}
+\end{itemize}
+Le iterazioni si dividono in due categorie:
+\begin{itemize}
+  \item Iterazione determinata, è possibile sapere quante 
+  iterazioni saranno eseguite prima di eseguirle, ad esempio con un \texttt{for} che itera su un intervallo di numeri.
+  Questa contiene una variabile di ciclo.
+  L'importante è sapere se la variabile può essere utilizzata all'interno del ciclo 
+  e capire la legalità della modifica della variabile di ciclo.
+  Quando avviene la valutazione dei valori di riferimento 
+  della variabile di ciclo.
+  \[
+    for \; \text{indice} = \text{inizio} \; to \; \text{fine} \; by \; c
+  \]
+  Dove \begin{itemize}
+    \item \texttt{indice} è la variabile di ciclo, che può essere utilizzata all'interno del ciclo, ma non può essere modificata.
+    \item \texttt{inizio} è il valore iniziale della variabile di ciclo, che viene valutato una sola volta all'inizio del ciclo.
+    \item \texttt{fine} è il valore finale della variabile di ciclo, che viene valutato una sola volta all'inizio del ciclo.
+    \item \texttt{by} è il passo di incremento della variabile di ciclo
+  \end{itemize}
+  \item Iterazione indeterminata, non è possibile, in generale
+  determinare a priori quanti iterazioni verranno eseguite. Non vi è una variabile di ciclo,
+  solo un controllo dell'iterazione determinato da una guardia logica. 
+  Ci interessa di:
+  \begin{itemize}
+    \item Quando avviene un controllo: se il controllo avviene all'inizio o alla fine del ciclo.
+    \item La forma della guardia 
+  \end{itemize}
+\end{itemize}
+
+\subsubsection*{Semantica statica}
+
+L'unico vincolo che abbiamo è sulla guardia quindi 
+gli identificatori sono abbastanza standard:
+\begin{itemize}
+  \item Identificatori liberi:
+  \[
+    FI(\text{while $e$ do $c$}) = FI(e) \cup FI(c)
+  \]
+  \item Identificatori definiti:
+  \[
+    DI(\text{while $b$ do $c$}) = DI(c)
+  \]
+  \item Regola statica:
+  \[
+    \inferrule
+    {\Delta \vdash e : bool \quad \Delta \vdash c}
+    {\Delta \vdash while \; e \; do \; c}
+  \]
+\end{itemize}
+
+\subsubsection*{Semantica dinamica}
+
+\begin{itemize}
+  \item Dobbimo innanzitutto valutare la guardia:
+  \[
+    \inferrule
+    {\rho \vdash \left<e, \sigma\right> \; \to^*\;  \left<t, \sigma\right>}
+    {\rho \vdash \left<while \; e \; do \; c, \sigma\right> \to \left<\text{while $t$ do $c$}, \sigma\right>}
+  \]
+  e sarà rivalutata ad ogni iterazione.
+  Il ciclo while con una guardia falsa si comporta come uno \texttt{skip}.
+  \[
+    \rho \vdash \left<\text{while false do $c$}, \sigma\right> \to \sigma
+  \]
+  Il problema è quando la guardia è vera:
+  \[
+    \rho \vdash \left<\text{while true do $c$}, \sigma\right> \to \left<c ; \text{while e do $c$}, \sigma\right>
+  \]
+  Riscriviamo le regole in una forma più corretta, fondiamo la regola di valutazione
+  con gli assiomi.
+  \[
+    \inferrule
+    {\rho \vdash \left<e, \sigma\right> \; \to^*\;  \left<false, \sigma\right>}
+    {\rho \vdash \left<while \; e \; do \; c, \sigma\right> \to \sigma}
+  \]
+  \[
+    \inferrule
+    {\rho \vdash \left<e, \sigma\right> \; \to^*\;  \left<true, \sigma\right>}
+    {\rho \vdash \left<\text{while $e$ do $c$}, \sigma\right> \to \left<c ; \text{while $e$ do $c$}, \sigma\right>}
+  \]
+\end{itemize}
+
+\begin{Example}
+Prendiamo come esempio questo comando:
+\[
+  while \; not \; x = 0  \; do \; x := x - 1
+\]
+dove $x$ è un identificatore libero e dobbiamo fornire un ambiente e memoria per poterlo eseguire:
+\[
+\begin{aligned}
+  &\rho = [x \mapsto l_x] \\
+  &\Delta = [x \mapsto \text{intloc}]\\
+  &\sigma = [l_x \mapsto 2]
+\end{aligned}
+\]
+Per la semantica statica: DA FARE A CASA 
+Per la semantica dinamica:
+\begin{enumerate}
+\end{enumerate}
+
+\end{Example}
 
 
 \end{document}

@@ -1,25 +1,5 @@
 # Lezione 3
 
-- [Esercizi](#esercizi)
-  - [Esercizio 1](#esercizio-1)
-  - [Esercizio 2](#esercizio-2)
-  - [Esercizio 3](#esercizio-3)
-  - [Esercizio 4](#esercizio-4)
-  - [Esercizio 5](#esercizio-5)
-  - [Esercizio 6](#esercizio-6)
-  - [Esercizio 7](#esercizio-7)
-  - [Esercizio 8](#esercizio-8)
-  - [Esercizio 9](#esercizio-9)
-  - [Esercizio 10](#esercizio-10)
-  - [Esercizio 11](#esercizio-11)
-  - [Esercizio 12](#esercizio-12)
-  - [Esercizio 13](#esercizio-13)
-  - [Esercizio 14](#esercizio-14)
-  - [Esercizio 15](#esercizio-15)
-  - [Esercizio 16](#esercizio-16)
-  - [Esercizio 17](#esercizio-17)
-  - [Esercizio 18](#esercizio-18)
-
 Si considerino le seguenti tabelle (grassetto per le chiavi primarie), presenti
 nella base di dati did2014 nel database di UniVR:
 
@@ -405,5 +385,5 @@ JOIN CorsoStudi as CS ON SS.id = CS.id_segreteria
 GROUP BY (
     SS.nomestruttura,
     SS.fax
-)
+);
 ```
