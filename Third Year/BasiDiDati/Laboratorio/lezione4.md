@@ -118,19 +118,46 @@ Trovare gli insegnamenti del corso di studi con id=4 che non sono mai stati offe
 quadrimestre.
 Per selezionare il secondo quadrimestre usare la condizione "abbreviazione LIKE '2%'".
 
+La soluzione ha 14 righe.
+
 ```sql
-SELECT *
+SELECT I.nomeins
 FROM InsErogato AS IE 
+JOIN Insegn AS I ON (IE.id_insegn = I.id)
 JOIN CorsoStudi AS CS ON (IE.id_corsostudi = CS.id)
 WHERE
+    CS.id = 4
+    
+EXCEPT 
+
+SELECT I.nomeins
+FROM InsErogato AS IE
+JOIN Insegn AS I ON (IE.id_insegn = I.id)
+JOIN CorsoStudi AS CS ON (IE.id_corsostudi = CS.id)
+JOIN InsInPeriodo AS IP ON IE.id = IP.id_inserogato
+JOIN PeriodoLez AS PL ON IP.id_periodolez = PL.id
+WHERE 
     CS.id = 4 AND
-    IE.modulo = 0 AND 
-    NOT EXISTS (
-        SELECT 1 
-        FROM InsErogato AS IE_IN
-        JOIN CorsoStudi AS CS_IN ON (IE_IN.id_corsostudi = CS_IN.id)
-        WHERE
-            CS_IN.id = 4 AND
-            CS_IN.abbreviazione LIKE '2%'
-    );
+    PL.abbreviazione LIKE '2%';
+```
+
+## Esercizio 4
+
+Trovare il nome dei corsi di studio che non hanno mai erogato insegnamenti che contengono nel nome la stringa ’matematica’ (usare ILIKE invece di LIKE per rendere il test non sensibile alle
+maiuscole/minuscole (case-insensitive)).
+
+La soluzione ha 572 righe.
+
+```sql
+SELECT CS.nome 
+FROM CorsoStudi AS CS
+
+EXCEPT 
+
+SELECT DISTINCT CS.nome 
+FROM InsErogato AS IE 
+JOIN CorsoStudi AS CS ON (IE.id_corsostudi = CS.id)
+JOIN Insegn AS I ON (IE.id_insegn = I.id)
+WHERE  
+    I.nomeins ILIKE '%matematica%';
 ```
