@@ -114,8 +114,23 @@ ORDER BY CS.nome;
 
 ## Esercizio 3 
 
-Visualizzare il nome, il codice, l’indirizzo e l’identificatore del preside di tutte le facoltà.
+Trovare gli insegnamenti del corso di studi con id=4 che non sono mai stati offerti al secondo
+quadrimestre.
+Per selezionare il secondo quadrimestre usare la condizione "abbreviazione LIKE '2%'".
 
 ```sql
-SELECT P.nome, F.codice, F.indirizzo, 
+SELECT *
+FROM InsErogato AS IE 
+JOIN CorsoStudi AS CS ON (IE.id_corsostudi = CS.id)
+WHERE
+    CS.id = 4 AND
+    IE.modulo = 0 AND 
+    NOT EXISTS (
+        SELECT 1 
+        FROM InsErogato AS IE_IN
+        JOIN CorsoStudi AS CS_IN ON (IE_IN.id_corsostudi = CS_IN.id)
+        WHERE
+            CS_IN.id = 4 AND
+            CS_IN.abbreviazione LIKE '2%'
+    );
 ```
