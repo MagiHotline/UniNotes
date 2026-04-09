@@ -1,7 +1,6 @@
 grammar Es5;
 
 // abcc
-main : s EOF ;
-s : | a b ;
-a : | 'a' a b 'c' ;
+main : a EOF ;
+a : 'a' a 'c' | b;
 b : | 'b' b 'c' ;
