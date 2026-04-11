@@ -161,3 +161,162 @@ JOIN Insegn AS I ON (IE.id_insegn = I.id)
 WHERE  
     I.nomeins ILIKE '%matematica%';
 ```
+## Esercizio 5
+
+Trovare nome, cognome e telefono dei docenti che hanno tenuto nel 2009/2010 un’occorrenza di
+insegnamento che non sia un’unità logistica del corso di studi con id=4 ma che non hanno mai tenuto un
+modulo dell’insegnamento di ’Programmazione’ del medesimo corso di studi.
+
+La soluzione ha 5 righe:
+
+nome | cognome | telefono
+| :--- | :--- | :--- | 
+Alberto | Belussi | 045 802 7980
+Vincenzo | Manca | 045 802 7981
+Angelo | Pica |
+Graziano | Pravadelli | +39 045 802 7081
+Roberto | Segala | 045 802 7997
+
+```sql
+SELECT P.nome, P.cognome, P.telefono
+FROM Docenza AS D 
+JOIN InsErogato AS IE ON D.id_inserogato = IE.id
+JOIN Persona AS P ON D.id_persona = P.id 
+JOIN CorsoStudi AS CS ON IE.id_corsostudi = CS.id
+WHERE
+    IE.annoaccademico = '2009/2010' AND
+    IE.modulo = 0 AND 
+    CS.id = 4 
+    
+EXCEPT 
+
+SELECT P.nome, P.cognome, P.telefono
+FROM Docenza AS D 
+JOIN InsErogato AS IE ON D.id_inserogato = IE.id
+JOIN Persona AS P ON D.id_persona = P.id 
+JOIN CorsoStudi AS CS ON IE.id_corsostudi = CS.id
+JOIN Insegn AS I ON IE.id_insegn = I.id 
+WHERE
+    IE.modulo = 0 AND 
+    CS.id = 4 AND 
+    I.nomeins = 'Programmazione';
+```
+
+## Esercizio 6
+
+Trovare, per ogni facoltà, il numero di unità logistiche erogate (modulo < 0) e il numero corrispondente di
+crediti totali erogati nel 2010/2011, riportando il nome della facoltà e i conteggi richiesti. Usare pure la relazione diretta tra InsErogato e Facolta.
+
+La soluzione ha 8 righe. 
+La riga relativa a ’Medicina e Chirurgia’ ha valori 253 e 979,50.
+
+```sql
+SELECT F.nome, COUNT(IE.id) as NumUnita, SUM(IE.crediti) as TotCrediti
+FROM InsErogato AS IE 
+JOIN Facolta AS F ON IE.id_facolta = F.id 
+WHERE
+    IE.annoaccademico = '2010/2011' AND 
+    IE.modulo < 0 
+GROUP BY F.nome;
+```
+
+## Esercizio 7
+
+Trovare, per ogni facoltà, il docente che ha tenuto il numero massimo di ore di lezione nel 2009/2010,
+riportando il cognome e il nome del docente e la facoltà. Per la relazione tra InsErogato e Facolta usare la
+relazione diretta.
+
+La soluzione ha 10 righe.
+
+cognome | nome | facolta | oretot
+| :--- | :--- | :--- | :--- | 
+Babbi | Anna Maria | Lingue e letterature straniere | 144.000
+Bartolozzi | Pietro | Medicina e Chirurgia | 411.000
+Battistelli | Adalgisa | Scienze motorie | 144.000
+Brunetti | Federico | Economia | 202.000
+De Lotto | Cinzia | Lingue e letterature straniere | 144.000
+Pedrazza Gorlero | Maurizio | Giurisprudenza | 158.000
+Peruzzi | Enrico | Lettere e filosofia | 150.000
+Pescatori | Sergio | Lingue e letterature straniere | 144.000
+Sala | Gabriel Maria | Scienze della formazione | 245.000
+Spera | Mauro | Scienze matematiche fisiche e naturali | 169.000
+
+```sql
+-- CREO UNA VISTA
+CREATE TEMP VIEW SumOreDoc (cognome, nome, nomef, OreTot) AS
+SELECT 
+    P.cognome, 
+    P.nome, 
+    F.nome, 
+    SUM(D.orelez) AS OreTot
+FROM Docenza AS D 
+JOIN Persona AS P ON D.id_persona = P.id 
+JOIN InsErogato AS IE ON D.id_inserogato = IE.id 
+JOIN Facolta AS F ON IE.id_facolta = F.id 
+WHERE
+    IE.annoaccademico = '2009/2010' AND
+    IE.modulo = 0
+GROUP BY P.cognome, P.nome, F.nome;
+
+-- ESEGUO LA QUERY
+SELECT 
+    S.cognome, 
+    S.nome, 
+    S.nomef, 
+    S.OreTot
+FROM SumOreDoc AS S
+WHERE 
+    S.OreTot = (
+        SELECT MAX(S_IN.OreTot) 
+        FROM SumOreDoc AS S_IN
+        WHERE 
+            S.nomef = S_IN.nomef
+    )
+ORDER BY cognome, nomef;
+```
+
+## Esercizio 8 
+
+Trovare gli insegnamenti (esclusi i moduli e le unità logistiche) del corso di studi con id=240 erogati nel 2009/2010 e nel 2010/2011 che hanno avuto almeno un docente ma che non hanno avuto docenti di nome 'Roberto', 'Alberto', 'Massimo' o 'Luca' in entrambi gli anni accademici, riportando il nome, il discriminante dell'insegnamento, ordinati per nome insegnamento.
+
+La soluzione ha 22 righe. Le cinque a partire dalla XV riga sono:
+
+nomeins | discriminante
+| :--- | :--- 
+Medicina interna (V anno ) | -
+Patologia e clinica delle endocrinopatie (IV anno ) | -
+Patologia e clinica delle endocrinopatie (V anno ) | -
+Patologia e clinica delle malattie del ricambio (IV anno ) | -
+Patologia e clinica delle malattie del ricambio (V anno ) | -
+
+```sql
+SELECT I.nomeins, DIS.descrizione
+FROM InsErogato AS IE 
+JOIN Discriminante AS DIS ON IE.id_discriminante = DIS.id 
+JOIN Insegn AS I ON I.id = IE.id_insegn
+JOIN CorsoStudi AS CS ON IE.id_corsostudi = CS.id
+JOIN Docenza AS D ON D.id_inserogato = IE.id
+WHERE
+    CS.id = 240 AND 
+    IE.modulo = 0 AND 
+    (IE.annoaccademico = '2009/2010' AND
+    IE.annoaccademico = '2010/2011')
+    
+EXCEPT 
+
+SELECT I.nomeins, DIS.descrizione
+FROM InsErogato AS IE 
+JOIN Discriminante AS DIS ON IE.id_discriminante = DIS.id
+JOIN Insegn AS I ON IE.id_insegn = I.id
+JOIN CorsoStudi AS CS ON IE.id_corsostudi = CS.id
+JOIN Docenza AS D ON D.id_inserogato = IE.id
+JOIN Persona AS P ON D.id_persona = P.id 
+WHERE
+    P.nome IN
+        ('Luca', 'Alberto', 'Massimo', 'Roberto') AND 
+    CS.id = 240 AND 
+    IE.modulo = 0 AND 
+    (IE.annoaccademico = '2009/2010' AND
+    IE.annoaccademico = '2010/2011')
+ORDER BY I.nomeins;
+```
