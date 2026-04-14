@@ -26,17 +26,17 @@
 \section{SQL}
 
 SQL è il linguaggio di riferimento per le basi di dati relazionali. Originariamente SQL
-era l'acronimo di "Structured Query Language", ma oggi è semplicemente SQL. 
+era l'acronimo di "Structured Query Language", ma oggi è semplicemente SQL.
 SQL ha varie funzionalità:
 \begin{itemize}
-    \item \textbf{Data Definition Language (DDL)}: consente di definire la struttura del database, 
+    \item \textbf{Data Definition Language (DDL)}: consente di definire la struttura del database,
     come la creazione di tabelle, l'aggiunta di colonne e la definizione di chiavi primarie.
-    \item \textbf{Data Manipulation Language (DML)}: consente di manipolare i dati 
+    \item \textbf{Data Manipulation Language (DML)}: consente di manipolare i dati
     all'interno del database, come l'inserimento, l'aggiornamento e la cancellazione di record.
-    \item \textbf{Data Query Language (DQL)}: consente di interrogare il database 
+    \item \textbf{Data Query Language (DQL)}: consente di interrogare il database
     per recuperare informazioni specifiche.
 \end{itemize}
-Ne esistono inoltre varie versioni. In laboratorio useremo 
+Ne esistono inoltre varie versioni. In laboratorio useremo
 SQL-2 poiché sappiamo che è supportato da tutti i DBMS.
 
 \subsection{Istruzioni}
@@ -108,7 +108,7 @@ La sintassi di base è:
     \item \texttt{from\_item [NATURAL] join\_type from\_item [ON condition]}
     \begin{itemize}
         \item è la clausola JOIN.
-        \item Metodo più sofisticato che permette di selezionare 
+        \item Metodo più sofisticato che permette di selezionare
         un sottoinsieme del prodotto cartesiano di due o più tabelle. join\_type specifica
         il tipo di join. I tipi principali sono riassunti nelle slide seguenti.
     \end{itemize}
@@ -129,7 +129,7 @@ La clausola WHERE ammette come argomento un’espressione booleana costruita
 \end{itemize}
 \noindent
 Ciascun predicato semplice usa gli operatori $= , <>, <, >, <=$ e $>=$ p
-er confrontare un’espressione costruita a 
+er confrontare un’espressione costruita a
 partire dal valore di un attributo con un valore costante,
 oppure un’altra espressione.
 Per esprimere la precedenza degli operatori AND e OR si fa uso della parentesi.
@@ -170,7 +170,7 @@ Esempi di componenti di espressioni regolari:
     \item $\%$: 0 o più caratteri arbitrari
     \item $\*$: ripetizione dell’elemento precedente (carattere o gruppo) 0 o più volte
     \item $+$: ripetizione dell’elemento precedente (carattere o gruppo) 1 o più volte
-    \item $\{n,m\}$: ripetizione del precedente match almeno n e non più di m volte. 
+    \item $\{n,m\}$: ripetizione del precedente match almeno n e non più di m volte.
     \item $[...]$: elenco di caratteri ammissibili
 \end{itemize}
 
@@ -211,7 +211,7 @@ SQL-2 implementa la logica a 3 valori:
 \subsubsection{Duplicati}
 
 Una significativa differenza tra SQL e algebra relazionale è la gestione dei duplicati.
-L’operazioni di eliminazione delle righe doppie 
+L’operazioni di eliminazione delle righe doppie
 (ad esempio al seguito di una selezione con where) è molto costosa, quindi di default SQL
 mantiene le righe duplicate.
 
@@ -296,7 +296,7 @@ valori di r1 e assegnando NULL agli altri attributi...
 
 \begin{Warning}{Attenzione}{}
 Il LEFT [OUTER] JOIN non è simmetrico! Con le medisime tabelle si possono ottenere risultati diversi invertendo l’ordine delle
-tabelle nel join! 
+tabelle nel join!
 \end{Warning}
 
 \subsubsection{RIGHT [OUTER] JOIN}
@@ -343,7 +343,7 @@ del primo attributo si usa il secondo, e così via in sequenza.
 
 \subsection{OPERAZIONI INSIEMISTICHE}
 
-SQL mette a disposizione degli operatori insiemistici. 
+SQL mette a disposizione degli operatori insiemistici.
 \begin{verbatim}
     SELECT
     { UNION | INTERSECT| EXCEPT
@@ -366,7 +366,7 @@ relazionale: \textbf{COUNT, SUM, AVG, MIN, MAX}.
 In algebra relazionale tutte le condizioni specificate vengono
 valutate su una tupla alla volta.
 Gli operatori di aggregazione permettono di valutare proprietà che
-dipendono da insiemi di tuple. Prima viene eseguita l’interrogazione considerando 
+dipendono da insiemi di tuple. Prima viene eseguita l’interrogazione considerando
 solo le clausole FROM e WHERE, quindi l’operatore di aggregazione viene applicato alla
 tabella contenente il risultato.
 
@@ -402,7 +402,7 @@ numero di valori di uno o più attributi:
 \textbf{SUM} e \textbf{AVG} ammettono come argomento solo espressioni che
 rappresentano valori numerici o intervalli di tempo.
 \textbf{MAX} e \textbf{MIN} ammettono come argomento solo espressioni su cui è
-definito un ordinamento (quindi anche stringhe). \textbf{DISTINCT} 
+definito un ordinamento (quindi anche stringhe). \textbf{DISTINCT}
 elimina i duplicati mentre \textbf{ALL} trascura solo i valori NULL. (DISTINCT e ALL non hanno effetto su MIN e MAX)
 \begin{verbatim}
     SELECT Cognone, Nome, MAX( I.Stipendio )
@@ -503,8 +503,8 @@ interna.
 
 \begin{verbatim}
 SELECT * FROM Persona P
-WHERE EXISTS (SELECT * FROM Persona P1 WHERE P1.Nome 
-    = P.Nome AND P1.Cognome = P.Cognome AND P1.CodFiscale 
+WHERE EXISTS (SELECT * FROM Persona P1 WHERE P1.Nome
+    = P.Nome AND P1.Cognome = P.Cognome AND P1.CodFiscale
     <> P.CodFiscale );
 \end{verbatim}
 Nel codice sopra si estraggono le persone che hanno degli omonimi (ovvero
@@ -550,7 +550,7 @@ Le interrogazioni nidificate possono essere utilizzate nella
 clausola FROM come sorgente dati su cui eseguire
 l’interrogazione. È possibile creare una catena di interrogazioni, dove ciascuna
 interrogazione utilizza il risultato della precedente come una
-tabella di base. 
+tabella di base.
 Per esempio: si estrae per ogni cantante che è anche autore di canzoni il numero
 di canzoni di cui è rispettivamente interprete e autore.
 \begin{verbatim}
@@ -586,7 +586,7 @@ We have here three tables:
 \end{itemize}
 \begin{enumerate}
     \item Trovare tutte le attrazioni della città di Verona il cui nome inizia con la lettera
-    $f$ maiuscola o minuscola. 
+    $f$ maiuscola o minuscola.
 \begin{lstlisting}[language=SQL]
 SELECT *
 FROM ATTRAZIONE
@@ -595,13 +595,13 @@ WHERE CITTA = 'Verona' AND NOME ILIKE 'f%';
     \item Trovare tutti i turisti che nel 2025 non hanno mai rilasciato
     recensioni con un voto $>$ 2 per attrazioni fuori dalla provincia di Verona.
 \begin{lstlisting}[language=SQL]
-SELECT T.USERNAME FROM TURIST T 
+SELECT T.USERNAME FROM TURIST T
 EXCEPT (
     SELECT R.TURISTA
-    FROM RECENSIONE R JOIN ATTRAZIONE A ON R.ATTRAZIONE = A.CODICE 
-    WHERE 
-        R.VOTO > 2 AND 
-        A.PROVINCIA <> 'VERONA' AND 
+    FROM RECENSIONE R JOIN ATTRAZIONE A ON R.ATTRAZIONE = A.CODICE
+    WHERE
+        R.VOTO > 2 AND
+        A.PROVINCIA <> 'VERONA' AND
         EXTRACT (YEAR FROM R.TIMESTAMP) = '2025'
 )
 \end{lstlisting}
@@ -609,50 +609,50 @@ EXCEPT (
 \begin{Observation}{}{}
 Le due query devono essere compatibili.
 \end{Observation}{}{}
-Questa query nidificata che restituisce i turisti che hanno rilasciato 
+Questa query nidificata che restituisce i turisti che hanno rilasciato
 recensioni con voto $>$ 2 per attrazioni fuori dalla provincia di Verona nel 2025 e la chiararemo Q1.
-Oppure 
+Oppure
 \begin{lstlisting}[language=SQL]
-SELECT T.USERNAME, T.NOME, T.COGNOME FROM TURIST T 
+SELECT T.USERNAME, T.NOME, T.COGNOME FROM TURIST T
 NOT IN (
     SELECT R.TURISTA
-    FROM RECENSIONE R JOIN ATTRAZIONE A ON R.ATTRAZIONE = A.CODICE 
-    WHERE 
-        R.VOTO > 2 AND 
-        A.PROVINCIA <> 'VERONA' AND 
+    FROM RECENSIONE R JOIN ATTRAZIONE A ON R.ATTRAZIONE = A.CODICE
+    WHERE
+        R.VOTO > 2 AND
+        A.PROVINCIA <> 'VERONA' AND
         EXTRACT (YEAR FROM R.TIMESTAMP) = '2025'
 )
 \end{lstlisting}
 \begin{Observation}
-Questa query non richiede che gli schemi siano compatibili,e permette di 
-aggiungere facilmente altri attributi alla query esterna 
+Questa query non richiede che gli schemi siano compatibili,e permette di
+aggiungere facilmente altri attributi alla query esterna
 \end{Observation}
     \item Trovare tutte le attrazioni che hanno ricevuto nel 2025 un numero di recensioni
     superiore a quelle ricevute nel 2024.
     \begin{itemize}
-        \item Date tutte le righe di R1 
+        \item Date tutte le righe di R1
         \item Le divide per attrazioni in un gruppo per ogni ATTRAZIONE
         \item Applica count su ogni gruppo
     \end{itemize}
 \begin{lstlisting}[language=SQL]
 SELECT COUNT(*) AS NumRecensioni, R1.ATTRAZIONE
-FROM RECENSIONE R1 
+FROM RECENSIONE R1
 WHERE EXTRACT (YEAR FROM R1.TIMESTAMP) = '2025'
-GROUP BY R1.ATTRAZIONE 
-HAVING 
+GROUP BY R1.ATTRAZIONE
+HAVING
     NumRecensioni > (
         SELECT COUNT(*) AS NumRecensioni2024
-        FROM RECENSIONE R2  
-        WHERE 
+        FROM RECENSIONE R2
+        WHERE
             EXTRACT (YEAR FROM R2.TIMESTAMP) = '2024' AND
             R1.ATTRAZIONE = R2.ATTRAZIONE
     );
 \end{lstlisting}
-Nella query annidata non ci sta bisogno di fare il \texttt{GROUP BY} 
+Nella query annidata non ci sta bisogno di fare il \texttt{GROUP BY}
 poiché abbiamo già fatto il DATA BINDING tra R1 e R2 con
-\texttt{R1.ATTRAZIONE = R2.ATTRAZIONE} e di conseguenza 
+\texttt{R1.ATTRAZIONE = R2.ATTRAZIONE} e di conseguenza
 R2.ATTRAZIONE è già un valore singolo e non un insieme di valori.
-    \item Trovare la media dei voti massimi rilasciati dagli utenti. 
+    \item Trovare la media dei voti massimi rilasciati dagli utenti.
     \begin{itemize}
         \item Calcolare il voto massimo rilasciato da ciascun utente $\{max_1, \dots, max_n\}$
         \item Calcolare la media dei valori in $\{max_1, \dots, max_n\}$
@@ -661,7 +661,7 @@ R2.ATTRAZIONE è già un valore singolo e non un insieme di valori.
         NO! Questa query non si può fare
 \begin{lstlisting}[language=SQL]
 SELECT AVG(MAX(VOTO))
-... 
+...
 \end{lstlisting}
     \end{Warning}
 \noindent
@@ -671,121 +671,121 @@ SELECT TURISTA, MAX(VOTO) AS MaxVoto
 FROM RECENSIONE
 GROUP BY TURISTA
 \end{lstlisting}
-\noindent 
+\noindent
 e poi facciamo la media:
 \begin{lstlisting}[language=SQL]
 SELECT AVG(T.MaxVoto)
-FROM ( 
+FROM (
     -- Prendiamo il voto massimo rilasciato da ciascun utente
     SELECT TURISTA, MAX(VOTO) AS MaxVoto
     FROM RECENSIONE R
     GROUP BY R.TURISTA
-) AS T 
+) AS T
 \end{lstlisting}
     \end{enumerate}
 \end{Example}
 
 \begin{Example}{}{}
-Consideriamo le seguenti tre tabelle: 
+Consideriamo le seguenti tre tabelle:
 \begin{itemize}
     \item AUTO(TARGA, NUM\_TELAIO, MODELLO, COLORE, KM, CILINDRATO, POSTI, PROPRIETARIO)
     \item PARCHEGGIO(NUMERO, COMUNE, INDIRIZZO, COPERTO)
     \item PRENOTAZIONE(CODICE, PARCHEGGIO, POSTO, AUTO, DATA\_ORA\_INIZIO, DATA\_ORA\_FINE, TIPO, PAGATO)
 \end{itemize}
-Dove 
+Dove
 \[\text{PRENOTAZIONE.PARCHEGGIO} \to \text{PARCHEGGIO}\]
 \[\text{PRENOTAZIONE.AUTO} \to \text{AUTO}\]
 \begin{Observation}{}{}
     Ricordiamo che SQL è case insentive.
 \end{Observation}
 \begin{enumerate}
-    \item Trovare tutti i parcheggi coperti di Verona 
+    \item Trovare tutti i parcheggi coperti di Verona
 \begin{lstlisting}[language=SQL]
-SELECT * 
-FROM PARCHEGGIO 
-WHERE COMUNE = 'VERONA' AND COPERTO; 
+SELECT *
+FROM PARCHEGGIO
+WHERE COMUNE = 'VERONA' AND COPERTO;
 \end{lstlisting}
-\item Trovare tutti i parcheggi in cui non sono mai sstate fatte prenotazioni 
+\item Trovare tutti i parcheggi in cui non sono mai sstate fatte prenotazioni
 online nel 2024. Per ciascun parcheggio riportarare il nome ed il numero di
 prenotazioni complessive.
 \begin{lstlisting}[language=SQL]
 SELECT P.NOME, COUNT(*) AS NumeroPrenotazioni
 FROM PARCHEGGIO P JOIN PRENOTAZIONE R ON (P.CODICE = R.PARCHEGGIO)
-WHERE P.CODICE NOT IN ( 
-    -- Query annidata che trova tutti i parcheggi che hanno avuto prenotazioni online nel 2024 
+WHERE P.CODICE NOT IN (
+    -- Query annidata che trova tutti i parcheggi che hanno avuto prenotazioni online nel 2024
     SELECT R1.PARCHEGGIO
     FROM PRENOTAZIONI R1
-    WHERE 
+    WHERE
         EXTRACT (YEAR FROM DATA_ORA_INIZIO) = '2024' AND
         TIPO = 'ONLINE'
 )
 GROUP BY P.NOME;
 \end{lstlisting}
 \item Trovare tutti i parcheggi in cui vengono effettuate
-più prenotazioni online che prenotazioni fisiche. 
-\begin{lstlisting}[language=SQL] 
+più prenotazioni online che prenotazioni fisiche.
+\begin{lstlisting}[language=SQL]
 SELECT PR.PARCHEGGIO
 FROM PRENOTAZIONE PR
-WHERE R.TIPO = 'ONLINE'  
+WHERE R.TIPO = 'ONLINE'
 GROUP BY R.PARCHEGGIO
 HAVING COUNT(*) > (
     SELECT COUNT(*)
-    FROM PRENOTAZIONE R2 
-    WHERE 
-        R2.TIPO = 'FISICA' AND 
+    FROM PRENOTAZIONE R2
+    WHERE
+        R2.TIPO = 'FISICA' AND
         R2.PARCHEGGIO = R.PARCHEGGIO -- DATA BINDING
 )
 \end{lstlisting}
 \begin{Observation}{}{}
-La query interna è eseguita per ogni riga della query esterna. 
+La query interna è eseguita per ogni riga della query esterna.
 \end{Observation}
 
-\item Trovare quanti parcheggi del comune di Verona hanno avuto un numoro 
-medio di prenotazioni nel 2024 superiore al numero 
+\item Trovare quanti parcheggi del comune di Verona hanno avuto un numoro
+medio di prenotazioni nel 2024 superiore al numero
 medio di prenotazioni complessive del 2024 dei parcheggi del comune di Padova.
 \begin{enumerate}
-    \item Calcolare \# prenotazioni nel 2025 per parcheggio per ogni parcheggio di Verona 
+    \item Calcolare \# prenotazioni nel 2025 per parcheggio per ogni parcheggio di Verona
     \item Calcolare \# prenotazioni nel 2025 per parcheggio per ogni parcheggio di Padova
     \item Calcolare la media su (b)
 \end{enumerate}
 \begin{lstlisting}[language=SQL]
-CREATE VIEW NPRENOTAZIONI AS 
-( 
+CREATE VIEW NPRENOTAZIONI AS
+(
     SELECT R.PARCHEGGIO, P.COMUNE, COUNT(*) AS NUM_PR
     FROM PARCHEGGIO P JOIN PRENOTAZIONE R ON (P.CODICE = R.PARCHEGGIO)
     WHERE EXTRACT (YEAR FROM R.DATA) = '2024'
     GROUP BY R.PARCHEGGIO, P.COMUNE
 )
 
-SELECT N.PARCHEGGIO 
-FROM NPRENOTAZIONI AS N 
-WHERE 
+SELECT N.PARCHEGGIO
+FROM NPRENOTAZIONI AS N
+WHERE
     N.NUM_PR > (
         -- numero medio di prenotazioni dei parcheggi di PD nel 2024
         -- (ritorna un solo valore)
         SELECT AVG(N1.NUM_PR)
-        FROM NPRENOTAZIONI AS N1 
-        WHERE N1.COMUNE = 'PADOVA' 
-    ) AND 
+        FROM NPRENOTAZIONI AS N1
+        WHERE N1.COMUNE = 'PADOVA'
+    ) AND
     N.COMUNE = 'VERONA'; -- Per ogni parcheggio VR guardo quali hanno # prenotazioni maggiori
 \end{lstlisting}
 \end{enumerate}
 
 \end{Example}
 
-\section{METODI DI ACCESSO} 
+\section{Metodi di accesso}
 
 
-\subsection{Operazioni sulle pagine} 
+\subsection{Operazioni sulle pagine}
 
 \begin{itemize}
     \item \textbf{Inserimento}
     \begin{itemize}
-        \item Se esiste uno spazio contiguo sufficiente $\Rightarrow$ siamo nel caso semplice 
-        perché ci basta aggiungere una tupla e aggiornare il dizionario. 
-        \item Se non esiste uno spazio sufficiente $\Rightarrow$ 
+        \item Se esiste uno spazio contiguo sufficiente $\Rightarrow$ siamo nel caso semplice
+        perché ci basta aggiungere una tupla e aggiornare il dizionario.
+        \item Se non esiste uno spazio sufficiente $\Rightarrow$
         dobbiamo avere un'interazione con il filesyste per allocare nuovi blocchi per
-        i file. 
+        i file.
         \item Se esiste uno spazio sufficiente ma non contiguo $\Rightarrow$
         Riorganizzazione spazio: inserimento semplice.
     \end{itemize}
@@ -795,10 +795,10 @@ WHERE
     \end{itemize}
     \item  \textbf{Accesso}
     \begin{itemize}
-        \item Tupla $\leadsto$ dizionario, accesso sequenziale  
-        \item Ad un attributo di una tupla: 
+        \item Tupla $\leadsto$ dizionario, accesso sequenziale
+        \item Ad un attributo di una tupla:
         \begin{itemize}
-            \item Identificare la tupla $t$ 
+            \item Identificare la tupla $t$
             \item Scorrere elementi di $t$ tramite offset
         \end{itemize}
     \end{itemize}
@@ -809,51 +809,51 @@ WHERE
 I criteri per cui organizziamo le tuple nei blocchi possono essere:
 
 \begin{itemize}
-    \item \textbf{Sequenziale}: abbiamo una disposizione consecutiva 
-    delle tuple in base ad un criterio specifico (es. ordine di inserimento). 
+    \item \textbf{Sequenziale}: abbiamo una disposizione consecutiva
+    delle tuple in base ad un criterio specifico (es. ordine di inserimento).
     \item \textbf{Accesso calcolato (Hash)}: La posizione delle tuple nei blocchi
-    dipende da un algoritmo di hashing. 
-    \item \textbf{Albero}: principato utilizzato per la costruzione di indici. 
+    dipende da un algoritmo di hashing.
+    \item \textbf{Albero}: principato utilizzato per la costruzione di indici.
 \end{itemize}
 
 \subsubsection{Struttura primaria sequenziale/seriale}
 
-Nella struttura primaria sequenziale, costruiamo i blocchi 
+Nella struttura primaria sequenziale, costruiamo i blocchi
 "logicamente" consecutivi. Assumiamo che questi blocchi siano uno vicini all'altro,
 in modo da minimizzare i tempi di accesso.
 Ci sono due modi per organizzare le tuple nei blocchi:
 \begin{itemize}
     \item \textbf{Disordinata}: le tuple sono disposte rispetto all'ordine di inserimento.
-    È la forma più semplice con cui salviamo i nostri dati. 
+    È la forma più semplice con cui salviamo i nostri dati.
     Quali sono le sue caratteristiche?
     \begin{itemize}
-        \item \textbf{Inserimento:} prendo l'ultimo blocco ($b$) del file libero e tento di fare 
-        l'inserimento $b$. Ha bisogno di un solo accesso a memoria secondaria. 
-        \item \textbf{Ricerca:} non è efficiente perché dovremmo fare una scansione 
-        sequenziale di tutti i blocchi del file. 
-        \item \textbf{Cancellazione/Modifica:} Per potere eliminare una tupla 
+        \item \textbf{Inserimento:} prendo l'ultimo blocco ($b$) del file libero e tento di fare
+        l'inserimento $b$. Ha bisogno di un solo accesso a memoria secondaria.
+        \item \textbf{Ricerca:} non è efficiente perché dovremmo fare una scansione
+        sequenziale di tutti i blocchi del file.
+        \item \textbf{Cancellazione/Modifica:} Per potere eliminare una tupla
         abbiamo prima bisogno di trovarla. Dunque richiede la ricerca. Una volta
-        che l'abbiamo trovata, basta semplicemente che cancelliamo senza ricompattare. 
-        Nella modifica invece può cambiare la dimensione della tepla e potrebbe 
+        che l'abbiamo trovata, basta semplicemente che cancelliamo senza ricompattare.
+        Nella modifica invece può cambiare la dimensione della tepla e potrebbe
         non starci nello stesso spazio. In questo caso,
         devo cancellare e inserire. Per far fronte a questo problema,
-        il DBMS può riorganizzare i blocchi periodicamente. 
+        il DBMS può riorganizzare i blocchi periodicamente.
     \end{itemize}
     \item \textbf{Ordinata}: le tuple sono disposte rispetto ad un campo chiamato "chiave di ordinamento".
-    Questa struttura rende efficiente le operazioni che hanno bisogno dell'ordinamento 
+    Questa struttura rende efficiente le operazioni che hanno bisogno dell'ordinamento
     utilizzato ad esempio:
     \begin{itemize}
         \item Elenco ordinato
-        \item Range query 
-        \item Operazioni aggregate 
+        \item Range query
+        \item Operazioni aggregate
     \end{itemize}
     In caso di aggiornammento è necessario mantenere l'ordinamento,
     quindi servono periodiche riorganizzazioni dei blocchi.
     \begin{itemize}
-        \item \textbf{Inserimento: } 
+        \item \textbf{Inserimento: }
         \begin{itemize}
             \item Quando devo fare l'inserimento
-            devo prima individuare il blocco in cui fare l'inserimento. 
+            devo prima individuare il blocco in cui fare l'inserimento.
             Devo andare a pescare il blocco candidato ovvero quello che contiene
             la tupla precedente nell'ordinamento.
             \item Se c'è spazio, allora faccio l'inserimento e basta, altrimenti
@@ -862,97 +862,97 @@ Ci sono due modi per organizzare le tuple nei blocchi:
         \item \textbf{Cancellazione: }
         \begin{itemize}
             \item Devo individuare il blocco $b$ che la contiene
-            \item Cancellare la tupla 
+            \item Cancellare la tupla
             \item Aggiusto i puntatori tra i blocchi per mantenere l'ordinamento
         \end{itemize}
         \item \textbf{Riorganizzazione: }
-        TODO 
+        TODO
     \end{itemize}
 \end{itemize}
 
 \subsection{Indici}
 
-Gli indici sono delle strutture dati per l'accesso efficiente ai file sequenziali. 
-L'obiettivo degli indici è quello di velocizzare l'accesso casuale 
+Gli indici sono delle strutture dati per l'accesso efficiente ai file sequenziali.
+L'obiettivo degli indici è quello di velocizzare l'accesso casuale
 via chiave di ricerca (un insieme di attributi).
 Gli indici si contraddistinguono tra due tipi:
 \begin{itemize}
-    \item \textbf{Indici primari}: la chiave di ordinamento è uguale alla chiave di ricerca. 
+    \item \textbf{Indici primari}: la chiave di ordinamento è uguale alla chiave di ricerca.
     Ogni record dell'indice è composto da:
     \[
         < v_i, p_i >
     \]
-    dove $v_i$ è il valore della chiave di ricerca e $p_i$ è il puntatore 
-    alla prima tupla con quel valore di chiave (basta 1 puntatore perché chiave 
+    dove $v_i$ è il valore della chiave di ricerca e $p_i$ è il puntatore
+    alla prima tupla con quel valore di chiave (basta 1 puntatore perché chiave
     ricerca = chiave ordinamento). Trovata la prima tupla, le altre sono di seguito.
-    Inoltre l'indice può essere 
+    Inoltre l'indice può essere
     \begin{itemize}
         \item \textbf{denso}, ovvero che esiste un recordo di indice per ogni chiave di ricerca.
-        \item \textbf{sparso}, solo per alcune occorrenze dlle chiave persenti nel file esiste un corrispondente 
+        \item \textbf{sparso}, solo per alcune occorrenze dlle chiave persenti nel file esiste un corrispondente
         record nell'indice, tipicamente una per blocco.
     \end{itemize}
     \begin{itemize}
         \item Per la \textbf{ricerca} di una chiave $k$ se è \textbf{denso}:
         \begin{itemize}
             \item $K$ è presente nell'indice?
-            Se no, allora è finito subito e ho solo un acccesso all'indice (vuol dire 
+            Se no, allora è finito subito e ho solo un acccesso all'indice (vuol dire
             fare una scansione sequenziale dei blocchi in cui è salvato l'indice).
             Altrimenti, se è presente, faccio accesso al blocco puntato da
-            $p_k$ e quindi il mio costo equivale a un accesso all'indice + 
-            un accesso al blocco dati. Per l'accesso all'indice devo comunque 
+            $p_k$ e quindi il mio costo equivale a un accesso all'indice +
+            un accesso al blocco dati. Per l'accesso all'indice devo comunque
             caricar el'indice di memoria che sono comunque molto meno rispetto
-            a fare una scansione sequenziale. 
+            a fare una scansione sequenziale.
         \end{itemize}
-        \item Per la \textbf{ricerca} di una chiave $K$ se è \textbf{sparso} ($k$ potrebbe 
+        \item Per la \textbf{ricerca} di una chiave $K$ se è \textbf{sparso} ($k$ potrebbe
         non essere presente nell'indice ma essere presente nelle tuple. ):
         \begin{itemize}
             \item Eseguo una scansione sequenziale dell'indice per trovare $(k', p_k)$
-            dove $k'$ è il valore di chiave più grande minore 
+            dove $k'$ è il valore di chiave più grande minore
             o uguale alla chiave $k$ che sto cercando
             \item A questo punto seguo il puntatore $p_k$ per accedere al blocco.
             In questo caso il costo dell'operazione è:
             \[
-                \text{costo = un accesso all'indice + 
+                \text{costo = un accesso all'indice +
             un accesso al blocco dei dati. }
             \]
         \end{itemize}
         \item \textbf{Inserimento}:
         \begin{itemize}
             \item Come un inserimento su file sequenziale disordinato/ordinato
-            \item Aggiornare indice (mantenere l'indice è costoso, quindi 
+            \item Aggiornare indice (mantenere l'indice è costoso, quindi
             bisogna fare dei buon compromessi su il numero di indici che costruiamo
-            e il numero di attributi su cui non calcoliamo l'indice poiché 
+            e il numero di attributi su cui non calcoliamo l'indice poiché
             non ha senso)
             \begin{itemize}
-                \item Se è denso, inserire una coppia nel file indice solo se la chiave 
-                è nuova 
-                \item Se è sparso, inserire una coppia solo se l'inserimento della 
-                tupla aggiunge un nuovo blocco 
+                \item Se è denso, inserire una coppia nel file indice solo se la chiave
+                è nuova
+                \item Se è sparso, inserire una coppia solo se l'inserimento della
+                tupla aggiunge un nuovo blocco
             \end{itemize}
         \end{itemize}
-        \item \textbf{Cancellazione}: 
+        \item \textbf{Cancellazione}:
         \begin{itemize}
-            \item Cancellazione dal file sequenziale disordinato/ordinato 
+            \item Cancellazione dal file sequenziale disordinato/ordinato
             \item Aggiorniamo l'indice:
             \begin{itemize}
-                \item Se è denso, cancelliamo anche la coppia 
-                nel file di indice solo se la tupla era l'ultima con chiave $k$.  
-                \item Se è sparso procediamo a cancellare anche la coppia nel file 
-                di indice se la tupla era l'ultima con chiave $k$ 
-                inoltre aggiungere una nuova coppia con chiave $k'$ (chiave 
+                \item Se è denso, cancelliamo anche la coppia
+                nel file di indice solo se la tupla era l'ultima con chiave $k$.
+                \item Se è sparso procediamo a cancellare anche la coppia nel file
+                di indice se la tupla era l'ultima con chiave $k$
+                inoltre aggiungere una nuova coppia con chiave $k'$ (chiave
                 più grande minore o uguale a $k$) se $k'$ è diverso da $k$.
             \end{itemize}
         \end{itemize}
     \end{itemize}
-    \item \textbf{Indici secondari}: la chiave di ordinamento è diversa 
-    dalla chiave di ricerca. 
+    \item \textbf{Indici secondari}: la chiave di ordinamento è diversa
+    dalla chiave di ricerca.
     Ogni record dell'indice è composto da:
     \[
         < v_i, p_i >
     \]
 dove $v_i$ è il valore della chiave di ricerca e $p_i$ è un puntatore ad un bucket
-di puntatori che individuano nel file sequenziale tutte le tuple con chiave $v_i$. 
-Gli indice secondari \textbf{sono sempre densi} perché non si può sfruttare 
+di puntatori che individuano nel file sequenziale tutte le tuple con chiave $v_i$.
+Gli indice secondari \textbf{sono sempre densi} perché non si può sfruttare
 l'ordinamento delle tuple. \\
 Le operazioni che si possono eseguire su un indice secondario sono:
 \begin{itemize}
@@ -960,7 +960,7 @@ Le operazioni che si possono eseguire su un indice secondario sono:
     \begin{itemize}
         \item Ricerca sequenziale per trovare $k \Rightarrow (k, p_k)$:
         \begin{itemize}
-            \item Se è denso, se $k$ non c'è, non esistono tuple con chiave $k$ 
+            \item Se è denso, se $k$ non c'è, non esistono tuple con chiave $k$
         \end{itemize}
         \item Accesso al bucket $b$ $p_k$
         \item Accesso al file tramite i puntatori in $b$.
@@ -969,74 +969,74 @@ Le operazioni che si possono eseguire su un indice secondario sono:
     \[
         \text{costo = un accesso all'indice + un accesso al bucket + $n$ accessi al file}
     \]
-    dove $n$ è uguale al numero di puntatori in $b$. 
+    dove $n$ è uguale al numero di puntatori in $b$.
     \end{itemize}
-    \item \textbf{Inserimento/Cancellazione}: rimane come un indice primario 
-    denso ma con aggiornamento dei bucket. 
+    \item \textbf{Inserimento/Cancellazione}: rimane come un indice primario
+    denso ma con aggiornamento dei bucket.
 \end{itemize}
 
 \subsection{Minimizzare i costi di accesso}
 
-Per migliorare l'accesso agli indici, possiamo migliorare le prestazioni 
-utilizzando la struttura ad albero (B+TREE) oppure le strutture ad accesso 
+Per migliorare l'accesso agli indici, possiamo migliorare le prestazioni
+utilizzando la struttura ad albero (B+TREE) oppure le strutture ad accesso
 calcolato (Hash).
 
 \subsubsection{B+TREE}
 
 \begin{itemize}
-    \item Struttura ad albero 
-    \item Ogni nodo viene memorizzato in una pagina/blocco di memoria 
+    \item Struttura ad albero
+    \item Ogni nodo viene memorizzato in una pagina/blocco di memoria
     secondaria.
-    \item Ogni nodo ci sono dei legami che rappresentano i puntatori alle pagine. 
-    \item È caratterizzato per avere pochi livelli e molti nodi foglia. 
-    \item È un albero bilanciato in modo che non esistono dei path preferenziali o 
-    più "fortunati" rispetto agli altri. Inserimenti e cancellazioni non devono alterare 
-    le prestazioni di accesso ai dati. 
+    \item Ogni nodo ci sono dei legami che rappresentano i puntatori alle pagine.
+    \item È caratterizzato per avere pochi livelli e molti nodi foglia.
+    \item È un albero bilanciato in modo che non esistono dei path preferenziali o
+    più "fortunati" rispetto agli altri. Inserimenti e cancellazioni non devono alterare
+    le prestazioni di accesso ai dati.
 \end{itemize}
 
 \subsubsection*{Struttura dell'albero}
 
 \begin{itemize}
-    \item \textbf{Nodi foglia: } (con fan-out = $n$) Può contenere fino a $n - 1$ 
-    valori ordinati di chiave di ricerca e fino ad $n$ puntatori ai dati. 
+    \item \textbf{Nodi foglia: } (con fan-out = $n$) Può contenere fino a $n - 1$
+    valori ordinati di chiave di ricerca e fino ad $n$ puntatori ai dati.
 
     \begin{figure}[H]
-        \centering 
+        \centering
         \includegraphics[width=0.7\textwidth]{btree_f}
         \caption{Struttura di un B+TREE con fan-out = n}
     \end{figure}
     \noindent
-    Ogni nodo foglia ha un \textit{vincolo di ordinamento}. 
-    Questo vuol dire che le chiave dentro ad un nodo foglia sono ordinate 
+    Ogni nodo foglia ha un \textit{vincolo di ordinamento}.
+    Questo vuol dire che le chiave dentro ad un nodo foglia sono ordinate
     e inoltre sono ordinate rispetto alle chiavi degli altri nodi foglia.
     \[
-        \forall L_i, L_j \text{ nodi foglia } i < j: 
+        \forall L_i, L_j \text{ nodi foglia } i < j:
         \forall k_t \in L_i, k_j \in L_j: k_i < k_j
     \]
     Il puntatore $p_m$ del nodo $L_i$ punta al nodo $L_{i+1}$, ovvero al nodo foglia successivo
     se esiste e altrimenti è nullo.
 
     \begin{figure}[H]
-        \centering 
+        \centering
         \includegraphics[width=0.7\textwidth]{btree_pm}
         \caption{Puntatore $p_m$ del nodo $L_i$ che punta al nodo $L_{i+1}$}
     \end{figure}
 
     \item \textbf{Nodi intermedi} (con fan-out = $n$)
     è una sequenza di $m' \le n$ valori ordinati di chiave. Può contenere fino a $n$ puntatori a nodo.
-    Ogni chiave $K_i$ è seguita da un puntatore $p_i$: 
+    Ogni chiave $K_i$ è seguita da un puntatore $p_i$:
 
     \begin{figure}[H]
-        \centering 
+        \centering
         \includegraphics[width=0.7\textwidth]{btree_int}
         \caption{Struttura di un nodo intermedio di un B+TREE con fan-out = n}
     \end{figure}
     \noindent
 \end{itemize}
 \noindent
-Entrambi i due nodi devono rispettare il vincolo di reimpimento. 
+Entrambi i due nodi devono rispettare il vincolo di reimpimento.
 \begin{itemize}
-    \item Per un nodo foglia con fanout = $n$, ogni nodo foglia 
+    \item Per un nodo foglia con fanout = $n$, ogni nodo foglia
     può contenere un numero di valori di chiae (\#chiavi) vincolato come:
     \[
         \left\lceil \frac{n-1}{2} \right\rceil \le \colorbox{yellow}{\#\text{chiavi}} \le n - 1
@@ -1050,56 +1050,56 @@ Entrambi i due nodi devono rispettare il vincolo di reimpimento.
 
 \begin{Example}{}{}
  Esempio di B+Tree con contenuti (A, B, C, D, E, F, G, L, M, N, P) e
- con fanout = 4. Il fanout ci dice che ci sta un vincolo di reimpimento 
+ con fanout = 4. Il fanout ci dice che ci sta un vincolo di reimpimento
  dove i nodi foglia devono essere:
  \[
     2 \le \text{ \#chiavi} \le 3
- \]   
+ \]
 e i nodi intermedi devono essere:
 \[
     2 \le \text{ \#puntatori} \le 4
 \]
 
 \begin{figure}[H]
-    \centering 
+    \centering
     \includegraphics[width=1\textwidth]{btree_ex}
     \caption{Esempio di B+Tree con fanout = 4}
 \end{figure}
 \noindent
 Questo esempio di albero per chiavi desiderate che rispetta
 il vincolo di reimpimento usando un reimpimento \textbf{minimo}.
-Tuttavia si poteva gestire il reimpimento in modo diverso, ad esempio con un reimpimento \textbf{massimo} 
+Tuttavia si poteva gestire il reimpimento in modo diverso, ad esempio con un reimpimento \textbf{massimo}
 che avrebbe portato ad avere nodi con 3 chiavi e 4 puntatori.
 
 \begin{figure}[H]
-    \centering 
+    \centering
     \includegraphics[width=1\textwidth]{btree_ex_2}
     \caption{Esempio di B+Tree con fanout = 4 e reimpimento massimo}
 \end{figure}
 \noindent
 In questo caso non è necessario passare da un livello intermedio, possiamo rappresentare
-tutto con unico nodo radice, perché puntare a $9$ nodi foglia ci servono 
+tutto con unico nodo radice, perché puntare a $9$ nodi foglia ci servono
 $4$ puntatori e questo è compatibile con il vincolo di reimpimento.
 \end{Example}
 
 \subsubsection{Ricerca in un B+TREE}
 
 \begin{enumerate}
-    \item Cercare nel nodo radice il più 
-    piccolo valore di chiave $>$ di $K$. 
+    \item Cercare nel nodo radice il più
+    piccolo valore di chiave $>$ di $K$.
 
     \begin{figure}[H]
-        \centering 
+        \centering
         \includegraphics[width=0.9\textwidth]{btree_ric}
         \caption{Ricerca di una chiave $K$ in un B+TREE}
     \end{figure}
 
-    \item  Se il nodo raggiunto è un nodo foglia cercare 
+    \item  Se il nodo raggiunto è un nodo foglia cercare
     il valore $K$ nel nodo e seguire il
     corrispondente puntatore verso le tuple, altrimenti riprendere il passo 1
 
     \begin{figure}[H]
-        \centering 
+        \centering
         \includegraphics[width=0.7\textwidth]{btree_ric_2}
     \end{figure}
 \end{enumerate}
@@ -1108,7 +1108,7 @@ $4$ puntatori e questo è compatibile con il vincolo di reimpimento.
 
 Ricerca delle tuple con valore $G$ della chiave di ricerca:
 \begin{figure}[H]
-    \centering 
+    \centering
     \includegraphics[width=1\textwidth]{btree_ric_ex}
     \caption{Esempio di ricerca di una chiave $G$ in un B+TREE}
 \end{figure}
@@ -1130,12 +1130,12 @@ Ricerca delle tuple con valore $G$ della chiave di ricerca:
 \subsubsection{Inserimento in un B+TREE}
 
 \begin{enumerate}
-    \item Ricerca del nodo foglia $NF$ dove $K$ va inserito. 
+    \item Ricerca del nodo foglia $NF$ dove $K$ va inserito.
     \item Ci possono essere vari casi:
     \begin{itemize}
         \item Se $K$ è presente in $NF$:
         \begin{itemize}
-            \item Se è un indice primario, allora nessuna azione. 
+            \item Se è un indice primario, allora nessuna azione.
             \item Se è un indice secondario, allora aggiornare il bucket dei puntatori.
         \end{itemize}
         \item Se $K$ non è presente in $NF$, inserire $K$ in $NF$ rispettando ordine:
@@ -1149,10 +1149,10 @@ Ricerca delle tuple con valore $G$ della chiave di ricerca:
     \item Passo split: se in $NF$ esistono già $n$ valori di chiave:
     \begin{itemize}
         \item Creare due nodi foglia $NF_1$ e $NF_2$.
-        \item Devo inserire i primi $\lceil \frac{n-1}{2} \rceil$ valori di chiave 
+        \item Devo inserire i primi $\lceil \frac{n-1}{2} \rceil$ valori di chiave
         in $NF_1$ e i restanti in $NF_2$.
-        \item Aggiornare il padre. Se il padre viola il vincolo di riempimento massimo, 
-        devo propagare lo split. Questa propagazione può arrivare fino alla radice 
+        \item Aggiornare il padre. Se il padre viola il vincolo di riempimento massimo,
+        devo propagare lo split. Questa propagazione può arrivare fino alla radice
         e in questo caso devo creare un nuovo nodo radice.
     \end{itemize}
 \end{enumerate}
@@ -1160,13 +1160,13 @@ Ricerca delle tuple con valore $G$ della chiave di ricerca:
 \begin{Example}{}{}
 Consideriamo il seguente esempio:
 \begin{figure}[H]
-    \centering 
+    \centering
     \includegraphics[width=1\textwidth]{btree_ins_ex_2}
     \caption{Esempio di split di un nodo foglia $NF$ in un B+TREE con fanout = 5}
 \end{figure}
 \noindent
-Se aggiungo $15$ a $NF \Rightarrow$ \# chiavi = 5 
-allora violo il vincolo di riempimento massimo, devo fare lo split. 
+Se aggiungo $15$ a $NF \Rightarrow$ \# chiavi = 5
+allora violo il vincolo di riempimento massimo, devo fare lo split.
 \end{Example}
 
 
@@ -1176,7 +1176,7 @@ allora violo il vincolo di riempimento massimo, devo fare lo split.
     \item Ricerca del nodo foglia $NF$ che contiene $K$.
     \item Cancellare $K$ ed il suo puntatore:
     \begin{itemize}
-        \item Potrebbe violare il vincolo di riempimento minimo. 
+        \item Potrebbe violare il vincolo di riempimento minimo.
         Dopo la cancellazione:
         \[
             \text{ \#chiavi} < \left\lceil \frac{n-1}{2} \right\rceil
@@ -1185,8 +1185,8 @@ allora violo il vincolo di riempimento massimo, devo fare lo split.
         il \textbf{merge}.
         Per effettuare il merge:
         \begin{itemize}
-            \item Individuiamo il nodo fratello. 
-            \item Si genera un unico nodo foglia. Se non esiste il fratello che unito 
+            \item Individuiamo il nodo fratello.
+            \item Si genera un unico nodo foglia. Se non esiste il fratello che unito
             rispetta il vincolo di riempimento max, merge + split.
             \item Si aggiorna il nodo padre
             \item Se anche il padre viola il vincolo di riempimento minimo, merge anche per il padre.
@@ -1197,12 +1197,12 @@ allora violo il vincolo di riempimento massimo, devo fare lo split.
 \begin{Example}{}{}
 Consideriamo il seguente esempio di merge:
 \begin{figure}[H]
-    \centering 
+    \centering
     \includegraphics[width=1\textwidth]{btree_mer_ex}
     \caption{Esempio di merge di un nodo foglia $NF$ in un B+TREE con fanout = 5}
 \end{figure}
-Dopo eliminazione di $K$ uguale a 3, il nodo $NF_1$ viola il vincolo di reimpimento 
-minimo. 
+Dopo eliminazione di $K$ uguale a 3, il nodo $NF_1$ viola il vincolo di reimpimento
+minimo.
 \end{Example}
 \begin{Example}{Esercizio da Esame}{}
 Costruire B+Tree con fanout = 5 con i seguenti valori di chiave:
@@ -1218,16 +1218,16 @@ Vincoli di reimpimento:
 \]
 Le task sono le seguenti:
 \begin{enumerate}
-    \item Costruzione dell'albero 
+    \item Costruzione dell'albero
     \item Inserire $H$
-    \item Cancellare $Z$ 
+    \item Cancellare $Z$
 \end{enumerate}
 (1) Abbiamo $5$ nodi foglia quindi abbiamo bisogno di $5$ puntatori.
-Possiamo usare un unico livello intermedio. 
+Possiamo usare un unico livello intermedio.
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}[
-        >=Latex, 
+        >=Latex,
         font=\sffamily,
         % Stile base per i nodi del B-Tree
         bnode/.style={
@@ -1239,7 +1239,7 @@ Possiamo usare un unico livello intermedio.
             inner sep=4pt
         }
     ]
-    
+
     % ==========================
     % FOGLIE (Leaves)
     % ==========================
@@ -1249,13 +1249,13 @@ Possiamo usare un unico livello intermedio.
     \node[bnode, rectangle split parts=2, right=0.4cm of l2] (l3) {O \nodepart{two} P};
     \node[bnode, rectangle split parts=2, right=0.4cm of l3] (l4) {S \nodepart{two} T};
     \node[bnode, rectangle split parts=2, right=0.4cm of l4] (l5) {W \nodepart{two} Z};
-    
+
     % ==========================
     % RADICE (Root)
     % ==========================
     % Usiamo la libreria calc per trovare il centro esatto tra l1 e l5
     \node[bnode, rectangle split parts=4, above=2cm of $(l1.north)!0.5!(l5.north)$] (root) {F \nodepart{two} O \nodepart{three} S \nodepart{four} W};
-    
+
     % ==========================
     % PUNTATORI INTERNI
     % ==========================
@@ -1264,7 +1264,7 @@ Possiamo usare un unico livello intermedio.
     \draw[->] (root.two split south)      -- (l3.north);
     \draw[->] (root.three split south)    -- (l4.north);
     \draw[->] (root.south east) ++(-0.1,0)-- (l5.north);
-    
+
     % ==========================
     % PUNTATORI TRA FOGLIE (Linked List del B+ Tree)
     % ==========================
@@ -1272,20 +1272,20 @@ Possiamo usare un unico livello intermedio.
     \draw[->, thick, blue!80] (l2.east) -- (l3.west);
     \draw[->, thick, blue!80] (l3.east) -- (l4.west);
     \draw[->, thick, blue!80] (l4.east) -- (l5.west);
-    
+
     \end{tikzpicture}
 \end{figure}
 \noindent
-(2) Inseriamo $H$: Partendo dalla radice si cerca il nodo più piccolo con chiave maggiore di $H$ che 
+(2) Inseriamo $H$: Partendo dalla radice si cerca il nodo più piccolo con chiave maggiore di $H$ che
 in questo caso è $O$.
 Ci sta un problema però. Il nuovo nodo foglia viola il vincolo di riempimento massimo.
 Dobbiamo ricorrere allo split del nodo foglia $NF$ che contiene $F,G,H,M,N$.
 Facendo però abbiamo $6$ puntatori e questo viola il vincolo di riempimento massimo dei nodi intermedi.
 Quindi non possiamo più usare un unico livello intermedio, ma dobbiamo aggiungere un nuovo livello intermedio.
 \begin{figure}[H]
-    \centering 
+    \centering
     \begin{tikzpicture}[
-        >=Latex, 
+        >=Latex,
         font=\sffamily,
         % Stile base per i nodi del B-Tree
         bnode/.style={
@@ -1297,7 +1297,7 @@ Quindi non possiamo più usare un unico livello intermedio, ma dobbiamo aggiunge
             inner sep=4pt
         }
     ]
-    
+
     % ==========================
     % LIVELLO 2: FOGLIE (Leaves)
     % ==========================
@@ -1309,7 +1309,7 @@ Quindi non possiamo più usare un unico livello intermedio, ma dobbiamo aggiunge
     \node[bnode, rectangle split parts=2, right=0.3cm of l3] (l4) {O \nodepart{two} P};
     \node[bnode, rectangle split parts=2, right=0.3cm of l4] (l5) {S \nodepart{two} T};
     \node[bnode, rectangle split parts=2, right=0.3cm of l5] (l6) {W \nodepart{two} Z};
-    
+
     % ==========================
     % LIVELLO 1: NODI INTERNI
     % ==========================
@@ -1317,19 +1317,19 @@ Quindi non possiamo più usare un unico livello intermedio, ma dobbiamo aggiunge
     \node[bnode, rectangle split parts=2, above=1.5cm of l2] (i1) {F \nodepart{two} H};
     % Nodo interno destro [S, W]
     \node[bnode, rectangle split parts=2, above=1.5cm of l5] (i2) {S \nodepart{two} W};
-    
+
     % ==========================
     % LIVELLO 0: NUOVA RADICE (Root)
     % ==========================
     % La nuova radice [O] è calcolata per stare al centro esatto tra i1 e i2
     \node[bnode, rectangle split parts=1, above=1.5cm of $(i1.north)!0.5!(i2.north)$] (root) {O};
-    
+
     % ==========================
     % PUNTATORI RADICE -> INTERNI
     % ==========================
     \draw[->] (root.south west) ++(0.1,0) -- (i1.north);
     \draw[->] (root.south east) ++(-0.1,0) -- (i2.north);
-    
+
     % ==========================
     % PUNTATORI INTERNI -> FOGLIE
     % ==========================
@@ -1337,12 +1337,12 @@ Quindi non possiamo più usare un unico livello intermedio, ma dobbiamo aggiunge
     \draw[->] (i1.south west) ++(0.1,0) -- (l1.north);
     \draw[->] (i1.one split south)      -- (l2.north);
     \draw[->] (i1.south east) ++(-0.1,0)-- (l3.north);
-    
+
     % Da i2 alle foglie l4, l5, l6
     \draw[->] (i2.south west) ++(0.1,0) -- (l4.north);
     \draw[->] (i2.one split south)      -- (l5.north);
     \draw[->] (i2.south east) ++(-0.1,0)-- (l6.north);
-    
+
     % ==========================
     % PUNTATORI TRA FOGLIE (Linked List)
     % ==========================
@@ -1351,20 +1351,20 @@ Quindi non possiamo più usare un unico livello intermedio, ma dobbiamo aggiunge
     \draw[->, thick, blue!80] (l3.east) -- (l4.west);
     \draw[->, thick, blue!80] (l4.east) -- (l5.west);
     \draw[->, thick, blue!80] (l5.east) -- (l6.west);
-    
+
     \end{tikzpicture}
 \end{figure}
 \noindent
-(3) Cencelliamo ora il nodo $Z$. Si cerca la chiave, non esiste quindi 
-si seuge il puntatore a destra. Sappiamo però che se lo cancello, il nodo foglia $NF$ che 
+(3) Cencelliamo ora il nodo $Z$. Si cerca la chiave, non esiste quindi
+si seuge il puntatore a destra. Sappiamo però che se lo cancello, il nodo foglia $NF$ che
 contiene $W$ e $Z$ viola il vincolo di riempimento minimo.
-Il nodo foglia ha un unico fratello e quindi senza ambiguità riesco a 
-fonderlo con il nodo $S,T$. 
+Il nodo foglia ha un unico fratello e quindi senza ambiguità riesco a
+fonderlo con il nodo $S,T$.
 
 \begin{figure}[H]
-    \centering 
+    \centering
     \begin{tikzpicture}[
-        >=Latex, 
+        >=Latex,
         font=\sffamily,
         % Stile base per i nodi del B-Tree
         bnode/.style={
@@ -1376,7 +1376,7 @@ fonderlo con il nodo $S,T$.
             inner sep=4pt
         }
     ]
-    
+
     % ==========================
     % LIVELLO 1: FOGLIE (Leaves)
     % ==========================
@@ -1386,13 +1386,13 @@ fonderlo con il nodo $S,T$.
     \node[bnode, rectangle split parts=2, right=0.3cm of l3] (l4) {O \nodepart{two} P};
     % Ecco la nuova foglia fusa:
     \node[bnode, rectangle split parts=3, right=0.3cm of l4] (l5) {S \nodepart{two} T \nodepart{three} W};
-    
+
     % ==========================
     % LIVELLO 0: NUOVA RADICE (Root)
     % ==========================
     % La nuova radice raggruppa tutti i separatori. La posizioniamo sopra l3 (il nodo centrale).
     \node[bnode, rectangle split parts=4, above=1.5cm of l3] (root) {F \nodepart{two} H \nodepart{three} O \nodepart{four} S};
-    
+
     % ==========================
     % PUNTATORI RADICE -> FOGLIE
     % ==========================
@@ -1401,7 +1401,7 @@ fonderlo con il nodo $S,T$.
     \draw[->] (root.two split south)      -- (l3.north);
     \draw[->] (root.three split south)    -- (l4.north);
     \draw[->] (root.south east) ++(-0.1,0)-- (l5.north);
-    
+
     % ==========================
     % PUNTATORI TRA FOGLIE (Linked List)
     % ==========================
@@ -1409,60 +1409,60 @@ fonderlo con il nodo $S,T$.
     \draw[->, thick, blue!80] (l2.east) -- (l3.west);
     \draw[->, thick, blue!80] (l3.east) -- (l4.west);
     \draw[->, thick, blue!80] (l4.east) -- (l5.west);
-    
+
     \end{tikzpicture}
 \end{figure}
 \noindent
-Ora che abbiamo cancellato $Z$, abbiamo di nuovo $5$ puntatori quindi 
-possiamo usare un unico livello intermedio, come prima. Quindi viene 
+Ora che abbiamo cancellato $Z$, abbiamo di nuovo $5$ puntatori quindi
+possiamo usare un unico livello intermedio, come prima. Quindi viene
 creata una nuova radice.
 \end{Example}
 
 \subsubsection{Hash}
 
-Questa struttura sfrutta l'accesso associativo nel senso 
-che la localizzazione fisica dei dati diende dal valore della chiave. 
-Viene utilizzata una funzione di hash che mappa i valori di chiave 
-in indirizzi di memorizzazione delle tuple. 
+Questa struttura sfrutta l'accesso associativo nel senso
+che la localizzazione fisica dei dati diende dal valore della chiave.
+Viene utilizzata una funzione di hash che mappa i valori di chiave
+in indirizzi di memorizzazione delle tuple.
 \[
-    h : K \to B 
+    h : K \to B
 \]
 dove $K$ è il dominio delle chiavi e $B$ è il dominio degli indirizzi.
-Costo della ricerca è uguale quindi ad un accesso alla memoria secondaria. 
-Tuttavia il problema dell'hashing sono le collisioni: valori di chiavi diverse 
+Costo della ricerca è uguale quindi ad un accesso alla memoria secondaria.
+Tuttavia il problema dell'hashing sono le collisioni: valori di chiavi diverse
 possono produrre lo stesso indirizzo.
-Una funzione di hash è buona se minimizza il numero di collisioni. 
-Viene definito il concetto di fattore di riempimento. 
+Una funzione di hash è buona se minimizza il numero di collisioni.
+Viene definito il concetto di fattore di riempimento.
 \dfn{}
 {
-    \textbf{Il fattore di riempimento} mi dice lo spazio medio fisico utilizato 
-    in ciascun blocco. 
+    \textbf{Il fattore di riempimento} mi dice lo spazio medio fisico utilizato
+    in ciascun blocco.
 }
 \noindent
 Consideriamo:
 \begin{itemize}
-    \item $T = \#\text{tuple}$ 
+    \item $T = \#\text{tuple}$
     \item $F = \#\text{tuple ci stanno in un blocco}$
     \item $f = \text{fattore di riempimento}$
-    \item $B = \left \lceil \frac{T}{F \cdot f} \right \rceil$ viene allocato 
+    \item $B = \left \lceil \frac{T}{F \cdot f} \right \rceil$ viene allocato
     il numero di bucket di puntatori uguale a $B$.
 \end{itemize}
-Viene definita una funzione di folding: 
+Viene definita una funzione di folding:
 \[
     \varphi : K \to \mathbb{Z}^+ \text{ trasforma chiavi in interi}
 \]
 La funzione di hashing è data da:
 \[
-    h : \mathbb{Z}^+ \to B 
+    h : \mathbb{Z}^+ \to B
 \]
 \subsubsection{Ricerca in un indice hash}
 
 \begin{enumerate}
-    \item Dobbiamo calcolare $b = h(\varphi(K))$ dove il costo è dato da un accesso alla memoria secondaria e quindi è zero. 
-    \item Accedere al bucket $b$ dove il costo è uguale a $1$ essendo che facciamo un accesso alla pagina 
+    \item Dobbiamo calcolare $b = h(\varphi(K))$ dove il costo è dato da un accesso alla memoria secondaria e quindi è zero.
+    \item Accedere al bucket $b$ dove il costo è uguale a $1$ essendo che facciamo un accesso alla pagina
     \item Accedere alle $n$ tuple tramite puntatori dove il costo è uguale $m \le n$ dove $m$ sono il numero di pagine.
     \begin{figure}[H]
-        \centering 
+        \centering
         \includegraphics[width=0.9\textwidth]{hash_ex}
         \caption{Ricerca di una chiave $K$ in un indice hash}
     \end{figure}
@@ -1479,20 +1479,20 @@ collisioni.
   \( K_1 \neq K_2 \) , risulta:
   \[
     h(f(K_1)) = h(f(K_2))
-  \] 
+  \]
 }
 \noindent
 La probabilità che uno stesso bucket riceva \( t \) chiavi su \( n \) inserimenti
 è:
 \[
   p(t) = \binom{n}{t} \left( \frac{1}{B} \right)^t \left( 1 - \frac{1}{B} \right)^{n-t}
-\] 
+\]
 dove \( B \) è il numero totale di bucket.
 La probabilità di avere più di \( F \) collisioni, con \( F \) il fattore blocco,
 cioè il numero di puntatori nel bucket, è:
 \[
   p_K = 1 - \sum_{i=0}^{F} p(i)
-\] 
+\]
 
 \subsubsection*{Gestione delle collisioni}
 Un numero eccessivo di collisioni porta alla saturazione del bucket
@@ -1534,9 +1534,9 @@ controllo nell'esecuzione delle transazioni per evitare queste anomalie.
   Verrà utilizzata la seguente notazione:
   \begin{itemize}
     \item \( t_i \) indica una transazione
-    \item \( r_i(x) \) è un operazione di lettura eseguita dalla transazione \( t_i \) 
-      sulla risorsa \( x \) 
-    \item \( w_i(x) \) è un operazione di scrittura eseguita dalla transazione \( t_i \) 
+    \item \( r_i(x) \) è un operazione di lettura eseguita dalla transazione \( t_i \)
+      sulla risorsa \( x \)
+    \item \( w_i(x) \) è un operazione di scrittura eseguita dalla transazione \( t_i \)
       sulla risorsa \( x \)
 
     \item \texttt{bot} indica l'inizio di una transazione (begin of transaction)
@@ -1554,7 +1554,7 @@ persi. Si considerino le seguenti transazioni:
   t_1:\; & bot; \; r_1(x); \; x = x + 1; \; w_1(x); \; commit; \; eot \\
   t_2:\; & bot; \; r_2(x); \; x = x + 1; \; w_2(x); \; commit; \; eot
 \end{aligned}
-\] 
+\]
 L'esecuzione concorrente di \( t_1 \) e \( t_2 \) può portare alla perdita di
 aggiornamento, come si può vedere dalla seguente simulazione:
 \begin{figure}[H]
@@ -1571,7 +1571,7 @@ di una transazione, ritornano valori diversi. Si considerino le seguenti transaz
   t_1:\; & bot; \; r_1(x); \; r_1'(x); \; commit; \; eot \\
   t_2:\; & bot; \; r_2(x); \; x = x + 1; \; w_2(x); \; commit; \; eot
 \end{aligned}
-\] 
+\]
 L'esecuzione concorrente di \( t_1 \) e \( t_2 \) può portare alla lettura
 inconsistente, come si può vedere dalla seguente simulazione:
 \begin{figure}[H]
@@ -1588,7 +1588,7 @@ intermedio nell’evoluzione di una transazione. Si considerino le seguenti tran
   t_1:\; & bot; \; r_1(x); \; commit; \; eot \\
   t_2:\; & bot; \; r_2(x); \; x = x + 1; \; w_2(x); \; \ldots abort;
 \end{aligned}
-\] 
+\]
 L'esecuzione concorrente di \( t_1 \) e \( t_2 \) può portare alla lettura
 sporca, come si può vedere dalla seguente simulazione:
 \begin{figure}[H]
@@ -1605,14 +1605,14 @@ non soddisfa i vincoli di integrità. Si considerino le seguenti transazioni:
   Risorse &: x, y, z \\
   Vincoli &: x + y + z = 100 \\
 \end{aligned}
-\] 
+\]
 \[
 \begin{aligned}
   t_1:\; & bot; \; r_1(y); \; r_1(x); \; r_1(z); \; s = x + y + z; \; eot \\
   t_2:\; & bot; \; r_2(y); \; y = y + 10; \; r_2(z); \; z = z - 10; \; w_2(y); \; w_2(z);
   \; commit; \; eot
 \end{aligned}
-\] 
+\]
 L'esecuzione concorrente di \( t_1 \) e \( t_2 \) può portare all'aggiornamento
 fantasma, come si può vedere dalla seguente simulazione:
 \begin{figure}[H]
@@ -1639,7 +1639,7 @@ della base di dati da diverse transazioni concorrenti che rappresenta una possib
 esecuzione concorrente di diverse transazioni:
 \[
   S: r_1(x); \; r_2(z); \; w_1(x); \; w_2(z);
-\] 
+\]
 Per evitare anomalie si stabilisce di accettare \textbf{solo} gli schedule equivalenti
 ad uno schedule seriale.
 
@@ -1653,7 +1653,7 @@ di altre transazioni.
     \item \( S_1: r_1(x); \; \color{blue}r_2(x); \; w_2(x); \; \color{black}w_1(x); \)
       \textbf{non} è seriale
 
-    \item \( S_2: r_1(x); \; w_1(x); \; \color{blue} r_2(x); \; w_2(x); \) 
+    \item \( S_2: r_1(x); \; w_1(x); \; \color{blue} r_2(x); \; w_2(x); \)
       \textbf{è} seriale
   \end{itemize}
 \end{Example}
@@ -1683,13 +1683,13 @@ a buon fine.
   \begin{Example}{}{}
     Un esempio di utilizzo della relazione LEGGE\_DA è il seguente:
     \begin{itemize}
-      \item \( S_1: r_1(x);\; r_2(x);\; w_2(x);\; w_1(x);\, \) 
-        \texttt{LEGGE\_DA}\( (S_1) = \varnothing \) 
+      \item \( S_1: r_1(x);\; r_2(x);\; w_2(x);\; w_1(x);\, \)
+        \texttt{LEGGE\_DA}\( (S_1) = \varnothing \)
 
-      \item \( S_2: r_1(x);\; w_1(x);\; r_2(x);\; w_2(x);\, \) 
+      \item \( S_2: r_1(x);\; w_1(x);\; r_2(x);\; w_2(x);\, \)
         \texttt{LEGGE\_DA}\( (S_2) = \{ (r_2(x), w_1(x)) \} \)
 
-      \item \( S_3: r_1(x);\; w_1(x);\; w_2(x);\; r_2(x);\, \) 
+      \item \( S_3: r_1(x);\; w_1(x);\; w_2(x);\; r_2(x);\, \)
         \texttt{LEGGE\_DA}\( (S_3) = \varnothing \)
     \end{itemize}
   \end{Example}
@@ -1757,11 +1757,11 @@ nei sistemi reali.
     t_1:\; & r_1(x); \; w_1(x) \\
     t_2:\; & r_2(x); \; w_2(x)
   \end{aligned}
-  \] 
+  \]
   Eseguite con lo schedule:
   \[
     S_{pa} = r_1(x); \; r_2(x); \; w_2(x); \; w_1(x);
-  \] 
+  \]
   Questo schedule è view serializzabile?
 
   \vspace{1em}
@@ -1771,21 +1771,21 @@ nei sistemi reali.
     \item \texttt{LEGGE\_DA}\( (S_{pa}) = \varnothing \)
     \item \texttt{SCRITTURE\_FINALI}\( (S_{pa}) = \{ w_1(x) \} \)
   \end{itemize}
-  
+
   \vspace{1em}
   \noindent
   Bisogna generare tutti i possibili schedule seriali per determinare se
   esiste uno schedule seriale \( S' \) tale che \( S_{pa} \approx_V S' \).
   Gli schedule seriali sono:
   \begin{itemize}
-    \item \( S_{12} = r_1(x); \; w_1(x); \; r_2(x); \; w_2(x); \) 
+    \item \( S_{12} = r_1(x); \; w_1(x); \; r_2(x); \; w_2(x); \)
       \begin{itemize}
         \item \texttt{LEGGE\_DA}\( (S_{12}) = \{ (r_2(x), w_1(x)) \} \)
         \item \texttt{SCRITTURE\_FINALI}\( (S_{12}) = \{ w_1(x) \} \)
       \end{itemize}
       Osserviamo che \( S_{pa} \not\approx_V S_{12} \)
 
-    \item \( S_{21} = r_2(x); \; w_2(x); \; r_1(x); \; w_1(x); \) 
+    \item \( S_{21} = r_2(x); \; w_2(x); \; r_1(x); \; w_1(x); \)
       \begin{itemize}
         \item \texttt{LEGGE\_DA}\( (S_{21}) = \{ (r_1(x), w_2(x)) \} \)
         \item \texttt{SCRITTURE\_FINALI}\( (S_{21}) = \{ w_1(x) \} \)
@@ -1803,11 +1803,11 @@ nei sistemi reali.
     t_1:\; & r_1(x); \; r_1'(x) \\
     t_2:\; & r_2(x); \; w_2(x)
   \end{aligned}
-  \] 
+  \]
   Eseguite con lo schedule:
   \[
     S_{li} = r_1(x); \; r_2(x); \; w_2(x); \; r_1'(x);
-  \] 
+  \]
   Questo schedule è view serializzabile?
 
   \vspace{1em}
@@ -1817,21 +1817,21 @@ nei sistemi reali.
     \item \texttt{LEGGE\_DA}\( (S_{li}) = \{ (r_1'(x), w_2(x)) \} \)
     \item \texttt{SCRITTURE\_FINALI}\( (S_{li}) = \{ w_2(x) \} \)
   \end{itemize}
-  
+
   \vspace{1em}
   \noindent
   Bisogna generare tutti i possibili schedule seriali per determinare se
   esiste uno schedule seriale \( S' \) tale che \( S_{li} \approx_V S' \).
   Gli schedule seriali sono:
   \begin{itemize}
-    \item \( S_{12} = r_1(x); \; r_1'(x); \; r_2(x); \; w_2(x); \) 
+    \item \( S_{12} = r_1(x); \; r_1'(x); \; r_2(x); \; w_2(x); \)
       \begin{itemize}
         \item \texttt{LEGGE\_DA}\( (S_{12}) = \varnothing \)
         \item \texttt{SCRITTURE\_FINALI}\( (S_{12}) = \{ w_2(x) \} \)
       \end{itemize}
       Osserviamo che \( S_{li} \not\approx_V S_{12} \)
 
-    \item \( S_{21} = r_2(x); \; w_2(x); \; r_1(x); \; r_1'(x);\,\) 
+    \item \( S_{21} = r_2(x); \; w_2(x); \; r_1(x); \; r_1'(x);\,\)
       \begin{itemize}
         \item \texttt{LEGGE\_DA}\( (S_{21}) = \{ (r_1(x), w_2(x)), (r_1'(x), w_2(x)) \} \)
         \item \texttt{SCRITTURE\_FINALI}\( (S_{21}) = \{ w_2(x) \} \)
@@ -1849,12 +1849,12 @@ nei sistemi reali.
     t_1:\; & r_1(x); \; w_1(x); \; r_1(y); \; w_1(y) \\
     t_2:\; & r_2(z); \; r_2(x); \; w_2(x); \; w_2(z)
   \end{aligned}
-  \] 
+  \]
   Eseguite con lo schedule:
   \[
     S_1 = r_1(x); \; w_1(x); \; r_2(z); \; r_1(y); \; w_1(y); \; r_2(x); \; w_2(x); \;
     w_2(z);
-  \] 
+  \]
   Questo schedule è view serializzabile?
 
   \vspace{1em}
@@ -1871,23 +1871,23 @@ nei sistemi reali.
   esiste uno schedule seriale \( S' \) tale che \( S_1 \approx_V S' \).
   Gli schedule seriali sono:
   \begin{itemize}
-    \item \( S_{12} = t_1 t_2 \) 
+    \item \( S_{12} = t_1 t_2 \)
 
-    \item \( S_{21} = t_2 t_1 \) 
+    \item \( S_{21} = t_2 t_1 \)
   \end{itemize}
   Al posto di creare tutte le permutazioni degli schedule seriali, cerchiamo di
   osservare le relazioni LEGGE\_DA e SCRITTURE\_FINALI per capire se \( S_1 \) è
   view-equivalente ad \( S_{12} \) o \( S_{21} \).
 
   Dalla presenza di \( w_2(x) \) nelle scritture finali di \( S_1 \) si nota che
-  \( t_1 < t_2 \) perchè \( w_2(x) \) è l'ultima scrittura di \( x \) in \( S_1 \), 
+  \( t_1 < t_2 \) perchè \( w_2(x) \) è l'ultima scrittura di \( x \) in \( S_1 \),
   e questa operazione viene eseguita solo da \( t_2 \) e di conseguenza va eseguita
   dopo \( t_1 \). Da ciò sappiamo che sicuramente \( S_1 \not\approx_V S_{21} \) e
   ci rimane da controllare soltanto se \( S_1 \approx_V S_{12} \):
   \[
     S_{12} = r_1(x); \; w_1(x); \; r_1(y); \; w_1(y); \; r_2(z); \; r_2(x); \; w_2(x); \;
     w_2(z);
-  \] 
+  \]
   \begin{itemize}
     \item \texttt{LEGGE\_DA}\( (S_{12}) = \left\{ (r_2(x), w_1(x)) \right\} \)
     \item \texttt{SCRITTURE\_FINALI}\( (S_{12}) = \left\{ w_2(x), w_1(y), w_2(z) \right\} \)
@@ -1903,11 +1903,11 @@ nei sistemi reali.
       t_2:\; & r_2(y); \; r_2(x) \\
       t_3:\; & w_3(x); \; r_3(y); \; w_3(y)
     \end{aligned}
-  \] 
+  \]
   \[
     S_2 = r_1(x); \; w_1(x); \; w_3(x); \; r_2(y); \; r_3(y); \; w_3(y); \; w_1(y); \;
     r_2(x)
-  \] 
+  \]
   Questo schedule è view serializzabile?
 
   \vspace{1em}
@@ -1940,7 +1940,7 @@ nei sistemi reali.
     \item L'insieme \texttt{LEGGE\_DA}\( (S_2) \) implica:
       \begin{itemize}
         \item \( t_3 < t_2 \) perchè \( r_2(x) \) (in \( t_2 \)) legge da \( w_3(x) \)
-          (in \( t_3 \)) e quindi \( (r_2(x), w_3(x)) \in \texttt{LEGGE\_DA} \) 
+          (in \( t_3 \)) e quindi \( (r_2(x), w_3(x)) \in \texttt{LEGGE\_DA} \)
 
         \item \( t_1 < t_3 \) per garantire \( (r_1(x), w_3(x)) \notin \texttt{LEGGE\_DA} \)
         \item \( t_2 < t_3 \) per garantire \( (r_2(x), w_3(x)) \in \texttt{LEGGE\_DA} \)
@@ -1962,7 +1962,7 @@ nei sistemi reali.
       t_4:\; & r_4(z) \\
       t_5:\; & w_5(x); \; w_5(y); \; r_5(z)
     \end{aligned}
-  \] 
+  \]
   eseguite con lo schedule:
   \[
     \begin{aligned}
@@ -1970,7 +1970,7 @@ nei sistemi reali.
       w_3(x); \; w_1(y); \\
           &\; w_5(x); \; w_1(z); \; w_5(y); \; r_5(z)
     \end{aligned}
-  \] 
+  \]
   Questo schedule è view serializzabile?
 
   \vspace{1em}
@@ -1988,8 +1988,8 @@ nei sistemi reali.
   \begin{itemize}
     \item Considerando \texttt{SCRITTURE\_FINALI}\( (S_3) \) si ha che:
       \begin{itemize}
-        \item \( w_5(x) \Rightarrow t_2 < t_5,\; t_1 < t_5,\; t_3 < t_5 \) 
-        \item \( w_5(y) \Rightarrow t_3 < t_5,\; t_1 < t_5\) 
+        \item \( w_5(x) \Rightarrow t_2 < t_5,\; t_1 < t_5,\; t_3 < t_5 \)
+        \item \( w_5(y) \Rightarrow t_3 < t_5,\; t_1 < t_5\)
       \end{itemize}
       Da queste informazioni non si rilevano contraddizioni, quindi si procede con
       l'analisi di \texttt{LEGGE\_DA}\( (S_3) \).
@@ -2039,13 +2039,13 @@ nei sistemi reali.
 \dfn{Conflict-equivalenza}
 {
   Due schedule \( S_1 \) e \( S_2 \) sono conflict-equivalenti (\( S_1 \approx_C S_2 \))
-  se possiedono le stesse operazioni e gli stessi conflitti, cioè se le operazioni 
+  se possiedono le stesse operazioni e gli stessi conflitti, cioè se le operazioni
   in conflitto sono nello stesso ordine nei due schedule.
 }
 
 \dfn{Conflict-serializzabilità}
 {
-  Uno schedule \( S \) è \\ conflict-serializzabile (CSR) se esiste uno schedule seriale
+  Uno schedule \( S \) è conflict-serializzabile (CSR) se esiste uno schedule seriale
   \( S' \) tale che \( S \approx_C S' \).
 }
 \noindent
@@ -2057,9 +2057,9 @@ Dato uno schedule \( S \):
   \item Si costruisce il grafo dei conflitti \( G(N, A) \) dove:
     \begin{itemize}
       \item \( N = \left\{ t_1, \ldots, t_n \right\} \) è l'insieme delle transazioni
-        di \( S \) 
+        di \( S \)
 
-      \item \( (t_i, t_j) \in A \) se esiste almeno un conflitto \( (a_i, a_j) \) in 
+      \item \( (t_i, t_j) \in A \) se esiste almeno un conflitto \( (a_i, a_j) \) in
         \( S \)
     \end{itemize}
 
@@ -2067,7 +2067,76 @@ Dato uno schedule \( S \):
 \end{itemize}
 Richiede comunque l'ipotesi di commit-proiezione.
 
-\begin{theorem}
+\thm{}
+{
+  Se $S$ è CSR (ovvero $\exists S_r$ seriale tale che $S \approx_C S_r$) 
+  allora il suo grafo è \textbf{aciclico}. 
+}
+
+\begin{proof}
+Ipotesi: le transazioni sono ordinate $t_1, \ldots, t_n$ e poiché 
+$S \approx_C S_r$, $S_r$ ha tutti i conflitti di $S$ con operaizoni esattamente nello stesso ordine. 
+Nel grafo dei conflitti di $S_r$ ci possono essere solo archi $i,j$ 
+con $i < j$, quindi non possono esserci cicli nel grafo di $S_R$
+perché un ciclo richiederebbe un arco $j,i$ con $j > i$ che torna indietro. 
+Siccome $S \approx_C S_R$ allora hanno lo stesso grafo dei conflitti, quindi anche il grafo dei conflitti di 
+$S$ è aciclico. 
+\end{proof}
+
+\thm{}
+{
+  Se il grafo $S$ è aciclico allora $S$ è CSR. 
+}
+
+\begin{proof}
+Ipotesi: il grafo dei conflitti di $S$ è aciclico.
+Vuol dire che esiste un ordinamento topologico 
+cioè una numerazione dei nodi tale che il grafo contiene solo archi
+$(i,j)$ con $i < j$.  
+Utilizzando questo ordinamento topologico possiamo definire 
+delle transazioni che produce lo stesso grafo 
+allora vuol dire che abbiamo uno schedule seriale. 
+\end{proof}
+
+\begin{Example}{}{}
+Consideriamo le seguenti transazioni:
+\[
+  t_1 : r_1(x)\; w_1(x) \quad t_2 : r_2(x)\;  w_2(x) 
+\]
+E lo schedule:  
+\[
+  S_{pa} : r_1(x) \; r_2(x)\;  w_2(x)\;  w_1(x)
+\]
+I conflitti sono i seguenti:
+\[
+  \text{conflitti}(S_{pa}) = \{ (r_1(x), w_2(x)), (r_2(x), w_1(x)), (w_2(x), w_1(x))\}
+\]
+dove:
+\begin{itemize}
+  \item $(r_1(x), w_2(x))$ è un conflitto perché $r_1(x)$ e $w_2(x)$ operano sulla stessa risorsa $x$,
+  \item $(r_2(x), w_1(x))$ è un conflitto perché $r_2(x)$ e $w_1(x)$ operano sulla stessa risorsa $x$.
+  \item $(w_2(x), w_1(x))$ è un conflitto perché $w_2(x)$ e $w_1(x)$ operano sulla stessa risorsa $x$.
+\end{itemize}
+Il grafo dei conflitti è il seguente:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \node[circle, draw] (t1) at (0,0) {$t_1$};
+    \node[circle, draw] (t2) at (2,0) {$t_2$};
+  
+    \draw[->] (t1) to[bend left] node[above] {$(r_1(x), w_2(x))$} (t2);
+    \draw[->] (t2) to[bend left] node[below] {$(r_2(x), w_1(x))$} (t1);
+  \end{tikzpicture}
+  \caption{Grafo dei conflitti di \( S_{pa} \)}
+\end{figure}
+\noindent
+Il grafo dei conflitti di \( S_{pa} \) è ciclico, quindi \( S_{pa} \) \textbf{non è
+conflict-serializzabile}.
+
+\end{Example}
+
+\thm{}
+{
   La conflict-serializzabilità è una condizione sufficiente, ma non necessaria per
   la view-serializzabilità, cioè \( CSR \subset VSR \):
   \begin{figure}[H]
@@ -2075,7 +2144,221 @@ Richiede comunque l'ipotesi di commit-proiezione.
     \includegraphics[width=0.6\textwidth]{csr_vsr}
     \caption{Relazione tra conflict-serializzabilità e view-serializzabilità}
   \end{figure}
-\end{theorem}
+}
+\noindent
+\begin{proof}
+  Per $CSR \subset VSR$:
+\begin{itemize}
+  \item Basta trovare $S \in VSR$ ma $S \notin CSR$ 
+  \item 
+    \[
+      S = r_1(x); \; w_2(x); \; w_1(x); \; w_3(x);
+    \]
+    \begin{itemize}
+      \item \texttt{LEGGE\_DA} = $\varnothing$ 
+      \item \texttt{SCRITTURE\_FINALI} = $\{ w_3(x) \}$
+    \end{itemize}
+    Questo è VSR perchè $\exists S_R . S_r \approx_V S$ 
+    \[
+      S_R = r_1(x); \; w_1(x); \; w_2(x); \; w_3(x);
+    \]
+    \begin{itemize}
+      \item \texttt{LEGGE\_DA}($S_r$) = $\varnothing$
+      \item \texttt{SCRITTURE\_FINALI}($S_r$) = $\{ w_3(x) \}$
+    \end{itemize}
+    \item Dove i conflitti sono:
+    \[
+    \text{Conflitti}(S_{Pa}) = 
+      \begin{aligned}
+        &(r_1(x), w_2(x)), (r_1(x), w_3(x)),\\
+        &(w_2(x), w_1(x)), (w_2(x), w_3(x)),\\
+        &(w_1(x), w_3(x))
+      \end{aligned}
+    \]
+    Quindi il grafo: 
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        % Nodes placed in a triangle formation
+        \node[circle, draw, minimum size=1.2cm] (t1) at (0,0) {$t_1$};
+        \node[circle, draw, minimum size=1.2cm] (t2) at (3,4) {$t_2$};
+        \node[circle, draw, minimum size=1.2cm] (t3) at (6,0) {$t_3$};
+      
+        % Edges between t1 and t2
+        \draw[->] (t1) to[bend left=15] node[above left, font=\scriptsize] {$(r_1(x), w_2(x))$} (t2);
+        \draw[->] (t2) to[bend left=15] node[below right, font=\scriptsize] {$(w_2(x), w_1(x))$} (t1);
+        
+        % Edge between t2 and t3
+        \draw[->] (t2) to[bend left=15] node[above right, font=\scriptsize] {$(w_2(x), w_3(x))$} (t3);
+        
+        % Edges between t1 and t3
+        % One bends up (inside the triangle) and one bends down (outside the triangle)
+        \draw[->] (t1) to[bend left=20] node[above, font=\scriptsize] {$(w_1(x), w_3(x))$} (t3);
+        \draw[->] (t1) to[bend right=20] node[below, font=\scriptsize] {$(r_1(x), w_3(x))$} (t3);
+      \end{tikzpicture}
+      \caption{Grafo dei conflitti di \( S_{Pa} \)}
+    \end{figure}
+\end{itemize}
+Per $VSR \not\subset CSR$:
+Dato $S_1 \approx S_2$ e dimostriamo $S_1 \approx_V S_2$:
+\begin{itemize}
+  \item Devono avere lo stesso insieme di 
+  SCRITTURE\_FINALI, altrimenti ci sarebbero due scritture sulla stessa risorsa da
+  parte di transazioni diverse in un ordine diverso e quindi un conflitto diverso.
+  \item Devono avere lo stesso insieme di LEGGE\_DA, altrimenti ci sarebbe un conflitto
+  composto da una lettura ed una scrittura diversa e quindi 
+  un conflitto diverso.  
+  \item Se $S$:
+  \begin{itemize}
+    \item è CSR allora $S$ è VSR 
+    \item non è CSR allora $S$ non è VSR
+  \end{itemize}
+  \end{itemize}
+\end{proof}
+\noindent
+\begin{Example}{}{}
+Consideriamo il seguente schedule:
+\[
+  S = r_(x) \; w_1(x) \; r_2(z) \; r_1(y) \; w_1(y) \; r_2(x) \; w_2(x) \; w_2(z )
+\]
+Ci chiediamo se $S$ è CSR e di conseguenza se è VSR.
+\[
+  \text{conflitti}(S) = \begin{aligned}
+    &(r_1(x), w_2(x)),\\
+    &(w_1(x), r_2(x)),\\
+    &(w_1(y), w_2(y))
+  \end{aligned}
+\]
+dove il grafo dei conflitti è il seguente:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    % Nodi più grandi
+    \node[circle, draw, minimum size=1.2cm] (t1) at (0,0) {$t_1$};
+    \node[circle, draw, minimum size=1.2cm] (t2) at (4,0) {$t_2$};
+  
+    % Testo dei conflitti più piccolo (\scriptsize)
+    % Arco superiore (da t1 a t2)
+    \draw[->] (t1) to[bend left=30] node[above, font=\scriptsize] {$(r_1(x), w_2(x))$} (t2);
+    
+    % Archi inferiori con angolazioni diverse per evitare sovrapposizioni
+    % Arco da t2 a t1 (curva verso il basso)
+    \draw[->] (t2) to[bend left=30] node[below, font=\scriptsize] {$(w_1(x), r_2(x))$} (t1);
+    
+    % Arco da t1 a t2 (curva ancora più in basso per passare sotto il precedente)
+    \draw[->] (t1) to[bend right=65] node[below, font=\scriptsize] {$(w_1(y), w_2(y))$} (t2);
+  \end{tikzpicture}
+  \caption{Grafo dei conflitti di \( S \)}
+\end{figure}
+\noindent
+Il grafo è acilico e quindi $S_1$ è CSR e di conseguenza è anche VSR.
+\end{Example}
+
+\begin{Example}{}{}
+\[
+  S_2 = r_(x) \; w_1(x) \; w_3(x) \; r_2(y) \; r_3(y) \; w_3(y) \; w_1(y) \; r_2(x)
+\]  
+I conflitti sono:
+\[
+  \text{conflitti}(S) = \begin{aligned}
+    &(r_1(x), w_3(x)),\\
+    &(w_1(x), w_3(x)), (w_1(x), r_2(x))\\
+    &(w_3(x), r_2(x))\\
+    &(r_2(y), w_3(y)), (r_2(y), w_1(y))\\
+    &(r_3(y), w_1(y)), (w_3(y), w_1(y))\\
+  \end{aligned}
+\]
+Il grafo dei conflitti è il seguente:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    % Nodi
+    \node[circle, draw, minimum size=1.2cm] (t1) at (0,0) {$t_1$};
+    \node[circle, draw, minimum size=1.2cm] (t2) at (6,0) {$t_2$};
+    \node[circle, draw, minimum size=1.2cm] (t3) at (3,-5) {$t_3$};
+  
+    % Archi tra t1 e t2
+    \draw[->] (t1) to[bend left=15] (t2);
+    \draw[->] (t2) to[bend left=15] (t1);
+    
+    % Archi tra t2 e t3
+    \draw[->] (t2) to[bend right=15] (t3);
+    \draw[->] (t3) to[bend left=15] (t2);
+    
+    % Archi tra t1 e t3
+    \draw[->] (t1) to[bend right=45] (t3);
+    \draw[->] (t1) to[bend right=15] (t3);
+    \draw[->] (t3) to[bend left=15] (t1);
+    \draw[->] (t3) to[bend left=45] (t1);
+  \end{tikzpicture}
+  \caption{Grafo dei conflitti di \( S_2 \)}
+\end{figure}
+\noindent
+Il grafo è ciclico e qundi $S_2$ non è CSR e di conseguenza non è VSR.
+\end{Example}
+
+\begin{Example}{}{}
+Consideriamo la schedule:
+\[
+  S_3 = r_1(x) \; r_2(x) \; w_2(x) \; r_3(x) \; r_4(z) \; w_1(x) \; w_3(y) \; w_3(x) \; w_1(y) \;
+  w_5(x) \; w_1(z) \; w_5(y) \; r_5(z)
+\]
+I conflitti sono:
+\[
+  \text{conflitti}(S_3) = \begin{aligned}
+    & \{ (r_1(x), w_2(x)),\\
+    &(r_1(x), w_3(x)), (r_1(x), w_5(x))\\
+    &(r_2(x), w_1(x)), (r_2(x), w_3(x)), (r_2(x), w_5(x))\\
+    &(w_2(x), r_3(x)), (w_2(x), w_1(x)), (w_2(x), w_3(x)), (w_2(x), w_5(x))\\
+    &(r_3(x), w_1(x)), (r_3(x), w_5(x))\\
+    &(r_4(z), w_1(z)),\\
+    &(w_1(x), w_3(x)), (w_1(x), w_5(x))\\
+    &(w_3(y), w_1(y)), (w_3(y), w_5(y))\\
+    &(w_3(x), w_5(x)) \}
+  \end{aligned}
+\]
+Il grafo dei conflitti è il seguente:
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    % Nodi disposti a pentagono allargato per una migliore leggibilità
+    \node[circle, draw, minimum size=1.2cm] (t1) at (0, 3) {$t_1$};
+    \node[circle, draw, minimum size=1.2cm] (t2) at (3.5, 0.5) {$t_2$};
+    \node[circle, draw, minimum size=1.2cm] (t3) at (2.2, -3) {$t_3$};
+    \node[circle, draw, minimum size=1.2cm] (t5) at (-2.2, -3) {$t_5$};
+    \node[circle, draw, minimum size=1.2cm] (t4) at (-3.5, 1.5) {$t_4$};
+  
+    % --- Archi bidirezionali ---
+    % Tra t1 e t2
+    \draw[->] (t1) to[bend left=15] (t2);
+    \draw[->] (t2) to[bend left=15] (t1);
+    
+    % Tra t1 e t3
+    \draw[->] (t1) to[bend left=15] (t3);
+    \draw[->] (t3) to[bend left=15] (t1);
+    
+    % --- Archi monodirezionali ---
+    % Nodo t4 verso t1
+    \draw[->] (t4) to (t1);
+    
+    % Nodo t1 verso t5
+    \draw[->] (t1) to (t5);
+    
+    % Nodo t2 verso t3 e t5
+    \draw[->] (t2) to (t3);
+    \draw[->] (t2) to[bend left=15] (t5); % Curvato leggermente per non incrociarsi al centro esatto
+    
+    % Nodo t3 verso t5
+    \draw[->] (t3) to (t5);
+    
+  \end{tikzpicture}
+  \caption{Grafo dei conflitti di \( S_3 \)}
+\end{figure}
+\noindent
+Il grafo è ciclico e quindi $S_3$ non è CSR e di conseguenza non è VSR.
+\end{Example}
+
+
 
 \subsubsection{Locking a due fasi stretto}
 Il locking a due fasi (2PL, Two-Phase Locking) è il metodo applicato nei sistemi reali
@@ -2114,10 +2397,10 @@ Gli aspetti che caratterizzano il locking a due fasi sono i seguenti:
     rispetto al locking.
 
   \item \textbf{Politica di concessione dei lock sulle risorse}:
-    Il gestore dei lock (o gestore della concorrenza) mantiene per ogni risorsa \( x \) 
+    Il gestore dei lock (o gestore della concorrenza) mantiene per ogni risorsa \( x \)
     le seguenti informazioni:
     \begin{itemize}
-      \item \textbf{Stato}: \( s(x) \in \left\{ libero, r\_lock, w\_lock \right\} \) 
+      \item \textbf{Stato}: \( s(x) \in \left\{ libero, r\_lock, w\_lock \right\} \)
 
       \item \textbf{Transazioni in r\_lock}: \( c(x) = \left( t_1, \ldots, t_n \right)  \),
         dove \( t_1, \ldots, t_n \) hanno un \( r\_lock \) su \( x \)
@@ -2170,7 +2453,7 @@ il numero di risorse che possono essere bloccate) è la tupla, la probabilità c
 si verifichi un lock tra due transazioni è:
 \[
   P(\text{deadlock di lunghezza 2}) = \frac{1}{n^2}
-\] 
+\]
 \begin{Example}{}{}
   Un esempio di deadlock utilizzando il locking a due fasi stretto è il seguente:
   \begin{figure}[H]
@@ -2183,10 +2466,10 @@ si verifichi un lock tra due transazioni è:
 \noindent
 Le tecniche per risolvere i deadlock sono le seguenti:
 \begin{itemize}
-  \item \textbf{Timeout}: se una transazione è in attesa su una risorsa da troppo tempo 
+  \item \textbf{Timeout}: se una transazione è in attesa su una risorsa da troppo tempo
     viene abortita
 
-  \item \textbf{Prevenzione}: 
+  \item \textbf{Prevenzione}:
     \begin{itemize}
       \item Una transazione blocca tutte le risorse a cui deve accedere in lettura o
         scrittura in una sola volta (o blocca tutto o non blocca nulla)
@@ -2211,7 +2494,7 @@ probabile, ma comunque risolvibile con le tecniche precedenti (in particolare il
 rilevamento).
 
 \begin{definition}[Starvation]
-  Se una risorsa \( x \) viene costantemente bloccata da una sequenza di transazioni 
+  Se una risorsa \( x \) viene costantemente bloccata da una sequenza di transazioni
   che acquisiscono \( r\_lock \) su \( x \), un'eventuale transazione in attesa di
   scrivere su \( x \) viene bloccata per un lungo periodo fino alla fine della
   sequenza di letture.
@@ -2224,7 +2507,7 @@ rilevamento).
 
 \subsubsection{Gestione della concorrenza in SQL}
 Siccome risulta molto pesante per il sistema gestire l'esecuzione concorrente di
-transazioni con una conseguente diminuzione delle prestazioni, SQL prevede la 
+transazioni con una conseguente diminuzione delle prestazioni, SQL prevede la
 possibilità di \textbf{rinunciare del tutto o in parte al controllo di concorrenza}
 per aumentare le prestazioni del sistema. È quindi possibile, a livello di una singola
 transazione, decidere di \textbf{tollerare alcune anomalie} di esecuzione concorrente.
@@ -2242,7 +2525,7 @@ La seguente tabella mostra le possibili combinazioni di anomalie che si possono 
     il lock di predicato (cioè blocca tutte le risorse che soddisfano un certo
     predicato) per evitare l'inserimento fantasma
 
-  \item \textbf{Repeatable read}: Applica il 2PL stretto per tutti i lock in lettura 
+  \item \textbf{Repeatable read}: Applica il 2PL stretto per tutti i lock in lettura
     applicati a livello di tupla e non di tabella. Consente inserimenti e quindi non
     evita l'anomalia di inserimento fantasma
 
@@ -2251,8 +2534,6 @@ La seguente tabella mostra le possibili combinazioni di anomalie che si possono 
 
   \item \textbf{Read uncommitted}: Non applica lock in lettura
 \end{itemize}
-
-
 
 
 \end{document}

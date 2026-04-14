@@ -296,13 +296,15 @@ JOIN Discriminante AS DIS ON IE.id_discriminante = DIS.id
 JOIN Insegn AS I ON I.id = IE.id_insegn
 JOIN CorsoStudi AS CS ON IE.id_corsostudi = CS.id
 JOIN Docenza AS D ON D.id_inserogato = IE.id
+JOIN Persona AS P ON D.id_persona = P.id 
 WHERE
+    P.nome NOT IN
+        ('Luca', 'Alberto', 'Massimo', 'Roberto') AND 
     CS.id = 240 AND 
     IE.modulo = 0 AND 
-    (IE.annoaccademico = '2009/2010' AND
-    IE.annoaccademico = '2010/2011')
+    IE.annoaccademico = '2009/2010'
     
-EXCEPT 
+INTERSECT
 
 SELECT I.nomeins, DIS.descrizione
 FROM InsErogato AS IE 
@@ -312,11 +314,92 @@ JOIN CorsoStudi AS CS ON IE.id_corsostudi = CS.id
 JOIN Docenza AS D ON D.id_inserogato = IE.id
 JOIN Persona AS P ON D.id_persona = P.id 
 WHERE
-    P.nome IN
+    P.nome NOT IN
         ('Luca', 'Alberto', 'Massimo', 'Roberto') AND 
     CS.id = 240 AND 
     IE.modulo = 0 AND 
-    (IE.annoaccademico = '2009/2010' AND
-    IE.annoaccademico = '2010/2011')
-ORDER BY I.nomeins;
+    IE.annoaccademico = '2010/2011'
+ORDER BY nomeins;
+```
+
+## Esercizio 9
+
+Trovare le unità logistiche del corso di studi con id=420 erogati nel 2010/2011 e che hanno lezione o
+il lunedì (Lezione.giorno=2) o il martedì (Lezione.giorno=3), ma non in entrambi i giorni, riportando
+il nomedell’insegnamento e il nome dell’unità ordinate per nome insegnamento.
+
+La soluzione ha 8 righe:
+
+nomeins | nomeunita
+--- | --- 
+Algoritmi | Teoria
+Architettura degli elaboratori | Laboratorio
+Architettura degli elaboratori | Teoria
+Basi di dati | Laboratorio
+Programmazione I | Laboratorio
+Programmazione I | Teoria
+Sistemi operativi | Laboratorio
+Sistemi operativi | Teoria
+
+```sql
+-- SBAGLIATO 
+SELECT I.nomeins, IE.nomeunita
+FROM InsErogato as IE 
+JOIN Insegn as I ON IE.id_insegn = I.id
+JOIN CorsoStudi as CS ON IE.id_corsostudi = CS.id
+JOIN Lezione as L ON L.id_inserogato = IE.id 
+WHERE
+    CS.id = 420 AND 
+    IE.annoaccademico = '2010/2011' AND
+    IE.modulo < 0 AND 
+    L.giorno IN (2, 3)
+GROUP BY IE.id, nomeins, nomeunita
+    
+EXCEPT 
+
+(
+SELECT I.nomeins, IE.nomeunita
+FROM InsErogato as IE 
+JOIN Insegn as I ON IE.id_insegn = I.id
+JOIN CorsoStudi as CS ON IE.id_corsostudi = CS.id
+JOIN Lezione as L ON L.id_inserogato = IE.id 
+WHERE
+    CS.id = 420 AND 
+    IE.annoaccademico = '2010/2011' AND
+    IE.modulo < 0 AND 
+    L.giorno = 2 
+GROUP BY IE.id, nomeins, nomeunita
+
+INTERSECT 
+
+SELECT I.nomeins, IE.nomeunita
+FROM InsErogato as IE 
+JOIN Insegn as I ON IE.id_insegn = I.id
+JOIN CorsoStudi as CS ON IE.id_corsostudi = CS.id
+JOIN Lezione as L ON L.id_inserogato = IE.id 
+WHERE
+    CS.id = 420 AND 
+    IE.annoaccademico = '2010/2011' AND
+    IE.modulo < 0 AND 
+    L.giorno = 3
+GROUP BY IE.id, nomeins, nomeunita
+)
+ORDER BY nomeins;
+```
+
+VIA CORRETTA (GEMINI): 
+```sql
+SELECT I.nomeins, IE.nomeunita
+FROM InsErogato as IE
+JOIN Insegn as I ON IE.id_insegn = I.id
+JOIN CorsoStudi as CS ON IE.id_corsostudi = CS.id
+JOIN Lezione as L ON L.id_inserogato = IE.id
+WHERE
+    CS.id = 420 AND
+    IE.annoaccademico = '2010/2011' AND
+    IE.modulo < 0 AND
+    L.giorno IN (2, 3)
+GROUP BY IE.id, nomeins, nomeunita
+HAVING COUNT(DISTINCT L.giorno) = 1
+ORDER BY nomeins;
 ```
