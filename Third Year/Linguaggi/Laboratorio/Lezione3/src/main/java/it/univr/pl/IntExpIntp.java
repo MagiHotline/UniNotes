@@ -1,6 +1,9 @@
 package it.univr.pl;
+import java.util.HashMap;
 
 public class IntExpIntp extends IntExpBaseVisitor<Integer> {
+
+    static HashMap<String, Integer> memory = new HashMap<>();
 
     @Override
     public Integer visitMain(IntExpParser.MainContext ctx) {
@@ -12,6 +15,13 @@ public class IntExpIntp extends IntExpBaseVisitor<Integer> {
         int left = visit(ctx.exp(0));
         int right = visit(ctx.exp(1));
         return left + right;
+    }
+
+    @Override
+    public Integer visitMul(IntExpParser.MulContext ctx) {
+        int left = visit(ctx.exp(0));
+        int right = visit(ctx.exp(1));
+        return left * right;
     }
 
     @Override
@@ -42,9 +52,22 @@ public class IntExpIntp extends IntExpBaseVisitor<Integer> {
 
     @Override
     public Integer visitVar(IntExpParser.VarContext ctx) {
+        int val = visit(ctx.exp());
+        String var = ctx.VAR().toString();
+        memory.put(var, val);
+        return val;
+    }
 
-        int lhs = visit(ctx.VAR());
+    @Override
+    public Integer visitSeq(IntExpParser.SeqContext ctx) {
+        int val = visit(ctx.exp(0));
+        String var = ctx.VAR().toString();
+        memory.put(var, val);
+        return visit(ctx.exp(1));
+    }
 
-        return 0;
+    @Override
+    public Integer visitAccess(IntExpParser.AccessContext ctx) {
+        return memory.getOrDefault(ctx.VAR().toString(), 0);
     }
 }

@@ -259,12 +259,40 @@ public class IntExpParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class AccessContext extends ExpContext {
+		public TerminalNode VAR() { return getToken(IntExpParser.VAR, 0); }
+		public AccessContext(ExpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof IntExpVisitor ) return ((IntExpVisitor<? extends T>)visitor).visitAccess(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class SeqContext extends ExpContext {
+		public TerminalNode VAR() { return getToken(IntExpParser.VAR, 0); }
+		public TerminalNode EQUALS() { return getToken(IntExpParser.EQUALS, 0); }
+		public List<ExpContext> exp() {
+			return getRuleContexts(ExpContext.class);
+		}
+		public ExpContext exp(int i) {
+			return getRuleContext(ExpContext.class,i);
+		}
+		public TerminalNode SEMICOLON() { return getToken(IntExpParser.SEMICOLON, 0); }
+		public SeqContext(ExpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof IntExpVisitor ) return ((IntExpVisitor<? extends T>)visitor).visitSeq(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 
 	public final ExpContext exp() throws RecognitionException {
 		ExpContext _localctx = new ExpContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_exp);
 		try {
-			setState(43);
+			setState(50);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 			case 1:
@@ -276,96 +304,120 @@ public class IntExpParser extends Parser {
 				}
 				break;
 			case 2:
-				_localctx = new VarContext(_localctx);
+				_localctx = new AccessContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(8);
 				match(VAR);
-				setState(9);
-				match(EQUALS);
-				setState(10);
-				exp();
-				setState(11);
-				match(SEMICOLON);
 				}
 				break;
 			case 3:
-				_localctx = new AddContext(_localctx);
+				_localctx = new VarContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(13);
-				match(LPAR);
-				setState(14);
+				setState(9);
+				match(VAR);
+				setState(10);
+				match(EQUALS);
+				setState(11);
 				exp();
-				setState(15);
-				match(ADD);
-				setState(16);
-				exp();
-				setState(17);
-				match(RPAR);
+				setState(12);
+				match(SEMICOLON);
 				}
 				break;
 			case 4:
-				_localctx = new MulContext(_localctx);
+				_localctx = new SeqContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(19);
-				match(LPAR);
-				setState(20);
+				setState(14);
+				match(VAR);
+				setState(15);
+				match(EQUALS);
+				setState(16);
 				exp();
-				setState(21);
-				match(MUL);
-				setState(22);
+				setState(17);
+				match(SEMICOLON);
+				setState(18);
 				exp();
-				setState(23);
-				match(RPAR);
 				}
 				break;
 			case 5:
-				_localctx = new SubContext(_localctx);
+				_localctx = new AddContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(25);
+				setState(20);
 				match(LPAR);
-				setState(26);
+				setState(21);
 				exp();
-				setState(27);
-				match(SUB);
-				setState(28);
+				setState(22);
+				match(ADD);
+				setState(23);
 				exp();
-				setState(29);
+				setState(24);
 				match(RPAR);
 				}
 				break;
 			case 6:
-				_localctx = new DivContext(_localctx);
+				_localctx = new MulContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(31);
+				setState(26);
 				match(LPAR);
-				setState(32);
+				setState(27);
 				exp();
-				setState(33);
-				match(DIV);
-				setState(34);
+				setState(28);
+				match(MUL);
+				setState(29);
 				exp();
-				setState(35);
+				setState(30);
 				match(RPAR);
 				}
 				break;
 			case 7:
-				_localctx = new MODContext(_localctx);
+				_localctx = new SubContext(_localctx);
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(37);
+				setState(32);
 				match(LPAR);
+				setState(33);
+				exp();
+				setState(34);
+				match(SUB);
+				setState(35);
+				exp();
+				setState(36);
+				match(RPAR);
+				}
+				break;
+			case 8:
+				_localctx = new DivContext(_localctx);
+				enterOuterAlt(_localctx, 8);
+				{
 				setState(38);
-				exp();
+				match(LPAR);
 				setState(39);
-				match(MOD);
-				setState(40);
 				exp();
+				setState(40);
+				match(DIV);
 				setState(41);
+				exp();
+				setState(42);
+				match(RPAR);
+				}
+				break;
+			case 9:
+				_localctx = new MODContext(_localctx);
+				enterOuterAlt(_localctx, 9);
+				{
+				setState(44);
+				match(LPAR);
+				setState(45);
+				exp();
+				setState(46);
+				match(MOD);
+				setState(47);
+				exp();
+				setState(48);
 				match(RPAR);
 				}
 				break;
@@ -383,36 +435,41 @@ public class IntExpParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\f.\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0001"+
+		"\u0004\u0001\f5\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0001"+
 		"\u0000\u0001\u0000\u0001\u0000\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
-		"\u0001\u0001\u0001\u0001\u0001\u0003\u0001,\b\u0001\u0001\u0001\u0000"+
-		"\u0000\u0002\u0000\u0002\u0000\u00001\u0000\u0004\u0001\u0000\u0000\u0000"+
-		"\u0002+\u0001\u0000\u0000\u0000\u0004\u0005\u0003\u0002\u0001\u0000\u0005"+
-		"\u0006\u0005\u0000\u0000\u0001\u0006\u0001\u0001\u0000\u0000\u0000\u0007"+
-		",\u0005\u0002\u0000\u0000\b\t\u0005\u0001\u0000\u0000\t\n\u0005\n\u0000"+
-		"\u0000\n\u000b\u0003\u0002\u0001\u0000\u000b\f\u0005\u000b\u0000\u0000"+
-		"\f,\u0001\u0000\u0000\u0000\r\u000e\u0005\u0003\u0000\u0000\u000e\u000f"+
-		"\u0003\u0002\u0001\u0000\u000f\u0010\u0005\u0005\u0000\u0000\u0010\u0011"+
-		"\u0003\u0002\u0001\u0000\u0011\u0012\u0005\u0004\u0000\u0000\u0012,\u0001"+
-		"\u0000\u0000\u0000\u0013\u0014\u0005\u0003\u0000\u0000\u0014\u0015\u0003"+
-		"\u0002\u0001\u0000\u0015\u0016\u0005\u0006\u0000\u0000\u0016\u0017\u0003"+
-		"\u0002\u0001\u0000\u0017\u0018\u0005\u0004\u0000\u0000\u0018,\u0001\u0000"+
-		"\u0000\u0000\u0019\u001a\u0005\u0003\u0000\u0000\u001a\u001b\u0003\u0002"+
-		"\u0001\u0000\u001b\u001c\u0005\u0007\u0000\u0000\u001c\u001d\u0003\u0002"+
-		"\u0001\u0000\u001d\u001e\u0005\u0004\u0000\u0000\u001e,\u0001\u0000\u0000"+
-		"\u0000\u001f \u0005\u0003\u0000\u0000 !\u0003\u0002\u0001\u0000!\"\u0005"+
-		"\b\u0000\u0000\"#\u0003\u0002\u0001\u0000#$\u0005\u0004\u0000\u0000$,"+
-		"\u0001\u0000\u0000\u0000%&\u0005\u0003\u0000\u0000&\'\u0003\u0002\u0001"+
-		"\u0000\'(\u0005\t\u0000\u0000()\u0003\u0002\u0001\u0000)*\u0005\u0004"+
-		"\u0000\u0000*,\u0001\u0000\u0000\u0000+\u0007\u0001\u0000\u0000\u0000"+
-		"+\b\u0001\u0000\u0000\u0000+\r\u0001\u0000\u0000\u0000+\u0013\u0001\u0000"+
-		"\u0000\u0000+\u0019\u0001\u0000\u0000\u0000+\u001f\u0001\u0000\u0000\u0000"+
-		"+%\u0001\u0000\u0000\u0000,\u0003\u0001\u0000\u0000\u0000\u0001+";
+		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
+		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0003\u00013\b\u0001\u0001"+
+		"\u0001\u0000\u0000\u0002\u0000\u0002\u0000\u0000:\u0000\u0004\u0001\u0000"+
+		"\u0000\u0000\u00022\u0001\u0000\u0000\u0000\u0004\u0005\u0003\u0002\u0001"+
+		"\u0000\u0005\u0006\u0005\u0000\u0000\u0001\u0006\u0001\u0001\u0000\u0000"+
+		"\u0000\u00073\u0005\u0002\u0000\u0000\b3\u0005\u0001\u0000\u0000\t\n\u0005"+
+		"\u0001\u0000\u0000\n\u000b\u0005\n\u0000\u0000\u000b\f\u0003\u0002\u0001"+
+		"\u0000\f\r\u0005\u000b\u0000\u0000\r3\u0001\u0000\u0000\u0000\u000e\u000f"+
+		"\u0005\u0001\u0000\u0000\u000f\u0010\u0005\n\u0000\u0000\u0010\u0011\u0003"+
+		"\u0002\u0001\u0000\u0011\u0012\u0005\u000b\u0000\u0000\u0012\u0013\u0003"+
+		"\u0002\u0001\u0000\u00133\u0001\u0000\u0000\u0000\u0014\u0015\u0005\u0003"+
+		"\u0000\u0000\u0015\u0016\u0003\u0002\u0001\u0000\u0016\u0017\u0005\u0005"+
+		"\u0000\u0000\u0017\u0018\u0003\u0002\u0001\u0000\u0018\u0019\u0005\u0004"+
+		"\u0000\u0000\u00193\u0001\u0000\u0000\u0000\u001a\u001b\u0005\u0003\u0000"+
+		"\u0000\u001b\u001c\u0003\u0002\u0001\u0000\u001c\u001d\u0005\u0006\u0000"+
+		"\u0000\u001d\u001e\u0003\u0002\u0001\u0000\u001e\u001f\u0005\u0004\u0000"+
+		"\u0000\u001f3\u0001\u0000\u0000\u0000 !\u0005\u0003\u0000\u0000!\"\u0003"+
+		"\u0002\u0001\u0000\"#\u0005\u0007\u0000\u0000#$\u0003\u0002\u0001\u0000"+
+		"$%\u0005\u0004\u0000\u0000%3\u0001\u0000\u0000\u0000&\'\u0005\u0003\u0000"+
+		"\u0000\'(\u0003\u0002\u0001\u0000()\u0005\b\u0000\u0000)*\u0003\u0002"+
+		"\u0001\u0000*+\u0005\u0004\u0000\u0000+3\u0001\u0000\u0000\u0000,-\u0005"+
+		"\u0003\u0000\u0000-.\u0003\u0002\u0001\u0000./\u0005\t\u0000\u0000/0\u0003"+
+		"\u0002\u0001\u000001\u0005\u0004\u0000\u000013\u0001\u0000\u0000\u0000"+
+		"2\u0007\u0001\u0000\u0000\u00002\b\u0001\u0000\u0000\u00002\t\u0001\u0000"+
+		"\u0000\u00002\u000e\u0001\u0000\u0000\u00002\u0014\u0001\u0000\u0000\u0000"+
+		"2\u001a\u0001\u0000\u0000\u00002 \u0001\u0000\u0000\u00002&\u0001\u0000"+
+		"\u0000\u00002,\u0001\u0000\u0000\u00003\u0003\u0001\u0000\u0000\u0000"+
+		"\u00012";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

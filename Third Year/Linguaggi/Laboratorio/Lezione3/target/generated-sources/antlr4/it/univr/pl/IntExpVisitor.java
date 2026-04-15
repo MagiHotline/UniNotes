@@ -24,12 +24,26 @@ public interface IntExpVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVal(IntExpParser.ValContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code Access}
+	 * labeled alternative in {@link IntExpParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAccess(IntExpParser.AccessContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code var}
 	 * labeled alternative in {@link IntExpParser#exp}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitVar(IntExpParser.VarContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code seq}
+	 * labeled alternative in {@link IntExpParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSeq(IntExpParser.SeqContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code add}
 	 * labeled alternative in {@link IntExpParser#exp}.

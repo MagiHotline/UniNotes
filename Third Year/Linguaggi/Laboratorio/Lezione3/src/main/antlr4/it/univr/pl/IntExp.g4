@@ -3,7 +3,9 @@ grammar IntExp;
 main : exp EOF ;
                                     /* Labels */
 exp : INT                           # val
+    | VAR                           # Access
     | VAR EQUALS exp SEMICOLON      # var
+    | VAR EQUALS exp SEMICOLON exp  # seq
     | LPAR exp ADD exp RPAR         # add
     | LPAR exp MUL exp RPAR         # mul
     | LPAR exp SUB exp RPAR         # sub
@@ -11,7 +13,7 @@ exp : INT                           # val
     | LPAR exp MOD exp RPAR         # MOD
     ;
 
-VAR : [a-z]* ;
+VAR : [A-Za-z]* ;
 INT : '0' | [-]?[1-9][0-9]* ;
 LPAR : '(' ;
 RPAR : ')' ;
