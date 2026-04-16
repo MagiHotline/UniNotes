@@ -387,7 +387,7 @@ GROUP BY IE.id, nomeins, nomeunita
 ORDER BY nomeins;
 ```
 
-VIA CORRETTA (GEMINI): 
+VIA CORRETTA (GEMINATO): 
 ```sql
 SELECT I.nomeins, IE.nomeunita
 FROM InsErogato as IE
@@ -403,3 +403,61 @@ GROUP BY IE.id, nomeins, nomeunita
 HAVING COUNT(DISTINCT L.giorno) = 1
 ORDER BY nomeins;
 ```
+
+## Esercizio 10
+
+Trovare gli insegnamenti in ordine alfabetico (esclusi moduli e unità logistiche) dei corsi di studi della
+facoltà di ’Scienze Matematiche Fisiche e Naturali’ che sono stati tenuti dallo stesso docente per due anni
+accademici consecutivi riportando id, nome dell’insegnamento e id, nome, cognome del docente. 
+
+Per la relazione tra InsErogato e Facolta non usare la relazione diretta. Circa la condizione sull’anno
+accademico, dopo aver estratto una sua opportuna parte, si può trasformare questa in un intero e, quindi,
+usarlo per gli opportuni controlli. Oppure si può usarla direttamente confrontandola con un’opportuna
+parte dell’altro anno accademico.
+
+La soluzione ha 544 righe. Le ultime 5 sono:
+
+id | - | - | - | -
+--- | --- | --- | --- | --- 
+321 | Viticoltura III | 119 | Claudio | Giulivo
+4068 | Viticoltura e territorio | 3937 | Maurizio | Boselli 
+4087 | Viticoltura generale | 3937 | Maurizio | Boselli
+5648 | Web semantico | 62 | Matteo | Cristani
+
+```sql
+SELECT DISTINCT I.id, I.nomeins, P.id, P.nome, P.cognome
+FROM InsErogato as IE
+JOIN Insegn as I ON IE.id_insegn = I.id
+JOIN Docenza as D on D.id_inserogato = IE.id
+JOIN Persona as P on D.id_persona = P.id
+JOIN CorsoInFacolta as CF on CF.id_corsostudi = IE.id_corsostudi
+JOIN Facolta as F on CF.id_facolta = F.id
+WHERE
+    F.nome = 'Scienze matematiche fisiche e naturali' AND
+    IE.modulo = 0 AND
+    EXISTS
+    (
+        SELECT 1
+        FROM InsErogato as IE_IN
+        JOIN Insegn as I_IN ON IE_IN.id_insegn = I_IN.id
+        JOIN Docenza as D_IN on D_IN.id_inserogato = IE_IN.id
+        JOIN Persona as P_IN on D_IN.id_persona = P_IN.id
+        JOIN CorsoInFacolta as CF_IN on CF_IN.id_corsostudi = IE_IN.id_corsostudi
+        JOIN Facolta as F_IN on CF_IN.id_facolta = F_IN.id
+        WHERE
+            IE_IN.modulo = 0 AND
+            F.id = F_IN.id AND
+            P.id = P_IN.id AND
+            I.id = I_IN.id AND
+            CAST(SUBSTRING(IE.annoaccademico, 6, 4) as INT) = CAST(SUBSTRING(IE_IN.annoaccademico, 6, 4) as INT) + 1
+    )
+ORDER BY nomeins;
+```
+
+## Esercizio 11
+
+Trovare per ogni docente il numero di insegnamenti o moduli o unità logistiche a lui assegnate come docente
+nell’anno accademico 2005/2006, riportare anche coloro che non hanno assegnato alcun insegnamento.
+Nel risultato si mostri identificatore, nome e cognome del docente insieme al conteggio richiesto (0 per il caso nessun insegnamento/modulo/unità insegnati).
+
+La soluzione ha 3315 righe.

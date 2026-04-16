@@ -18,7 +18,7 @@ public class MainIntExp {
         IntExpParser parser = new IntExpParser(tokens);
         ParseTree tree = parser.main();
 
-        System.out.println("Tree : " + tree);
+        System.out.println("Tree : " + tree.toStringTree(parser));
 
         /*  Interpreta i token ... in stringhe
         StrExpIntp interpreter_str = new StrExpIntp();

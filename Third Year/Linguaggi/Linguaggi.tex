@@ -3089,8 +3089,295 @@ dove $x$ è un identificatore libero e dobbiamo fornire un ambiente e memoria pe
 Per la semantica statica: DA FARE A CASA 
 Per la semantica dinamica:
 
+\end{Example}
+
+\subsection{Blocco}
+
+Nel nostro linguaggio introduciamo il 
+costrutto del blocco per raggruppare comandi  
+e dichiarazioni, potenzialmente isolata 
+da altri pezzi di codice. 
+\begin{itemize}
+  \item L'idea è quella di rendere modulare il programma 
+  e quindi più chiaro da comprendere.
+  \item  Permette inoltre la gestione locale di identificatori. 
+  \item Permette di gestire l'allocazione della memoria.
+\end{itemize}
+
+\subsubsection{Blocco inline}
+Il blocco inline (senza nome) ci permette
+di specificare le dichiarazioni $D$ che definiscono 
+l'ambiente in cui eseguire la porzione $C$.
+\[
+  D \; ; \; C 
+\]
+In alcuni linguaggi di programmazioni per evidenziare il blocco 
+viene delimitato da pararentesi graffe.
+\[
+  \{\text{ blocco }\}
+\]
+In \textbf{IMP} invece abbiamo i comandi che 
+possiedono semanticamente la composizione sequenziale, 
+quindi è possibile inserire
+dichiarazioni in qualunque punto. Con questa sintassi (e con la semantica che 
+specificheremo) una dichiarazione è visibile da dove viene inserita fino alla fine 
+del programma. I blocchi possono essere annidati.
+\begin{Observation}{}{}
+  Se apro un blocco dentro ad un altro blocco, non posso chiuderlo 
+prima di aver chiuso il blocco esterno.
+  Devo sempre chiudere l'ultimo blocco aperto. 
+  I blocchi possono essere solo \textit{completamente annidati}.
+
+  Questa regole di sovrapposizione dei blocchi permette di definire la regola di visibilità 
+  delle dichiarazioni.
+\end{Observation}
+\subsubsection{Regola di visibilità}
+
+Una dichiarazione locale ad un blocco è visibile nel blocco e in tutti 
+i blocchi annidati, a meno che in tali blocchi non intervenga una dichiarazione 
+dello stesso nome.
+
+\begin{lstlisting}
+{
+  const i : int = 3; // dichiarazione globale
+  {
+    var i : real = 1.2; 
+    i = i + 1; 
+  }
+  i = i + 1;
+}
+\end{lstlisting}
+In questo esempio, la dichiarazione di \texttt{i} all'interno del blocco annidato nasconde 
+la dichiarazione globale di \texttt{i}. Quindi, all'interno del blocco annidato, \texttt{i} 
+si riferisce alla variabile di tipo \texttt{real}, 
+mentre all'esterno del blocco annidato, \texttt{i} 
+si riferisce alla costante di tipo \texttt{int}. La porzione di codice annidata
+si chiama \textbf{scope di \texttt{i}}.
+
+\begin{Example}{}{}
+Prendiamo come esempio questo codice:
+\begin{lstlisting}[language=Python]
+A: {
+  int a = 1;
+  B: {
+    int b = 2; 
+    int c = 2; 
+    C : {
+      int c = 3;
+      int d;
+      d = a + b + c;
+      write(d);
+    }
+    D : {
+      int e; 
+      e = a + b + c;
+      write(e);
+    }
+  }
+}
+\end{lstlisting}
+In questo caso:
+\begin{itemize}
+  \item il blocco $A$ è globale, visibile in tutti i blocchi 
+  essendo tutti i blocchi annidati in $A$.
+  \item Locali al blocco $B$ sono visibili in $B$, $C$ e $D$.
+  \item Locali al blocco $C$ sono visibili solo in $C$. 
+  Nasconde dentro $C$ la precedente dichiarazione di $c$ in $B$.
+  \item Locali al blocco $D$ sono visibili solo in $D$ e non vede $C$. 
+\end{itemize}
+\end{Example}
+\dfn{Scope di una dichiarazione di $x$}{
+  Porzione di codice in cui tutte le occorrenze di $x$
+  fanno riferimento alla dichiarazione. 
+  Devono usare il legame definito definito dalla dichiarazione.
+  Lo \textbf{scope} è il concetto statico che lega un identificatore all'ambiente 
+  di riferimento a tempo di compilazione in quanto (senza l'uso di procedure) 
+  \textbf{eseguiamo} il codice dove viene \textbf{definito}.
+}
+\noindent
+Di conseguenza una \textbf{variabile} può essere:
+\begin{itemize}
+  \item Globale quando è visibile da tutti i blocchi, quindi l'intero programma
+  \item Rispetto al blocco in cui si trova le variabili possono essere:
+  \begin{itemize}
+    \item Locali, ovvero inserite dentro il blocco, che sovrascrivono eventuali esterne
+    \item Non locali (globali incluse) visibili al blocco ma posizionate 
+    in blocchi esterni.
+  \end{itemize}
+\end{itemize}
+\noindent
+Gli \textbf{ambienti} possono essere:
+\begin{itemize}
+  \item Globali, ambiente visibile a tutti i blocchi del programma
+  \item Locali, l'ambiente è definito nel blocco e non visibile esternamente 
+  \item Non locali, l'ambiente ereditato dai blocchi esterni
+\end{itemize}
+\dfn{Scoping}
+{
+  Lo scoping è un concetto che riguarda porzioni di codice, 
+  determina a quali legami (ambiente statico) 
+  fa riferimento ogni occorrenza.
+}
+
+\subsubsection{Tempo di vita}
+
+Ogni variabile ha un tempo di vita ovvero il tempo di esecuzione 
+in cui l'associazione della locazione (memoria) rimane valida. 
+Il tempo di vita è un \textbf{concetto dinamico} perché dipende dall'esecuzione 
+del programma. 
+Il tempo di vita è delimitato da:
+\begin{itemize}
+  \item Allocazione in memoria 
+  \item Deallocazione 
+\end{itemize}
+Se l'allcoazione e deallocazione non è esplicita, allora 
+il tempo di vita coincide con il tempo di esecuzione del programma. 
+
+\begin{Example}{}{}
+  Prendiamo come esempio questo codice:
+\begin{lstlisting}[language=Python]
+{
+  const i : int = 3; // dichiarazione globale
+  {
+    var i : real = 1.2; 
+    i = i + 1; 
+  }
+  i = i + 1;
+}
+\end{lstlisting}
+\begin{itemize}
+  \item Il tempo di vita di \texttt{const i} è l'intero programma 
+  \item Il tempo di vita di \texttt{var i} è limitato al blocco annidato,
+\end{itemize}
+\end{Example}
+\begin{Example}{}{}
+Prendiamo come esempio questo codice:
+\begin{lstlisting}[language=Python]
+{
+  while ... 
+  {
+    D1 dich.
+    C11 comandi 
+    {
+      D2 dich. 
+      C12 comandi 
+    }
+    C13 comandi 
+  }
+}
+\end{lstlisting}
+\noindent
+Si adatta esattamente al concetto di stack di attivazione,
+dove ogni blocco annidato rappresenta un nuovo frame nello stack.
+\begin{enumerate}
+  \item Passando dal primo blocco, lo stack viene allocato in questa maniera:
+  \[
+    \rightarrow [\rho]
+  \]
+  \item Passando al blocco D1, lo stack viene allocato in questa maniera:
+  \[
+    \rightarrow [\rho_1, \rho]
+  \]  
+  \item Entrando dentro al blocco D2:
+  \[
+    \rightarrow [\rho_2, \rho_1, \rho]
+  \]
+  Il tempo di vita delle dichiarazioni $D_2$ è la durata dell'ambiente $\rho_2$ 
+  nello stack. 
+  \item Uscendo dal blocco D2, lo stack torna a questa configurazione:
+  \[
+    \rightarrow [\rho_1, \rho]
+  \]
+  E abbiamo deallocato $\rho_2$ e poi così anche per $\rho_1$. Allocazioni di 
+  $\rho_1$ e $\rho_2$ successive nello stack durante 
+  l'esecuzione del while sono di fatto ambienti nuovi, diversi. 
+\end{enumerate}
+\end{Example}
+
+\subsubsection{Semantica statica}
+
+Ricordiamo che la semantica statica controlla se il comando è ben formato. 
+
+\[
+\inferrule{
+  \Delta \vdash D : \Delta_0 \quad \Delta[\Delta_0] \vdash C
+}
+{
+  \Delta \vdash D ; C
+}
+\]
+Per quanto riguarda gli identificatori liberi e definiti:
+\[
+\begin{aligned}
+  &FI(D ; C) = FI(D) \cup (FI(C) \setminus DI(D))\\
+  &DI(D ; C) = DI(D) \cup DI(C)
+\end{aligned}
+\]
+
+\subsubsection{Semantica dinamica}
+
+Regola per l'esecuzione delle dichiarazioni di un blocco: 
+\[
+\inferrule{
+  \rho \vdash \left<D, \sigma\right> \to^* \left<\rho_0, \sigma'\right> 
+}
+{
+  \rho \vdash \left<D ; C, \sigma\right> \to^* \sigma'
+}
+\]
+Regola per l'esecuzione del blocco:
+\[
+\inferrule{
+  \rho[\rho_0] \vdash \left<C, \sigma\right> \to^* \sigma'
+}
+{
+  \rho \vdash \left<D ; C, \sigma\right> \to^* \sigma'
+}
+\]
+\begin{Example}{}{}
+Consideriamo il seguente codice:
+\[
+  \underbrace{\texttt{var x : int = 3}}_{d}; \underbrace{\texttt{x := x + 1}}_{c}
+\]
+Proviamo a vedere se il comando è ben formato. \textbf{Semantica statica:}
+\[
+  \inferrule
+  {\vdash d : \Delta \quad \Delta \vdash c}
+  {\vdash d ; c}
+\]
+Espandiamo per $\vdash d : \Delta$:
+\[
+  \inferrule
+  {\vdash 3 : int}
+  {\vdash \texttt{var x : int = 3} : [x \mapsto intloc] \equiv \Delta}
+\]
+Riscriviamo la regola per l'esecuzione del blocco:
+\[
+  \inferrule
+  {\vdash d: [x \mapsto intloc] \quad [x \mapsto intloc] \vdash c}
+  {\vdash d ; c}
+\]
+Espandiamo per $[x \mapsto intloc] \vdash c$:
+\[
+  \inferrule
+  {[x \mapsto intloc] \vdash x + 1 : ?}
+  {[x \mapsto intloc] \vdash x := x + 1}
+\]
+Espandiamo per $[x \mapsto intloc] \vdash x + 1 : ?$:
+\[
+  \inferrule
+  {[x \mapsto intloc] \vdash x : int \quad [x \mapsto intloc] \vdash 1 : int}
+  {[x \mapsto intloc] \vdash x + 1 : int}
+\]
+Ora proviamo a eseguire il blocco. \textbf{Semantica dinamica:}
+\[
+  \inferrule
+  {...}
+  {\vdash \left<d ; c, \varnothing\right>}
+\]
 
 \end{Example}
+
 
 
 \end{document}

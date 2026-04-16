@@ -14,13 +14,13 @@ exp : INT                           # val
     ;
 
 VAR : [A-Za-z]* ;
-INT : '0' | [-]?[1-9][0-9]* ;
 LPAR : '(' ;
 RPAR : ')' ;
 // ARITHMETIC
 ADD  : '+' ;
 MUL  : '*' ;
 SUB : '-' ;
+INT : '0' | [-]?[1-9][0-9]* ;
 DIV : '/' ;
 MOD  : 'mod' ;
 // ASSIGNMENT
