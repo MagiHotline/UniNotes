@@ -1,7 +1,7 @@
 \documentclass[a4paper]{article}
 \usepackage{import}
 \input{../../setup.sty}
-
+\usepackage[dvipsnames]{xcolor}
 \usepackage{mathpartir}
 
 \onehalfspacing
@@ -3377,6 +3377,667 @@ Ora proviamo a eseguire il blocco. \textbf{Semantica dinamica:}
 \]
 
 \end{Example}
+
+
+\subsection{Astrazione del controllo (Procedure)}
+L'obiettivo è quello di \textbf{astrarre il controllo}, cioè nascondere dei
+dettagli implementativi fornendo al programmatore un'interfaccia più semplice da
+utilizzare.
+Per fare ciò bisogna \textbf{identificare cosa è necessario descrivere} e mantenere
+pubblico e cosa si può nascondere, in modo da poter focalizzare la programmazione
+sulle questioni rilevanti. Questa astrazione permette di:
+\begin{itemize}
+  \item Ottimizzare l'implementazione
+  \item Ridurre gli errori
+  \item Migliorare la leggibilità
+\end{itemize}
+L'astrazione del controllo \textbf{introduce dei legami}, cioè dei \textbf{blocchi di
+codice con un nome}, che vanno gestiti separando la definizione dall'esecuzione. \\
+Gli aspetti principali dell'astrazione del controllo sono:
+\begin{itemize}
+  \item \textbf{Nome}: si riferisce ad un \textbf{insieme di comandi}, ma può essere
+    usato in vari modi. Essenzialmente il nome identifica un blocco di codice
+    che \textbf{esegue sempre nello stesso modo}
+
+  \item \textbf{Parametri}: permettono di creare un "ponte" tra l'ambiente che
+    \textbf{chiama} e l'ambiente \textbf{eseguito} che permette di passare informazioni
+    tra i due ambienti. Essenzialmente permettono di usare un pezzo di codice su
+    valori (input) differenti ed eseguire computazioni simili usando lo stesso nome.
+\end{itemize}
+Il nome, i parametri e il \textbf{tipo di risultato} rappresentano
+\textbf{l'interfaccia} di un blocco di codice, che è la parte pubblica esposta al
+programmatore. La parte nascosta dell'astrazione è il \textbf{corpo della procedura},
+cioè il codice eseguito.
+
+\begin{Example}{}{}
+  Un esempio di procedura, un tipo di astrazione del controllo, è la seguente:
+  \[
+    \begin{aligned}
+      &\overbrace{\texttt{double P(int x)}}^{\text{Interfaccia}} \texttt{\{}\\
+      &\quad\left.
+      \begin{aligned}
+        &\quad \texttt{double z;}\\
+        &\quad \texttt{/* corpo */}\\
+        &\quad \texttt{return z;}\\
+      \end{aligned}
+      \right\} \text{Corpo} \\
+      &\texttt{\}}
+    \end{aligned}
+  \] 
+\end{Example}
+
+\noindent
+Per definire procedure il linguaggio di programmazione deve avere strumenti sintattici
+per:
+\begin{itemize}
+  \item Specificare (definire) la procedura (interfaccia)
+
+  \item Scrivere il corpo della procedura (corpo), che insieme all'interfaccia
+    rappresenta la \textbf{definizione completa di una procedura}
+
+  \item Utilizzare la procedura, cioè chiamare l'esecuzione del corpo della procedura
+\end{itemize}
+La definizione viene fatta tramite \textbf{dichiarazioni}, mentre l'utilizzo viene fatto
+tramite \textbf{comandi}.
+
+\begin{Example}{}{}
+  Consideriamo il seguente codice:
+  \[
+    \begin{aligned}
+      &\left.\begin{aligned}
+        &\overbrace{\texttt{int foo(int n, int a)}}^{\text{Specifica}}
+        \texttt{\textcolor{Red}{\{}}\\
+        &\quad \texttt{int tmp = a;}\\
+        &\quad \texttt{if (tmp == 0) then return n;}\\
+        &\quad \texttt{else return n + 1 }\\
+        &\texttt{\textcolor{Red}{\}}}
+      \end{aligned}\right\} & \text{dichiarazione} \\
+      &\vdots \\
+      &\text{\{ // contesto del chiamante}\\
+      &\left.\quad \texttt{int x = } \underbrace{\texttt{foo}}_{\text{Nome}} \texttt{(} \underbrace{3, 0}_{\substack{\text{Parametri}\\\text{attuali}}}
+      \texttt{);}\qquad \right\} & \text{comando}\\
+      &\text{\}}
+    \end{aligned}
+  \] 
+  \begin{itemize}
+    \item 
+      Il \textcolor{Red}{blocco} definisce un ambiente locale che contiene:
+      \begin{itemize}
+        \item Dichiarazioni interne (ad esempio \texttt{tmp})
+        \item Parametri formali (\texttt{n} e \texttt{a})
+      \end{itemize}
+
+    \item I parametri attuali sono valori con cui si vogliono inizializzare i parametri
+      formali della procedura
+
+    \item Il tipo della procedura e il tipo del risultato devono coincidere sia
+      nella definizione che nell'utilizzo
+  \end{itemize}
+\end{Example}
+
+\subsubsection{Ambiente di riferimento di una procedura}
+L'ambiente di riferimento di una procedura è determinato da:
+\begin{itemize}
+  \item \textbf{Regole di visibilità}: standard per l'annidamento
+  \item \textbf{Regole di scoping}: specificano dove risolvere ambienti non locali di codice
+    eseguito su contesti diversi da quello di definizione
+    \begin{itemize}
+      \item \textbf{Regole di binding}: risolve regole di scoping ambigue, ad
+        esempio nel caso di una funzione come parametro ad un'altra funzione
+    \end{itemize}
+  \item \textbf{Regole di passaggio di parametri}
+  \item \textbf{Regole specifiche del linguaggio}
+\end{itemize}
+
+\subsubsection{Regole di scoping}
+Consideriamo il seguente codice:
+\[
+  \begin{aligned}
+    &\texttt{int foo(int n)}
+    \texttt{\{}\\
+    &\quad \texttt{int tmp = a;}\\
+    &\quad \texttt{if (tmp == 0) then return n;}\\
+    &\quad \texttt{else return n + 1 }\\
+    &\texttt{\}}
+  \end{aligned}
+\] 
+In questo caso la variabile \texttt{a} è un \textbf{identificatore non locale}, cioè
+un identificatore libero per cui si deve trovare il significato nel contesto.
+Il problema è che nel contesto del chiamante potrebbero esserci più definizioni
+di \texttt{a} e quindi bisogna gestire quale utilizzare.
+Di conseguenza la regola di visibilità delle dichiarazioni
+\ref{sec:regola_visibilita_dichiarazioni} non è più sufficiente a risolvere i riferimenti
+quando si usano le procedure se la procedura ha un ambiente non locale.
+
+\vspace{1em}
+\noindent
+\begin{Example}{}{}
+  Nel seguente codice la variabile \texttt{x} è dichiarata correttamente, ma non
+  sappiamo a quale dichiarazione la funzione fa riferimento:
+\begin{lstlisting}
+{
+  int x = 3;
+  int foo() {
+    return x;
+  }
+
+  {
+    int x = 5;
+    int res = foo(); // a quale x fa riferimento foo()?
+  }
+}
+\end{lstlisting}
+\end{Example}
+
+\noindent
+La risoluzione di questo problema è gestita diversamente da ogni linguaggio di
+programmazione. Per risolverlo va definita la \textbf{regola di scoping} che
+può essere:
+\begin{itemize}
+  \item \textbf{Statico}: l'ambiente è quello della definizione
+  \item \textbf{Dinamico}: l'ambiente è quello della chiamata
+\end{itemize}
+Le regole di scoping quindi servono per risolvere riferimenti \textbf{non locali}
+presenti in procedure, ovvero dove il contesto di definizione può non
+coincidere con il contesto di esecuzione.
+
+\subsubsection{Scoping statico}
+\begin{Example}{}{}
+  Consideriamo il seguente codice:
+\begin{lstlisting}[language=C]
+{
+  int x = 10; // x_1
+  void foo() {
+    // x non e' un parametro formale
+    // e non e' dichiarata nel blocco
+    x++; // Ambiente non locale
+  }
+  void fie() {
+    int x = 0; // x_2
+    foo();
+  }
+
+  fie();
+}
+\end{lstlisting}
+Non possiamo sapere se alla fine si ottiene \texttt{x = 1} (scoping dinamico) o
+\texttt{x = 11} (scoping statico).
+\begin{itemize}
+  \item Scoping statico: si sceglie l'ambiente di definizione a tempo di compilazione,
+    quindi utilizza la dichiarazione di \texttt{x} nello scope della definizione
+    della proceduta
+  \item Scoping dinamico: si sceglie l'ambiente di chiamata a tempo di esecuzione,
+    quindi utilizza la dichiarazione di \texttt{x} nello scope della chiamata
+\end{itemize}
+\end{Example}
+
+\noindent
+Consideriamo il seguente codice:
+\begin{lstlisting}[escapechar=|, basicstyle=\ttfamily, columns=fullflexible, keepspaces=true]
+def(P) {
+  |\textcolor{Purple}{def(x)}|
+
+  |\color{Blue} def(\( P_1 \)) \{|
+    |\color{Cyan} def(\( P_{11} \)) \{|
+      |\color{Red} use(x)|
+    |\color{Cyan}\}|
+
+    |\color{Cyan} \( P_{11} \)()|
+  |\color{Blue}\}|
+
+  |\color{Green} def(\( P_2 \)) \{|
+    |\color{Purple} def(x)|
+
+    |\color{Blue} \( P_1 \)() |
+  |\color{Green}\}|
+
+  |\color{Green} \( P_2 \)() |
+}
+\end{lstlisting}
+Nella sequenza di \textbf{annidamento statico} (delle definizioni) \( P_{11} \)  non
+vede \( P_2 \), quindi l'uso di \( x \) in \( P_{11} \) si riferisce alla definizione
+di \( x \) in \( P_1 \).
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \node (eq) at (0, 0) {
+        \(
+          P: \left[ 
+            \begin{aligned}
+              &\color{Blue} P_1: \left[
+                \color{Cyan}\stackrel{\mathcolor{white}{A}}{P_{11}}: \left[
+                \right.
+              \right. \\
+              &\color{Green}P_2: \left[ \stackrel{\mathcolor{white}{A}}{\mathcolor{white}{P}}  \right.
+            \end{aligned}
+          \right.
+        \) 
+      };
+
+    \draw[Red, -latex] (0.8,0.2) -- ++(-1, 0);
+  \end{tikzpicture}
+\end{figure}
+
+\noindent
+Lo scoping statico consiste nell'applicare la regola di visibilità usando come
+relazione di annidamento \textbf{quello di definizione}.
+\begin{itemize}
+  \item Sequenza di definizione:
+    \begin{figure}[H]
+      \centering
+      \begin{forest}
+        [{$P$}
+          [{$P_1$}
+            [{$P_{11}$}]
+          ]
+          [{$P_2$}]
+        ]
+      \end{forest}
+    \end{figure}
+    \noindent
+    La visibilità di \( P_{11} \) è limitata a \( P_1 \).
+    Grazie a questo la risoluzione dei riferimenti avviene a tempo di compilazione
+  \item Sequenza di chiamate:
+    \[
+      P \to P_2 \to P_1 \to P_{11}
+    \] 
+\end{itemize}
+
+\begin{Example}{}{}
+  Consideriamo il seguente esempio:
+\begin{lstlisting}[language=c]
+{
+  int x = 0;
+  void pippo(int n) {
+    x = n+1; // x non locale, n locale
+  }
+  
+  pippo(3); // x = 4
+  write(x); // 4
+  {
+    int x = 0; // <-+
+    pippo(4);  //  -|---> x = 5
+    write(x);  // --+ 0
+  }
+  write(x); // 5
+}
+\end{lstlisting}
+  \begin{enumerate}
+    \item Alla priima esecuzione di \texttt{pippo(3)} si modifica \texttt{x} globale
+      e si ottiene \texttt{x = 4}
+
+    \item Alla seconda esecuzione di \texttt{pippo(4)} si modifica ancora \texttt{x}
+      globale e il valore stampato è quello della \texttt{x} locale, quindi
+      \texttt{0}
+
+    \item L'ultima write stampa il valore di \texttt{x} globale, quindi \texttt{5}
+  \end{enumerate}
+\end{Example}
+
+\dfn{Scoping statico}
+{
+  Lo scoping statico garantisce l'indipendenza del riferimento dalla posizione della
+  chiamata.
+  \begin{itemize}
+    \item Rende il codice più comprensibile
+    \item Ma è più difficile da implementare
+  \end{itemize}
+}
+
+\vspace{1em}
+\noindent
+\begin{Example}{}{}
+  Alcuni esempi di scoping statico in linguaggi di programmazione comuni sono i seguenti:
+  \begin{enumerate}
+    \item JavaScript:
+      \begin{itemize}
+        \item Esempio 1
+\begin{lstlisting}[language=Python]
+var n = 12;
+
+function addn() {
+    return n + 30;
+}
+
+console.log(n + '\n');
+
+n = addn();
+
+console.log(n);
+\end{lstlisting}
+          In output si ottiene:
+\begin{lstlisting}
+12
+
+47
+\end{lstlisting}
+
+        \item Esempio 2
+\begin{lstlisting}[language=Python]
+var n = 12;
+
+function addn() {
+    return n + 30;
+}
+
+console.log(n + '\n');
+
+var n = 17;
+n = addn();
+
+console.log(n);
+\end{lstlisting}
+          In output si ottiene:
+\begin{lstlisting}
+12
+
+47
+\end{lstlisting}
+      \end{itemize}
+      In entrambi i casi viene sovrascritta la variabile \texttt{n} globale
+      \begin{itemize}
+        \item Esempio 3
+\begin{lstlisting}
+var n = 12;
+
+function addn() {
+    return n + 30;
+}
+
+function setn() {
+    var n = 17;
+    n = addn();
+    console.log(n + '\n');
+}
+
+setn();
+
+console.log(n);
+\end{lstlisting}
+          In output si ottiene:
+\begin{lstlisting}
+42
+
+12
+\end{lstlisting}
+          Da questo esempio si nota che JavaScript utilizza scoping statico
+      \end{itemize}
+
+    \item Python:
+      \begin{itemize}
+        \item Esempio 1
+\begin{lstlisting}[language=Python]
+n = 12;
+
+def addn():
+        return(n + 30);
+
+def setn():
+    n = 17;
+    n = addn();
+    print(n);
+
+setn();
+print(n);
+\end{lstlisting}
+          In output si ottiene:
+\begin{lstlisting}
+42
+
+12
+\end{lstlisting}
+
+        \item Esempio 2
+\begin{lstlisting}[language=Python]
+n = 12;
+
+def addn():
+    return(n + 30);
+
+def setn():
+   n = 17;
+   n = addn();
+   print(n);
+
+n = 13;
+setn();
+print(n);
+\end{lstlisting}
+          In output si ottiene:
+\begin{lstlisting}
+43
+
+13
+\end{lstlisting}
+
+        \item Esempio 3
+\begin{lstlisting}[language=Python]
+x = 4;
+z = 3;
+
+def f(y):
+    return(x * y);
+
+def setn():
+    x = 5;
+    print(f(z) + x)
+
+setn();
+print(x);
+\end{lstlisting}
+          In output si ottiene:
+\begin{lstlisting}
+17
+4
+\end{lstlisting}
+      \end{itemize}
+      Anche python utilizza scoping statico
+  \end{enumerate}
+\end{Example}
+
+\vspace{1em}
+\noindent
+Lo scoping statico è più difficile da implementare, ma è più efficiente e
+garantisce una maggiore comprensibilità del codice, inoltre è calcolabile
+a tempo di compilazione.
+
+\subsubsection{Scoping dinamico}
+Consideriamo il seguente codice:
+\begin{lstlisting}[escapechar=|, basicstyle=\ttfamily, columns=fullflexible, keepspaces=true]
+def(P) {
+  |\textcolor{Purple}{def(x)}|
+
+  |\color{Blue} def(\( P_1 \)) \{|
+    |\color{Cyan} def(\( P_{11} \)) \{|
+      |\color{Red} use(x)|
+    |\color{Cyan}\}|
+
+    |\color{Cyan} \( P_{11} \)()|
+  |\color{Blue}\}|
+
+  |\color{Green} def(\( P_2 \)) \{|
+    |\color{Purple} def(x)|
+
+    |\color{Blue} \( P_1 \)() |
+  |\color{Green}\}|
+
+  |\color{Green} \( P_2 \)() |
+}
+\end{lstlisting}
+
+\noindent
+Lo scoping dinamico consiste nell'applicare la regola di visibilità usando come
+relazione di annidamento quella della \textbf{sequenza di chiamate}.
+\begin{itemize}
+  \item Sequenza di chiamate:
+    \[
+      P \to P_2 \to P_1 \to P_{11}
+    \] 
+    \( P_{11} \) cerca la definizione di \texttt{x} in \( P_1 \) e non la trova, quindi
+    cerca in \( P_2 \) e la trova, quindi utilizza quella definizione di \texttt{x} a
+    tempo di esecuzione
+
+  \item Sequenza di definizione:
+    \begin{figure}[H]
+      \centering
+      \begin{forest}
+        [{$P$}
+          [{$P_1$}
+            [{$P_{11}$}]
+          ]
+          [{$P_2$}]
+        ]
+      \end{forest}
+    \end{figure}
+
+\end{itemize}
+
+\noindent
+Il riferimento (legame) corretto \textbf{dipende dalla posizione della chiamata},
+quindi chiamate diverse possono fare riferimento a legami diversi.
+
+\begin{Example}{}{}
+  Consideriamo il seguente codice:
+\begin{lstlisting}[language=C]
+{
+  int x = 0;
+  void pippo(int n) {
+    x = n + 1;
+  }
+
+  pippo(3);
+  write(x); // 4
+
+  {
+    int x = 0; // <-+<+
+    pippo(4);  // --+ |
+    write(x);  // 5 --+
+  }
+  write(x); // 4
+}
+\end{lstlisting}
+  La dichiarazione di \texttt{x} utilizzata da \texttt{pippo} dipende da dove viene
+  chiamata, quindi:
+  \begin{itemize}
+    \item Alla prima chiamata di \texttt{pippo(3)} viene modificata la \texttt{x} globale
+      e si ottiene \texttt{x = 4}
+
+    \item Alla seconda chiamata di \texttt{pippo(4)} viene modificata la \texttt{x} locale
+      e si ottiene \texttt{x = 5}
+
+    \item L'ultima write stampa il valore di \texttt{x} globale, quindi \texttt{4}
+  \end{itemize}
+\end{Example}
+\noindent
+Le cause che rendono due risultati diversi in base allo scoping sono:
+\begin{itemize}
+  \item Il codice contiene una procedura con un ambiente non locale
+  \item Esistono diverse definizioni di questi riferimenti non locali nel
+    codice
+\end{itemize}
+
+\begin{Example}{}{}
+  Alcuni esempi di scoping dinamico in linguaggi di programmazione comuni sono i seguenti:
+  \begin{enumerate}
+    \item Lisp:
+      \begin{itemize}
+        \item Esempio 1
+\begin{lstlisting}[language=Lisp]
+(defvar n 12)
+
+(defun addn () (+ n 30))
+
+(defun setn () 
+  (let ((n 17))
+    (print (addn)))
+)
+
+(setn)
+(print n)
+\end{lstlisting}
+          In output si ottiene:
+\begin{lstlisting}
+47
+12
+\end{lstlisting}
+
+        \item Esempio 2
+\begin{lstlisting}[language=Lisp]
+(defvar x 4)
+(defvar z 3)
+
+(defun f (y) (* x y))
+
+(let ((x 5))
+  (print (+ (f z) x)))
+
+(print x)
+\end{lstlisting}
+          In output si ottiene:
+\begin{lstlisting}
+20
+4
+\end{lstlisting}
+      \end{itemize}
+
+    \item Perl:
+      \begin{itemize}
+        \item Esempio 1
+\begin{lstlisting}[language=Perl]
+$n = 12;
+
+sub addn() {return $n + 30};
+
+sub setn() {
+    $n = 17;
+    $n = addn();
+    print $n
+};
+
+setn();
+
+print ' ';
+print $n;
+\end{lstlisting}
+    In output si ottiene:
+\begin{lstlisting}
+47 47
+\end{lstlisting}
+          In questo codice non c'è alcun tipo di scoping perchè le variabili sono tutte globali.
+          Per avere variabili locali bisogna utilizzare la parola chiave \texttt{local}.
+
+        \item Esempio 2
+\begin{lstlisting}[language=Perl]
+$n = 12;
+
+sub addn() {return $n + 30};
+
+sub setn() {
+    local $n = 17;
+    $n = addn();
+    print $n
+};
+
+setn();
+
+print ' ';
+print $n;
+\end{lstlisting}
+    In output si ottiene:
+\begin{lstlisting}
+47 12
+\end{lstlisting}
+          Se si forza la località delle variabili si ottiene scoping dinamico.
+      \end{itemize}
+  \end{enumerate}
+\end{Example}
+
+\vspace{1em}
+\noindent
+Lo scoping dinamico ha un'implementazione più semplice, ma rende il codice
+meno leggibile e siccome è eseguito a tempo di esecuzione è più difficile 
+fare analisi statica del codice.
 
 
 
