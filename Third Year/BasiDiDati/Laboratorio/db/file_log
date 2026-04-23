@@ -1,0 +1,28 @@
+2026-04-23 13:32:44.544 CEST [54972] LOG:  a partire da PostgreSQL 16.13 (Homebrew) on aarch64-apple-darwin24.6.0, compiled by Apple clang version 17.0.0 (clang-1700.6.3.2), 64-bit
+2026-04-23 13:32:44.546 CEST [54972] LOG:  bind dell'indirizzo IPv4 "127.0.0.1" fallito: Address already in use
+2026-04-23 13:32:44.546 CEST [54972] SUGGERIMENTO:  C'è già un altro postmaster in funzione sulla porta 5432? Se non c'è, aspetta alcuni secondi e riprova.
+2026-04-23 13:32:44.546 CEST [54972] LOG:  bind dell'indirizzo IPv6 "::1" fallito: Address already in use
+2026-04-23 13:32:44.546 CEST [54972] SUGGERIMENTO:  C'è già un altro postmaster in funzione sulla porta 5432? Se non c'è, aspetta alcuni secondi e riprova.
+2026-04-23 13:32:44.546 CEST [54972] ATTENZIONE:  creazione del socket di ascolto per "localhost" fallita
+2026-04-23 13:32:44.547 CEST [54972] FATALE:  non è stato possibile creare alcun socket TCP/IP
+2026-04-23 13:32:44.547 CEST [54972] LOG:  il database è stato arrestato
+2026-04-23 13:38:02.565 CEST [2194] LOG:  a partire da PostgreSQL 16.13 (Homebrew) on aarch64-apple-darwin24.6.0, compiled by Apple clang version 17.0.0 (clang-1700.6.3.2), 64-bit
+2026-04-23 13:38:02.567 CEST [2194] LOG:  bind dell'indirizzo IPv6 "::1" fallito: Address already in use
+2026-04-23 13:38:02.567 CEST [2194] SUGGERIMENTO:  C'è già un altro postmaster in funzione sulla porta 5432? Se non c'è, aspetta alcuni secondi e riprova.
+2026-04-23 13:38:02.567 CEST [2194] LOG:  bind dell'indirizzo IPv4 "127.0.0.1" fallito: Address already in use
+2026-04-23 13:38:02.567 CEST [2194] SUGGERIMENTO:  C'è già un altro postmaster in funzione sulla porta 5432? Se non c'è, aspetta alcuni secondi e riprova.
+2026-04-23 13:38:02.567 CEST [2194] ATTENZIONE:  creazione del socket di ascolto per "localhost" fallita
+2026-04-23 13:38:02.567 CEST [2194] FATALE:  non è stato possibile creare alcun socket TCP/IP
+2026-04-23 13:38:02.567 CEST [2194] LOG:  il database è stato arrestato
+2026-04-23 13:40:11.408 CEST [3087] LOG:  a partire da PostgreSQL 16.13 (Homebrew) on aarch64-apple-darwin24.6.0, compiled by Apple clang version 17.0.0 (clang-1700.6.3.2), 64-bit
+2026-04-23 13:40:11.410 CEST [3087] LOG:  in ascolto sull'indirizzo IPv6 "::1", porta 5432
+2026-04-23 13:40:11.410 CEST [3087] LOG:  in ascolto sull'indirizzo IPv4 "127.0.0.1", porta 5432
+2026-04-23 13:40:11.411 CEST [3087] LOG:  in ascolto sul socket Unix "/tmp/.s.PGSQL.5432"
+2026-04-23 13:40:11.412 CEST [3090] LOG:  il database è stato arrestato alle 2026-04-23 13:32:29 CEST
+2026-04-23 13:40:11.415 CEST [3087] LOG:  il database è pronto ad accettare connessioni
+2026-04-23 13:45:05.493 CEST [3087] LOG:  richiesta di arresto smart ricevuta
+2026-04-23 13:45:05.500 CEST [3087] LOG:  processo di lavoro in background "logical replication launcher" (PID 3093) è uscito con codice di uscita 1
+2026-04-23 13:45:05.500 CEST [3088] LOG:  arresto in corso
+2026-04-23 13:45:05.501 CEST [3088] LOG:  inizio checkpoint: shutdown immediate
+2026-04-23 13:45:05.509 CEST [3088] LOG:  checkpoint complete: wrote 45 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.005 s, sync=0.001 s, total=0.009 s; sync files=11, longest=0.001 s, average=0.001 s; distance=268 kB, estimate=268 kB; lsn=0/1556A28, redo lsn=0/1556A28
+2026-04-23 13:45:05.512 CEST [3087] LOG:  il database è stato arrestato
