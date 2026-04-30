@@ -1,6 +1,20 @@
 \documentclass[a4paper]{article}
 \usepackage{import}
 \input{../../setup.sty}
+
+\usepackage{bussproofs}
+
+% 1. Salviamo l'ambiente di bussproofs in un nuovo nome (es. bprooftree)
+\let\bprooftree\prooftree
+\let\endbprooftree\endprooftree
+
+% 2. "Dimentichiamo" l'ambiente originale per evitare il conflitto
+\let\prooftree\relax
+\let\endprooftree\relax
+
+% 3. Ora carichiamo ebproof, che si prenderà il nome "prooftree"
+\usepackage{ebproof}
+
 \usepackage[dvipsnames]{xcolor}
 \usepackage{mathpartir}
 
@@ -4039,6 +4053,129 @@ Lo scoping dinamico ha un'implementazione più semplice, ma rende il codice
 meno leggibile e siccome è eseguito a tempo di esecuzione è più difficile 
 fare analisi statica del codice.
 
+\textbf{Semantica statica}: Verifichiamo che l'if sia ben formato usando
+      l'ambiente statico:\\
+      Per prima cosa verifichiamo che le espressioni e le dichiarazioni siano ben formate:
+      \begin{enumerate}
+        \item Guardia
+          \[
+            \begin{prooftree}
+              \hypo{ 
+                \Delta \vdash x: \texttt{\textcolor{Blue}{int}}
+              }
+              \hypo{ 
+                \Delta \vdash y: \texttt{\textcolor{Blue}{int}}
+              }
+              \infer2
+              [\( 
+              \Delta(x) = \texttt{\textcolor{Blue}{int}loc} \land \Delta(y) =
+              \texttt{\textcolor{Blue}{int}}
+              \)]
+              { 
+                \Delta \vdash x = y: \texttt{bool}
+              }
+            \end{prooftree}
+          \] 
+
+        \item Ramo then
+          \[
+            \begin{prooftree}
+              \hypo{ 
+                \Delta \vdash x: \texttt{\textcolor{Blue}{int}}
+              }
+              \infer1
+              [\( 
+                \Delta(x) = \texttt{\textcolor{Blue}{int}loc}
+              \)]
+              { 
+                \Delta \vdash \texttt{x := 5}
+              }
+            \end{prooftree}
+          \] 
+
+        \item Ramo else
+          \[
+            \begin{prooftree}
+              \hypo{ 
+                \Delta \vdash x: \texttt{\textcolor{Blue}{int}}
+              }
+              \infer1[\( 
+                \Delta(x) = \texttt{\textcolor{Blue}{int}loc}
+              \)]{ 
+                \Delta \vdash \texttt{x := 6}
+              }
+            \end{prooftree}
+          \] 
+      \end{enumerate}
+      Dopo aver verificato tutte le componenti dell'if possiamo dire che è ben
+      formato:
+      \[
+        \begin{prooftree}
+          \hypo{ 
+            \Delta \vdash \texttt{x = y} : \texttt{bool}
+          }
+          \hypo{ 
+            \Delta \vdash \texttt{x := 5}: \texttt{int}
+          }
+          \hypo{ 
+            \Delta \vdash \texttt{x := 6}: \texttt{int}
+          }
+          \infer3{ 
+            \Delta \vdash \texttt{if x = y then x := 5 else x := 6}
+          }
+        \end{prooftree}
+      \] 
 
 
+\[
+\begin{prooftree}
+  \hypo{
+    \rho \vdash \left< x, \sigma_1  \right> \to_e
+    \left< 1, \sigma_1  \right>
+  }
+  \infer1{
+    \rho \vdash \left< \texttt{x - 1}, \sigma_1  \right> \to_e
+    \left< 1 - 1, \sigma_1  \right>
+  }
+  \infer1{
+    \rho \vdash \left< \texttt{x - 1}, \sigma_1  \right> \to^*_e
+    \left< 0, \sigma_1  \right>
+  }
+  \infer1{
+    \rho \vdash \left< \texttt{x := 0}, \sigma_1  \right> \to_c
+    \sigma_1[l_x \mapsto 0] = \left[ l_x \mapsto 0 \right] = \sigma_2
+  }
+  \infer1{ 
+    \rho \vdash \left<\texttt{x}, \sigma_2 \right> \to_e
+    \left< 0, \sigma_2 \right>
+  }
+  \infer1[\( 
+    \sigma_2(\rho(x)) = 0
+  \)]{  
+    \rho \vdash \left< \texttt{x = 0}, \sigma_2 \right>
+    \to_e
+    \left< 0 = 0, \sigma_2 \right>
+  }
+  \infer1{ 
+    \rho \vdash \left<\texttt{not x = 0}, \sigma_2\right> 
+    \to_e
+    \left<\texttt{not 0 = 0},\sigma_2\right>
+  }
+  \infer1{ 
+    \rho\vdash\left<\texttt{0 = 0},\sigma_2\right> 
+    \to_e
+    \left<\texttt{\textcolor{Green}{true}},\sigma_2\right>
+  }
+  \infer1{ 
+    \rho \vdash \left< \texttt{not x = 0}, \sigma_2 \right>
+    \to^*_e
+    \left< \texttt{\textcolor{Red}{false}}, \sigma_2 \right>
+  }
+  \infer1{ 
+    \rho \vdash \left< \texttt{while not x = 0 do x := x - 1}, \sigma_2  \right> 
+    \to_c
+    \sigma_2 = \left[ l_x \mapsto 0 \right]
+  }
+\end{prooftree}
+\]
 \end{document}
