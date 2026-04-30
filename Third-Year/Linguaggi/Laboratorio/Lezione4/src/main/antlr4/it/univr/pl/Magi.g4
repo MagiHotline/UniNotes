@@ -4,8 +4,9 @@ main : com EOF ;
                                             /* Labels */
 com:  VAR ASSIGN exp                        # var
     | com SEMICOLON com                     # seq
-    | IF LPAR exp RPAR LCUR com RBRACE      # if
+    | IF LPAR exp RPAR LCUR com RCUR        # if
     | WHILE LPAR exp RPAR LCUR com RCUR     # while
+    | PRINT LPAR exp RPAR                   # print
     ;
 
 exp : FLOAT                                 # float
@@ -21,7 +22,6 @@ exp : FLOAT                                 # float
     | LPAR exp RPAR                         # paren
     ;
 
-VAR : [A-Za-z]+ ;
 LPAR : '(' ;
 RPAR : ')' ;
 LCUR : '{' ;
@@ -30,6 +30,7 @@ RCUR : '}' ;
 // COMMANDS
 IF: 'if' ;
 WHILE: 'while' ;
+PRINT: 'print' ;
 
 // ARITHMETIC
 FLOAT : INT | (INT | '-' '0') '.' [0-9]+;
@@ -61,6 +62,8 @@ SEMICOLON : ';' ;
 STRING : '"' STRCHAR* '"' ;
 fragment STRCHAR : ~["\\] | ESC ;
 fragment ESC : '\\' [btnfr"'\\] ;
+
+VAR : [A-Za-z]+ ;
 
 // WHAT TO SKIP: Comments, whitespaces, tabulations, etc.
 WS : [ \t\n\r]+              -> skip ;

@@ -217,4 +217,10 @@ public class Interpreter extends MagiBaseVisitor<Value> {
         return new BoolValue(!exp.toJavaValue());
     }
 
+    @Override
+    public ComValue visitPrint(MagiParser.PrintContext ctx) {
+        ExpValue<?> val = (ExpValue<?>)visit(ctx.exp());
+        System.out.println(val.toJavaValue());
+        return ComValue.INSTANCE;
+    }
 }

@@ -17,6 +17,13 @@ public interface MagiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMain(MagiParser.MainContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code print}
+	 * labeled alternative in {@link MagiParser#com}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrint(MagiParser.PrintContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code var}
 	 * labeled alternative in {@link MagiParser#com}.
 	 * @param ctx the parse tree
