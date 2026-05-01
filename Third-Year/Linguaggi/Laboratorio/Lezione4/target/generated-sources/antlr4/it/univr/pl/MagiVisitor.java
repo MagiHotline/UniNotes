@@ -45,6 +45,13 @@ public interface MagiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIf(MagiParser.IfContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ifElse}
+	 * labeled alternative in {@link MagiParser#com}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfElse(MagiParser.IfElseContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code seq}
 	 * labeled alternative in {@link MagiParser#com}.
 	 * @param ctx the parse tree

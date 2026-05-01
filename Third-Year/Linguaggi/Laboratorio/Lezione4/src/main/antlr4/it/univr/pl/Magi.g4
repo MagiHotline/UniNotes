@@ -1,25 +1,26 @@
 grammar Magi;
 
 main : com EOF ;
-                                            /* Labels */
-com:  VAR ASSIGN exp                        # var
-    | com SEMICOLON com                     # seq
-    | IF LPAR exp RPAR LCUR com RCUR        # if
-    | WHILE LPAR exp RPAR LCUR com RCUR     # while
-    | PRINT LPAR exp RPAR                   # print
+                                                            /* Labels */
+com:  VAR ASSIGN exp                                        # var
+    | com SEMICOLON com                                     # seq
+    | IF LPAR exp RPAR LCUR com RCUR                        # if
+    | IF LPAR exp RPAR LCUR com RCUR ELSE LCUR com RCUR     # ifElse
+    | WHILE LPAR exp RPAR LCUR com RCUR                     # while
+    | PRINT LPAR exp RPAR                                   # print
     ;
 
-exp : FLOAT                                 # float
-    | BOOL                                  # bool
-    | VAR                                   # access
-    | <assoc=right> exp POW exp             # pow
-    | exp op=(MUL | DIV | MOD) exp          # arith2
-    | exp op=(ADD | SUB) exp                # arith1
-    | exp op=(EQ | NEQ) exp                 # eqExp
-    | exp op=(AND | OR) exp                 # andOr
-    | exp op=(LT | LTE | GT | GTE) exp      # cmpExp
-    | NOT exp                               # not
-    | LPAR exp RPAR                         # paren
+exp : FLOAT                                                 # float
+    | BOOL                                                  # bool
+    | VAR                                                   # access
+    | <assoc=right> exp POW exp                             # pow
+    | exp op=(MUL | DIV | MOD) exp                          # arith2
+    | exp op=(ADD | SUB) exp                                # arith1
+    | exp op=(EQ | NEQ) exp                                 # eqExp
+    | exp op=(AND | OR) exp                                 # andOr
+    | exp op=(LT | LTE | GT | GTE) exp                      # cmpExp
+    | NOT exp                                               # not
+    | LPAR exp RPAR                                         # paren
     ;
 
 LPAR : '(' ;

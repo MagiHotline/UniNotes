@@ -14,7 +14,6 @@ import it.univr.pl.exception.*;
 // CONCATENARE DUE STRINGHE
 // only STRINGS can be PRINTED
 // add nop that does nothing
-// add if and else and while
 
 public class Interpreter extends MagiBaseVisitor<Value> {
 
@@ -24,7 +23,6 @@ public class Interpreter extends MagiBaseVisitor<Value> {
     public Value visitMain(MagiParser.MainContext ctx) {
         return visit(ctx.com());
     }
-
 
     private FloatValue visitFloatExp(ExpContext ctx) {
         try {
@@ -95,6 +93,14 @@ public class Interpreter extends MagiBaseVisitor<Value> {
         return condition.toJavaValue() ?
             (ComValue)visit(ctx.com()) : ComValue.INSTANCE;
     }
+
+    public ComValue visitIfElse(MagiParser.IfElseContext ctx) {
+        BoolValue condition = visitBoolExp(ctx.exp());
+
+        return condition.toJavaValue() ?
+            (ComValue)visit(ctx.com(0)) : (ComValue)visit(ctx.com(1));
+    }
+
 
     @Override
     public ComValue visitWhile(MagiParser.WhileContext ctx) {
