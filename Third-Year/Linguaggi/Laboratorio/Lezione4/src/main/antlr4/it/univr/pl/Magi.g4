@@ -30,6 +30,7 @@ RCUR : '}' ;
 
 // COMMANDS
 IF: 'if' ;
+ELSE: 'else' ;
 WHILE: 'while' ;
 PRINT: 'print' ;
 

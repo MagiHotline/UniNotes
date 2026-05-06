@@ -17,10 +17,10 @@ public class MagiParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		LPAR=1, RPAR=2, LCUR=3, RCUR=4, IF=5, WHILE=6, PRINT=7, FLOAT=8, ADD=9, 
-		MUL=10, SUB=11, DIV=12, MOD=13, POW=14, BOOL=15, NOT=16, EQ=17, NEQ=18, 
-		LT=19, GT=20, LTE=21, GTE=22, AND=23, OR=24, ASSIGN=25, SEMICOLON=26, 
-		STRING=27, VAR=28, WS=29, COMMENT=30, LINE_COMMENT=31, ELSE=32;
+		LPAR=1, RPAR=2, LCUR=3, RCUR=4, IF=5, ELSE=6, WHILE=7, PRINT=8, FLOAT=9, 
+		ADD=10, MUL=11, SUB=12, DIV=13, MOD=14, POW=15, BOOL=16, NOT=17, EQ=18, 
+		NEQ=19, LT=20, GT=21, LTE=22, GTE=23, AND=24, OR=25, ASSIGN=26, SEMICOLON=27, 
+		STRING=28, VAR=29, WS=30, COMMENT=31, LINE_COMMENT=32;
 	public static final int
 		RULE_main = 0, RULE_com = 1, RULE_exp = 2;
 	private static String[] makeRuleNames() {
@@ -32,18 +32,18 @@ public class MagiParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'('", "')'", "'{'", "'}'", "'if'", "'while'", "'print'", null, 
-			"'+'", "'*'", "'-'", "'/'", "'mod'", "'^'", null, "'!'", "'=='", "'!='", 
-			"'<'", "'>'", "'<='", "'>='", "'&&'", "'||'", "'='", "';'"
+			null, "'('", "')'", "'{'", "'}'", "'if'", "'else'", "'while'", "'print'", 
+			null, "'+'", "'*'", "'-'", "'/'", "'mod'", "'^'", null, "'!'", "'=='", 
+			"'!='", "'<'", "'>'", "'<='", "'>='", "'&&'", "'||'", "'='", "';'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "LPAR", "RPAR", "LCUR", "RCUR", "IF", "WHILE", "PRINT", "FLOAT", 
-			"ADD", "MUL", "SUB", "DIV", "MOD", "POW", "BOOL", "NOT", "EQ", "NEQ", 
-			"LT", "GT", "LTE", "GTE", "AND", "OR", "ASSIGN", "SEMICOLON", "STRING", 
-			"VAR", "WS", "COMMENT", "LINE_COMMENT", "ELSE"
+			null, "LPAR", "RPAR", "LCUR", "RCUR", "IF", "ELSE", "WHILE", "PRINT", 
+			"FLOAT", "ADD", "MUL", "SUB", "DIV", "MOD", "POW", "BOOL", "NOT", "EQ", 
+			"NEQ", "LT", "GT", "LTE", "GTE", "AND", "OR", "ASSIGN", "SEMICOLON", 
+			"STRING", "VAR", "WS", "COMMENT", "LINE_COMMENT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -708,7 +708,7 @@ public class MagiParser extends Parser {
 						setState(72);
 						((Arith2Context)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
-						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 13312L) != 0)) ) {
+						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 26624L) != 0)) ) {
 							((Arith2Context)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
@@ -792,7 +792,7 @@ public class MagiParser extends Parser {
 						setState(84);
 						((CmpExpContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
-						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 7864320L) != 0)) ) {
+						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 15728640L) != 0)) ) {
 							((CmpExpContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
@@ -875,12 +875,12 @@ public class MagiParser extends Parser {
 		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
 		"\u0001\u0002\u0001\u0002\u0005\u0002W\b\u0002\n\u0002\f\u0002Z\t\u0002"+
 		"\u0001\u0002\u0000\u0002\u0002\u0004\u0003\u0000\u0002\u0004\u0000\u0005"+
-		"\u0002\u0000\n\n\f\r\u0002\u0000\t\t\u000b\u000b\u0001\u0000\u0011\u0012"+
-		"\u0001\u0000\u0017\u0018\u0001\u0000\u0013\u0016g\u0000\u0006\u0001\u0000"+
-		"\u0000\u0000\u0002.\u0001\u0000\u0000\u0000\u0004B\u0001\u0000\u0000\u0000"+
-		"\u0006\u0007\u0003\u0002\u0001\u0000\u0007\b\u0005\u0000\u0000\u0001\b"+
-		"\u0001\u0001\u0000\u0000\u0000\t\n\u0006\u0001\uffff\uffff\u0000\n\u000b"+
-		"\u0005\u001c\u0000\u0000\u000b\f\u0005\u0019\u0000\u0000\f/\u0003\u0004"+
+		"\u0002\u0000\u000b\u000b\r\u000e\u0002\u0000\n\n\f\f\u0001\u0000\u0012"+
+		"\u0013\u0001\u0000\u0018\u0019\u0001\u0000\u0014\u0017g\u0000\u0006\u0001"+
+		"\u0000\u0000\u0000\u0002.\u0001\u0000\u0000\u0000\u0004B\u0001\u0000\u0000"+
+		"\u0000\u0006\u0007\u0003\u0002\u0001\u0000\u0007\b\u0005\u0000\u0000\u0001"+
+		"\b\u0001\u0001\u0000\u0000\u0000\t\n\u0006\u0001\uffff\uffff\u0000\n\u000b"+
+		"\u0005\u001d\u0000\u0000\u000b\f\u0005\u001a\u0000\u0000\f/\u0003\u0004"+
 		"\u0002\u0000\r\u000e\u0005\u0005\u0000\u0000\u000e\u000f\u0005\u0001\u0000"+
 		"\u0000\u000f\u0010\u0003\u0004\u0002\u0000\u0010\u0011\u0005\u0002\u0000"+
 		"\u0000\u0011\u0012\u0005\u0003\u0000\u0000\u0012\u0013\u0003\u0002\u0001"+
@@ -888,36 +888,36 @@ public class MagiParser extends Parser {
 		"\u0015\u0016\u0005\u0005\u0000\u0000\u0016\u0017\u0005\u0001\u0000\u0000"+
 		"\u0017\u0018\u0003\u0004\u0002\u0000\u0018\u0019\u0005\u0002\u0000\u0000"+
 		"\u0019\u001a\u0005\u0003\u0000\u0000\u001a\u001b\u0003\u0002\u0001\u0000"+
-		"\u001b\u001c\u0005\u0004\u0000\u0000\u001c\u001d\u0005 \u0000\u0000\u001d"+
-		"\u001e\u0005\u0003\u0000\u0000\u001e\u001f\u0003\u0002\u0001\u0000\u001f"+
-		" \u0005\u0004\u0000\u0000 /\u0001\u0000\u0000\u0000!\"\u0005\u0006\u0000"+
-		"\u0000\"#\u0005\u0001\u0000\u0000#$\u0003\u0004\u0002\u0000$%\u0005\u0002"+
-		"\u0000\u0000%&\u0005\u0003\u0000\u0000&\'\u0003\u0002\u0001\u0000\'(\u0005"+
-		"\u0004\u0000\u0000(/\u0001\u0000\u0000\u0000)*\u0005\u0007\u0000\u0000"+
-		"*+\u0005\u0001\u0000\u0000+,\u0003\u0004\u0002\u0000,-\u0005\u0002\u0000"+
-		"\u0000-/\u0001\u0000\u0000\u0000.\t\u0001\u0000\u0000\u0000.\r\u0001\u0000"+
-		"\u0000\u0000.\u0015\u0001\u0000\u0000\u0000.!\u0001\u0000\u0000\u0000"+
-		".)\u0001\u0000\u0000\u0000/5\u0001\u0000\u0000\u000001\n\u0005\u0000\u0000"+
-		"12\u0005\u001a\u0000\u000024\u0003\u0002\u0001\u000630\u0001\u0000\u0000"+
-		"\u000047\u0001\u0000\u0000\u000053\u0001\u0000\u0000\u000056\u0001\u0000"+
-		"\u0000\u00006\u0003\u0001\u0000\u0000\u000075\u0001\u0000\u0000\u0000"+
-		"89\u0006\u0002\uffff\uffff\u00009C\u0005\b\u0000\u0000:C\u0005\u000f\u0000"+
-		"\u0000;C\u0005\u001c\u0000\u0000<=\u0005\u0010\u0000\u0000=C\u0003\u0004"+
-		"\u0002\u0002>?\u0005\u0001\u0000\u0000?@\u0003\u0004\u0002\u0000@A\u0005"+
-		"\u0002\u0000\u0000AC\u0001\u0000\u0000\u0000B8\u0001\u0000\u0000\u0000"+
-		"B:\u0001\u0000\u0000\u0000B;\u0001\u0000\u0000\u0000B<\u0001\u0000\u0000"+
-		"\u0000B>\u0001\u0000\u0000\u0000CX\u0001\u0000\u0000\u0000DE\n\b\u0000"+
-		"\u0000EF\u0005\u000e\u0000\u0000FW\u0003\u0004\u0002\bGH\n\u0007\u0000"+
-		"\u0000HI\u0007\u0000\u0000\u0000IW\u0003\u0004\u0002\bJK\n\u0006\u0000"+
-		"\u0000KL\u0007\u0001\u0000\u0000LW\u0003\u0004\u0002\u0007MN\n\u0005\u0000"+
-		"\u0000NO\u0007\u0002\u0000\u0000OW\u0003\u0004\u0002\u0006PQ\n\u0004\u0000"+
-		"\u0000QR\u0007\u0003\u0000\u0000RW\u0003\u0004\u0002\u0005ST\n\u0003\u0000"+
-		"\u0000TU\u0007\u0004\u0000\u0000UW\u0003\u0004\u0002\u0004VD\u0001\u0000"+
-		"\u0000\u0000VG\u0001\u0000\u0000\u0000VJ\u0001\u0000\u0000\u0000VM\u0001"+
-		"\u0000\u0000\u0000VP\u0001\u0000\u0000\u0000VS\u0001\u0000\u0000\u0000"+
-		"WZ\u0001\u0000\u0000\u0000XV\u0001\u0000\u0000\u0000XY\u0001\u0000\u0000"+
-		"\u0000Y\u0005\u0001\u0000\u0000\u0000ZX\u0001\u0000\u0000\u0000\u0005"+
-		".5BVX";
+		"\u001b\u001c\u0005\u0004\u0000\u0000\u001c\u001d\u0005\u0006\u0000\u0000"+
+		"\u001d\u001e\u0005\u0003\u0000\u0000\u001e\u001f\u0003\u0002\u0001\u0000"+
+		"\u001f \u0005\u0004\u0000\u0000 /\u0001\u0000\u0000\u0000!\"\u0005\u0007"+
+		"\u0000\u0000\"#\u0005\u0001\u0000\u0000#$\u0003\u0004\u0002\u0000$%\u0005"+
+		"\u0002\u0000\u0000%&\u0005\u0003\u0000\u0000&\'\u0003\u0002\u0001\u0000"+
+		"\'(\u0005\u0004\u0000\u0000(/\u0001\u0000\u0000\u0000)*\u0005\b\u0000"+
+		"\u0000*+\u0005\u0001\u0000\u0000+,\u0003\u0004\u0002\u0000,-\u0005\u0002"+
+		"\u0000\u0000-/\u0001\u0000\u0000\u0000.\t\u0001\u0000\u0000\u0000.\r\u0001"+
+		"\u0000\u0000\u0000.\u0015\u0001\u0000\u0000\u0000.!\u0001\u0000\u0000"+
+		"\u0000.)\u0001\u0000\u0000\u0000/5\u0001\u0000\u0000\u000001\n\u0005\u0000"+
+		"\u000012\u0005\u001b\u0000\u000024\u0003\u0002\u0001\u000630\u0001\u0000"+
+		"\u0000\u000047\u0001\u0000\u0000\u000053\u0001\u0000\u0000\u000056\u0001"+
+		"\u0000\u0000\u00006\u0003\u0001\u0000\u0000\u000075\u0001\u0000\u0000"+
+		"\u000089\u0006\u0002\uffff\uffff\u00009C\u0005\t\u0000\u0000:C\u0005\u0010"+
+		"\u0000\u0000;C\u0005\u001d\u0000\u0000<=\u0005\u0011\u0000\u0000=C\u0003"+
+		"\u0004\u0002\u0002>?\u0005\u0001\u0000\u0000?@\u0003\u0004\u0002\u0000"+
+		"@A\u0005\u0002\u0000\u0000AC\u0001\u0000\u0000\u0000B8\u0001\u0000\u0000"+
+		"\u0000B:\u0001\u0000\u0000\u0000B;\u0001\u0000\u0000\u0000B<\u0001\u0000"+
+		"\u0000\u0000B>\u0001\u0000\u0000\u0000CX\u0001\u0000\u0000\u0000DE\n\b"+
+		"\u0000\u0000EF\u0005\u000f\u0000\u0000FW\u0003\u0004\u0002\bGH\n\u0007"+
+		"\u0000\u0000HI\u0007\u0000\u0000\u0000IW\u0003\u0004\u0002\bJK\n\u0006"+
+		"\u0000\u0000KL\u0007\u0001\u0000\u0000LW\u0003\u0004\u0002\u0007MN\n\u0005"+
+		"\u0000\u0000NO\u0007\u0002\u0000\u0000OW\u0003\u0004\u0002\u0006PQ\n\u0004"+
+		"\u0000\u0000QR\u0007\u0003\u0000\u0000RW\u0003\u0004\u0002\u0005ST\n\u0003"+
+		"\u0000\u0000TU\u0007\u0004\u0000\u0000UW\u0003\u0004\u0002\u0004VD\u0001"+
+		"\u0000\u0000\u0000VG\u0001\u0000\u0000\u0000VJ\u0001\u0000\u0000\u0000"+
+		"VM\u0001\u0000\u0000\u0000VP\u0001\u0000\u0000\u0000VS\u0001\u0000\u0000"+
+		"\u0000WZ\u0001\u0000\u0000\u0000XV\u0001\u0000\u0000\u0000XY\u0001\u0000"+
+		"\u0000\u0000Y\u0005\u0001\u0000\u0000\u0000ZX\u0001\u0000\u0000\u0000"+
+		"\u0005.5BVX";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

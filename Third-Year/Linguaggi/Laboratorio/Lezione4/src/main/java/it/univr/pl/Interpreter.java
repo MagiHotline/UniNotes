@@ -28,7 +28,8 @@ public class Interpreter extends MagiBaseVisitor<Value> {
         try {
             return (FloatValue) visit(ctx);
         } catch(ClassCastException e) {
-            String err = ctx.start.getLine()+ ": " + ctx.start.getCharPositionInLine();
+            String err = ctx.start.getLine()+ ": " +
+            ctx.start.getCharPositionInLine();
             throw new TypeMismatchException(err);
         }
     }
@@ -43,10 +44,10 @@ public class Interpreter extends MagiBaseVisitor<Value> {
 
         switch (ctx.op.getType()) {
             case MagiParser.ADD: {
-                return new ExpValue<Float>(left_v + right_v);
+                return new FloatValue(left_v + right_v);
             }
             case MagiParser.SUB: {
-                return new ExpValue<Float>(left_v + right_v);
+                return new FloatValue(left_v - right_v);
             }
         }
 
@@ -63,13 +64,13 @@ public class Interpreter extends MagiBaseVisitor<Value> {
 
         switch (ctx.op.getType()) {
            case MagiParser.MUL: {
-               return new ExpValue<Float>(left_v * right_v);
+               return new FloatValue(left_v * right_v);
            }
            case MagiParser.DIV: {
-               return new ExpValue<Float>(left_v / right_v);
+               return new FloatValue(left_v / right_v);
            }
            case MagiParser.MOD: {
-               return new ExpValue<Float>(left_v % right_v);
+               return new FloatValue(left_v % right_v);
            }
 
         }
@@ -127,7 +128,7 @@ public class Interpreter extends MagiBaseVisitor<Value> {
             res *= left_v;
         }
 
-        return new ExpValue<Float>(res);
+        return new FloatValue(res);
     }
 
     @Override
@@ -157,7 +158,7 @@ public class Interpreter extends MagiBaseVisitor<Value> {
         String id = ctx.VAR().getText();
 
         if (!memory.containsKey(id)) {
-            String err = "Variable" + id + " used but not initialized"
+            String err = "Variable " + id + " used but not initialized"
             + "@" + ctx.start.getLine()+ ": " + ctx.start.getCharPositionInLine();
 
             throw new UnknownVariableException(err);

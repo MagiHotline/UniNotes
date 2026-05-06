@@ -2,17 +2,6 @@
 \usepackage{import}
 \input{../../setup.sty}
 
-\usepackage{bussproofs}
-
-% 1. Salviamo l'ambiente di bussproofs in un nuovo nome (es. bprooftree)
-\let\bprooftree\prooftree
-\let\endbprooftree\endprooftree
-
-% 2. "Dimentichiamo" l'ambiente originale per evitare il conflitto
-\let\prooftree\relax
-\let\endprooftree\relax
-
-% 3. Ora carichiamo ebproof, che si prenderà il nome "prooftree"
 \usepackage{ebproof}
 
 \usepackage[dvipsnames]{xcolor}
@@ -4127,55 +4116,347 @@ fare analisi statica del codice.
       \] 
 
 
+
+\subsection{Allocazione delal memoria}
+
+Un altro aspetto importante nel creare un linguaggio di programmazione
+è come e quando viene allocato lo spazio in memoria per gli elementi 
+del programma. Ciò ha effetto sugli algoritmi di risoluzione dei 
+riferimenti non locali. Si distinguono due tipi di allocazione:
+\begin{itemize}
+  \item \textbf{Allocazione statica}:  La memoria viene allocata a 
+  tempo di compilazione
+  \item \textbf{Allocazione dinamica}: La memoria viene allocata a 
+  tempo di esecuzione.
+\end{itemize}
+
+Vi sono due strutture in cui questi dati vengono allocati:
+\begin{itemize}
+  \item \textbf{Stack} 
+  \item \textbf{Heap} 
+\end{itemize}
+
+\begin{Example}{}{}
+In FORTRAN questo programma è sintatticamente illegale: ricorsione non ammessa:
+\begin{lstlisting}
+SUBROUTINE ERROR(N)
+    IF (N .LE. 0) THEN
+yyy    CALL ERROR(N-1)
+    PRINT N
+    END
+
+xxx CALL ERROR(3)
+\end{lstlisting}
+Questo succede perchè in FORTRAN l'allocazione è statica, quindi non è possibile allocare
+memoria per la chiamata ricorsiva di \texttt{ERROR} a tempo di esecuzione.
+\end{Example}
+
+\subsubsection{Allocazione dinamica su pila}
+
+La pila è una struttura dati allocata dinamica e gestita in modalità FIFO.
+Per ogni chiamata a procedura viene creato un RdA (record di attivazione)
+il quale contiene tutte le informazioni per eseguire la nostra procedura
+e reimpostare lo stato della macchina nel momento in cui la procedura
+è terminata. L'RdA contiene: 
+\begin{itemize}
+  \item Indirizzo di ritorno 
+  \item Variabili locali (parametri formali e ambienti dichiarato nella procedura)
+  \item Puntatore alla testa della pila 
+  \item Altre informazioni specifiche:
+  \begin{itemize}
+    \item   Il puntatore statico è un puntatore al RdA della
+    procedura genitore nelle catena sstorica delle definizioni.
+    Può essere distante nello stack dell'RdA corrente. 
+    \item Il puntatore dinamico è il puntatore dell'RdA delle procedura chiamante.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Procedura di chiamata a funzione}
+
+Quando viene chiamata una funzione bisogna:
+\begin{itemize}
+  \item Valutare i parametri (in funzione del metodo di passaggio) 
+  \item Allocare RdA sullo stack con ambiente locale 
+  \item Salva lo stato del chiamante al momento della chiamata
+  \item Trasferimetno del controllo alla procedura chiamata 
+\end{itemize}
+
+\subsubsection*{Procedura di ritorno da funzione} 
+
+Quando la procedura chiamata termina bisogna:
+
+\begin{itemize}
+  \item Recupero informazioni dal RdA (passaggio valore-risultato) 
+  \item Deallocazione RdA dallo stack
+  \item Ripristino dello stato del chiamante al momento della chiamata
+  \item Ritorno del controllo al chiamante 
+\end{itemize}
+
+% TODO: ESEMPIO di chiamata a funzione con allocazione dinamica su pila
+
+\subsubsection{Implementazione dello scoping statico} 
+
+Per implementare lo scoping statico dobbiamo introdurre il concetto di 
+\textbf{link statico} che punta all'indirizzo del RdA della procedura 
+che contiene la definzione della procedura in atto.
+
+\dfn{Profondità statica}
+{
+  La profondità statica è il valore che denota la profondità di annidamento.
+}
+
+\begin{Example}{}{}
+Immaginiamo le seguenti procedure $A, B, C, D, E$. 
 \[
-\begin{prooftree}
-  \hypo{
-    \rho \vdash \left< x, \sigma_1  \right> \to_e
-    \left< 1, \sigma_1  \right>
-  }
-  \infer1{
-    \rho \vdash \left< \texttt{x - 1}, \sigma_1  \right> \to_e
-    \left< 1 - 1, \sigma_1  \right>
-  }
-  \infer1{
-    \rho \vdash \left< \texttt{x - 1}, \sigma_1  \right> \to^*_e
-    \left< 0, \sigma_1  \right>
-  }
-  \infer1{
-    \rho \vdash \left< \texttt{x := 0}, \sigma_1  \right> \to_c
-    \sigma_1[l_x \mapsto 0] = \left[ l_x \mapsto 0 \right] = \sigma_2
-  }
-  \infer1{ 
-    \rho \vdash \left<\texttt{x}, \sigma_2 \right> \to_e
-    \left< 0, \sigma_2 \right>
-  }
-  \infer1[\( 
-    \sigma_2(\rho(x)) = 0
-  \)]{  
-    \rho \vdash \left< \texttt{x = 0}, \sigma_2 \right>
-    \to_e
-    \left< 0 = 0, \sigma_2 \right>
-  }
-  \infer1{ 
-    \rho \vdash \left<\texttt{not x = 0}, \sigma_2\right> 
-    \to_e
-    \left<\texttt{not 0 = 0},\sigma_2\right>
-  }
-  \infer1{ 
-    \rho\vdash\left<\texttt{0 = 0},\sigma_2\right> 
-    \to_e
-    \left<\texttt{\textcolor{Green}{true}},\sigma_2\right>
-  }
-  \infer1{ 
-    \rho \vdash \left< \texttt{not x = 0}, \sigma_2 \right>
-    \to^*_e
-    \left< \texttt{\textcolor{Red}{false}}, \sigma_2 \right>
-  }
-  \infer1{ 
-    \rho \vdash \left< \texttt{while not x = 0 do x := x - 1}, \sigma_2  \right> 
-    \to_c
-    \sigma_2 = \left[ l_x \mapsto 0 \right]
-  }
-\end{prooftree}
+  A \underbrace{\rightarrow}_{\text{link dinamico}} B \rightarrow C \rightarrow D \rightarrow E \rightarrow C \text{ (sequenze di chiamates)}
 \]
+\begin{lstlisting}[escapechar=|, basicstyle=\ttfamily, columns=fullflexible, keepspaces=true]
+A() {
+  B() {
+    C();
+  }
+  C() {
+    D() {
+      E();
+    }
+    E() {
+      C();
+    }
+    D();
+  }
+}
+\end{lstlisting}
+\noindent
+\begin{itemize}
+  \item $B$ e $C$ sono definiti dentro $A$ 
+  \item $D$ e $E$ è definito dentro $C$
+\end{itemize}
+Quinid la profondità statica di $A$ è 0:
+\[
+sd(A) = 0 \quad sd(B) = 1 + sd(A) = 1 = sd(C) \quad sd(D) = 1 + sd(C) = 2 = sd(E)
+\]
+Quali informazioni statiche abbiamo per calcolare il link statico:
+\begin{itemize}
+  \item Profondità di annidamento 
+  \item RdA della procedura (struttura nota sintatticamente)
+\end{itemize}
+Come calcolare il link statico ($Ch$ denota il chiamante e $CS$ denota la catena statica):
+Dobbiamo capire chi chiama $P$: dobbiamo determinare link statico di $P$:
+\begin{itemize}
+  \item Se $P$ è definito in $Ch$ (link statico = link dinamico)
+  \item Se $P$ è definito in un blocco che si trova $k$ passi prima di 
+  $Ch$ dobbiamo risalire la catena statica di $k$ passi.
+  \[
+    k = sd(Ch) - sd(P) + 1
+  \]
+  \begin{itemize}
+    \item Se $k = 0$ allora $Ch$ def. $P$ e quindi $CS(P = Ch)$
+    Il link statico per $P$ è l'indirizzo del chiamante.
+    \item Se $k > 0$ allora $CS(P) = \overbrace{CS(CS \dots CS(Ch))}^{k \text{ volte}}$.
+    Il link statico si ottiene risalendo $k$ volte la catena statica.
+  \end{itemize}
+\end{itemize}
+Quindi proviamo ad applicarlo nel nostro esempio e calcoliamo i link statici 
+per ogni procedura:
+\[
+  k_B = sd(A) - sd(B) + 1 = 0 - 1 + 1 = 0 \quad \Rightarrow \quad CS(B) = A
+\]
+\[
+  k_C = sd(B) - sd(C) + 1 = 1 - 1 + 1 = 1 \quad \Rightarrow \quad CS(C) = CS(B)
+\]
+\[
+  k_D = sd(C) - sd(D) + 1 = 1 - 2 + 1 = 0 \quad \Rightarrow \quad CS(D) = C
+\]
+\[
+  k_E = sd(D) - sd(E) + 1 = 2 - 2 + 1 = 1 \quad \Rightarrow \quad CS(E) = CS(D)
+\]
+Calcolo link static o di $C$ chiamato da $E$: 
+\[
+  k_C = sd(E) - sd(C) + 1 = 2 - 1 + 1 = 2 
+\]
+\[
+  \Rightarrow \quad CS(C) = CS(CS(E)) = CS(CS(D)) = CS(B) = A
+\]
+\end{Example}
+
+\subsection{Resoluzione dei riferimenti non locali}
+
+Nota: se il riferimento è locale, la risoluzione è ovvia nell'RdA attivo.
+Per esempio, se abbiamo $x$ usata in $P$ ma non locale dobbiamo  
+individuare il blocco più vicino nella catena statica che definisce $x$:
+\begin{itemize}
+  \item Usiamo $sd$ e l'informazione data dai blocchi che definiscono $x$. 
+  \item Usiamo la catena statica 
+\end{itemize}
+Denoteremo con $N_x$ quanto dobbiamo risalire la catenata statica per trovare la corretta $x$.
+\[N_x = sd(A) - sd(main) = 1 - 0 = 1\]
+Dove:
+\begin{itemize}
+  \item $A$ è il blocco che usa $x$
+  \item $main$ è il boocco più vicino ad $A$ che definisce $x$ nella catena di annidamento
+\end{itemize}
+
+\subsection{Implementanzione scoping dinamico}
+
+Ci sono diversi algoritmi per implementarlo ma noi useremo
+il \textbf{Shallow Access} che utilizza strutture dati centrali basato su CRT 
+(Tabella centrale dei riferimenti o Central Reference Table):
+\begin{itemize}
+  \item Permette di evitare ricerche lineare nella catena dinamica
+  \item Mantiene in modo centralizzato le informazioni necessarie per 
+  accedere all'RdA dinamico corretto.
+  \item È una tabella con una voce per ogni identificatore usato nel programma
+  \item Ogni identificatore punta ad ogni lista tale che in testa 
+  si trovano le informazioni dell'ultimo RdA che definisce l'identificatore (dinamico)
+\end{itemize}
+
+\begin{Example}{}{}
+Consideriamo il seguente ordine di chiamate:
+\[
+  A \to B \to C \to D
+\]  
+Costruiamo lo schema statico di anniadamento delle definizioni (Scoping statico)
+\begin{lstlisting}
+A() { 
+  x,y
+  B() {
+    x,y
+  }
+  C() {
+    w,x
+    D() {
+      w
+    }
+  }
+}
+\end{lstlisting}
+\noindent
+\begin{itemize}
+  \item Chiamata di $A$:
+  \begin{itemize}
+    \item Creazione dell'RDA per $A$ sullo stack
+    \item Abbiamo indirizzo di RdA di $A$ (e offset per $x$)
+  \end{itemize}
+  \item Chiamata di $B$: 
+  \begin{itemize}
+    \item Creazione dell'RDA per $B$ sullo stack
+    \item Aggiornamento CRT: $x$ e $y$ puntano all'RDA di $B$
+  \end{itemize}
+  \item Chiamata di $C$:
+  \begin{itemize}
+    \item Creazione dell'RDA per $C$ sullo stack
+    \item Aggiornamento CRT: $w$ e $x$ puntano all'RDA di $C$
+  \end{itemize}
+  \item Chiamata di $D$: 
+  \begin{itemize}
+    \item Creazione dell'RDA per $D$ sullo stack
+    \item Aggiornamento CRT: $w$ punta all'RDA di $D$
+  \end{itemize}
+\end{itemize}
+All'uscita da un blocco viene distrutto l'RdA e viene eliminata la testa
+di ogni lista linkata da identificatori definiti nel blocco.
+\end{Example}
+
+\subsection{Procedure in IMP}
+
+In un linguaggio di programmazione le procedure:
+\begin{itemize}
+  \item vanno \textbf{definite} (modifica delle dichiarazioni)
+  \item vanno \textbf{chiamate} (modifica dei comandi)
+\end{itemize}
+
+\subsubsection*{Dichiarazioni}
+Questo è il modo in cui dichiareremo le procedure in IMP:
+\[
+  D \to \dots \; | \; \texttt{proc} \; P \; () \;  C
+\]
+dove:
+\begin{itemize}
+  \item \texttt{proc} è una parola chiave che indica la dichiarazione di una procedura
+  \item $P$ è un identificatore di procedura
+  \item $C$ è un comando che rappresenta il corpo della procedura
+  \item In questo caso non ci sono parametri formali, ma è possibile aggiungerli
+\end{itemize}
+Aggiungiamo agli oggetti denotabili le "astrazioni" 
+cioè funzioni:
+\[
+  \lambda \varepsilon. C
+\]
+Quindi utilizziamo la notazione del lambda calcolo per indicare una funzione e 
+$\varepsilon$ vuol dire non ci sono parametri.
+\subsubsection{Regole per le dichiarazioni}
+\[
+  \rho \vdash \left<\texttt{proc} \; P() \; C, \sigma\right> \rightarrow \left<\overbrace{[\rho \mapsto \lambda\varepsilon. C']}^{\text{associazione costante di $P$ al suo codice}}, \sigma\right>
+\]
+\[
+C' = 
+\begin{cases}
+  \rho ; C & \text{se scoping statico}\\
+  C & \text{se scoping dinamico}
+\end{cases}
+\]
+Quindi:
+\begin{itemize}
+  \item Se è scoping \textbf{statico}, fisso l'ambiente presente al momento della definizione di $P$ per averlo alla sua esecuzione.
+  \item Se è scoping \textbf{dinamico}, si usa l'ambiente alla chiamata $P$
+\end{itemize}
+
+\subsubsection*{Comandi}
+
+Questo è il modo in cui invocheremo le procedure in IMP:
+\[
+  C \mapsto \dots \; | \; P()
+\]
+dove:
+\begin{itemize}
+  \item $P$ è un identificatore di procedura
+  \item \texttt{()} indica che stiamo chiamando la procedura $P$ senza parametri
+\end{itemize}
+
+\subsubsection{Regole per la chiamata} 
+
+\[
+  \overline{\rho} \vdash \left<P(), \sigma\right> \rightarrow \left<C', \sigma\right>
+\]
+con 
+\[
+  \overline{\rho}(P) = \lambda \varepsilon. C'
+\]
+dove $C'$ può essere in base allo scoping:
+\begin{itemize}
+  \item Se statico $C' = \rho ; C$
+  \item Se dinamico $C' = C$
+\end{itemize}
+Con definizione \texttt{proc P() C} nell'ambiente $\rho$.
+
+\begin{Example}{Esercizio}{}
+Consideriamo il seguente codice in IMP:
+\begin{lstlisting}
+{ 
+  int b; 
+  void A() {
+    int x = 0, y = 0, z = 5;
+    void B () {
+      int x = 3, w = 3; 
+      x = y + z; 
+    }
+    void C (int a) {
+      int y = 1, v = 1; 
+      void D() {
+        int z = 2, v = 2; 
+        B();
+        v = x + y;
+      }
+      D();
+      x = z + y;
+    }
+    C(7);
+  }
+  A();
+}
+Esercizio sul quaderno.
+\end{lstlisting}
+\end{Example}
+
+
 \end{document}

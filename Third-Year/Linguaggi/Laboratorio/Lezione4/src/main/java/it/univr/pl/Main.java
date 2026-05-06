@@ -21,12 +21,11 @@ public class Main {
 
             try (Scanner myReader = new Scanner(src)) {
               while (myReader.hasNextLine()) {
-                input = myReader.nextLine();
+                input += myReader.nextLine();
               }
             } catch (FileNotFoundException e) {
               System.out.println("File was not found");
               e.printStackTrace();
-
             }
         } else  {
             Scanner sc = new Scanner(System.in);
@@ -35,9 +34,9 @@ public class Main {
             sc.close();
         }
 
+        System.out.println("CODE: \n" + input);
 
-        CharStream cs = CharStreams.fromString(input); // or "(2 + (5 * 3))"
-
+        CharStream cs = CharStreams.fromString(input);
         MagiLexer lexer = new MagiLexer(cs);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         MagiParser parser = new MagiParser(tokens);
@@ -46,8 +45,8 @@ public class Main {
         System.out.println("Tree : " + tree.toStringTree(parser));
 
         // Interpreta i token in interi
-        Interpreter interprete_int = new Interpreter();
-        System.out.println(interprete_int.visit(tree));
+        Interpreter interpreter = new Interpreter();
+        System.out.println(interpreter.visit(tree));
 
     }
 }
