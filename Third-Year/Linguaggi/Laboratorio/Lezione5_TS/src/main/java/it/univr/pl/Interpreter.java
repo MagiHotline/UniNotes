@@ -1,0 +1,262 @@
+package it.univr.pl;
+import java.util.HashMap;
+
+import it.univr.pl.value.BoolValue;
+import it.univr.pl.value.ComValue;
+import it.univr.pl.value.ExpValue;
+import it.univr.pl.value.FloatValue;
+import it.univr.pl.value.StringValue;
+import it.univr.pl.value.Value;
+import it.univr.pl.MagiParser.ExpContext;
+import it.univr.pl.exception.*;
+
+// CONCATENARE DUE STRINGHE
+// only STRINGS can be PRINTED
+// add nop that does nothing
+
+public class Interpreter extends MagiBaseVisitor<Value> {
+
+    static HashMap<String, ExpValue<?>> memory = new HashMap<>();
+
+    @Override
+    public Value visitMain(MagiParser.MainContext ctx) {
+        return visit(ctx.com());
+    }
+
+    private FloatValue visitFloatExp(ExpContext ctx) {
+        try {
+            return (FloatValue) visit(ctx);
+        } catch(ClassCastException e) {
+            String err = ctx.start.getLine()+ ": " +
+            ctx.start.getCharPositionInLine();
+            throw new TypeMismatchException(err);
+        }
+    }
+
+    private StringValue visitStringExp(ExpContext ctx) {
+        try {
+            return (StringValue) visit(ctx);
+        } catch(ClassCastException e) {
+            String err = ctx.start.getLine()+ ": " +
+            ctx.start.getCharPositionInLine();
+            throw new TypeMismatchException(err);
+        }
+    }
+
+    @Override
+    public ExpValue<?> visitArith1(MagiParser.Arith1Context ctx) {
+        FloatValue left = visitFloatExp(ctx.exp(0));
+        FloatValue right = visitFloatExp(ctx.exp(1));
+
+        float left_v = left.toJavaValue();
+        float right_v = right.toJavaValue();
+
+        switch (ctx.op.getType()) {
+            case MagiParser.ADD: {
+                return new FloatValue(left_v + right_v);
+            }
+            case MagiParser.SUB: {
+                return new FloatValue(left_v - right_v);
+            }
+        }
+
+        return null; // unreachable
+    }
+
+    @Override
+    public ExpValue<?> visitArith2(MagiParser.Arith2Context ctx) {
+        FloatValue left = visitFloatExp(ctx.exp(0));
+        FloatValue right = visitFloatExp(ctx.exp(1));
+
+        float left_v = left.toJavaValue();
+        float right_v = right.toJavaValue();
+
+        switch (ctx.op.getType()) {
+           case MagiParser.MUL: {
+               return new FloatValue(left_v * right_v);
+           }
+           case MagiParser.DIV: {
+               return new FloatValue(left_v / right_v);
+           }
+           case MagiParser.MOD: {
+               return new FloatValue(left_v % right_v);
+           }
+
+        }
+
+        return null; // unreachable
+    }
+
+    private BoolValue visitBoolExp(ExpContext ctx) throws TypeMismatchException {
+        try {
+            return (BoolValue) visit(ctx);
+        } catch(ClassCastException e) {
+            String err = ctx.start.getLine()+ ": " + ctx.start.getCharPositionInLine();
+            throw new TypeMismatchException(err);
+        }
+    }
+
+    @Override
+    public ComValue visitIf(MagiParser.IfContext ctx) {
+        BoolValue condition = visitBoolExp(ctx.exp());
+
+        return condition.toJavaValue() ?
+            (ComValue)visit(ctx.com()) : ComValue.INSTANCE;
+    }
+
+    public ComValue visitIfElse(MagiParser.IfElseContext ctx) {
+        BoolValue condition = visitBoolExp(ctx.exp());
+
+        return condition.toJavaValue() ?
+            (ComValue)visit(ctx.com(0)) : (ComValue)visit(ctx.com(1));
+    }
+
+
+    @Override
+    public ComValue visitWhile(MagiParser.WhileContext ctx) {
+        BoolValue condition = visitBoolExp(ctx.exp());
+
+        if (condition.toJavaValue()) {
+            visit(ctx.com());
+            return visitWhile(ctx);
+        } else {
+            return ComValue.INSTANCE;
+        }
+    }
+
+    @Override
+    public ExpValue<?> visitPow(MagiParser.PowContext ctx) {
+        FloatValue left = visitFloatExp(ctx.exp(0));
+        FloatValue right = visitFloatExp(ctx.exp(1));
+
+        float left_v = left.toJavaValue();
+        float right_v = right.toJavaValue();
+
+        float res = 1;
+        for(float i = 1; i <= right_v; i++) {
+            res *= left_v;
+        }
+
+        return new FloatValue(res);
+    }
+
+    @Override
+    public FloatValue visitFloat(MagiParser.FloatContext ctx) {
+        return new FloatValue(Float.parseFloat(ctx.getText()));
+    }
+
+    @Override
+    public Value visitDecl(MagiParser.DeclContext ctx) {
+        String var = ctx.VAR().getText();
+        ExpValue<?> val = (ExpValue<?>) visit(ctx.exp());
+        memory.put(var, val);
+        return ComValue.INSTANCE;
+    }
+
+    @Override
+    public Value visitAssign(MagiParser.AssignContext ctx) {
+        String var = ctx.VAR().getText();
+        ExpValue<?> val = (ExpValue<?>) visit(ctx.exp());
+        memory.put(var, val);
+        return ComValue.INSTANCE;
+    }
+
+    @Override
+    public Value visitSeq(MagiParser.SeqContext ctx) {
+        visit(ctx.com(0));
+        return (ComValue) visit(ctx.com(1));
+    }
+
+    /// Visit identifier
+    @Override
+    public ExpValue<?> visitAccess(MagiParser.AccessContext ctx) {
+
+        String id = ctx.VAR().getText();
+
+        if (!memory.containsKey(id)) {
+            String err = "Variable " + id + " used but not initialized"
+            + "@" + ctx.start.getLine()+ ": " + ctx.start.getCharPositionInLine();
+
+            throw new UnknownVariableException(err);
+        }
+
+        return memory.get(id);
+    }
+
+    @Override
+    public BoolValue visitBool(MagiParser.BoolContext ctx) {
+        return new BoolValue(Boolean.parseBoolean(ctx.getText()));
+    }
+
+    @Override
+    public Value visitEqExp(MagiParser.EqExpContext ctx) {
+        ExpValue<?> left = (ExpValue<?>) visit(ctx.exp(0));
+        ExpValue<?> right = (ExpValue<?>) visit(ctx.exp(1));
+
+        return switch (ctx.op.getType()) {
+            case MagiParser.EQ -> new BoolValue(left.equals(right));
+            case MagiParser.NEQ -> new BoolValue(!left.equals(right));
+            default -> null; // unreachable
+        };
+
+    }
+
+    @Override
+    public Value visitAndOr(MagiParser.AndOrContext ctx) {
+        BoolValue left = visitBoolExp(ctx.exp(0));
+        BoolValue right = visitBoolExp(ctx.exp(1));
+
+        boolean left_v = left.toJavaValue();
+        boolean right_v = right.toJavaValue();
+
+        return switch(ctx.op.getType()) {
+            case MagiParser.AND -> new BoolValue(left_v && right_v);
+            case MagiParser.OR -> new BoolValue(left_v || right_v);
+            default -> null;    // unreachable
+        };
+    }
+
+
+    @Override
+    public Value visitCmpExp(MagiParser.CmpExpContext ctx) {
+        FloatValue left = visitFloatExp(ctx.exp(0));
+        FloatValue right = visitFloatExp(ctx.exp(1));
+
+        float left_v = left.toJavaValue();
+        float right_v = right.toJavaValue();
+
+        return switch(ctx.op.getType()) {
+            case MagiParser.LT -> new BoolValue(left_v < right_v);
+            case MagiParser.LTE -> new BoolValue(left_v <= right_v);
+            case MagiParser.GT -> new BoolValue(left_v > right_v);
+            case MagiParser.GTE -> new BoolValue(left_v >= right_v);
+            default -> null;    // unreachable
+        };
+    }
+
+    @Override
+    public Value visitNot(MagiParser.NotContext ctx) {
+        BoolValue exp = visitBoolExp(ctx.exp());
+        return new BoolValue(!exp.toJavaValue());
+    }
+
+    @Override
+    public StringValue visitString(MagiParser.StringContext ctx) {
+        return new StringValue(ctx.getText());
+    }
+
+    @Override
+    public StringValue visitConcat(MagiParser.ConcatContext ctx) {
+        String left = ctx.STRING(0).getText();
+        String right = ctx.STRING(1).getText();
+
+        return new StringValue(left + right);
+    }
+
+    @Override
+    public ComValue visitPrint(MagiParser.PrintContext ctx) {
+        ExpValue<?> val = (ExpValue<?>)visit(ctx.exp());
+        System.out.println(val.toJavaValue());
+        return ComValue.INSTANCE;
+    }
+}
