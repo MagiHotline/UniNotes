@@ -171,4 +171,60 @@ public class TypeSystem extends MagiBaseVisitor<Type> {
 
         return left;
     }
+
+    @Override
+    public SimpleType visitArith2(MagiParser.Arith2Context ctx) {
+        SimpleType left = visitNumExp(ctx.exp(0));
+        SimpleType right = visitNumExp(ctx.exp(1));
+
+        if (left != right) {
+            String err = "Type mismatch: the operation cannot be applied to the given operands.\n" +
+                         "@" + ctx.start.getLine() + ":" + ctx.start.getCharPositionInLine() + "\n";
+            throw new TypeMismatchException(err);
+        }
+
+        return left;
+    }
+
+    @Override
+    public SimpleType visitPow(MagiParser.PowContext ctx) {
+        SimpleType left = visitNumExp(ctx.exp(0));
+        SimpleType right = visitNumExp(ctx.exp(1));
+
+        if (left != right) {
+            String err = "Type mismatch: the operation cannot be applied to the given operands.\n" +
+                         "@" + ctx.start.getLine() + ":" + ctx.start.getCharPositionInLine() + "\n";
+            throw new TypeMismatchException(err);
+        }
+
+        return left;
+    }
+
+    @Override
+    public SimpleType visitConcat(MagiParser.ConcatContext ctx) {
+        visitStringExp(ctx.exp(0));
+        visitStringExp(ctx.exp(1));
+
+        return SimpleType.STRING;
+    }
+
+    @Override
+    public SimpleType visitAndOr(MagiParser.AndOrContext ctx) {
+        visitBoolExp(ctx.exp(0));
+        visitBoolExp(ctx.exp(1));
+
+        return SimpleType.BOOL;
+    }
+
+    @Override
+    public SimpleType visitNot(MagiParser.NotContext ctx) {
+        visitBoolExp(ctx.exp());
+
+        return SimpleType.BOOL;
+    }
+
+    public ExpType visitParen(MagiParser.ParenContext ctx) {
+        return (ExpType)visit(ctx.exp());
+    }
+
 }

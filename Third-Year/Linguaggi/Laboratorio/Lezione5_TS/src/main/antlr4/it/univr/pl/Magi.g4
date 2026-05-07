@@ -16,7 +16,7 @@ exp : FLOAT                                                 # float
     | INT                                                   # int
     | BOOL                                                  # bool
     | STRING                                                # string
-    | STRING CONCAT STRING                                  # concat
+    | exp CONCAT exp                                        # concat
     | VAR                                                   # access
     | <assoc=right> exp POW exp                             # pow
     | exp op=(MUL | DIV | MOD) exp                          # arith2

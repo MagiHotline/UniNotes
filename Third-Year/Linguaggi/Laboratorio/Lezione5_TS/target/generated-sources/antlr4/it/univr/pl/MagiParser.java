@@ -524,9 +524,11 @@ public class MagiParser extends Parser {
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ConcatContext extends ExpContext {
-		public List<TerminalNode> STRING() { return getTokens(MagiParser.STRING); }
-		public TerminalNode STRING(int i) {
-			return getToken(MagiParser.STRING, i);
+		public List<ExpContext> exp() {
+			return getRuleContexts(ExpContext.class);
+		}
+		public ExpContext exp(int i) {
+			return getRuleContext(ExpContext.class,i);
 		}
 		public TerminalNode CONCAT() { return getToken(MagiParser.CONCAT, 0); }
 		public ConcatContext(ExpContext ctx) { copyFrom(ctx); }
@@ -709,10 +711,10 @@ public class MagiParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(80);
+			setState(77);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
-			case 1:
+			switch (_input.LA(1)) {
+			case FLOAT:
 				{
 				_localctx = new FloatContext(_localctx);
 				_ctx = _localctx;
@@ -722,7 +724,7 @@ public class MagiParser extends Parser {
 				match(FLOAT);
 				}
 				break;
-			case 2:
+			case INT:
 				{
 				_localctx = new IntContext(_localctx);
 				_ctx = _localctx;
@@ -731,7 +733,7 @@ public class MagiParser extends Parser {
 				match(INT);
 				}
 				break;
-			case 3:
+			case BOOL:
 				{
 				_localctx = new BoolContext(_localctx);
 				_ctx = _localctx;
@@ -740,7 +742,7 @@ public class MagiParser extends Parser {
 				match(BOOL);
 				}
 				break;
-			case 4:
+			case STRING:
 				{
 				_localctx = new StringContext(_localctx);
 				_ctx = _localctx;
@@ -749,52 +751,41 @@ public class MagiParser extends Parser {
 				match(STRING);
 				}
 				break;
-			case 5:
-				{
-				_localctx = new ConcatContext(_localctx);
-				_ctx = _localctx;
-				_prevctx = _localctx;
-				setState(70);
-				match(STRING);
-				setState(71);
-				match(CONCAT);
-				setState(72);
-				match(STRING);
-				}
-				break;
-			case 6:
+			case VAR:
 				{
 				_localctx = new AccessContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(73);
+				setState(70);
 				match(VAR);
 				}
 				break;
-			case 7:
+			case NOT:
 				{
 				_localctx = new NotContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(74);
+				setState(71);
 				match(NOT);
-				setState(75);
+				setState(72);
 				exp(2);
 				}
 				break;
-			case 8:
+			case LPAR:
 				{
 				_localctx = new ParenContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(76);
+				setState(73);
 				match(LPAR);
-				setState(77);
+				setState(74);
 				exp(0);
-				setState(78);
+				setState(75);
 				match(RPAR);
 				}
 				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
 			setState(102);
@@ -810,6 +801,18 @@ public class MagiParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 					case 1:
 						{
+						_localctx = new ConcatContext(new ExpContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_exp);
+						setState(79);
+						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
+						setState(80);
+						match(CONCAT);
+						setState(81);
+						exp(11);
+						}
+						break;
+					case 2:
+						{
 						_localctx = new PowContext(new ExpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_exp);
 						setState(82);
@@ -820,7 +823,7 @@ public class MagiParser extends Parser {
 						exp(8);
 						}
 						break;
-					case 2:
+					case 3:
 						{
 						_localctx = new Arith2Context(new ExpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_exp);
@@ -841,7 +844,7 @@ public class MagiParser extends Parser {
 						exp(8);
 						}
 						break;
-					case 3:
+					case 4:
 						{
 						_localctx = new Arith1Context(new ExpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_exp);
@@ -862,7 +865,7 @@ public class MagiParser extends Parser {
 						exp(7);
 						}
 						break;
-					case 4:
+					case 5:
 						{
 						_localctx = new EqExpContext(new ExpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_exp);
@@ -883,7 +886,7 @@ public class MagiParser extends Parser {
 						exp(6);
 						}
 						break;
-					case 5:
+					case 6:
 						{
 						_localctx = new AndOrContext(new ExpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_exp);
@@ -904,7 +907,7 @@ public class MagiParser extends Parser {
 						exp(5);
 						}
 						break;
-					case 6:
+					case 7:
 						{
 						_localctx = new CmpExpContext(new ExpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_exp);
@@ -964,16 +967,18 @@ public class MagiParser extends Parser {
 	private boolean exp_sempred(ExpContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 1:
-			return precpred(_ctx, 8);
+			return precpred(_ctx, 10);
 		case 2:
-			return precpred(_ctx, 7);
+			return precpred(_ctx, 8);
 		case 3:
-			return precpred(_ctx, 6);
+			return precpred(_ctx, 7);
 		case 4:
-			return precpred(_ctx, 5);
+			return precpred(_ctx, 6);
 		case 5:
-			return precpred(_ctx, 4);
+			return precpred(_ctx, 5);
 		case 6:
+			return precpred(_ctx, 4);
+		case 7:
 			return precpred(_ctx, 3);
 		}
 		return true;
@@ -992,8 +997,8 @@ public class MagiParser extends Parser {
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0003\u00019\b\u0001\u0001\u0001"+
 		"\u0001\u0001\u0005\u0001=\b\u0001\n\u0001\f\u0001@\t\u0001\u0001\u0002"+
 		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
-		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
-		"\u0001\u0002\u0001\u0002\u0003\u0002Q\b\u0002\u0001\u0002\u0001\u0002"+
+		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0003\u0002"+
+		"N\b\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
 		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
 		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
 		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0005\u0002e\b\u0002"+
@@ -1001,7 +1006,7 @@ public class MagiParser extends Parser {
 		"\u0002\u0004\u0000\u0005\u0002\u0000\f\f\u000e\u000f\u0002\u0000\u000b"+
 		"\u000b\r\r\u0001\u0000\u0014\u0015\u0001\u0000\u001a\u001b\u0001\u0000"+
 		"\u0016\u0019z\u0000\u0006\u0001\u0000\u0000\u0000\u00028\u0001\u0000\u0000"+
-		"\u0000\u0004P\u0001\u0000\u0000\u0000\u0006\u0007\u0003\u0002\u0001\u0000"+
+		"\u0000\u0004M\u0001\u0000\u0000\u0000\u0006\u0007\u0003\u0002\u0001\u0000"+
 		"\u0007\b\u0005\u0000\u0000\u0001\b\u0001\u0001\u0000\u0000\u0000\t\n\u0006"+
 		"\u0001\uffff\uffff\u0000\n\u000b\u0005\u0011\u0000\u0000\u000b\f\u0005"+
 		"\u001f\u0000\u0000\f\r\u0005\u001c\u0000\u0000\r\u000e\u0003\u0004\u0002"+
@@ -1028,26 +1033,26 @@ public class MagiParser extends Parser {
 		"\u00009>\u0001\u0000\u0000\u0000:;\n\u0006\u0000\u0000;=\u0003\u0002\u0001"+
 		"\u0007<:\u0001\u0000\u0000\u0000=@\u0001\u0000\u0000\u0000><\u0001\u0000"+
 		"\u0000\u0000>?\u0001\u0000\u0000\u0000?\u0003\u0001\u0000\u0000\u0000"+
-		"@>\u0001\u0000\u0000\u0000AB\u0006\u0002\uffff\uffff\u0000BQ\u0005\n\u0000"+
-		"\u0000CQ\u0005$\u0000\u0000DQ\u0005\u0012\u0000\u0000EQ\u0005\u001e\u0000"+
-		"\u0000FG\u0005\u001e\u0000\u0000GH\u0005\t\u0000\u0000HQ\u0005\u001e\u0000"+
-		"\u0000IQ\u0005\u001f\u0000\u0000JK\u0005\u0013\u0000\u0000KQ\u0003\u0004"+
-		"\u0002\u0002LM\u0005\u0001\u0000\u0000MN\u0003\u0004\u0002\u0000NO\u0005"+
-		"\u0002\u0000\u0000OQ\u0001\u0000\u0000\u0000PA\u0001\u0000\u0000\u0000"+
-		"PC\u0001\u0000\u0000\u0000PD\u0001\u0000\u0000\u0000PE\u0001\u0000\u0000"+
-		"\u0000PF\u0001\u0000\u0000\u0000PI\u0001\u0000\u0000\u0000PJ\u0001\u0000"+
-		"\u0000\u0000PL\u0001\u0000\u0000\u0000Qf\u0001\u0000\u0000\u0000RS\n\b"+
-		"\u0000\u0000ST\u0005\u0010\u0000\u0000Te\u0003\u0004\u0002\bUV\n\u0007"+
-		"\u0000\u0000VW\u0007\u0000\u0000\u0000We\u0003\u0004\u0002\bXY\n\u0006"+
-		"\u0000\u0000YZ\u0007\u0001\u0000\u0000Ze\u0003\u0004\u0002\u0007[\\\n"+
-		"\u0005\u0000\u0000\\]\u0007\u0002\u0000\u0000]e\u0003\u0004\u0002\u0006"+
-		"^_\n\u0004\u0000\u0000_`\u0007\u0003\u0000\u0000`e\u0003\u0004\u0002\u0005"+
-		"ab\n\u0003\u0000\u0000bc\u0007\u0004\u0000\u0000ce\u0003\u0004\u0002\u0004"+
-		"dR\u0001\u0000\u0000\u0000dU\u0001\u0000\u0000\u0000dX\u0001\u0000\u0000"+
-		"\u0000d[\u0001\u0000\u0000\u0000d^\u0001\u0000\u0000\u0000da\u0001\u0000"+
-		"\u0000\u0000eh\u0001\u0000\u0000\u0000fd\u0001\u0000\u0000\u0000fg\u0001"+
-		"\u0000\u0000\u0000g\u0005\u0001\u0000\u0000\u0000hf\u0001\u0000\u0000"+
-		"\u0000\u00058>Pdf";
+		"@>\u0001\u0000\u0000\u0000AB\u0006\u0002\uffff\uffff\u0000BN\u0005\n\u0000"+
+		"\u0000CN\u0005$\u0000\u0000DN\u0005\u0012\u0000\u0000EN\u0005\u001e\u0000"+
+		"\u0000FN\u0005\u001f\u0000\u0000GH\u0005\u0013\u0000\u0000HN\u0003\u0004"+
+		"\u0002\u0002IJ\u0005\u0001\u0000\u0000JK\u0003\u0004\u0002\u0000KL\u0005"+
+		"\u0002\u0000\u0000LN\u0001\u0000\u0000\u0000MA\u0001\u0000\u0000\u0000"+
+		"MC\u0001\u0000\u0000\u0000MD\u0001\u0000\u0000\u0000ME\u0001\u0000\u0000"+
+		"\u0000MF\u0001\u0000\u0000\u0000MG\u0001\u0000\u0000\u0000MI\u0001\u0000"+
+		"\u0000\u0000Nf\u0001\u0000\u0000\u0000OP\n\n\u0000\u0000PQ\u0005\t\u0000"+
+		"\u0000Qe\u0003\u0004\u0002\u000bRS\n\b\u0000\u0000ST\u0005\u0010\u0000"+
+		"\u0000Te\u0003\u0004\u0002\bUV\n\u0007\u0000\u0000VW\u0007\u0000\u0000"+
+		"\u0000We\u0003\u0004\u0002\bXY\n\u0006\u0000\u0000YZ\u0007\u0001\u0000"+
+		"\u0000Ze\u0003\u0004\u0002\u0007[\\\n\u0005\u0000\u0000\\]\u0007\u0002"+
+		"\u0000\u0000]e\u0003\u0004\u0002\u0006^_\n\u0004\u0000\u0000_`\u0007\u0003"+
+		"\u0000\u0000`e\u0003\u0004\u0002\u0005ab\n\u0003\u0000\u0000bc\u0007\u0004"+
+		"\u0000\u0000ce\u0003\u0004\u0002\u0004dO\u0001\u0000\u0000\u0000dR\u0001"+
+		"\u0000\u0000\u0000dU\u0001\u0000\u0000\u0000dX\u0001\u0000\u0000\u0000"+
+		"d[\u0001\u0000\u0000\u0000d^\u0001\u0000\u0000\u0000da\u0001\u0000\u0000"+
+		"\u0000eh\u0001\u0000\u0000\u0000fd\u0001\u0000\u0000\u0000fg\u0001\u0000"+
+		"\u0000\u0000g\u0005\u0001\u0000\u0000\u0000hf\u0001\u0000\u0000\u0000"+
+		"\u00058>Mdf";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

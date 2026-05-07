@@ -247,10 +247,9 @@ public class Interpreter extends MagiBaseVisitor<Value> {
 
     @Override
     public StringValue visitConcat(MagiParser.ConcatContext ctx) {
-        String left = ctx.STRING(0).getText();
-        String right = ctx.STRING(1).getText();
-
-        return new StringValue(left + right);
+        StringValue left = visitStringExp(ctx.exp(0));
+        StringValue right = visitStringExp(ctx.exp(1));
+        return new StringValue(left.toJavaValue() + right.toJavaValue());
     }
 
     @Override
