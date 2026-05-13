@@ -2821,7 +2821,7 @@ Infine applichiamo l'assioma per l'assegnamento:
 \end{Example}
 
 
-\subsection{Semantica dell'if}
+\subsubsection{Semantica dell'if}
 
 \subsubsection*{Semantica statica}
 
@@ -2950,7 +2950,7 @@ Ora proviamo ad eseguire l'if a partire da $\sigma_2$:
 \]
 \end{Example}
 
-\subsection{Composizione} 
+\subsubsection{Composizione} 
 Per comporre due comandi $c_1$ e $c_2$ usiamo il simbolo $;$, che rappresenta la composizione sequenziale.
 Per quanto riguarda gli identificatori liberi e definiti:
 \[
@@ -2974,7 +2974,7 @@ Per quanto riguarda la semantica dinamica, per eseguire $c_1 ; c_2$ dobbiamo ese
 Eseguiamo completamente $c_1$ che restituisce un nuovo stato $\sigma_1$.
 Da $\sigma_1$ continuiamo l'esecuzione di $c_2$.
 
-\subsection{Comando iterativo}
+\subsubsection{Comando iterativo}
 
 Il comando iterativo ci permette di ripetere 
 sequenze di comandi.
@@ -3382,7 +3382,7 @@ Ora proviamo a eseguire il blocco. \textbf{Semantica dinamica:}
 \end{Example}
 
 
-\subsection{Astrazione del controllo (Procedure)}
+\subsection{Procedure}
 L'obiettivo è quello di \textbf{astrarre il controllo}, cioè nascondere dei
 dettagli implementativi fornendo al programmatore un'interfaccia più semplice da
 utilizzare.
@@ -4117,7 +4117,7 @@ fare analisi statica del codice.
 
 
 
-\subsection{Allocazione delal memoria}
+\subsection{Allocazione della memoria}
 
 Un altro aspetto importante nel creare un linguaggio di programmazione
 è come e quando viene allocato lo spazio in memoria per gli elementi 
@@ -4664,6 +4664,87 @@ undefined
 \end{lstlisting}
 Come possiamo notare stampare le variabili all'interno della funzione e quelle globali,
 il valore non cambia.
+\end{Example}
+
+\subsection{Funzioni di ordine superiore}
+
+Le funzioni di ordine superiori sono funzioni passate come parametro ad altre funzioni.
+Esiste anche la controparte, restituire una funzione come risultato ma non 
+ne parleremo poiché abbastanza complesso.
+Il problema a cui ci riferiamo è la risoluzione di riferimenti non locali 
+in procedure / funzioni passate come parametro ad altre procedure / funzioni.
+
+\subsubsection{Regole di Binding}
+
+In particolare nel caso \textbf{dello scoping dinamico} sono necessarie anche delle
+regole aggiuntive dette di binding.
+
+\begin{itemize}
+  \item \textbf{Deep Binding}: Utilizzo l'ambiente della creazione del legame tra attuale e formale
+  \item \textbf{Shallow Binding}: Utilizzo l'ambiente della chiamata della funzione mediante il parametro formale 
+\end{itemize}
+
+\begin{Example}{}{}
+Consideriamo il seguente codice:
+\begin{lstlisting}[language=c]
+int x = 4; int z = 0; // ambiente valido al momento della definizione della procedura con ambiente non locale
+int f(int y) { // (1)
+  return x * y; 
+}
+void g(int h(int n)) {
+  int x = 7; // ambiente valido quando la procedura viene effettivamente eseguita mediante parametro formale
+  z = h(3) + x; // (3)
+}
+... 
+{
+  int x = 5; // ambiente valido al momento del passaggio di f 
+  g(f); // (2) f non locale
+}
+\end{lstlisting}
+Notiamo come abbiamo una procedura $f$ con ambiente non locale.
+Abbiamo bisogno almeno di regole di scoping e potenzialmente di binding.
+Abbiamo tre ambienti possibili dove $x$ è definita e quindi dobbiamo risolverla.\\
+Essendo che viene passata $f$ a $g$ con ambiente non locale allora 
+servono le regole di binding.
+Entrambi sono ambienti determinabili a tempo di esecuzione quindi 
+sono rilevanti in caso di scoping dinamico.\\
+\begin{itemize}
+  \item Se lo scoping è statico si utilizza l'ambiente $(1)$ per tutto, 
+  per tutte le procedure anche quelle passate come parametro.
+  Ambiente della definizione della procedura.
+  \item Se è dinamico, per le procedure non passate come parametro ma con ambiente non locale
+  \begin{itemize}
+    \item $(2)$ Se l'ambiente della creazione del legame tra attuale e formale, per le procedure 
+    passate come parametro \textbf{(Deep Binding)}
+    \item $(3)$ Se l'ambiente della chiamata della funzione mediante il parametro formale, 
+    per le procedure passate come parametro \textbf{(Shallow Binding)}
+  \end{itemize}
+\end{itemize}
+Torniamo al nostro esempio:
+\begin{itemize}
+  \item Ambiente scoping statico: \texttt{x = 4}
+  L'esecuzione di questo ambiente è il seguente:
+  \begin{itemize}
+    \item Si esegue la chiamata \texttt{g(f)}
+    \item Si esegue la chiamata \texttt{h(3)} che è in realtà \texttt{f(3)}. $x$ è locale e quindi $x = 7$
+    \item Si esegue $x * 3$, non locale e quindi scoping statico, prendo $x = 4$ e quindi $4 * 3 = 12$
+  \end{itemize}
+  \item Ambiente scoping dinamico con deep binding: \texttt{x = 5}
+  L'esecuzione di questo ambiente è il seguente:
+  \begin{itemize}
+    \item Eseguo la chiamata di \texttt{g(f)}
+    \item Eseguo la chiamata di \texttt{z = h(3) + x} dove $x$ è locale e quindi $x = 7$
+    \item Eseguo $h$ e quindi $x * 3$, con deep binding prendo $x = 5$ 
+    \item Tornando indietro per le chiamate abbiamo quindi $15 + 7 = 22$
+  \end{itemize}
+  \item Ambiente scoping dinamico con shallow binding: \texttt{x = 7}
+  \begin{itemize}
+    \item Chiamata di \texttt{g(f)}
+    \item Chiamata di \texttt{z = h(3) + x} dove $x$ è locale e quindi $x = 7$
+    \item Eseguo $h$ e quindi $x * 3$, con shallow binding prendo $x = 7$
+    \item Tornando indietro per le chiamate abbiamo quindi $21 + 7 = 28$
+  \end{itemize}
+\end{itemize}
 \end{Example}
 
 \end{document}

@@ -1,7 +1,7 @@
 import csv
 import re
 
-pattern = re.compile ("^\d {2 ,2}/\ d {2 ,2}/\ d{4 ,4}$")
+pattern = re.compile(r"^\d{2}/\d{2}/\d{4}$")
 
 def creaDict(data, voce, importo):
     """ Ritorna un dict formato con gli argomenti .
@@ -9,7 +9,7 @@ def creaDict(data, voce, importo):
     Fa il check sul formato data.
     """
     if not isinstance (data, str) or not pattern.match (data):
-        print("Data è nel formato dd/mm/aaaa")
+        print("Data non è nel formato dd/mm/aaaa")
         exit()
     return { 'data': data, 'voce': voce, 'importo': float(importo)}
 
@@ -22,17 +22,17 @@ tabella.append( creaDict ( "27/02/2016", "Affitto", -0.3))
 
 # Stampo la tabella da memoria
 print ( "=" * 50 )
-print( "| {:10 s} | {: <20} | {: >10s} |". format( "Data", "Voce", "Importo") )
+print("| {:10s} | {:<20} | {:>10s} |".format("Data", "Voce", "Importo"))
 print( '-' * 50 )
 for riga in tabella :
-    print( "| {:10 s} | {: <20} | {: >10.2 f} |". format ( riga ['data'], riga ['voce'], riga ['importo']))
+    print( "| {:10s} | {:<20} | {:>10.2f} |".format(riga['data'], riga['voce'], riga['importo']))
     print ('=' * 50)
 
 # Calcolo il totale degli importi
 tot = 0.0
 for riga in tabella:
     tot += riga ['importo']
-print("La somma è {:.20 f}".format(tot))
+print("La somma è {:.20f}".format(tot))
 
 # Salvo la tabella in un formato csv
 nomefile = "tabellaSpesa.csv"
@@ -48,12 +48,12 @@ tab1 = list()
 with open(nomefile, mode ='r', encoding='utf-8') as csvFile:
     reader = csv.DictReader(csvFile)
     for row in reader:
-        tab1.append( creaDict (row ['data'], row ['voce'], row ['importo']))
+        tab1.append( creaDict (row['data'], row['voce'], row['importo']))
 
 # Calcolo il totale sulla nuova tabella
 tot1 = 0
 for riga in tab1 :
-    tot1 += riga ['importo']
+    tot1 += riga['importo']
 if tot == tot1:
     print( "I due totali sono uguali !")
 else:
