@@ -4458,5 +4458,212 @@ Esercizio sul quaderno.
 \end{lstlisting}
 \end{Example}
 
+\subsection{Passaggio dei parametri}
+
+
+Le procedure senza parametri sono procedure constanti possono essere 
+viste come zucchero sintattico per parti di codice che vengono usate molteplici volte, al contrario
+funzioni con parametro possono dare diverso significao alle stesse procedure, 
+quindi è necessario introdurre il concetto di passaggio dei parametri.
+I \textbf{parametri} sono come "input" delle procedure che permettono una comunicazione 
+tra il chiamante e il chiamato.\\
+Dichiarazione di una funzione con parametri:
+\[
+  \underbrace{void}_{\text{valore ritorno}} \texttt{fun} \underbrace{(\texttt{int } x, \texttt{int } y)}_{\text{parametri formali}}
+\]
+Chiamata di una funzione con parametri:
+\[
+  \texttt{fun} \underbrace{(5, 10)}_{\text{parametri attuali}} \quad \text{oppure} \quad \texttt{fun} \underbrace{(x, y)}_{\text{parametri attuali}}
+\]
+Il tipo di comunicazione all'interno dei parametri può essere diverso 
+a seconda del \textbf{metodo di passaggio dei parametri utilizzato}, i principali sono:
+\begin{itemize}
+  \item \textbf{Passaggio per valore}: Il chiamante passa una copia del valore del parametro al chiamato.
+  \item \textbf{Passaggio per riferimento}: Il chiamante passa un riferimento (indirizzo) al parametro al chiamato, 
+  permettendo al chiamato di modificare il valore del parametro nel chiamante.
+  \item \textbf{Passaggio per risultato}: Il chiamante passa una variabile non inizializzata al chiamato,
+   che la utilizza per restituire un valore al chiamante.
+    \item \textbf{Passaggio per valore-risultato}: Combina il passaggio per valore e per risultato.
+\end{itemize}
+Un altro aspetto importante è \textbf{l'associazione tra parametri formali e parametri attuali}, che può variare:
+
+\subsubsection{Modalità di passaggio di parametri: direzioni}
+
+Le direzioni dei parametri indicano se un parametro è usato per fornire dati al chiamato, 
+restituire dati al chiamante o entrambi. Le principali direzioni dei parametri sono:
+\begin{itemize}
+  \item \textbf{In-mode}: Il parametro è usato solo per fornire dati al chiamato (input).
+  \item \textbf{Out-mode}: Il parametro è usato solo per restituire dati al chiamante (output).
+  \item \textbf{InOut-mode}: Il parametro è usato sia per fornire dati al chiamato che per restituire dati al chiamante.
+\end{itemize}
+E le modalità di passaggio dei parametri possono essere associate a queste direzioni in diversi modi:
+\begin{itemize}
+  \item Il passaggio per valore è tipicamente associato a parametri in-mode, poiché il chiamato 
+  riceve solo una copia del valore e non può modificare il valore originale nel chiamante.
+  \item Il passaggio per risultato è tipicamente associato a parametri out-mode, poiché il chiamato restituisce un valore al chiamante.
+  \item Il passaggio per riferimento e per valore-risultato possono essere associati a parametri inout-mode, 
+  poiché il chiamato può sia ricevere dati dal chiamante che restituire dati al chiamante.
+\end{itemize}
+
+\subsubsection{Passaggio per valore}
+
+\dfn{}
+{
+  Il valore del parametro attuale (eventualmente tramite una valutazione di un'espressione)
+  viene passato come valore iniziale del corrispondente parametro formale.
+  Viene implementato \textbf{creando una copia} dell'attuale nel formale.
+  \[
+    fun (\underbrace{x+1}_{\text{il parametro attuale è un r-value}}, y+2)
+  \]
+}
+\noindent
+\begin{itemize}
+  \item Il passaggio per valore è vantaggioso perché versatile nella scrittura nei parametri attuali
+  \item Tuttavia, se dovessimo copiare oggetti di grandi dimensioni, il passaggio per valore potrebbe 
+  essere inefficiente in termini di tempo e memoria.
+\end{itemize}
+A livello di implementazione si potrebbe fare il passaggio per valore utilizzando dei riferimenti
+che però devono essere protetti per evitare modifiche al valore originale.
+
+\begin{Example}{}{}
+Considerimamo il seguente codice:
+\begin{lstlisting}[language=c]
+void foo(int x) { x = x + 1; } 
+... 
+y = 1; 
+foo(y+1); // Chiamata a foo alloca x nell'ambiente locale di foo
+\end{lstlisting}
+Alla chiamata $y+1$ viene valutato a $2$ e il valore viene caricato nella cella 
+riferita da $x$. Non c'è nessun legame tra $y$ e $x$.
+Alla terminazione della procedura $foo$, il RdA contenente $x$ 
+viene distrutto perdendo tutte le modifiche fatte a $x$.
+Questa metodologia non permette di comunicare al chiamante
+attraverso i parametri.
+\end{Example}
+
+\begin{Example}{}{}
+Consideriamo il seguente codice; facciamo finta che si possa specificare 
+il tipo di passaggi di parametri tramite "value":
+\begin{lstlisting}[language=c]
+void swap (value int a, value int b) {
+  int temp = a; 
+  a = b; 
+  b = temp; 
+}
+... 
+int c = 3;
+int d = 4;
+swap(c, d);
+\end{lstlisting}
+Durante l'esecuzione di questo codice abbiamo la memoria 
+allocata per $c$ e $d$ con i valori $3$ e $4$ rispettivamente.
+\[
+  c \to 3, d \to 4
+\]
+Alla chiamata di di $swap$ viene allocata un RdA per $a$, $b$ e per $temp$. 
+I valori di $a$ e $b$ vengono inizializzati con i valori di $c$ e $d$ rispettivamente, quindi:
+\[
+  a \to 3 \quad b \to 4 \quad temp \to \text{non inizializzato}
+\]
+Esecuzione di swap:
+\begin{lstlisting}
+tmp -> 3 
+a -> 4
+b -> 3
+\end{lstlisting}
+Alla terminazione di $swap$ viene distrutto l'RdA e le modifiche a $a$ e $b$ vengono perse e quindi 
+la memoria di $c$ e $d$ rimane invariata.
+\end{Example}
+
+
+\subsubsection{Passaggio per riferimento} 
+
+\dfn{Passaggio per riferimento}
+{
+  Viene passato un cammino di accesso di parametro formale.
+  \begin{itemize}
+    \item Come vantaggio ha un uso efficiente della memoria.
+    \item Come svantaggio crea degli alias.
+  \end{itemize}
+}
+
+\begin{Example}{}{}
+Consideriamo il seguente codice; facciamo finta che si possa specificare
+il tipo di passaggi di parametri tramite "reference":
+\begin{lstlisting}[language=c]
+void foo (reference int x) { x = x + 1; }
+... 
+int y = 1;
+foo(y); // Notare che ora abbiamo un l-value quindi non possiamo applicare l'operatore + a y direttamente 
+\end{lstlisting}
+\noindent
+\begin{itemize}
+  \item Alla chiamata si crea Rda con cella per $x$
+  \item Alla chiamata $x$ diventa un riferimento a $y$ e quindi $x$ e $y$ sono alias
+  \item Alla terminazione viene distritto RdA contenente il riferimento $x$
+  \item Tutte le modifiche fatte a $x$ durante l'esecuzione di $foo$ rimangono in memoria 
+  e quindi $y$ viene modificato a $2$.
+\end{itemize}
+\end{Example}
+
+\begin{Example}{}{}
+Consideriamo il seguente codice:
+\begin{lstlisting}[language=c]
+void swap (reference int a, reference int b) {
+  int temp = a; 
+  a = b; 
+  b = temp; 
+}
+...
+int c = 3;
+int d = 4;
+swap(c, d);
+\end{lstlisting}
+Esecuzione:
+\begin{itemize}
+  \item Eseguiamo il main e abbiamo:
+  \[
+    c \to 3, d \to 4
+  \]
+  \item Alla chiamata di $swap$ viene allocata un RdA per $a$, $b$ e per $temp$.
+  \[
+    tmp \to [] \quad a \to c \quad b \to d
+  \]
+  \item Esecuzione di swap:
+  \begin{lstlisting}[language=c]
+tmp -> 3
+a -> 4 <- c 
+d -> 3 <- b
+  \end{lstlisting}
+  \item Alla terminazione di $swap$ viene distrutto l'RdA e le modifiche a $a$ e $b$ rimangono in memoria
+  e quindi $c$ e $d$ vengono modificati a $4$ e $3$ rispettivamente.
+\end{itemize}
+\end{Example}
+
+\begin{Example}{}{}
+Consideriamo il seguente codice javascript:
+\begin{lstlisting}
+> a = { val: 2 }
+{ val: 2 }
+> b  = { val : 3 }
+{ val: 3 }
+> function double (x,y) {
+| x.val = 2 * x.val;
+| y.val = 2 * y.val;
+| console.log(x.val + ' ' + y.val)
+| }
+undefined
+> console.log(double(a,b))
+4 6
+undefined
+undefined
+> console.log(a.val + ' ' + b.val)
+4 6
+undefined
+> 
+\end{lstlisting}
+Come possiamo notare stampare le variabili all'interno della funzione e quelle globali,
+il valore non cambia.
+\end{Example}
 
 \end{document}
