@@ -1,0 +1,37 @@
+2026-05-13 20:38:21.452 CEST [56341] LOG:  a partire da PostgreSQL 16.13 (Homebrew) on aarch64-apple-darwin24.6.0, compiled by Apple clang version 17.0.0 (clang-1700.6.3.2), 64-bit
+2026-05-13 20:38:21.455 CEST [56341] LOG:  in ascolto sull'indirizzo IPv4 "127.0.0.1", porta 5432
+2026-05-13 20:38:21.455 CEST [56341] LOG:  in ascolto sull'indirizzo IPv6 "::1", porta 5432
+2026-05-13 20:38:21.456 CEST [56341] LOG:  in ascolto sul socket Unix "/tmp/.s.PGSQL.5432"
+2026-05-13 20:38:21.458 CEST [56344] LOG:  il database è stato arrestato alle 2026-05-13 20:38:11 CEST
+2026-05-13 20:38:21.461 CEST [56341] LOG:  il database è pronto ad accettare connessioni
+2026-05-13 20:38:45.306 CEST [56385] ERRORE:  il database "postgres" esiste già
+2026-05-13 20:38:45.306 CEST [56385] ISTRUZIONE:  CREATE DATABASE postgres;
+2026-05-13 20:38:52.214 CEST [56414] FATALE:  il database "paolo" non esiste
+2026-05-13 20:43:21.463 CEST [56342] LOG:  inizio checkpoint: time
+2026-05-13 20:45:01.513 CEST [56342] LOG:  checkpoint complete: wrote 990 buffers (6.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=100.030 s, sync=0.012 s, total=100.053 s; sync files=335, longest=0.001 s, average=0.001 s; distance=4734 kB, estimate=4734 kB; lsn=0/19BD4B8, redo lsn=0/19BD480
+2026-05-13 20:48:58.144 CEST [56859] ERRORE:  errore di sintassi alla fine dell'input al carattere 200
+2026-05-13 20:48:58.144 CEST [56859] ISTRUZIONE:  
+	            CREATE TABLE IF NOT EXISTS Spese (
+	            id SERIAL PRIMARY KEY,
+	            data DATE NOT NULL,
+	            voce VARCHAR NOT NULL,
+	            importo NUMERIC NOT NULL
+	            
+2026-05-13 20:49:36.332 CEST [56917] ERRORE:  errore di sintassi alla fine dell'input al carattere 220
+2026-05-13 20:49:36.332 CEST [56917] ISTRUZIONE:  
+	                CREATE TABLE IF NOT EXISTS Spese (
+	                id SERIAL PRIMARY KEY,
+	                data DATE NOT NULL,
+	                voce VARCHAR NOT NULL,
+	                importo NUMERIC NOT NULL
+	            
+2026-05-13 20:50:50.437 CEST [57012] ERRORE:  errore di sintassi alla fine dell'input al carattere 220
+2026-05-13 20:50:50.437 CEST [57012] ISTRUZIONE:  
+	                CREATE TABLE IF NOT EXISTS Spese (
+	                id SERIAL PRIMARY KEY,
+	                data DATE NOT NULL,
+	                voce VARCHAR NOT NULL,
+	                importo NUMERIC NOT NULL
+	            
+2026-05-13 20:53:21.519 CEST [56342] LOG:  inizio checkpoint: time
+2026-05-13 20:53:26.091 CEST [56342] LOG:  checkpoint complete: wrote 46 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.565 s, sync=0.004 s, total=4.573 s; sync files=41, longest=0.001 s, average=0.001 s; distance=199 kB, estimate=4280 kB; lsn=0/19EF380, redo lsn=0/19EF348
