@@ -4747,4 +4747,157 @@ Torniamo al nostro esempio:
 \end{itemize}
 \end{Example}
 
+\subsection{Ricorsione}
+
+La ricorsione è un metodo alternativo alla costruzione di procedure iterarive.
+
+\dfn{}
+{
+  Una procedura è \textbf{ricorsiva} se 
+  all'interno della procedura esiste una chiamata alla procedura stessa.
+}
+
+\begin{Example}{}{}
+Consideriamo il seguente codice in IMP:
+\begin{lstlisting}
+int fact (int n) {
+  if (n <= 0) {
+    return 1;
+  } else {
+    return n * fact(n - 1);
+  }
+}
+\end{lstlisting}
+\end{Example}
+
+\begin{Example}{}{}
+  Consideriamo il seguente codice in IMP:
+\begin{lstlisting}
+int fun1(int n) {
+  if (n == 1) then return fun1(n);
+}
+
+int fun2(int n) {
+  if (n == 0) then return 1;
+  else return fun2(n + 1);
+}
+\end{lstlisting}
+\noindent
+Entrambe le funzioni sono ricorsive, tuttavia non si possono considerare
+come un procedimento induttivo poiché queste funzioni non terminano mai.
+\begin{itemize}
+  \item Nella prima funzione, quando $n$ è uguale a $1$, viene chiamata la funzione 
+  stessa con lo stesso valore di $n$, quindi si entra in un ciclo infinito.
+  \item Nella seconda funzione, quando $n$ è uguale a $0$, viene restituito $1$, ma se $n$ 
+  è diverso da $0$, viene chiamata la funzione stessa con un valore di $n$ incrementato di $1$, quindi si entra in un ciclo infinito che incrementa continuamente $n$.
+\end{itemize}
+\noindent
+L'induzione non è un induzione se non ha una \textbf{terminazione} e quindi torno al caso base.
+\end{Example}
+
+\subsubsection*{Ricorsione vs Iterazione}
+
+\begin{itemize}
+  \item L'iterazione è sempre possibile in qualunque PL turing completo
+  \item Per la ricorsione è possibile se le procedure possono essere definite in termini di sè stesse.
+  \begin{itemize}
+    \item Allocazione dinamica 
+    \item Ricorsione in coda 
+  \end{itemize}
+\end{itemize}
+Ogni programma iterativo può essere riscritto in modo ricorsivo 
+e viceversa ogni programma iterativo
+può essere trasformato in forma ricorsiva.
+
+\begin{Example}{}{}
+Consideriamo il seguente codice in IMP:
+\begin{lstlisting}
+int fact (int n) {
+  if (n <= 0) {
+    return 1;
+  } else {
+    return n * fact(n - 1);
+  }
+}
+\end{lstlisting}
+\noindent
+Se noi chiamiamo \texttt{fact(3)}, abbiamo la seguente sequenza di chiamate:
+\begin{itemize}
+  \item \texttt{fact(3)} chiama \texttt{fact(2)}
+  \item \texttt{fact(2)} chiama \texttt{fact(1)}
+  \item \texttt{fact(1)} chiama \texttt{fact(0)}
+  \item \texttt{fact(0)} restituisce $1$ (caso base)
+  \item \texttt{fact(1)} restituisce $1 * 1 = 1$
+  \item \texttt{fact(2)} restituisce $2 * 1 = 2$
+  \item \texttt{fact(3)} restituisce $3 * 2 = 6$
+  \item Quindi il risultato finale è $6$
+\end{itemize}
+\end{Example}
+
+\subsubsection{Ricorsione in coda}
+
+Una chiamata ricorsiva è in coda se è l'ultima operazione eseguita dalla procedura prima di restituire un valore al chiamante.
+\begin{itemize}
+  \item Chiamata in coda:
+  \begin{itemize}
+    \item $f$ chiama $g$ 
+    \item la chiamata di $g$ è detta in coda se $f$ restituisce il valore restituito da $g$ 
+    senza ulteriori computazioni.
+  \end{itemize}
+  \item $f$ è ricorsiva in coda se chiama la chiamata ricorsiva a sè stessa è in coda.
+\end{itemize}
+
+\begin{Example}{}{}
+Guardiamo l'esempio sul fattoriale:
+\begin{lstlisting}
+int fact(int n) {
+  fact-rc(n, *); // <-- valore iniziale per res, 
+  // indicativamente e' il risultato
+  // del caso base 
+}
+
+int fact-rc(int n, int res) {
+  if (n == 1) return res;
+  else fact-rc(n - 1, n * res);
+}
+\end{lstlisting}
+La sequenza delle chiamate è la seguente:
+\begin{itemize}
+  \item $\texttt{fact(3)} \to \texttt{fact-rc(3, 1)}$
+  \item $\texttt{fact-rc(3, 1)} \to \texttt{fact-rc(2, 3)}$
+  \item $\texttt{fact-rc(2, 3)} \to \texttt{fact-rc(1, 6)}$
+  \item $\texttt{fact-rc(1, 6)}$ restituisce $6$ (caso base)
+  \item Quindi il risultato finale è $6$
+\end{itemize}
+\end{Example}
+
+\begin{Example}{Fibonacci}{}
+  Proviamo a scrivere la funzione di Fibonacci in modo ricorsivo e ricorsivo in coda:
+  \begin{lstlisting}
+int fib(int n) {
+  if (n <= 0) return 0;
+  else if (n == 1) return 1;
+  else return fib(n - 1) + fib(n - 2);
+}
+  \end{lstlisting}
+\noindent
+La complessità esponenziale sia in tempo che in spazio a causa della somma 
+di due chiamate ricorsive che a loro volta fanno altre chiamate ricorsive.
+La ricorsione in coda migliora questi costi per evitare 
+la crescita esponenziale della pila di chiamate.
+\begin{lstlisting}
+int fib(int n) {
+  return fib-rc(n, 0, 1); // inizializziamo i valori per i primi due numeri di Fibonacci (caso base)
+}
+
+int fib-rc(int n, int a, int b) {
+  if (n == 0) return a;
+  else if (n == 1) return b;
+  else return fib-rc(n - 1, b, a + b);
+}
+\end{lstlisting}
+\noindent
+\end{Example}
+
+
 \end{document}
