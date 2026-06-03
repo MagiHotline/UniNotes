@@ -35,3 +35,9 @@
 	            
 2026-05-13 20:53:21.519 CEST [56342] LOG:  inizio checkpoint: time
 2026-05-13 20:53:26.091 CEST [56342] LOG:  checkpoint complete: wrote 46 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.565 s, sync=0.004 s, total=4.573 s; sync files=41, longest=0.001 s, average=0.001 s; distance=199 kB, estimate=4280 kB; lsn=0/19EF380, redo lsn=0/19EF348
+2026-05-29 17:08:40.137 CEST [56341] LOG:  richiesta di arresto smart ricevuta
+2026-05-29 17:08:40.352 CEST [56341] LOG:  processo di lavoro in background "logical replication launcher" (PID 56347) è uscito con codice di uscita 1
+2026-05-29 17:08:40.354 CEST [56342] LOG:  arresto in corso
+2026-05-29 17:08:40.357 CEST [56342] LOG:  inizio checkpoint: shutdown immediate
+2026-05-29 17:08:40.370 CEST [56342] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.007 s, sync=0.001 s, total=0.015 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=3852 kB; lsn=0/19EF430, redo lsn=0/19EF430
+2026-05-29 17:08:40.386 CEST [56341] LOG:  il database è stato arrestato
